@@ -1,4 +1,4 @@
-import uuid
+# import uuid
 from typing import List
 
 import graphene
@@ -7,7 +7,7 @@ from django.contrib.auth import models as auth_models
 from graphene import relay
 
 from ...account import models
-from ...checkout.utils import get_user_checkout
+# from ...checkout.utils import get_user_checkout
 from ...core.exceptions import PermissionDenied
 from ...core.permissions import (
     AccountPermissions,
@@ -16,13 +16,13 @@ from ...core.permissions import (
     OrderPermissions,
 )
 from ...core.tracing import traced_resolver
-from ...order import OrderStatus
+# from ...order import OrderStatus
 from ...thumbnail.utils import get_image_or_proxy_url, get_thumbnail_size
 from ..account.utils import check_is_owner_or_has_one_of_perms
 from ..app.dataloaders import AppByIdLoader
 from ..app.types import App
-from ..checkout.dataloaders import CheckoutByUserAndChannelLoader, CheckoutByUserLoader
-from ..checkout.types import Checkout
+# from ..checkout.dataloaders import CheckoutByUserAndChannelLoader, CheckoutByUserLoader
+# from ..checkout.types import Checkout
 from ..core.connection import CountableConnection, create_connection_slice
 from ..core.descriptions import DEPRECATED_IN_3X_FIELD
 from ..core.enums import LanguageCodeEnum
@@ -30,7 +30,7 @@ from ..core.federation import federated_entity, resolve_federation_references
 from ..core.fields import ConnectionField, PermissionsField
 from ..core.scalars import UUID
 from ..core.types import (
-    CountryDisplay,
+    # CountryDisplay,
     Image,
     ModelObjectType,
     NonNullList,
@@ -38,9 +38,9 @@ from ..core.types import (
     ThumbnailField,
 )
 from ..core.utils import from_global_id_or_error, str_to_enum, to_global_id_or_none
-from ..giftcard.dataloaders import GiftCardsByUserLoader
+# from ..giftcard.dataloaders import GiftCardsByUserLoader
 from ..meta.types import ObjectWithMetadata
-from ..order.dataloaders import OrderLineByIdLoader, OrdersByUserLoader
+# from ..order.dataloaders import OrderLineByIdLoader, OrdersByUserLoader
 from ..utils import format_permissions_for_display, get_user_or_app_from_context
 from .dataloaders import (
     CustomerEventsByUserLoader,
@@ -50,106 +50,106 @@ from .enums import CountryCodeEnum, CustomerEventsEnum
 from .utils import can_user_manage_group, get_groups_which_user_can_manage
 
 
-class AddressInput(graphene.InputObjectType):
-    first_name = graphene.String(description="Given name.")
-    last_name = graphene.String(description="Family name.")
-    company_name = graphene.String(description="Company or organization.")
-    street_address_1 = graphene.String(description="Address.")
-    street_address_2 = graphene.String(description="Address.")
-    city = graphene.String(description="City.")
-    city_area = graphene.String(description="District.")
-    postal_code = graphene.String(description="Postal code.")
-    country = CountryCodeEnum(description="Country.")
-    country_area = graphene.String(description="State or province.")
-    phone = graphene.String(description="Phone number.")
-
-
-@federated_entity("id")
-class Address(ModelObjectType):
-    id = graphene.GlobalID(required=True)
-    first_name = graphene.String(required=True)
-    last_name = graphene.String(required=True)
-    company_name = graphene.String(required=True)
-    street_address_1 = graphene.String(required=True)
-    street_address_2 = graphene.String(required=True)
-    city = graphene.String(required=True)
-    city_area = graphene.String(required=True)
-    postal_code = graphene.String(required=True)
-    country = graphene.Field(
-        CountryDisplay, required=True, description="Shop's default country."
-    )
-    country_area = graphene.String(required=True)
-    phone = graphene.String()
-    is_default_shipping_address = graphene.Boolean(
-        required=False, description="Address is user's default shipping address."
-    )
-    is_default_billing_address = graphene.Boolean(
-        required=False, description="Address is user's default billing address."
-    )
-
-    class Meta:
-        description = "Represents user address data."
-        interfaces = [relay.Node]
-        model = models.Address
-
-    @staticmethod
-    def resolve_country(root: models.Address, _info):
-        return CountryDisplay(code=root.country.code, country=root.country.name)
-
-    @staticmethod
-    def resolve_is_default_shipping_address(root: models.Address, _info):
-        """Look if the address is the default shipping address of the user.
-
-        This field is added through annotation when using the
-        `resolve_addresses` resolver. It's invalid for
-        `resolve_default_shipping_address` and
-        `resolve_default_billing_address`
-        """
-        if not hasattr(root, "user_default_shipping_address_pk"):
-            return None
-
-        user_default_shipping_address_pk = getattr(
-            root, "user_default_shipping_address_pk"
-        )
-        if user_default_shipping_address_pk == root.pk:
-            return True
-        return False
-
-    @staticmethod
-    def resolve_is_default_billing_address(root: models.Address, _info):
-        """Look if the address is the default billing address of the user.
-
-        This field is added through annotation when using the
-        `resolve_addresses` resolver. It's invalid for
-        `resolve_default_shipping_address` and
-        `resolve_default_billing_address`
-        """
-        if not hasattr(root, "user_default_billing_address_pk"):
-            return None
-
-        user_default_billing_address_pk = getattr(
-            root, "user_default_billing_address_pk"
-        )
-        if user_default_billing_address_pk == root.pk:
-            return True
-        return False
-
-    @staticmethod
-    def __resolve_references(roots: List["Address"], info):
-        from .resolvers import resolve_addresses
-
-        root_ids = [root.id for root in roots]
-        addresses = {
-            address.id: address for address in resolve_addresses(info, root_ids)
-        }
-
-        result = []
-        for root_id in root_ids:
-            _, root_id = from_global_id_or_error(root_id, Address)
-            result.append(addresses.get(int(root_id)))
-        return result
-
-
+# class AddressInput(graphene.InputObjectType):
+#     first_name = graphene.String(description="Given name.")
+#     last_name = graphene.String(description="Family name.")
+#     company_name = graphene.String(description="Company or organization.")
+#     street_address_1 = graphene.String(description="Address.")
+#     street_address_2 = graphene.String(description="Address.")
+#     city = graphene.String(description="City.")
+#     city_area = graphene.String(description="District.")
+#     postal_code = graphene.String(description="Postal code.")
+#     country = CountryCodeEnum(description="Country.")
+#     country_area = graphene.String(description="State or province.")
+#     phone = graphene.String(description="Phone number.")
+#
+#
+# @federated_entity("id")
+# class Address(ModelObjectType):
+#     id = graphene.GlobalID(required=True)
+#     first_name = graphene.String(required=True)
+#     last_name = graphene.String(required=True)
+#     company_name = graphene.String(required=True)
+#     street_address_1 = graphene.String(required=True)
+#     street_address_2 = graphene.String(required=True)
+#     city = graphene.String(required=True)
+#     city_area = graphene.String(required=True)
+#     postal_code = graphene.String(required=True)
+#     country = graphene.Field(
+#         CountryDisplay, required=True, description="Shop's default country."
+#     )
+#     country_area = graphene.String(required=True)
+#     phone = graphene.String()
+#     is_default_shipping_address = graphene.Boolean(
+#         required=False, description="Address is user's default shipping address."
+#     )
+#     is_default_billing_address = graphene.Boolean(
+#         required=False, description="Address is user's default billing address."
+#     )
+#
+#     class Meta:
+#         description = "Represents user address data."
+#         interfaces = [relay.Node]
+#         model = models.Address
+#
+#     @staticmethod
+#     def resolve_country(root: models.Address, _info):
+#         return CountryDisplay(code=root.country.code, country=root.country.name)
+#
+#     @staticmethod
+#     def resolve_is_default_shipping_address(root: models.Address, _info):
+#         """Look if the address is the default shipping address of the user.
+#
+#         This field is added through annotation when using the
+#         `resolve_addresses` resolver. It's invalid for
+#         `resolve_default_shipping_address` and
+#         `resolve_default_billing_address`
+#         """
+#         if not hasattr(root, "user_default_shipping_address_pk"):
+#             return None
+#
+#         user_default_shipping_address_pk = getattr(
+#             root, "user_default_shipping_address_pk"
+#         )
+#         if user_default_shipping_address_pk == root.pk:
+#             return True
+#         return False
+#
+#     @staticmethod
+#     def resolve_is_default_billing_address(root: models.Address, _info):
+#         """Look if the address is the default billing address of the user.
+#
+#         This field is added through annotation when using the
+#         `resolve_addresses` resolver. It's invalid for
+#         `resolve_default_shipping_address` and
+#         `resolve_default_billing_address`
+#         """
+#         if not hasattr(root, "user_default_billing_address_pk"):
+#             return None
+#
+#         user_default_billing_address_pk = getattr(
+#             root, "user_default_billing_address_pk"
+#         )
+#         if user_default_billing_address_pk == root.pk:
+#             return True
+#         return False
+#
+#     @staticmethod
+#     def __resolve_references(roots: List["Address"], info):
+#         from .resolvers import resolve_addresses
+#
+#         root_ids = [root.id for root in roots]
+#         addresses = {
+#             address.id: address for address in resolve_addresses(info, root_ids)
+#         }
+#
+#         result = []
+#         for root_id in root_ids:
+#             _, root_id = from_global_id_or_error(root_id, Address)
+#             result.append(addresses.get(int(root_id)))
+#         return result
+#
+#
 class CustomerEvent(ModelObjectType):
     id = graphene.GlobalID(required=True)
     date = graphene.types.datetime.DateTime(
@@ -205,13 +205,13 @@ class CustomerEvent(ModelObjectType):
     def resolve_count(root: models.CustomerEvent, _info):
         return root.parameters.get("count", None)
 
-    @staticmethod
-    def resolve_order_line(root: models.CustomerEvent, info):
-        if "order_line_pk" in root.parameters:
-            return OrderLineByIdLoader(info.context).load(
-                uuid.UUID(root.parameters["order_line_pk"])
-            )
-        return None
+    # @staticmethod
+    # def resolve_order_line(root: models.CustomerEvent, info):
+    #     if "order_line_pk" in root.parameters:
+    #         return OrderLineByIdLoader(info.context).load(
+    #             uuid.UUID(root.parameters["order_line_pk"])
+    #         )
+    #     return None
 
 
 class UserPermission(Permission):
@@ -245,49 +245,49 @@ class User(ModelObjectType):
     last_name = graphene.String(required=True)
     is_staff = graphene.Boolean(required=True)
     is_active = graphene.Boolean(required=True)
-    addresses = NonNullList(
-        Address, description="List of all user's addresses.", required=True
-    )
-    checkout = graphene.Field(
-        Checkout,
-        description="Returns the last open checkout of this user.",
-        deprecation_reason=(
-            f"{DEPRECATED_IN_3X_FIELD} "
-            "Use the `checkoutTokens` field to fetch the user checkouts."
-        ),
-    )
-    checkout_tokens = NonNullList(
-        UUID,
-        description="Returns the checkout UUID's assigned to this user.",
-        channel=graphene.String(
-            description="Slug of a channel for which the data should be returned."
-        ),
-        deprecation_reason=(f"{DEPRECATED_IN_3X_FIELD} Use `checkoutIds` instead."),
-    )
-    checkout_ids = NonNullList(
-        graphene.ID,
-        description="Returns the checkout ID's assigned to this user.",
-        channel=graphene.String(
-            description="Slug of a channel for which the data should be returned."
-        ),
-    )
-    gift_cards = ConnectionField(
-        "pint.graphql.giftcard.types.GiftCardCountableConnection",
-        description="List of the user gift cards.",
-    )
+    # addresses = NonNullList(
+    #     Address, description="List of all user's addresses.", required=True
+    # )
+    # checkout = graphene.Field(
+    #     Checkout,
+    #     description="Returns the last open checkout of this user.",
+    #     deprecation_reason=(
+    #         f"{DEPRECATED_IN_3X_FIELD} "
+    #         "Use the `checkoutTokens` field to fetch the user checkouts."
+    #     ),
+    # )
+    # checkout_tokens = NonNullList(
+    #     UUID,
+    #     description="Returns the checkout UUID's assigned to this user.",
+    #     channel=graphene.String(
+    #         description="Slug of a channel for which the data should be returned."
+    #     ),
+    #     deprecation_reason=(f"{DEPRECATED_IN_3X_FIELD} Use `checkoutIds` instead."),
+    # )
+    # checkout_ids = NonNullList(
+    #     graphene.ID,
+    #     description="Returns the checkout ID's assigned to this user.",
+    #     channel=graphene.String(
+    #         description="Slug of a channel for which the data should be returned."
+    #     ),
+    # )
+    # gift_cards = ConnectionField(
+    #     "pint.graphql.giftcard.types.GiftCardCountableConnection",
+    #     description="List of the user gift cards.",
+    # )
     note = PermissionsField(
         graphene.String,
         description="A note about the customer.",
         permissions=[AccountPermissions.MANAGE_USERS, AccountPermissions.MANAGE_STAFF],
     )
-    orders = ConnectionField(
-        "pint.graphql.order.types.OrderCountableConnection",
-        description=(
-            "List of user's orders. Requires one of the following permissions: "
-            f"{AccountPermissions.MANAGE_STAFF.name}, "
-            f"{AuthorizationFilters.OWNER.name}."
-        ),
-    )
+    # orders = ConnectionField(
+    #     "pint.graphql.order.types.OrderCountableConnection",
+    #     description=(
+    #         "List of user's orders. Requires one of the following permissions: "
+    #         f"{AccountPermissions.MANAGE_STAFF.name}, "
+    #         f"{AuthorizationFilters.OWNER.name}."
+    #     ),
+    # )
     user_permissions = NonNullList(
         UserPermission, description="List of user's permissions."
     )
@@ -315,8 +315,8 @@ class User(ModelObjectType):
     language_code = graphene.Field(
         LanguageCodeEnum, description="User language code.", required=True
     )
-    default_shipping_address = graphene.Field(Address)
-    default_billing_address = graphene.Field(Address)
+    # default_shipping_address = graphene.Field(Address)
+    # default_billing_address = graphene.Field(Address)
 
     last_login = graphene.DateTime()
     date_joined = graphene.DateTime(required=True)
@@ -331,68 +331,68 @@ class User(ModelObjectType):
     def resolve_addresses(root: models.User, _info):
         return root.addresses.annotate_default(root).all()  # type: ignore
 
-    @staticmethod
-    def resolve_checkout(root: models.User, _info):
-        return get_user_checkout(root)
+    # @staticmethod
+    # def resolve_checkout(root: models.User, _info):
+    #     return get_user_checkout(root)
+    #
+    # @staticmethod
+    # @traced_resolver
+    # def resolve_checkout_tokens(root: models.User, info, channel=None):
+    #     def return_checkout_tokens(checkouts):
+    #         if not checkouts:
+    #             return []
+    #         checkout_global_ids = []
+    #         for checkout in checkouts:
+    #             checkout_global_ids.append(checkout.token)
+    #         return checkout_global_ids
+    #
+    #     if not channel:
+    #         return (
+    #             CheckoutByUserLoader(info.context)
+    #             .load(root.id)
+    #             .then(return_checkout_tokens)
+    #         )
+    #     return (
+    #         CheckoutByUserAndChannelLoader(info.context)
+    #         .load((root.id, channel))
+    #         .then(return_checkout_tokens)
+    #     )
 
-    @staticmethod
-    @traced_resolver
-    def resolve_checkout_tokens(root: models.User, info, channel=None):
-        def return_checkout_tokens(checkouts):
-            if not checkouts:
-                return []
-            checkout_global_ids = []
-            for checkout in checkouts:
-                checkout_global_ids.append(checkout.token)
-            return checkout_global_ids
-
-        if not channel:
-            return (
-                CheckoutByUserLoader(info.context)
-                .load(root.id)
-                .then(return_checkout_tokens)
-            )
-        return (
-            CheckoutByUserAndChannelLoader(info.context)
-            .load((root.id, channel))
-            .then(return_checkout_tokens)
-        )
-
-    @staticmethod
-    @traced_resolver
-    def resolve_checkout_ids(root: models.User, info, channel=None):
-        def return_checkout_ids(checkouts):
-            if not checkouts:
-                return []
-            checkout_global_ids = []
-            for checkout in checkouts:
-                checkout_global_ids.append(to_global_id_or_none(checkout))
-            return checkout_global_ids
-
-        if not channel:
-            return (
-                CheckoutByUserLoader(info.context)
-                .load(root.id)
-                .then(return_checkout_ids)
-            )
-        return (
-            CheckoutByUserAndChannelLoader(info.context)
-            .load((root.id, channel))
-            .then(return_checkout_ids)
-        )
-
-    @staticmethod
-    def resolve_gift_cards(root: models.User, info, **kwargs):
-        from ..giftcard.types import GiftCardCountableConnection
-
-        def _resolve_gift_cards(gift_cards):
-            return create_connection_slice(
-                gift_cards, info, kwargs, GiftCardCountableConnection
-            )
-
-        return (
-            GiftCardsByUserLoader(info.context).load(root.id).then(_resolve_gift_cards)
-        )
+    # @staticmethod
+    # @traced_resolver
+    # def resolve_checkout_ids(root: models.User, info, channel=None):
+    #     def return_checkout_ids(checkouts):
+    #         if not checkouts:
+    #             return []
+    #         checkout_global_ids = []
+    #         for checkout in checkouts:
+    #             checkout_global_ids.append(to_global_id_or_none(checkout))
+    #         return checkout_global_ids
+    #
+    #     if not channel:
+    #         return (
+    #             CheckoutByUserLoader(info.context)
+    #             .load(root.id)
+    #             .then(return_checkout_ids)
+    #         )
+    #     return (
+    #         CheckoutByUserAndChannelLoader(info.context)
+    #         .load((root.id, channel))
+    #         .then(return_checkout_ids)
+    #     )
+    #
+    # @staticmethod
+    # def resolve_gift_cards(root: models.User, info, **kwargs):
+    #     from ..giftcard.types import GiftCardCountableConnection
+    #
+    #     def _resolve_gift_cards(gift_cards):
+    #         return create_connection_slice(
+    #             gift_cards, info, kwargs, GiftCardCountableConnection
+    #         )
+    #
+    #     return (
+    #         GiftCardsByUserLoader(info.context).load(root.id).then(_resolve_gift_cards)
+    #     )
 
     @staticmethod
     def resolve_user_permissions(root: models.User, _info):
@@ -416,31 +416,31 @@ class User(ModelObjectType):
     def resolve_events(root: models.User, info):
         return CustomerEventsByUserLoader(info.context).load(root.id)
 
-    @staticmethod
-    def resolve_orders(root: models.User, info, **kwargs):
-        from ..order.types import OrderCountableConnection
-
-        def _resolve_orders(orders):
-            requester = get_user_or_app_from_context(info.context)
-            if not requester.has_perm(OrderPermissions.MANAGE_ORDERS):
-                # allow fetch requestor orders (except drafts)
-                if root == info.context.user:
-                    orders = [
-                        order for order in orders if order.status != OrderStatus.DRAFT
-                    ]
-                else:
-                    raise PermissionDenied(
-                        permissions=[
-                            AuthorizationFilters.OWNER,
-                            OrderPermissions.MANAGE_ORDERS,
-                        ]
-                    )
-
-            return create_connection_slice(
-                orders, info, kwargs, OrderCountableConnection
-            )
-
-        return OrdersByUserLoader(info.context).load(root.id).then(_resolve_orders)
+    # @staticmethod
+    # def resolve_orders(root: models.User, info, **kwargs):
+    #     from ..order.types import OrderCountableConnection
+    #
+    #     def _resolve_orders(orders):
+    #         requester = get_user_or_app_from_context(info.context)
+    #         if not requester.has_perm(OrderPermissions.MANAGE_ORDERS):
+    #             # allow fetch requestor orders (except drafts)
+    #             if root == info.context.user:
+    #                 orders = [
+    #                     order for order in orders if order.status != OrderStatus.DRAFT
+    #                 ]
+    #             else:
+    #                 raise PermissionDenied(
+    #                     permissions=[
+    #                         AuthorizationFilters.OWNER,
+    #                         OrderPermissions.MANAGE_ORDERS,
+    #                     ]
+    #                 )
+    #
+    #         return create_connection_slice(
+    #             orders, info, kwargs, OrderCountableConnection
+    #         )
+    #
+    #     return OrdersByUserLoader(info.context).load(root.id).then(_resolve_orders)
 
     @staticmethod
     def resolve_avatar(root: models.User, info, size=None, format=None):
