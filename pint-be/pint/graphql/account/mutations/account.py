@@ -28,8 +28,8 @@ from ..types import User
 # from ..types import Address, AddressInput, User
 from .base import (
     INVALID_TOKEN,
-    BaseAddressDelete,
-    BaseAddressUpdate,
+    # BaseAddressDelete,
+    # BaseAddressUpdate,
     BaseCustomerCreate,
 )
 

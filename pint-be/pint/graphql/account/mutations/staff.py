@@ -14,16 +14,17 @@ from ....account.utils import (
     remove_staff_member,
     remove_the_oldest_user_address_if_address_limit_is_reached,
 )
-from ....checkout import AddressType
+# from ....checkout import AddressType
 from ....core.exceptions import PermissionDenied
 from ....core.permissions import AccountPermissions, AuthorizationFilters
 from ....core.tracing import traced_atomic_transaction
 from ....core.utils.url import validate_storefront_url
-from ....giftcard.utils import assign_user_gift_cards
-from ....order.utils import match_orders_with_new_user
+# from ....giftcard.utils import assign_user_gift_cards
+# from ....order.utils import match_orders_with_new_user
 from ....thumbnail import models as thumbnail_models
-from ...account.enums import AddressTypeEnum
-from ...account.types import Address, AddressInput, User
+# from ...account.enums import AddressTypeEnum
+# from ...account.types import Address, AddressInput, User
+from ...account.types import User
 from ...core.mutations import BaseMutation, ModelDeleteMutation, ModelMutation
 from ...core.types import AccountError, NonNullList, StaffError, Upload
 from ...core.utils import add_hash_to_file_name, validate_image_file
@@ -37,8 +38,8 @@ from ..utils import (
     get_out_of_scope_users,
 )
 from .base import (
-    BaseAddressDelete,
-    BaseAddressUpdate,
+    # BaseAddressDelete,
+    # BaseAddressUpdate,
     BaseCustomerCreate,
     CustomerInput,
     UserInput,
@@ -120,8 +121,8 @@ class CustomerUpdate(CustomerCreate):
             account_events.assigned_email_to_a_customer_event(
                 staff_user=staff_user, app=app, new_email=new_email
             )
-            assign_user_gift_cards(new_instance)
-            match_orders_with_new_user(new_instance)
+            # assign_user_gift_cards(new_instance)
+            # match_orders_with_new_user(new_instance)
         if has_new_name:
             account_events.assigned_name_to_a_customer_event(
                 staff_user=staff_user, app=app, new_name=new_fullname
@@ -472,9 +473,9 @@ class StaffUpdate(StaffCreate):
         old_email = instance.email
         response = super().perform_mutation(_root, info, **data)
         user = response.user
-        if user.email != old_email:
-            assign_user_gift_cards(user)
-            match_orders_with_new_user(user)
+        # if user.email != old_email:
+        #     assign_user_gift_cards(user)
+        #     match_orders_with_new_user(user)
         return response
 
     @classmethod
@@ -514,112 +515,112 @@ class StaffDelete(StaffDeleteMixin, UserDelete):
         return response
 
 
-class AddressCreate(ModelMutation):
-    user = graphene.Field(
-        User, description="A user instance for which the address was created."
-    )
-
-    class Arguments:
-        user_id = graphene.ID(
-            description="ID of a user to create address for.", required=True
-        )
-        input = AddressInput(
-            description="Fields required to create address.", required=True
-        )
-
-    class Meta:
-        description = "Creates user address."
-        model = models.Address
-        object_type = Address
-        permissions = (AccountPermissions.MANAGE_USERS,)
-        error_type_class = AccountError
-        error_type_field = "account_errors"
-
-    @classmethod
-    @traced_atomic_transaction()
-    def perform_mutation(cls, root, info, **data):
-        user_id = data["user_id"]
-        user = cls.get_node_or_error(info, user_id, field="user_id", only_type=User)
-        response = super().perform_mutation(root, info, **data)
-        if not response.errors:
-            address = info.context.plugins.change_user_address(
-                response.address, None, user
-            )
-            remove_the_oldest_user_address_if_address_limit_is_reached(user)
-            user.addresses.add(address)
-            response.user = user
-            user.search_document = prepare_user_search_document_value(user)
-            user.save(update_fields=["search_document", "updated_at"])
-        return response
-
-    @classmethod
-    def post_save_action(cls, info, instance, cleaned_input):
-        transaction.on_commit(lambda: info.context.plugins.address_created(instance))
-
-
-class AddressUpdate(BaseAddressUpdate):
-    class Meta:
-        description = "Updates an address."
-        model = models.Address
-        object_type = Address
-        permissions = (AccountPermissions.MANAGE_USERS,)
-        error_type_class = AccountError
-        error_type_field = "account_errors"
-
-
-class AddressDelete(BaseAddressDelete):
-    class Meta:
-        description = "Deletes an address."
-        model = models.Address
-        object_type = Address
-        permissions = (AccountPermissions.MANAGE_USERS,)
-        error_type_class = AccountError
-        error_type_field = "account_errors"
-
-
-class AddressSetDefault(BaseMutation):
-    user = graphene.Field(User, description="An updated user instance.")
-
-    class Arguments:
-        address_id = graphene.ID(required=True, description="ID of the address.")
-        user_id = graphene.ID(
-            required=True, description="ID of the user to change the address for."
-        )
-        type = AddressTypeEnum(required=True, description="The type of address.")
-
-    class Meta:
-        description = "Sets a default address for the given user."
-        permissions = (AccountPermissions.MANAGE_USERS,)
-        error_type_class = AccountError
-        error_type_field = "account_errors"
-
-    @classmethod
-    def perform_mutation(cls, _root, info, address_id, user_id, **data):
-        address = cls.get_node_or_error(
-            info, address_id, field="address_id", only_type=Address
-        )
-        user = cls.get_node_or_error(info, user_id, field="user_id", only_type=User)
-
-        if not user.addresses.filter(pk=address.pk).exists():
-            raise ValidationError(
-                {
-                    "address_id": ValidationError(
-                        "The address doesn't belong to that user.",
-                        code=AccountErrorCode.INVALID,
-                    )
-                }
-            )
-
-        if data.get("type") == AddressTypeEnum.BILLING.value:
-            address_type = AddressType.BILLING
-        else:
-            address_type = AddressType.SHIPPING
-
-        utils.change_user_default_address(
-            user, address, address_type, info.context.plugins
-        )
-        info.context.plugins.customer_updated(user)
-        return cls(user=user)
+# class AddressCreate(ModelMutation):
+#     user = graphene.Field(
+#         User, description="A user instance for which the address was created."
+#     )
+#
+#     class Arguments:
+#         user_id = graphene.ID(
+#             description="ID of a user to create address for.", required=True
+#         )
+#         input = AddressInput(
+#             description="Fields required to create address.", required=True
+#         )
+#
+#     class Meta:
+#         description = "Creates user address."
+#         model = models.Address
+#         # object_type = Address
+#         permissions = (AccountPermissions.MANAGE_USERS,)
+#         error_type_class = AccountError
+#         error_type_field = "account_errors"
+#
+#     @classmethod
+#     @traced_atomic_transaction()
+#     def perform_mutation(cls, root, info, **data):
+#         user_id = data["user_id"]
+#         user = cls.get_node_or_error(info, user_id, field="user_id", only_type=User)
+#         response = super().perform_mutation(root, info, **data)
+#         if not response.errors:
+#             address = info.context.plugins.change_user_address(
+#                 response.address, None, user
+#             )
+#             remove_the_oldest_user_address_if_address_limit_is_reached(user)
+#             user.addresses.add(address)
+#             response.user = user
+#             user.search_document = prepare_user_search_document_value(user)
+#             user.save(update_fields=["search_document", "updated_at"])
+#         return response
+#
+#     @classmethod
+#     def post_save_action(cls, info, instance, cleaned_input):
+#         transaction.on_commit(lambda: info.context.plugins.address_created(instance))
+#
+#
+# class AddressUpdate(BaseAddressUpdate):
+#     class Meta:
+#         description = "Updates an address."
+#         model = models.Address
+#         object_type = Address
+#         permissions = (AccountPermissions.MANAGE_USERS,)
+#         error_type_class = AccountError
+#         error_type_field = "account_errors"
+#
+#
+# class AddressDelete(BaseAddressDelete):
+#     class Meta:
+#         description = "Deletes an address."
+#         model = models.Address
+#         object_type = Address
+#         permissions = (AccountPermissions.MANAGE_USERS,)
+#         error_type_class = AccountError
+#         error_type_field = "account_errors"
+#
+#
+# class AddressSetDefault(BaseMutation):
+#     user = graphene.Field(User, description="An updated user instance.")
+#
+#     class Arguments:
+#         address_id = graphene.ID(required=True, description="ID of the address.")
+#         user_id = graphene.ID(
+#             required=True, description="ID of the user to change the address for."
+#         )
+#         type = AddressTypeEnum(required=True, description="The type of address.")
+#
+#     class Meta:
+#         description = "Sets a default address for the given user."
+#         permissions = (AccountPermissions.MANAGE_USERS,)
+#         error_type_class = AccountError
+#         error_type_field = "account_errors"
+#
+#     @classmethod
+#     def perform_mutation(cls, _root, info, address_id, user_id, **data):
+#         address = cls.get_node_or_error(
+#             info, address_id, field="address_id", only_type=Address
+#         )
+#         user = cls.get_node_or_error(info, user_id, field="user_id", only_type=User)
+#
+#         if not user.addresses.filter(pk=address.pk).exists():
+#             raise ValidationError(
+#                 {
+#                     "address_id": ValidationError(
+#                         "The address doesn't belong to that user.",
+#                         code=AccountErrorCode.INVALID,
+#                     )
+#                 }
+#             )
+#
+#         if data.get("type") == AddressTypeEnum.BILLING.value:
+#             address_type = AddressType.BILLING
+#         else:
+#             address_type = AddressType.SHIPPING
+#
+#         utils.change_user_default_address(
+#             user, address, address_type, info.context.plugins
+#         )
+#         info.context.plugins.customer_updated(user)
+#         return cls(user=user)
 
 
 class UserAvatarUpdate(BaseMutation):

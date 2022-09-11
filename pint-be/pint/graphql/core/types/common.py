@@ -234,20 +234,20 @@ class MetadataError(Error):
 #     code = InvoiceErrorCode(description="The error code.", required=True)
 
 
-# class PermissionGroupError(Error):
-#     code = PermissionGroupErrorCode(description="The error code.", required=True)
-#     permissions = NonNullList(
-#         PermissionEnum,
-#         description="List of permissions which causes the error.",
-#         required=False,
-#     )
-#     users = NonNullList(
-#         graphene.ID,
-#         description="List of user IDs which causes the error.",
-#         required=False,
-#     )
-#
-#
+class PermissionGroupError(Error):
+    code = PermissionGroupErrorCode(description="The error code.", required=True)
+    permissions = NonNullList(
+        PermissionEnum,
+        description="List of permissions which causes the error.",
+        required=False,
+    )
+    users = NonNullList(
+        graphene.ID,
+        description="List of user IDs which causes the error.",
+        required=False,
+    )
+
+
 # class ProductError(Error):
 #     code = ProductErrorCode(description="The error code.", required=True)
 #     attributes = NonNullList(

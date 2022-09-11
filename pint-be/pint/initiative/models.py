@@ -41,13 +41,13 @@ from prices import Money
 #
 # from ..core.db.fields import SanitizedJSONField
 from ..core.models import ModelWithMetadata, PublishableModel, SortableModel
-# from ..core.permissions import (
-#     DiscountPermissions,
-#     OrderPermissions,
-#     ProductPermissions,
-#     ProductTypePermissions,
-#     has_one_of_permissions,
-# )
+from ..core.permissions import (
+    # DiscountPermissions,
+    # OrderPermissions,
+    # ProductPermissions,
+    # ProductTypePermissions,
+    has_one_of_permissions,
+)
 # from ..core.utils import build_absolute_uri
 # from ..core.utils.draftjs import json_content_to_raw_text
 # from ..core.utils.editorjs import clean_editor_js
@@ -65,51 +65,51 @@ from . import InitiativeMediaTypes
 #     from ..account.models import User
 #     from ..app.models import App
 
-# ALL_PRODUCTS_PERMISSIONS = [
-#     # List of permissions, where each of them allows viewing all products
-#     # (including unpublished).
-#     OrderPermissions.MANAGE_ORDERS,
-#     DiscountPermissions.MANAGE_DISCOUNTS,
-#     ProductPermissions.MANAGE_PRODUCTS,
-# ]
+ALL_INITIATIVES_PERMISSIONS = [
+    # List of permissions, where each of them allows viewing all products
+    # (including unpublished).
+    # OrderPermissions.MANAGE_ORDERS,
+    # DiscountPermissions.MANAGE_DISCOUNTS,
+    # ProductPermissions.MANAGE_PRODUCTS,
+]
 class InitiativesQueryset(models.QuerySet):
-    def published(self, channel_slug: str):
-        today = datetime.datetime.now(pytz.UTC)
-        channels = Channel.objects.filter(
-            slug=str(channel_slug), is_active=True
-        ).values("id")
-        channel_listings = ProductChannelListing.objects.filter(
-            Q(published_at__lte=today) | Q(published_at__isnull=True),
-            Exists(channels.filter(pk=OuterRef("channel_id"))),
-            is_published=True,
-        ).values("id")
-        return self.filter(Exists(channel_listings.filter(product_id=OuterRef("pk"))))
+    # def published(self, channel_slug: str):
+    #     today = datetime.datetime.now(pytz.UTC)
+    #     channels = Channel.objects.filter(
+    #         slug=str(channel_slug), is_active=True
+    #     ).values("id")
+    #     channel_listings = Initiative.objects.filter(
+    #         Q(published_at__lte=today) | Q(published_at__isnull=True),
+    #         Exists(channels.filter(pk=OuterRef("channel_id"))),
+    #         is_published=True,
+    #     ).values("id")
+    #     return self.filter(Exists(channel_listings.filter(product_id=OuterRef("pk"))))
 
-    def not_published(self, channel_slug: str):
-        today = datetime.datetime.now(pytz.UTC)
-        return self.annotate_publication_info(channel_slug).filter(
-            Q(published_at__gt=today) & Q(is_published=True)
-            | Q(is_published=False)
-            | Q(is_published__isnull=True)
-        )
+    # def not_published(self, channel_slug: str):
+    #     today = datetime.datetime.now(pytz.UTC)
+    #     return self.annotate_publication_info(channel_slug).filter(
+    #         Q(published_at__gt=today) & Q(is_published=True)
+    #         | Q(is_published=False)
+    #         | Q(is_published__isnull=True)
+    #     )
 
     def visible_to_user(self, requestor: Union["User", "App"], channel_slug: str):
-        if has_one_of_permissions(requestor, ALL_PRODUCTS_PERMISSIONS):
-            if channel_slug:
-                channels = Channel.objects.filter(slug=str(channel_slug)).values("id")
-                channel_listings = ProductChannelListing.objects.filter(
-                    Exists(channels.filter(pk=OuterRef("channel_id")))
-                ).values("id")
-                return self.filter(
-                    Exists(channel_listings.filter(product_id=OuterRef("pk")))
-                )
+        if has_one_of_permissions(requestor, ALL_INITIATIVES_PERMISSIONS):
+            # if channel_slug:
+            #     channels = Channel.objects.filter(slug=str(channel_slug)).values("id")
+            #     channel_listings = ProductChannelListing.objects.filter(
+            #         Exists(channels.filter(pk=OuterRef("channel_id")))
+            #     ).values("id")
+            #     return self.filter(
+            #         Exists(channel_listings.filter(product_id=OuterRef("pk")))
+            #     )
             return self.all()
         return self.published_with_variants(channel_slug)
 
-    def annotate_publication_info(self, channel_slug: str):
-        return self.annotate_is_published(channel_slug).annotate_published_at(
-            channel_slug
-        )
+    # def annotate_publication_info(self, channel_slug: str):
+    #     return self.annotate_is_published(channel_slug).annotate_published_at(
+    #         channel_slug
+    #     )
 
     # def annotate_is_published(self, channel_slug: str):
     #     query = Subquery(
@@ -254,6 +254,7 @@ class InitiativesQueryset(models.QuerySet):
         # return self.prefetch_related("collections", "category", *common_fields)
         return self.prefetch_related(*common_fields)
 
+
 class Initiative(SeoModel, ModelWithMetadata):
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=255, unique=True, allow_unicode=True)
@@ -265,6 +266,7 @@ class Initiative(SeoModel, ModelWithMetadata):
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    objects = models.Manager.from_queryset(InitiativesQueryset)()
     translated = TranslationProxy()
 
     class Meta:

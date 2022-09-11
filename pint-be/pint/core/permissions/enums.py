@@ -63,16 +63,20 @@ class PageTypePermissions(BasePermissionEnum):
     MANAGE_PAGE_TYPES_AND_ATTRIBUTES = "page.manage_page_types_and_attributes"
 
 
-class ProductPermissions(BasePermissionEnum):
-    MANAGE_PRODUCTS = "product.manage_products"
+# class ProductPermissions(BasePermissionEnum):
+#     MANAGE_PRODUCTS = "product.manage_products"
+#
+#
+# class ProductTypePermissions(BasePermissionEnum):
+#     MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES = "product.manage_product_types_and_attributes"
 
 
-class ProductTypePermissions(BasePermissionEnum):
-    MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES = "product.manage_product_types_and_attributes"
+class InitiativePermissions(BasePermissionEnum):
+    MANAGE_INITIATIVES = "product.manage_products"
 
 
-class ShippingPermissions(BasePermissionEnum):
-    MANAGE_SHIPPING = "shipping.manage_shipping"
+# class ShippingPermissions(BasePermissionEnum):
+#     MANAGE_SHIPPING = "shipping.manage_shipping"
 
 
 class SitePermissions(BasePermissionEnum):
@@ -92,9 +96,9 @@ PERMISSIONS_ENUMS = [
     PagePermissions,
     PageTypePermissions,
     PaymentPermissions,
-    ProductPermissions,
-    ProductTypePermissions,
-    ShippingPermissions,
+    # ProductPermissions,
+    # ProductTypePermissions,
+    # ShippingPermissions,
     SitePermissions,
     CheckoutPermissions,
 ]
