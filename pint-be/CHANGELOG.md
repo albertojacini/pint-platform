@@ -1,6 +1,6 @@
 # Changelog
 
-All notable, unreleased changes to this project will be documented in this file. For the released changes, please visit the [Releases](https://github.com/mirumee/saleor/releases) page.
+All notable, unreleased changes to this project will be documented in this file. For the released changes, please visit the [Releases](https://github.com/mirumee/pint/releases) page.
 
 # 3.7.0
 
@@ -92,8 +92,8 @@ All notable, unreleased changes to this project will be documented in this file.
   - `is_due()` from `send-sale-toggle-notifications` was being invoked every 5s on django-celery-beat instead of every 60s
   - `send-sale-toggle-notifications` would crash on django-celery-beat with `Cannot convert schedule type <pint.core.schedules.sale_webhook_schedule object at 0x7fabfdaacb20> to model`
     Usage:
-  - Database backend: `celery --app saleor.celeryconf:app beat --scheduler saleor.schedulers.schedulers.DatabaseScheduler`
-  - Shelve backend: `celery --app saleor.celeryconf:app beat --scheduler saleor.schedulers.schedulers.PersistentScheduler`
+  - Database backend: `celery --app pint.celeryconf:app beat --scheduler pint.schedulers.schedulers.DatabaseScheduler`
+  - Shelve backend: `celery --app pint.celeryconf:app beat --scheduler pint.schedulers.schedulers.PersistentScheduler`
 - Fix problem with updating draft order with active Avalara - #10183 by @IKarbowiak
 - Fix stock validation and allocation for order with local collection point - #10218 by @IKarbowiak
 - Fix stock allocation for order with global collection point - #10225 by @IKarbowiak
@@ -128,8 +128,8 @@ All notable, unreleased changes to this project will be documented in this file.
 
   Usage:
 
-  - Database backend: `celery --app saleor.celeryconf:app beat --scheduler saleor.schedulers.schedulers.DatabaseScheduler`
-  - Shelve backend: `celery --app saleor.celeryconf:app beat --scheduler saleor.schedulers.schedulers.PersistentScheduler`
+  - Database backend: `celery --app pint.celeryconf:app beat --scheduler pint.schedulers.schedulers.DatabaseScheduler`
+  - Shelve backend: `celery --app pint.celeryconf:app beat --scheduler pint.schedulers.schedulers.PersistentScheduler`
 
 - Fix problem with updating draft order with active avalara - #10183 by @IKarbowiak
 - Fix stock validation and allocation for order with local collection point - #10218 by @IKarbowiak

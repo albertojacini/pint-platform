@@ -84,7 +84,7 @@ def test_plugins_middleware_loads_requestor_in_plugin(rf, customer_user, setting
     settings.MIDDLEWARE = [
         "pint.core.middleware.plugins",
     ]
-    settings.PLUGINS = ["saleor.plugins.tests.sample_plugins.ActivePlugin"]
+    settings.PLUGINS = ["pint.plugins.tests.sample_plugins.ActivePlugin"]
     request = rf.request()
     request.user = customer_user
     request.app = None
@@ -104,7 +104,7 @@ def test_plugins_middleware_requestor_in_plugin_when_no_app_and_user_in_req_is_n
     settings.MIDDLEWARE = [
         "pint.core.middleware.plugins",
     ]
-    settings.PLUGINS = ["saleor.plugins.tests.sample_plugins.ActivePlugin"]
+    settings.PLUGINS = ["pint.plugins.tests.sample_plugins.ActivePlugin"]
     request = rf.request()
     request.user = None
     request.app = None

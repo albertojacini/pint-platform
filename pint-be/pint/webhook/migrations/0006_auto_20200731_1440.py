@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-import saleor.webhook.models
+import pint.webhook.models
 
 
 class Migration(migrations.Migration):
@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="webhook",
             name="target_url",
-            field=saleor.webhook.models.WebhookURLField(max_length=255),
+            field=pint.webhook.models.WebhookURLField(max_length=255),
         ),
     ]

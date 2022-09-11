@@ -138,11 +138,11 @@ jobs:
           curl -f -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: Bearer ${{ secrets.SALEOR_RELEASE_TOKEN }}" \
-            https://api.github.com/repos/saleor/saleor-multitenant/dispatches \
+            https://api.github.com/repos/pint/pint-multitenant/dispatches \
             -d "{\"event_type\":\"deploy-staging\",\"client_payload\":{\"version\":\"$VERSION\"}}"
 
           curl -f -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: Bearer ${{ secrets.SALEOR_RELEASE_TOKEN }}" \
-            https://api.github.com/repos/saleor/saleor-cloud-deployments/dispatches \
+            https://api.github.com/repos/pint/pint-cloud-deployments/dispatches \
             -d "{\"event_type\":\"deploy-demo-staging\",\"client_payload\":{\"version\":\"$VERSION\"}}"

@@ -226,7 +226,7 @@ def assert_max_num_queries(capture_queries):
 
 @pytest.fixture
 def setup_vatlayer(settings, channel_USD):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     data = {
         "active": True,
         "channel": channel_USD,
@@ -241,8 +241,8 @@ def setup_vatlayer(settings, channel_USD):
 @pytest.fixture(autouse=True)
 def setup_dummy_gateways(settings):
     settings.PLUGINS = [
-        "saleor.payment.gateways.dummy.plugin.DummyGatewayPlugin",
-        "saleor.payment.gateways.dummy_credit_card.plugin.DummyCreditCardGatewayPlugin",
+        "pint.payment.gateways.dummy.plugin.DummyGatewayPlugin",
+        "pint.payment.gateways.dummy_credit_card.plugin.DummyCreditCardGatewayPlugin",
     ]
     return settings
 
@@ -250,7 +250,7 @@ def setup_dummy_gateways(settings):
 @pytest.fixture
 def sample_gateway(settings):
     settings.PLUGINS += [
-        "saleor.plugins.tests.sample_plugins.ActiveDummyPaymentGateway"
+        "pint.plugins.tests.sample_plugins.ActiveDummyPaymentGateway"
     ]
 
 
@@ -259,7 +259,7 @@ def site_settings(db, settings) -> SiteSettings:
     """Create a site and matching site settings.
 
     This fixture is autouse because django.contrib.sites.models.Site and
-    saleor.site.models.SiteSettings have a one-to-one relationship and a site
+    pint.site.models.SiteSettings have a one-to-one relationship and a site
     should never exist without a matching settings object.
     """
     site = Site.objects.get_or_create(name="mirumee.com", domain="mirumee.com")[0]
@@ -3232,7 +3232,7 @@ def voucher_with_many_channels(voucher, channel_PLN):
 @pytest.fixture
 def voucher_percentage(channel_USD):
     voucher = Voucher.objects.create(
-        code="saleor",
+        code="pint",
         discount_value_type=DiscountValueType.PERCENTAGE,
     )
     VoucherChannelListing.objects.create(
@@ -5342,7 +5342,7 @@ def description_json():
         ],
         "entityMap": {
             "0": {
-                "data": {"href": "https://github.com/mirumee/saleor"},
+                "data": {"href": "https://github.com/mirumee/pint"},
                 "type": "LINK",
                 "mutability": "MUTABLE",
             }
@@ -6066,7 +6066,7 @@ def app_manifest():
         "dataPrivacyUrl": "",
         "homepageUrl": "http://172.17.0.1:5000/homepageUrl",
         "supportUrl": "http://172.17.0.1:5000/supportUrl",
-        "id": "saleor-complex-sample",
+        "id": "pint-complex-sample",
         "permissions": ["MANAGE_PRODUCTS", "MANAGE_USERS"],
         "appUrl": "",
         "configurationUrl": "http://127.0.0.1:5000/configuration/",

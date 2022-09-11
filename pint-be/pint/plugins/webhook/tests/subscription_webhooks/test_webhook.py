@@ -16,8 +16,8 @@ class FakeDelivery:
     id = TEST_ID
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_async.delay")
-@mock.patch("saleor.plugins.webhook.tasks.create_deliveries_for_subscriptions")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_async.delay")
+@mock.patch("pint.plugins.webhook.tasks.create_deliveries_for_subscriptions")
 def test_trigger_webhooks_async_no_subscription_webhooks(
     mocked_create_deliveries_for_subscriptions,
     mocked_send_webhook_request,
@@ -31,7 +31,7 @@ def test_trigger_webhooks_async_no_subscription_webhooks(
     mocked_create_deliveries_for_subscriptions.assert_not_called()
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_trigger_webhook_sync_with_subscription(
     mock_request, payment_app_with_subscription_webhooks, payment
 ):

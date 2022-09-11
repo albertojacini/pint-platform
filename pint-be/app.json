@@ -1,17 +1,17 @@
 {
-  "name": "saleor",
+  "name": "pint-be",
   "description": "An e-commerce storefront for Python and Django",
-  "repository": "https://github.com/saleor/saleor",
-  "website": "https://saleor.io/",
+  "repository": "https://github.com/pint/pint",
+  "website": "https://pint.io/",
   "logo": "https://mirumee.com/img/opensource_saleor.jpg",
   "keywords": [
-    "saleor",
+    "pint",
     "e-commerce",
     "django"
   ],
   "image": "heroku/python",
   "env": {
-    "DJANGO_SETTINGS_MODULE": "saleor.settings",
+    "DJANGO_SETTINGS_MODULE": "pint.settings",
     "DEBUG": "True",
     "NPM_CONFIG_PRODUCTION": "false",
     "ALLOWED_HOSTS": {

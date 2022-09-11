@@ -47,7 +47,7 @@ def webhook_data():
     return WebhookTestData(secret, event_type, data, message)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_trigger_webhook_sync(mock_request, payment_app):
     data = '{"key": "value"}'
     trigger_webhook_sync(WebhookEventSyncType.PAYMENT_CAPTURE, data, payment_app)
@@ -55,8 +55,8 @@ def test_trigger_webhook_sync(mock_request, payment_app):
     mock_request.assert_called_once_with(payment_app.name, event_delivery)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.create_delivery_for_subscription_sync_event")
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.create_delivery_for_subscription_sync_event")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_trigger_webhook_sync_with_subscription(
     mock_request,
     mock_delivery_create,
@@ -73,7 +73,7 @@ def test_trigger_webhook_sync_with_subscription(
     mock_request.assert_called_once_with(payment_app.name, fake_delivery)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_trigger_webhook_sync_use_first_webhook(mock_request, payment_app):
     webhook_1 = payment_app.webhooks.first()
 
@@ -102,8 +102,8 @@ def test_trigger_webhook_sync_no_webhook_available():
         trigger_webhook_sync(WebhookEventSyncType.PAYMENT_REFUND, {}, app)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.observability.report_event_delivery_attempt")
-@mock.patch("saleor.plugins.webhook.tasks.requests.post")
+@mock.patch("pint.plugins.webhook.tasks.observability.report_event_delivery_attempt")
+@mock.patch("pint.plugins.webhook.tasks.requests.post")
 def test_send_webhook_request_sync_failed_attempt(
     mock_post, mock_observability, app, event_delivery
 ):
@@ -134,9 +134,9 @@ def test_send_webhook_request_sync_failed_attempt(
     mock_observability.assert_called_once_with(attempt)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.observability.report_event_delivery_attempt")
-@mock.patch("saleor.plugins.webhook.tasks.requests.post")
-@mock.patch("saleor.plugins.webhook.tasks.clear_successful_delivery")
+@mock.patch("pint.plugins.webhook.tasks.observability.report_event_delivery_attempt")
+@mock.patch("pint.plugins.webhook.tasks.requests.post")
+@mock.patch("pint.plugins.webhook.tasks.clear_successful_delivery")
 def test_send_webhook_request_sync_successful_attempt(
     mock_clear_delivery, mock_post, mock_observability, app, event_delivery
 ):
@@ -169,8 +169,8 @@ def test_send_webhook_request_sync_successful_attempt(
     mock_observability.assert_called_once_with(attempt)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.observability.report_event_delivery_attempt")
-@mock.patch("saleor.plugins.webhook.tasks.requests.post", side_effect=RequestException)
+@mock.patch("pint.plugins.webhook.tasks.observability.report_event_delivery_attempt")
+@mock.patch("pint.plugins.webhook.tasks.requests.post", side_effect=RequestException)
 def test_send_webhook_request_sync_request_exception(
     mock_post, mock_observability, app, event_delivery
 ):
@@ -201,8 +201,8 @@ def test_send_webhook_request_sync_request_exception(
     mock_observability.assert_called_once_with(attempt)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.observability.report_event_delivery_attempt")
-@mock.patch("saleor.plugins.webhook.tasks.requests.post")
+@mock.patch("pint.plugins.webhook.tasks.observability.report_event_delivery_attempt")
+@mock.patch("pint.plugins.webhook.tasks.requests.post")
 def test_send_webhook_request_sync_when_exception_with_response(
     mock_post, mock_observability, app, event_delivery
 ):
@@ -222,8 +222,8 @@ def test_send_webhook_request_sync_when_exception_with_response(
     mock_observability.assert_called_once_with(attempt)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.observability.report_event_delivery_attempt")
-@mock.patch("saleor.plugins.webhook.tasks.requests.post")
+@mock.patch("pint.plugins.webhook.tasks.observability.report_event_delivery_attempt")
+@mock.patch("pint.plugins.webhook.tasks.requests.post")
 def test_send_webhook_request_sync_json_parsing_error(
     mock_post, mock_observability, app, event_delivery
 ):
@@ -254,7 +254,7 @@ def test_send_webhook_request_sync_json_parsing_error(
     mock_observability.assert_called_once_with(attempt)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.requests.post")
+@mock.patch("pint.plugins.webhook.tasks.requests.post")
 def test_send_webhook_request_with_proper_timeout(mock_post, event_delivery, app):
     mock_post().text = '{"key": "response_text"}'
     mock_post().headers = {"header_key": "header_val"}
@@ -266,7 +266,7 @@ def test_send_webhook_request_with_proper_timeout(mock_post, event_delivery, app
 
 def test_send_webhook_request_sync_invalid_scheme(webhook, app):
     with pytest.raises(ValueError):
-        target_url = "gcpubsub://cloud.google.com/projects/saleor/topics/test"
+        target_url = "gcpubsub://cloud.google.com/projects/pint/topics/test"
         event_payload = EventPayload.objects.create(payload="fake_content")
         webhook.target_url = target_url
         webhook.save()
@@ -279,7 +279,7 @@ def test_send_webhook_request_sync_invalid_scheme(webhook, app):
         send_webhook_request_sync(app.name, delivery)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_get_payment_gateways(
     mock_send_request, payment_app, permission_manage_payments, webhook_plugin
 ):
@@ -321,7 +321,7 @@ def test_get_payment_gateways(
     assert response_data[1] == expected_response_2[0]
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_get_payment_gateways_filters_out_unsupported_currencies(
     mock_send_request, payment_app, webhook_plugin
 ):
@@ -339,8 +339,8 @@ def test_get_payment_gateways_filters_out_unsupported_currencies(
     assert response_data == []
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
-@mock.patch("saleor.plugins.webhook.plugin.generate_list_gateways_payload")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.plugin.generate_list_gateways_payload")
 def test_get_payment_gateways_for_checkout(
     mock_generate_payload, mock_send_request, checkout, payment_app, webhook_plugin
 ):
@@ -370,7 +370,7 @@ def test_get_payment_gateways_for_checkout(
         (TransactionKind.CAPTURE, "process_payment"),
     ),
 )
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_run_payment_webhook(
     mock_send_request,
     txn_kind,
@@ -432,7 +432,7 @@ def test_run_payment_webhook_inactive_plugin(payment, webhook_plugin):
     assert response == dummy_previous_value
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_run_payment_webhook_no_response(mock_send_request, payment, webhook_plugin):
     # Should raise and error when response data is None.
     mock_send_request.return_value = None
@@ -447,7 +447,7 @@ def test_run_payment_webhook_no_response(mock_send_request, payment, webhook_plu
         )
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_run_payment_webhook_empty_response(mock_send_request, payment, webhook_plugin):
     # Empty JSON response "{}"" is accepted; check that it doesn't fail.
     mock_send_request.return_value = {}

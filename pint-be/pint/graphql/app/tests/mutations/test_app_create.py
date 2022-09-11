@@ -72,8 +72,8 @@ def test_app_create_mutation(
 
 
 @freeze_time("2022-05-12 12:00:00")
-@mock.patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@mock.patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@mock.patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@mock.patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_app_create_trigger_webhook(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -86,7 +86,7 @@ def test_app_create_trigger_webhook(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     staff_user.user_permissions.add(permission_manage_products)
 

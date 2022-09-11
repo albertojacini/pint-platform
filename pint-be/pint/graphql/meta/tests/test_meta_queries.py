@@ -5,9 +5,9 @@ from django.contrib.auth.models import Permission
 from django.http import HttpResponse
 
 from pint.core.models import ModelWithMetadata
-from saleor.order.models import Order
-from saleor.payment.models import Payment
-from saleor.payment.utils import payment_owned_by_user
+from pint.order.models import Order
+from pint.payment.models import Payment
+from pint.payment.utils import payment_owned_by_user
 
 from ...tests.fixtures import ApiClient
 from ...tests.utils import assert_no_permission, get_graphql_content

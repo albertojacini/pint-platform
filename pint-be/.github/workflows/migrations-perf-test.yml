@@ -7,7 +7,7 @@ on:
 jobs:
   run:
     name: Run migrations performance test
-    if: ${{ (((github.event.action == 'labeled') && (github.event.label.name == 'migrations perf test')) || ((github.event.action == 'opened') && contains(github.event.pull_request.labels.*.name, 'migrations perf test')) && github.repository == 'saleor/saleor') }}
+    if: ${{ (((github.event.action == 'labeled') && (github.event.label.name == 'migrations perf test')) || ((github.event.action == 'opened') && contains(github.event.pull_request.labels.*.name, 'migrations perf test')) && github.repository == 'pint/pint') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,7 +19,7 @@ jobs:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          repo: saleor-testenvs
+          repo: pint-testenvs
           region: us-east-1
           tags: ${{ env.GITHUB_HEAD_REF_SLUG_URL }},${{ github.sha }}
 
@@ -38,7 +38,7 @@ jobs:
             {
               "action": "${{ github.event.action }}",
               "label": "${{ env.GITHUB_HEAD_REF_SLUG_URL }}",
-              "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/saleor-testenvs:${{ github.sha }}",
+              "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/pint-testenvs:${{ github.sha }}",
               "pr_id": "${{ env.PULL_ID }}",
               "commit_hash": "${{ github.sha }}"
             }
@@ -46,7 +46,7 @@ jobs:
 
   cleanup:
     name: Cleanup after migrations performance test
-    if: ${{ (((github.event.action == 'unlabeled') && (github.event.label.name == 'migrations perf test')) || ((github.event.action == 'closed') && contains(github.event.pull_request.labels.*.name, 'migrations perf test')) && github.repository == 'saleor/saleor') }}
+    if: ${{ (((github.event.action == 'unlabeled') && (github.event.label.name == 'migrations perf test')) || ((github.event.action == 'closed') && contains(github.event.pull_request.labels.*.name, 'migrations perf test')) && github.repository == 'pint/pint') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -67,7 +67,7 @@ jobs:
             {
               "action": "${{ github.event.action }}",
               "label": "${{ env.GITHUB_HEAD_REF_SLUG_URL }}",
-              "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/saleor-testenvs:${{ github.sha }}",
+              "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/pint-testenvs:${{ github.sha }}",
               "pr_id": "${{ env.PULL_ID }}",
               "commit_hash": "${{ github.sha }}"
             }

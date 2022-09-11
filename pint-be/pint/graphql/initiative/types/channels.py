@@ -80,7 +80,7 @@ class ProductChannelListing(ModelObjectType):
         description="Whether the product is available for purchase."
     )
     pricing = graphene.Field(
-        "saleor.graphql.product.types.products.ProductPricingInfo",
+        "pint.graphql.product.types.products.ProductPricingInfo",
         address=graphene.Argument(
             account_types.AddressInput,
             description=(

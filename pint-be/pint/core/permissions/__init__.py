@@ -88,7 +88,7 @@ def one_of_permissions_or_auth_filter_required(context, permissions):
     granted_by_authorization_filters = False
 
     # TODO: move this function from graphql to core
-    from saleor.graphql.utils import get_user_or_app_from_context
+    from pint.graphql.utils import get_user_or_app_from_context
 
     requestor = get_user_or_app_from_context(context)
 

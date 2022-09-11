@@ -82,8 +82,8 @@ def test_delete_categories(staff_api_client, category_list, permission_manage_pr
     ).exists()
 
 
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_delete_categories_trigger_webhook(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -95,7 +95,7 @@ def test_delete_categories_trigger_webhook(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     variables = {
         "ids": [
@@ -160,7 +160,7 @@ def test_delete_categories_with_images(
     assert not Thumbnail.objects.all()
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_delete_categories_trigger_product_updated_webhook(
     product_updated_mock,
     staff_api_client,
@@ -198,7 +198,7 @@ def test_delete_categories_trigger_product_updated_webhook(
     assert product_updated_mock.call_count == 2
 
 
-@patch("saleor.product.utils.update_products_discounted_prices_task")
+@patch("pint.product.utils.update_products_discounted_prices_task")
 def test_delete_categories_with_subcategories_and_products(
     mock_update_products_discounted_prices_task,
     staff_api_client,
@@ -348,7 +348,7 @@ def test_delete_collections_with_images(
     assert not Thumbnail.objects.all()
 
 
-@patch("saleor.plugins.manager.PluginsManager.collection_deleted")
+@patch("pint.plugins.manager.PluginsManager.collection_deleted")
 def test_delete_collections_trigger_collection_deleted_webhook(
     collection_deleted_mock,
     staff_api_client,
@@ -375,7 +375,7 @@ def test_delete_collections_trigger_collection_deleted_webhook(
     assert len(collection_list) == collection_deleted_mock.call_count
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_delete_collections_trigger_product_updated_webhook(
     product_updated_mock,
     staff_api_client,
@@ -418,7 +418,7 @@ mutation productBulkDelete($ids: [ID!]!) {
 """
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_products(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -521,8 +521,8 @@ def test_delete_products_invalid_object_typed_of_given_ids(
     assert data["count"] == 0
 
 
-@patch("saleor.product.signals.delete_from_storage_task.delay")
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.product.signals.delete_from_storage_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_products_with_images(
     mocked_recalculate_orders_task,
     delete_from_storage_task_mock,
@@ -557,9 +557,9 @@ def test_delete_products_with_images(
     mocked_recalculate_orders_task.assert_not_called()
 
 
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_products_trigger_webhook(
     mocked_recalculate_orders_task,
     mocked_webhook_trigger,
@@ -573,7 +573,7 @@ def test_delete_products_trigger_webhook(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     query = DELETE_PRODUCTS_MUTATION
     variables = {
@@ -592,8 +592,8 @@ def test_delete_products_trigger_webhook(
     mocked_recalculate_orders_task.assert_not_called()
 
 
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_delete_products_without_variants(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -606,7 +606,7 @@ def test_delete_products_without_variants(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     for product in product_list:
         product.variants.all().delete()
@@ -661,7 +661,7 @@ def test_delete_products_removes_checkout_lines(
     assert old_quantity == calculate_checkout_quantity(lines) + 3
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_products_with_file_attributes(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -699,7 +699,7 @@ def test_delete_products_with_file_attributes(
             value.refresh_from_db()
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_products_variants_in_draft_order(
     mocked_recalculate_orders_task,
     draft_order,
@@ -886,8 +886,8 @@ mutation productVariantBulkDelete($ids: [ID!]!) {
 """
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_variant_deleted")
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.plugins.manager.PluginsManager.product_variant_deleted")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_variants(
     mocked_recalculate_orders_task,
     product_variant_deleted_webhook_mock,
@@ -996,9 +996,9 @@ def test_delete_product_variants_removes_checkout_lines(
     assert old_quantity == calculate_checkout_quantity(lines) + 2
 
 
-@patch("saleor.product.signals.delete_from_storage_task")
-@patch("saleor.plugins.manager.PluginsManager.product_variant_deleted")
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.product.signals.delete_from_storage_task")
+@patch("pint.plugins.manager.PluginsManager.product_variant_deleted")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_variants_with_images(
     mocked_recalculate_orders_task,
     product_variant_deleted_webhook_mock,
@@ -1172,8 +1172,8 @@ def test_product_delete_removes_reference_to_page(
     assert not data["errors"]
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_variant_deleted")
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.plugins.manager.PluginsManager.product_variant_deleted")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_variants_with_file_attribute(
     mocked_recalculate_orders_task,
     product_variant_deleted_webhook_mock,
@@ -1221,7 +1221,7 @@ def test_delete_product_variants_with_file_attribute(
             value.refresh_from_db()
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_variants_in_draft_orders(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -1338,7 +1338,7 @@ def test_delete_product_variants_in_draft_orders(
         assert param in event.parameters
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_variants_delete_default_variant(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -1389,7 +1389,7 @@ def test_delete_product_variants_delete_default_variant(
     mocked_recalculate_orders_task.assert_not_called()
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_variants_delete_all_product_variants(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -1439,7 +1439,7 @@ def test_delete_product_variants_delete_all_product_variants(
     mocked_recalculate_orders_task.assert_not_called()
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_variants_from_different_products(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -1491,7 +1491,7 @@ def test_delete_product_variants_from_different_products(
     mocked_recalculate_orders_task.assert_not_called()
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_variants_delete_product_channel_listing_without_available_channel(
     mocked_recalculate_orders_task,
     staff_api_client,

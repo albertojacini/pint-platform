@@ -67,10 +67,10 @@ CHECKOUT_QUERY_SHIPPING_METHOD = """
 """
 
 
-@mock.patch("saleor.plugins.webhook.shipping.cache.set")
-@mock.patch("saleor.plugins.webhook.shipping.trigger_webhook_sync")
+@mock.patch("pint.plugins.webhook.shipping.cache.set")
+@mock.patch("pint.plugins.webhook.shipping.trigger_webhook_sync")
 @mock.patch(
-    "saleor.plugins.webhook.plugin.generate_excluded_shipping_methods_for_order_payload"
+    "pint.plugins.webhook.plugin.generate_excluded_shipping_methods_for_order_payload"
 )
 def test_excluded_shipping_methods_for_order(
     mocked_payload,
@@ -133,10 +133,10 @@ def test_excluded_shipping_methods_for_order(
     )
 
 
-@mock.patch("saleor.plugins.webhook.shipping.cache.set")
-@mock.patch("saleor.plugins.webhook.shipping.trigger_webhook_sync")
+@mock.patch("pint.plugins.webhook.shipping.cache.set")
+@mock.patch("pint.plugins.webhook.shipping.trigger_webhook_sync")
 @mock.patch(
-    "saleor.plugins.webhook.plugin.generate_excluded_shipping_methods_for_order_payload"
+    "pint.plugins.webhook.plugin.generate_excluded_shipping_methods_for_order_payload"
 )
 def test_multiple_app_with_excluded_shipping_methods_for_order(
     mocked_payload,
@@ -255,7 +255,7 @@ def test_parse_excluded_shipping_methods_response(app):
 
 
 @mock.patch(
-    "saleor.plugins.webhook.plugin.WebhookPlugin.excluded_shipping_methods_for_order"
+    "pint.plugins.webhook.plugin.WebhookPlugin.excluded_shipping_methods_for_order"
 )
 def test_order_shipping_methods(
     mocked_webhook,
@@ -265,7 +265,7 @@ def test_order_shipping_methods(
     settings,
 ):
     # given
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
     webhook_reason = "spanish-inquisition"
     excluded_shipping_method_id = order_with_lines.shipping_method.id
     mocked_webhook.return_value = [
@@ -289,7 +289,7 @@ def test_order_shipping_methods(
     [(lambda s: [ExcludedShippingMethod(s.id, "")], 0), (lambda s: [], 1)],
 )
 @mock.patch(
-    "saleor.plugins.webhook.plugin.WebhookPlugin.excluded_shipping_methods_for_order"
+    "pint.plugins.webhook.plugin.WebhookPlugin.excluded_shipping_methods_for_order"
 )
 def test_order_available_shipping_methods(
     mocked_webhook,
@@ -301,7 +301,7 @@ def test_order_available_shipping_methods(
     expected_count,
 ):
     # given
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
     mocked_webhook.side_effect = lambda *args, **kwargs: webhook_response(
         order_with_lines.shipping_method
     )
@@ -316,7 +316,7 @@ def test_order_available_shipping_methods(
 
 
 @mock.patch(
-    "saleor.plugins.webhook.plugin.WebhookPlugin.excluded_shipping_methods_for_checkout"
+    "pint.plugins.webhook.plugin.WebhookPlugin.excluded_shipping_methods_for_checkout"
 )
 def test_checkout_shipping_methods(
     mocked_webhook,
@@ -326,7 +326,7 @@ def test_checkout_shipping_methods(
     settings,
 ):
     # given
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
     webhook_reason = "spanish-inquisition"
     excluded_shipping_method_id = checkout_ready_to_complete.shipping_method.id
     mocked_webhook.return_value = [
@@ -354,7 +354,7 @@ def test_checkout_shipping_methods(
 
 
 @mock.patch(
-    "saleor.plugins.manager.PluginsManager.excluded_shipping_methods_for_checkout"
+    "pint.plugins.manager.PluginsManager.excluded_shipping_methods_for_checkout"
 )
 def test_checkout_available_shipping_methods(
     mocked_webhook,
@@ -364,7 +364,7 @@ def test_checkout_available_shipping_methods(
     settings,
 ):
     # given
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
     webhook_reason = "spanish-inquisition"
 
     excluded_shipping_method_id = checkout_ready_to_complete.shipping_method.id
@@ -385,7 +385,7 @@ def test_checkout_available_shipping_methods(
 
 
 @mock.patch(
-    "saleor.plugins.manager.PluginsManager.excluded_shipping_methods_for_checkout"
+    "pint.plugins.manager.PluginsManager.excluded_shipping_methods_for_checkout"
 )
 def test_checkout_shipping_methods_webhook_called_once(
     mocked_webhook,
@@ -405,7 +405,7 @@ def test_checkout_shipping_methods_webhook_called_once(
     assert len(checkout_data["shippingMethods"]) == 2
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_trigger_webhook_sync(mock_request, shipping_app):
     data = '{"key": "value"}'
     trigger_webhook_sync(
@@ -415,10 +415,10 @@ def test_trigger_webhook_sync(mock_request, shipping_app):
     mock_request.assert_called_once_with(shipping_app.name, event_delivery)
 
 
-@mock.patch("saleor.plugins.webhook.shipping.cache.set")
-@mock.patch("saleor.plugins.webhook.shipping.trigger_webhook_sync")
+@mock.patch("pint.plugins.webhook.shipping.cache.set")
+@mock.patch("pint.plugins.webhook.shipping.trigger_webhook_sync")
 @mock.patch(
-    "saleor.plugins.webhook.plugin."
+    "pint.plugins.webhook.plugin."
     "generate_excluded_shipping_methods_for_checkout_payload"
 )
 def test_excluded_shipping_methods_for_checkout(
@@ -482,10 +482,10 @@ def test_excluded_shipping_methods_for_checkout(
     )
 
 
-@mock.patch("saleor.plugins.webhook.shipping.cache.set")
-@mock.patch("saleor.plugins.webhook.shipping.trigger_webhook_sync")
+@mock.patch("pint.plugins.webhook.shipping.cache.set")
+@mock.patch("pint.plugins.webhook.shipping.trigger_webhook_sync")
 @mock.patch(
-    "saleor.plugins.webhook.plugin."
+    "pint.plugins.webhook.plugin."
     "generate_excluded_shipping_methods_for_checkout_payload"
 )
 def test_multiple_app_with_excluded_shipping_methods_for_checkout(

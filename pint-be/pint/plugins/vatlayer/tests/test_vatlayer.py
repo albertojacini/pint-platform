@@ -184,7 +184,7 @@ def test_apply_tax_to_price_no_taxes_raise_typeerror_for_invalid_type():
         assert apply_tax_to_price(None, "standard", 100)
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_assign_tax_code_to_object_meta(vatlayer, product):
     # given
     manager = get_plugins_manager()
@@ -200,7 +200,7 @@ def test_assign_tax_code_to_object_meta(vatlayer, product):
     }
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_assign_tax_code_to_object_meta_none_as_tax_code(vatlayer, product):
     # given
     manager = get_plugins_manager()
@@ -213,7 +213,7 @@ def test_assign_tax_code_to_object_meta_none_as_tax_code(vatlayer, product):
     assert product.metadata == {}
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_assign_tax_code_to_object_meta_no_obj_id_and_none_as_tax_code(vatlayer):
     # given
     manager = get_plugins_manager()
@@ -227,7 +227,7 @@ def test_assign_tax_code_to_object_meta_no_obj_id_and_none_as_tax_code(vatlayer)
     assert product.metadata == {}
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_assign_tax_code_to_object_meta_no_obj_id(vatlayer):
     # given
     manager = get_plugins_manager()
@@ -253,7 +253,7 @@ def test_assign_tax_code_to_object_meta_no_obj_id(vatlayer):
         (False, "30.09", "37.00", "3.0", True),
     ],
 )
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_total(
     site_settings,
     vatlayer,
@@ -308,7 +308,7 @@ def test_calculate_checkout_total(
         (False, "30.08", "37.00", "3.0", True),
     ],
 )
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_total_shipping_voucher(
     site_settings,
     vatlayer,
@@ -434,7 +434,7 @@ def test_calculate_checkout_total_with_excluded_country(
         (False, "50.00", "61.50", False),
     ],
 )
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_subtotal(
     site_settings,
     vatlayer,
@@ -548,7 +548,7 @@ def test_calculate_checkout_subtotal_with_excluded_country(
     assert total == TaxedMoney(net=Money("15.00", "USD"), gross=Money("15.00", "USD"))
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_order_shipping(vatlayer, order_line, shipping_zone, site_settings):
     manager = get_plugins_manager()
     order = order_line.order
@@ -606,7 +606,7 @@ def test_calculate_order_shipping_with_excluded_country(
     assert price == TaxedMoney(net=Money("10.00", "USD"), gross=Money("10.00", "USD"))
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_order_shipping_for_order_without_shipping(
     vatlayer, order_line, shipping_zone, site_settings
 ):
@@ -618,7 +618,7 @@ def test_calculate_order_shipping_for_order_without_shipping(
     assert price == zero_taxed_money(order.currency)
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_order_shipping_voucher_on_shipping(
     vatlayer, order_line, shipping_zone, voucher_shipping_type
 ):
@@ -660,7 +660,7 @@ def test_calculate_order_shipping_voucher_on_shipping(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_order_shipping_free_shipping_voucher(
     vatlayer, order_line, shipping_zone, voucher_shipping_type
 ):
@@ -696,7 +696,7 @@ def test_calculate_order_shipping_free_shipping_voucher(
     assert price == zero_taxed_money(currency)
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_line_total(
     vatlayer, checkout_with_item, shipping_zone, address, site_settings
 ):
@@ -734,7 +734,7 @@ def test_calculate_checkout_line_total(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_line_total_voucher_on_entire_order(
     vatlayer, checkout_with_item, shipping_zone, address, voucher
 ):
@@ -864,7 +864,7 @@ def test_calculate_checkout_line_total_with_excluded_country(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_update_taxes_for_order_lines(vatlayer, order_with_lines):
     # given
     currency = order_with_lines.currency
@@ -892,7 +892,7 @@ def test_update_taxes_for_order_lines(vatlayer, order_with_lines):
         assert line.tax_rate == Decimal("0.23")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_update_taxes_for_order_lines_voucher_on_entire_order(
     vatlayer, order_with_lines, voucher
 ):
@@ -958,7 +958,7 @@ def test_update_taxes_for_order_lines_voucher_on_entire_order(
         )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_update_taxes_for_order_lines_voucher_on_shipping(
     vatlayer, order_with_lines, voucher_shipping_type
 ):
@@ -1012,7 +1012,7 @@ def test_update_taxes_for_order_lines_voucher_on_shipping(
         assert line.tax_rate == Decimal("0.23")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_line_unit_price(
     vatlayer, checkout_with_item, shipping_zone, address, site_settings
 ):
@@ -1048,7 +1048,7 @@ def test_calculate_checkout_line_unit_price(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_line_unit_price_with_voucher_one_line(
     vatlayer, checkout_with_item, shipping_zone, address, voucher, site_settings
 ):
@@ -1096,7 +1096,7 @@ def test_calculate_checkout_line_unit_price_with_voucher_one_line(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_line_unit_price_with_voucher_multiple_lines(
     vatlayer, checkout_with_item, shipping_zone, address, voucher, product_list
 ):
@@ -1161,7 +1161,7 @@ def test_calculate_checkout_line_unit_price_with_voucher_multiple_lines(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_line_unit_price_with_voucher_multiple_lines_last_line(
     vatlayer, checkout_with_item, shipping_zone, address, voucher, product_list
 ):
@@ -1231,7 +1231,7 @@ def test_calculate_checkout_line_unit_price_with_voucher_multiple_lines_last_lin
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_line_unit_price_with_shipping_voucher(
     vatlayer,
     checkout_with_item,
@@ -1281,7 +1281,7 @@ def test_calculate_checkout_line_unit_price_with_shipping_voucher(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_tax_rate_percentage_value(
     vatlayer, order_line, shipping_zone, site_settings, product
 ):
@@ -1318,7 +1318,7 @@ def test_get_tax_rate_percentage_value_with_excluded_country(
 
 
 def test_save_plugin_configuration(vatlayer, settings, channel_USD):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     manager = get_plugins_manager()
     manager.save_plugin_configuration(
         VatlayerPlugin.PLUGIN_ID, channel_USD.slug, {"active": False}
@@ -1331,7 +1331,7 @@ def test_save_plugin_configuration(vatlayer, settings, channel_USD):
 def test_save_plugin_configuration_cannot_be_enabled_without_config(
     settings, channel_USD
 ):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     manager = get_plugins_manager()
     with pytest.raises(ValidationError):
         manager.save_plugin_configuration(
@@ -1342,7 +1342,7 @@ def test_save_plugin_configuration_cannot_be_enabled_without_config(
 
 
 def test_show_taxes_on_storefront(vatlayer, settings):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     manager = get_plugins_manager()
     assert manager.show_taxes_on_storefront() is True
 
@@ -1354,10 +1354,10 @@ def test_get_tax_rate_type_choices(vatlayer, settings, monkeypatch):
         "admission to entertainment events",
     ]
     monkeypatch.setattr(
-        "saleor.plugins.vatlayer.plugin.get_tax_rate_types",
+        "pint.plugins.vatlayer.plugin.get_tax_rate_types",
         lambda: expected_choices,
     )
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     manager = get_plugins_manager()
     choices = manager.get_tax_rate_type_choices()
 
@@ -1372,7 +1372,7 @@ def test_get_tax_rate_type_choices(vatlayer, settings, monkeypatch):
 def test_apply_taxes_to_product(
     vatlayer, settings, variant, discount_info, channel_USD
 ):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     country = Country("PL")
     manager = get_plugins_manager()
     variant.product.metadata = {
@@ -1448,7 +1448,7 @@ def test_apply_taxes_to_product_with_excluded_country(
 def test_apply_taxes_to_product_uses_taxes_from_product_type(
     vatlayer, settings, variant, discount_info, channel_USD
 ):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     country = Country("PL")
     manager = get_plugins_manager()
     product = variant.product
@@ -1472,7 +1472,7 @@ def test_apply_taxes_to_product_uses_taxes_from_product_type(
 def test_calculations_checkout_total_with_vatlayer(
     vatlayer, settings, checkout_with_item
 ):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     manager = get_plugins_manager()
     lines, _ = fetch_checkout_lines(checkout_with_item)
     checkout_info = fetch_checkout_info(checkout_with_item, lines, [], manager)
@@ -1490,7 +1490,7 @@ def test_calculations_checkout_total_with_vatlayer(
 def test_calculations_checkout_subtotal_with_vatlayer(
     vatlayer, settings, checkout_with_item
 ):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     manager = get_plugins_manager()
     lines, _ = fetch_checkout_lines(checkout_with_item)
     checkout_info = fetch_checkout_info(checkout_with_item, lines, [], manager)
@@ -1508,7 +1508,7 @@ def test_calculations_checkout_subtotal_with_vatlayer(
 def test_calculations_checkout_shipping_price_with_vatlayer(
     vatlayer, settings, checkout_with_item
 ):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     manager = get_plugins_manager()
     lines, _ = fetch_checkout_lines(checkout_with_item)
     checkout_info = fetch_checkout_info(checkout_with_item, lines, [], manager)
@@ -1524,7 +1524,7 @@ def test_calculations_checkout_shipping_price_with_vatlayer(
 
 
 def test_skip_diabled_plugin(settings, channel_USD):
-    settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+    settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
     manager = get_plugins_manager()
     plugin: VatlayerPlugin = manager.get_plugin(
         VatlayerPlugin.PLUGIN_ID, channel_USD.slug
@@ -1538,7 +1538,7 @@ def test_skip_diabled_plugin(settings, channel_USD):
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_checkout_line_tax_rate(
     site_settings,
     vatlayer,
@@ -1656,7 +1656,7 @@ def test_get_checkout_line_tax_rate_with_excluded_country(
     assert tax_rate == Decimal("0")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_checkout_line_tax_rate_order_not_valid(
     site_settings,
     vatlayer,
@@ -1759,7 +1759,7 @@ def test_get_order_line_tax_rate_with_excluded_country(
     assert tax_rate == Decimal("0")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_order_line_tax_rate(
     site_settings,
     vatlayer,
@@ -1792,7 +1792,7 @@ def test_get_order_line_tax_rate(
     assert tax_rate == Decimal("0.230")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_order_line_tax_rate_order_no_address_given(
     site_settings,
     order_line,
@@ -1816,7 +1816,7 @@ def test_get_order_line_tax_rate_order_no_address_given(
     assert tax_rate == Decimal("0.25")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_checkout_shipping_tax_rate(
     site_settings,
     vatlayer,
@@ -1931,7 +1931,7 @@ def test_get_checkout_shipping_tax_rate_with_excluded_country(
     assert tax_rate == Decimal("0")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_checkout_shipping_tax_rate_no_address(
     site_settings,
     vatlayer,
@@ -1962,13 +1962,13 @@ def test_get_checkout_shipping_tax_rate_no_address(
     assert tax_rate == Decimal("0.25")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_checkout_shipping_tax_rate_skip_plugin(
     site_settings, vatlayer, checkout_with_item, monkeypatch, address, shipping_zone
 ):
     manager = get_plugins_manager()
     monkeypatch.setattr(
-        "saleor.plugins.vatlayer.plugin.VatlayerPlugin._skip_plugin",
+        "pint.plugins.vatlayer.plugin.VatlayerPlugin._skip_plugin",
         lambda *_: True,
     )
 
@@ -2000,7 +2000,7 @@ def test_get_checkout_shipping_tax_rate_skip_plugin(
     assert tax_rate == Decimal("0.25")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_order_shipping_tax_rate(
     site_settings,
     vatlayer,
@@ -2097,7 +2097,7 @@ def test_get_order_shipping_tax_rate_with_excluded_country(
     assert tax_rate == Decimal("0")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_order_shipping_tax_rate_no_address_given(
     site_settings,
     order_line,
@@ -2123,13 +2123,13 @@ def test_get_order_shipping_tax_rate_no_address_given(
     assert tax_rate == Decimal("0.25")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_get_order_shipping_tax_rate_skip_plugin(
     site_settings, order_line, vatlayer, monkeypatch
 ):
     manager = get_plugins_manager()
     monkeypatch.setattr(
-        "saleor.plugins.vatlayer.plugin.VatlayerPlugin._skip_plugin",
+        "pint.plugins.vatlayer.plugin.VatlayerPlugin._skip_plugin",
         lambda *_: True,
     )
     order = order_line.order
@@ -2147,7 +2147,7 @@ def test_get_order_shipping_tax_rate_skip_plugin(
     assert tax_rate == Decimal("0.25")
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_shipping(
     checkout_with_item,
     shipping_zone,
@@ -2174,7 +2174,7 @@ def test_calculate_checkout_shipping(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_shipping_no_shipping_price(
     checkout_with_item,
     discount_info,
@@ -2201,7 +2201,7 @@ def test_calculate_checkout_shipping_no_shipping_price(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_shipping_voucher_on_shipping(
     checkout_with_item,
     shipping_zone,
@@ -2244,7 +2244,7 @@ def test_calculate_checkout_shipping_voucher_on_shipping(
     )
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_shipping_free_shipping_voucher(
     checkout_with_item,
     shipping_zone,
@@ -2281,7 +2281,7 @@ def test_calculate_checkout_shipping_free_shipping_voucher(
     assert shipping_price == zero_taxed_money(checkout_with_item.currency)
 
 
-@override_settings(PLUGINS=["saleor.plugins.vatlayer.plugin.VatlayerPlugin"])
+@override_settings(PLUGINS=["pint.plugins.vatlayer.plugin.VatlayerPlugin"])
 def test_calculate_checkout_shipping_free_entire_order_voucher(
     checkout_with_item,
     shipping_zone,

@@ -17,7 +17,7 @@ CUSTOMER_BULK_DELETE_MUTATION = """
 """
 
 
-@patch("saleor.graphql.account.utils.account_events.customer_deleted_event")
+@patch("pint.graphql.account.utils.account_events.customer_deleted_event")
 def test_delete_customers(
     mocked_deletion_event,
     staff_api_client,
@@ -58,8 +58,8 @@ def test_delete_customers(
     )
 
 
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_delete_customers_trigger_webhooks(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -72,7 +72,7 @@ def test_delete_customers_trigger_webhooks(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     variables = {
         "ids": [graphene.Node.to_global_id("User", user.id) for user in user_list]
@@ -89,7 +89,7 @@ def test_delete_customers_trigger_webhooks(
     assert mocked_webhook_trigger.call_count == 2
 
 
-@patch("saleor.graphql.account.utils.account_events.customer_deleted_event")
+@patch("pint.graphql.account.utils.account_events.customer_deleted_event")
 def test_delete_customers_by_app(
     mocked_deletion_event,
     app_api_client,
@@ -173,8 +173,8 @@ def test_delete_staff_members(
     assert User.objects.filter(id__in=[user.id for user in users]).count() == len(users)
 
 
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_delete_staff_members_trigger_webhook(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -187,7 +187,7 @@ def test_delete_staff_members_trigger_webhook(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     *users, staff_1, staff_2 = user_list
     users.append(superuser)

@@ -1391,7 +1391,7 @@ def test_product_query_error_when_id_and_slug_provided(
     }
     response = user_api_client.post_graphql(QUERY_PRODUCT, variables=variables)
     assert graphql_log_handler.messages == [
-        "saleor.graphql.errors.handled[INFO].GraphQLError"
+        "pint.graphql.errors.handled[INFO].GraphQLError"
     ]
     content = get_graphql_content(response, ignore_errors=True)
     assert len(content["errors"]) == 1
@@ -1405,7 +1405,7 @@ def test_product_query_error_when_no_param(
     variables = {}
     response = user_api_client.post_graphql(QUERY_PRODUCT, variables=variables)
     assert graphql_log_handler.messages == [
-        "saleor.graphql.errors.handled[INFO].GraphQLError"
+        "pint.graphql.errors.handled[INFO].GraphQLError"
     ]
     content = get_graphql_content(response, ignore_errors=True)
     assert len(content["errors"]) == 1
@@ -4600,8 +4600,8 @@ CREATE_PRODUCT_MUTATION = """
 """
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
-@patch("saleor.plugins.manager.PluginsManager.product_created")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_created")
 def test_create_product(
     created_webhook_mock,
     updated_webhook_mock,
@@ -6984,7 +6984,7 @@ def test_product_create_with_collections_webhook(
         assert product.collections.first() == published_collection
 
     monkeypatch.setattr(
-        "saleor.plugins.manager.PluginsManager.product_created",
+        "pint.plugins.manager.PluginsManager.product_created",
         lambda _, product: assert_product_has_collections(product),
     )
 
@@ -7084,8 +7084,8 @@ MUTATION_UPDATE_PRODUCT = """
 """
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
-@patch("saleor.plugins.manager.PluginsManager.product_created")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_created")
 def test_update_product(
     created_webhook_mock,
     updated_webhook_mock,
@@ -7239,7 +7239,7 @@ def test_update_product_without_description_clear_description_plaintext(
     assert product.description_plaintext == ""
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_boolean_attribute_value(
     updated_webhook_mock,
     staff_api_client,
@@ -7293,7 +7293,7 @@ def test_update_product_with_boolean_attribute_value(
     updated_webhook_mock.assert_called_once_with(product)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_file_attribute_value(
     updated_webhook_mock,
     staff_api_client,
@@ -7352,7 +7352,7 @@ def test_update_product_with_file_attribute_value(
     updated_webhook_mock.assert_called_once_with(product)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_file_attribute_value_new_value_is_not_created(
     updated_webhook_mock,
     staff_api_client,
@@ -7420,7 +7420,7 @@ def test_update_product_with_file_attribute_value_new_value_is_not_created(
     updated_webhook_mock.assert_called_once_with(product)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_numeric_attribute_value(
     updated_webhook_mock,
     staff_api_client,
@@ -7476,7 +7476,7 @@ def test_update_product_with_numeric_attribute_value(
     updated_webhook_mock.assert_called_once_with(product)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_numeric_attribute_value_new_value_is_not_created(
     updated_webhook_mock,
     staff_api_client,
@@ -7541,7 +7541,7 @@ def test_update_product_with_numeric_attribute_value_new_value_is_not_created(
     assert value.name == new_value
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_clear_attribute_values(
     updated_webhook_mock,
     staff_api_client,
@@ -7678,7 +7678,7 @@ def test_update_product_clean_file_attribute_value(
     assert product_attr.values.count() == 0
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_none_as_attribute_values(
     updated_webhook_mock,
     staff_api_client,
@@ -7723,7 +7723,7 @@ def test_update_product_none_as_attribute_values(
     updated_webhook_mock.assert_called_once_with(product)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_plain_text_attribute_value(
     updated_webhook_mock,
     staff_api_client,
@@ -7778,7 +7778,7 @@ def test_update_product_with_plain_text_attribute_value(
     updated_webhook_mock.assert_called_once_with(product)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_plain_text_attribute_value_required(
     updated_webhook_mock,
     staff_api_client,
@@ -7837,7 +7837,7 @@ def test_update_product_with_plain_text_attribute_value_required(
 
 
 @pytest.mark.parametrize("value", ["", "  ", None])
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_plain_text_attribute_value_required_no_value_given(
     updated_webhook_mock,
     value,
@@ -7903,7 +7903,7 @@ def test_update_product_rating(
     assert product.rating == expected_rating
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_page_reference_attribute_value(
     updated_webhook_mock,
     staff_api_client,
@@ -8062,7 +8062,7 @@ def test_update_product_with_empty_input_collections(
     assert product_errors["code"] == ProductErrorCode.GRAPHQL_ERROR.name
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_page_reference_attribute_existing_value(
     updated_webhook_mock,
     staff_api_client,
@@ -8138,7 +8138,7 @@ def test_update_product_with_page_reference_attribute_existing_value(
     assert product_type_page_reference_attribute.values.count() == values_count
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_page_reference_attribute_value_not_given(
     updated_webhook_mock,
     staff_api_client,
@@ -8183,7 +8183,7 @@ def test_update_product_with_page_reference_attribute_value_not_given(
     updated_webhook_mock.assert_not_called()
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_product_reference_attribute_value(
     updated_webhook_mock,
     staff_api_client,
@@ -8251,7 +8251,7 @@ def test_update_product_with_product_reference_attribute_value(
     assert product_type_product_reference_attribute.values.count() == values_count + 1
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_product_reference_attribute_existing_value(
     updated_webhook_mock,
     staff_api_client,
@@ -8328,7 +8328,7 @@ def test_update_product_with_product_reference_attribute_existing_value(
     assert product_type_product_reference_attribute.values.count() == values_count
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_with_product_reference_attribute_value_not_given(
     updated_webhook_mock,
     staff_api_client,
@@ -8373,7 +8373,7 @@ def test_update_product_with_product_reference_attribute_value_not_given(
     updated_webhook_mock.assert_not_called()
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_update_product_change_values_ordering(
     updated_webhook_mock,
     staff_api_client,
@@ -8883,7 +8883,7 @@ DELETE_PRODUCT_MUTATION = """
 """
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -8905,8 +8905,8 @@ def test_delete_product(
     mocked_recalculate_orders_task.assert_not_called()
 
 
-@patch("saleor.product.signals.delete_from_storage_task.delay")
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.product.signals.delete_from_storage_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_with_image(
     mocked_recalculate_orders_task,
     delete_from_storage_task_mock,
@@ -8953,9 +8953,9 @@ def test_delete_product_with_image(
 
 
 @freeze_time("1914-06-28 10:50")
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_trigger_webhook(
     mocked_recalculate_orders_task,
     mocked_webhook_trigger,
@@ -8967,7 +8967,7 @@ def test_delete_product_trigger_webhook(
     settings,
 ):
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     query = DELETE_PRODUCT_MUTATION
     node_id = graphene.Node.to_global_id("Product", product.id)
@@ -8995,7 +8995,7 @@ def test_delete_product_trigger_webhook(
     mocked_recalculate_orders_task.assert_not_called()
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_with_file_attribute(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -9056,7 +9056,7 @@ def test_delete_product_removes_checkout_lines(
     assert node_id == data["product"]["id"]
 
 
-@patch("saleor.order.tasks.recalculate_orders_task.delay")
+@patch("pint.order.tasks.recalculate_orders_task.delay")
 def test_delete_product_variant_in_draft_order(
     mocked_recalculate_orders_task,
     staff_api_client,
@@ -9641,7 +9641,7 @@ PRODUCT_MEDIA_CREATE_QUERY = """
     """
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_product_media_create_mutation(
     product_updated_mock,
     monkeypatch,
@@ -9834,7 +9834,7 @@ def test_invalid_product_media_create_mutation(
     assert product.media.count() == 0
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_product_image_update_mutation(
     product_updated_mock,
     monkeypatch,
@@ -9867,8 +9867,8 @@ def test_product_image_update_mutation(
     product_updated_mock.assert_called_once_with(product_with_image)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
-@patch("saleor.product.signals.delete_from_storage_task.delay")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
+@patch("pint.product.signals.delete_from_storage_task.delay")
 def test_product_media_delete(
     delete_from_storage_task_mock,
     product_updated_mock,
@@ -9920,7 +9920,7 @@ PRODUCT_MEDIA_REORDER = """
 """
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_reorder_media(
     product_updated_mock,
     staff_api_client,
@@ -10006,7 +10006,7 @@ def test_reorder_not_existing_media(
             media.delete()
 
     with before_after.before(
-        "saleor.graphql.product.mutations.products.update_ordered_media", delete_media
+        "pint.graphql.product.mutations.products.update_ordered_media", delete_media
     ):
         variables = {"product_id": product_id, "media_ids": [media_1_id, media_0_id]}
         response = staff_api_client.post_graphql(
@@ -10159,7 +10159,7 @@ def test_unassign_not_assigned_variant_media_image(
     assert content["data"]["variantMediaUnassign"]["errors"][0]["field"] == ("mediaId")
 
 
-@patch("saleor.product.tasks._update_variants_names")
+@patch("pint.product.tasks._update_variants_names")
 def test_product_update_variants_names(mock__update_variants_names, product_type):
     variant_attributes = [product_type.variant_attributes.first()]
     variant_attr_ids = [attr.pk for attr in variant_attributes]
@@ -10864,7 +10864,7 @@ QUERY_GET_PRODUCT_VARIANTS_PRICING_NO_ADDRESS = """
 
 
 @patch(
-    "saleor.graphql.product.types.products.get_variant_availability",
+    "pint.graphql.product.types.products.get_variant_availability",
     wraps=get_variant_availability,
 )
 def test_product_variant_price_no_address(
@@ -11903,7 +11903,7 @@ def test_update_or_create_variant_stocks(variant, warehouses):
     }
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_variant_back_in_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_back_in_stock")
 def test_update_or_create_variant_stocks_when_stock_out_of_quantity(
     back_in_stock_webhook_trigger, variant, warehouses
 ):
@@ -11946,8 +11946,8 @@ def test_update_or_create_variant_stocks_empty_stocks_data(variant, warehouses):
     assert stock.quantity == 5
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_variant_back_in_stock")
-@patch("saleor.plugins.manager.PluginsManager.product_variant_out_of_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_back_in_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_out_of_stock")
 def test_update_or_create_variant_with_back_in_stock_webhooks_only_success(
     product_variant_stock_out_of_stock_webhook,
     product_variant_back_in_stock_webhook,
@@ -11964,7 +11964,7 @@ def test_update_or_create_variant_with_back_in_stock_webhooks_only_success(
         ]
     )
 
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
     info.context.plugins = get_plugins_manager()
     stocks_data = [
         {"quantity": 10, "warehouse": "123"},
@@ -11984,8 +11984,8 @@ def test_update_or_create_variant_with_back_in_stock_webhooks_only_success(
     product_variant_stock_out_of_stock_webhook.assert_not_called()
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_variant_back_in_stock")
-@patch("saleor.plugins.manager.PluginsManager.product_variant_out_of_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_back_in_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_out_of_stock")
 def test_update_or_create_variant_with_back_in_stock_webhooks_only_failed(
     product_variant_stock_out_of_stock_webhook,
     product_variant_back_in_stock_webhook,
@@ -12002,7 +12002,7 @@ def test_update_or_create_variant_with_back_in_stock_webhooks_only_failed(
         ]
     )
 
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
     info.context.plugins = get_plugins_manager()
     stocks_data = [
         {"quantity": 0, "warehouse": "123"},
@@ -12022,8 +12022,8 @@ def test_update_or_create_variant_with_back_in_stock_webhooks_only_failed(
     )
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_variant_back_in_stock")
-@patch("saleor.plugins.manager.PluginsManager.product_variant_out_of_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_back_in_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_out_of_stock")
 def test_update_or_create_variant_stocks_with_out_of_stock_webhook_only(
     product_variant_stock_out_of_stock_webhook,
     product_variant_back_in_stock_webhook,
@@ -12040,7 +12040,7 @@ def test_update_or_create_variant_stocks_with_out_of_stock_webhook_only(
         ]
     )
 
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     info.context.plugins = get_plugins_manager()
 

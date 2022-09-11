@@ -45,15 +45,15 @@ def openid_plugin(settings, plugin_configuration):
         client_id="client_id",
         client_secret="client_secret",
         enable_refresh_token=True,
-        oauth_authorization_url="https://saleor.io/oauth/authorize",
-        oauth_token_url="https://saleor.io/oauth/token",
-        json_web_key_set_url="https://saleor.io/.well-known/jwks.json",
+        oauth_authorization_url="https://pint.io/oauth/authorize",
+        oauth_token_url="https://pint.io/oauth/token",
+        json_web_key_set_url="https://pint.io/.well-known/jwks.json",
         oauth_logout_url="",
         use_oauth_scope_permissions=False,
-        user_info_url="https://saleor.io/userinfo",
+        user_info_url="https://pint.io/userinfo",
         audience="perms",
     ):
-        settings.PLUGINS = ["saleor.plugins.openid_connect.plugin.OpenIDConnectPlugin"]
+        settings.PLUGINS = ["pint.plugins.openid_connect.plugin.OpenIDConnectPlugin"]
         manager = get_plugins_manager()
         manager.save_plugin_configuration(
             OpenIDConnectPlugin.PLUGIN_ID,
@@ -83,15 +83,15 @@ def openid_plugin(settings, plugin_configuration):
 @pytest.fixture
 def decoded_access_token():
     return {
-        "iss": "https://saleor-test.eu.auth0.com/",
+        "iss": "https://pint-test.eu.auth0.com/",
         "sub": "google-oauth2|114622651317794521039",
-        "aud": ["perms", "https://saleor.io/userinfo"],
+        "aud": ["perms", "https://pint.io/userinfo"],
         "iat": 1615374231,
         "exp": 1615460631,
         "azp": "mnrVS8QkVOjtvC2zeapSkLLkwowr37Lt",
         "scope": (
-            "openid profile email saleor:manage_apps saleor:manage_orders "
-            "saleor:manage_products saleor:staff"
+            "openid profile email pint:manage_apps pint:manage_orders "
+            "pint:manage_products pint:staff"
         ),
     }
 
@@ -124,7 +124,7 @@ def id_payload():
         "updated_at": "2020-09-22T08:50:50.110Z",
         "email": "admin@example.com",
         "email_verified": True,
-        "iss": "https://saleor.io/",
+        "iss": "https://pint.io/",
         "sub": "google-oauth2|",
         "aud": "",
         "iat": 1600764712,

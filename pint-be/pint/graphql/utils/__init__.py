@@ -16,8 +16,8 @@ from ..core.enums import PermissionEnum
 from ..core.types import TYPES_WITH_DOUBLE_ID_AVAILABLE, Permission
 from ..core.utils import from_global_id_or_error
 
-unhandled_errors_logger = logging.getLogger("saleor.graphql.errors.unhandled")
-handled_errors_logger = logging.getLogger("saleor.graphql.errors.handled")
+unhandled_errors_logger = logging.getLogger("pint.graphql.errors.unhandled")
+handled_errors_logger = logging.getLogger("pint.graphql.errors.handled")
 
 
 ERROR_COULD_NO_RESOLVE_GLOBAL_ID = (

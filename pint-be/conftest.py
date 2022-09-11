@@ -9,16 +9,16 @@ from django.db import connections
 from django.test.testcases import TransactionTestCase
 
 pytest_plugins = [
-    "saleor.tests.fixtures",
-    "saleor.plugins.tests.fixtures",
-    "saleor.graphql.tests.fixtures",
-    "saleor.graphql.channel.tests.fixtures",
-    "saleor.graphql.channel.tests.benchmark.fixtures",
-    "saleor.graphql.account.tests.benchmark.fixtures",
-    "saleor.graphql.order.tests.benchmark.fixtures",
-    "saleor.graphql.giftcard.tests.benchmark.fixtures",
-    "saleor.graphql.webhook.tests.benchmark.fixtures",
-    "saleor.plugins.webhook.tests.subscription_webhooks.fixtures",
+    "pint.tests.fixtures",
+    "pint.plugins.tests.fixtures",
+    "pint.graphql.tests.fixtures",
+    "pint.graphql.channel.tests.fixtures",
+    "pint.graphql.channel.tests.benchmark.fixtures",
+    "pint.graphql.account.tests.benchmark.fixtures",
+    "pint.graphql.order.tests.benchmark.fixtures",
+    "pint.graphql.giftcard.tests.benchmark.fixtures",
+    "pint.graphql.webhook.tests.benchmark.fixtures",
+    "pint.plugins.webhook.tests.subscription_webhooks.fixtures",
 ]
 
 if os.environ.get("PYTEST_DB_URL"):

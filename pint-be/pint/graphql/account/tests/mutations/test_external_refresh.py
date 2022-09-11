@@ -49,7 +49,7 @@ def test_external_refresh(
     )
     mocked_plugin_fun.return_value = expected_return
     monkeypatch.setattr(
-        "saleor.plugins.manager.PluginsManager.external_refresh", mocked_plugin_fun
+        "pint.plugins.manager.PluginsManager.external_refresh", mocked_plugin_fun
     )
     variables = {"pluginId": "pluginId1", "input": json.dumps({"refreshToken": "ABCD"})}
     response = api_client.post_graphql(MUTATION_EXTERNAL_REFRESH, variables)

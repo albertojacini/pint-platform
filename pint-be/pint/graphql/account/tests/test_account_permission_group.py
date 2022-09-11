@@ -102,8 +102,8 @@ def test_permission_group_create_mutation(
 
 
 @freeze_time("2018-05-31 12:00:01")
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_permission_group_create_mutation_trigger_webhook(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -117,7 +117,7 @@ def test_permission_group_create_mutation_trigger_webhook(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     staff_user = staff_users[0]
     staff_user.user_permissions.add(permission_manage_users, permission_manage_apps)
@@ -610,8 +610,8 @@ def test_permission_group_update_mutation(
 
 
 @freeze_time("2018-05-31 12:00:01")
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_permission_group_update_mutation_trigger_webhook(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -625,7 +625,7 @@ def test_permission_group_update_mutation_trigger_webhook(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     staff_user = staff_users[0]
     staff_user.user_permissions.add(permission_manage_apps, permission_manage_users)
@@ -2021,8 +2021,8 @@ def test_group_delete_mutation(
 
 
 @freeze_time("2018-05-31 12:00:01")
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_group_delete_mutation_trigger_webhook(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -2036,7 +2036,7 @@ def test_group_delete_mutation_trigger_webhook(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     staff_user, staff_user1, staff_user2 = staff_users
     staff_user.user_permissions.add(

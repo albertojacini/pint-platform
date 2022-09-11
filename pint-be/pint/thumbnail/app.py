@@ -3,7 +3,7 @@ from django.db.models.signals import post_delete
 
 
 class ThumbnailAppConfig(AppConfig):
-    name = "saleor.thumbnail"
+    name = "pint.thumbnail"
 
     def ready(self):
         from .models import Thumbnail

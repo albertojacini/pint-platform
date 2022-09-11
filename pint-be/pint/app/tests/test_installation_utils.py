@@ -24,7 +24,7 @@ def test_install_app_created_app(
     mocked_get_response.json.return_value = app_manifest
 
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("saleor.app.installation_utils.send_app_token", Mock())
+    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     app_installation.permissions.set([permission_manage_products])
 
@@ -37,8 +37,8 @@ def test_install_app_created_app(
 
 
 @freeze_time("2022-05-12 12:00:00")
-@patch("saleor.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("saleor.plugins.webhook.plugin.trigger_webhooks_async")
+@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
 def test_install_app_created_app_trigger_webhook(
     mocked_webhook_trigger,
     mocked_get_webhooks_for_event,
@@ -51,14 +51,14 @@ def test_install_app_created_app_trigger_webhook(
 ):
     # given
     mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     app_manifest["permissions"] = ["MANAGE_PRODUCTS"]
     mocked_get_response = Mock()
     mocked_get_response.json.return_value = app_manifest
 
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("saleor.app.installation_utils.send_app_token", Mock())
+    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     app_installation.permissions.set([permission_manage_products])
 
@@ -106,7 +106,7 @@ def test_install_app_with_extension(
     mocked_get_response.json.return_value = app_manifest
 
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("saleor.app.installation_utils.send_app_token", Mock())
+    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     app_installation.permissions.set(
         [permission_manage_products, permission_manage_orders]
@@ -157,7 +157,7 @@ def test_install_app_extension_permission_out_of_scope(
     mocked_get_response.json.return_value = app_manifest
 
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("saleor.app.installation_utils.send_app_token", Mock())
+    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     # when & then
     with pytest.raises(ValidationError):
@@ -193,7 +193,7 @@ def test_install_app_extension_incorrect_url(
     mocked_get_response.json.return_value = app_manifest
 
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("saleor.app.installation_utils.send_app_token", Mock())
+    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     # when & then
     with pytest.raises(ValidationError):
@@ -224,7 +224,7 @@ def test_install_app_extension_ivalid_permission(
     mocked_get_response.json.return_value = app_manifest
 
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("saleor.app.installation_utils.send_app_token", Mock())
+    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     # when & then
     with pytest.raises(ValidationError):
@@ -264,7 +264,7 @@ def test_install_app_extension_incorrect_values(
     mocked_get_response.json.return_value = app_manifest
 
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("saleor.app.installation_utils.send_app_token", Mock())
+    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     # when & then
     with pytest.raises(ValidationError):
@@ -280,7 +280,7 @@ def test_install_app_with_webhook(
     mocked_get_response = Mock()
     mocked_get_response.json.return_value = app_manifest
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("saleor.app.installation_utils.send_app_token", Mock())
+    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     # when
     app, _ = install_app(app_installation, activate=True)

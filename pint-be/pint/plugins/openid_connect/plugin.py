@@ -135,7 +135,7 @@ class OpenIDConnectPlugin(BasePlugin):
             "help_text": (
                 "Use OAuth scope permissions to grant a logged-in user access to "
                 "protected resources. Your OAuth provider needs to have defined "
-                "Saleor's permission scopes in format saleor:<saleor-perm>. Check"
+                "Saleor's permission scopes in format pint:<pint-perm>. Check"
                 " Saleor docs for more details."
             ),
             "label": "Use OAuth scope permissions",
@@ -194,7 +194,7 @@ class OpenIDConnectPlugin(BasePlugin):
     def _get_oauth_session(self):
         scope = "openid profile email"
         if self.config.use_scope_permissions:
-            permissions = [f"saleor:{perm}" for perm in get_permissions_codename()]
+            permissions = [f"pint:{perm}" for perm in get_permissions_codename()]
             permissions.append(SALEOR_STAFF_PERMISSION)
             scope_permissions = " ".join(permissions)
             scope += f" {scope_permissions}"

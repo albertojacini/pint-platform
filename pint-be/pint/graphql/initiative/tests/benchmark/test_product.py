@@ -405,7 +405,7 @@ def test_product_create(
         }
     }
 """
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
     description_json = json.dumps(description_json)
 
     product_type_id = graphene.Node.to_global_id("ProductType", product_type.pk)
@@ -519,7 +519,7 @@ def test_update_product(
     for collection in collection_list:
         collection.products.add(product)
     other_description_json = json.dumps(other_description_json)
-    settings.PLUGINS = ["saleor.plugins.webhook.plugin.WebhookPlugin"]
+    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
     product_id = graphene.Node.to_global_id("Product", product.pk)
     category_id = graphene.Node.to_global_id("Category", non_default_category.pk)

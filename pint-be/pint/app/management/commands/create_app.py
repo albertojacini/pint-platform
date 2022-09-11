@@ -42,8 +42,8 @@ class Command(BaseCommand):
         domain = Site.objects.get_current().domain
         headers = {
             # X- headers will be deprecated in Saleor 4.0, proper headers are without X-
-            "x-saleor-domain": domain,
-            "saleor-domain": domain,
+            "x-pint-domain": domain,
+            "pint-domain": domain,
         }
         try:
             response = requests.post(target_url, json=data, headers=headers, timeout=15)

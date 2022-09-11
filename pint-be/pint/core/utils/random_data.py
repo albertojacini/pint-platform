@@ -105,51 +105,51 @@ DUMMY_STAFF_PASSWORD = "password"
 DEFAULT_CURRENCY = os.environ.get("DEFAULT_CURRENCY", "USD")
 
 IMAGES_MAPPING = {
-    126: ["saleor-headless-omnichannel-book.png"],
+    126: ["pint-headless-omnichannel-book.png"],
     127: [
-        "saleor-white-plimsolls-1.png",
-        "saleor-white-plimsolls-2.png",
-        "saleor-white-plimsolls-3.png",
-        "saleor-white-plimsolls-4.png",
+        "pint-white-plimsolls-1.png",
+        "pint-white-plimsolls-2.png",
+        "pint-white-plimsolls-3.png",
+        "pint-white-plimsolls-4.png",
     ],
     128: [
-        "saleor-blue-plimsolls-1.png",
-        "saleor-blue-plimsolls-2.png",
-        "saleor-blue-plimsolls-3.png",
-        "saleor-blue-plimsolls-4.png",
+        "pint-blue-plimsolls-1.png",
+        "pint-blue-plimsolls-2.png",
+        "pint-blue-plimsolls-3.png",
+        "pint-blue-plimsolls-4.png",
     ],
-    129: ["saleor-dash-force-1.png", "saleor-dash-force-2.png"],
-    130: ["saleor-pauls-blanace-420-1.png", "saleor-pauls-blanace-420-2.png"],
-    131: ["saleor-grey-hoodie.png"],
-    132: ["saleor-blue-hoodie.png"],
-    133: ["saleor-white-hoodie.png"],
-    134: ["saleor-ascii-shirt-front.png", "saleor-ascii-shirt-back.png"],
-    135: ["saleor-team-tee-front.png", "saleor-team-tee-front.png"],
-    136: ["saleor-polo-shirt-front.png", "saleor-polo-shirt-back.png"],
-    137: ["saleor-blue-polygon-tee-front.png", "saleor-blue-polygon-tee-back.png"],
-    138: ["saleor-dark-polygon-tee-front.png", "saleor-dark-polygon-tee-back.png"],
-    141: ["saleor-beanie-1.png", "saleor-beanie-2.png"],
-    143: ["saleor-neck-warmer.png"],
-    144: ["saleor-sunnies.png"],
-    145: ["saleor-battle-tested-book.png"],
-    146: ["saleor-enterprise-cloud-book.png"],
-    147: ["saleor-own-your-stack-and-data-book.png"],
-    150: ["saleor-mighty-mug.png"],
-    151: ["saleor-cushion-blue.png"],
-    152: ["saleor-apple-drink.png"],
-    153: ["saleor-bean-drink.png"],
-    154: ["saleor-banana-drink.png"],
-    155: ["saleor-carrot-drink.png"],
-    156: ["saleor-sunnies-dark.png"],
+    129: ["pint-dash-force-1.png", "pint-dash-force-2.png"],
+    130: ["pint-pauls-blanace-420-1.png", "pint-pauls-blanace-420-2.png"],
+    131: ["pint-grey-hoodie.png"],
+    132: ["pint-blue-hoodie.png"],
+    133: ["pint-white-hoodie.png"],
+    134: ["pint-ascii-shirt-front.png", "pint-ascii-shirt-back.png"],
+    135: ["pint-team-tee-front.png", "pint-team-tee-front.png"],
+    136: ["pint-polo-shirt-front.png", "pint-polo-shirt-back.png"],
+    137: ["pint-blue-polygon-tee-front.png", "pint-blue-polygon-tee-back.png"],
+    138: ["pint-dark-polygon-tee-front.png", "pint-dark-polygon-tee-back.png"],
+    141: ["pint-beanie-1.png", "pint-beanie-2.png"],
+    143: ["pint-neck-warmer.png"],
+    144: ["pint-sunnies.png"],
+    145: ["pint-battle-tested-book.png"],
+    146: ["pint-enterprise-cloud-book.png"],
+    147: ["pint-own-your-stack-and-data-book.png"],
+    150: ["pint-mighty-mug.png"],
+    151: ["pint-cushion-blue.png"],
+    152: ["pint-apple-drink.png"],
+    153: ["pint-bean-drink.png"],
+    154: ["pint-banana-drink.png"],
+    155: ["pint-carrot-drink.png"],
+    156: ["pint-sunnies-dark.png"],
     157: [
-        "saleor-monospace-white-tee-front.png",
-        "saleor-monospace-white-tee-back.png",
+        "pint-monospace-white-tee-front.png",
+        "pint-monospace-white-tee-back.png",
     ],
-    160: ["saleor-gift-100.png"],
-    161: ["saleor-white-cubes-tee-front.png", "saleor-white-cubes-tee-back.png"],
-    162: ["saleor-white-parrot-cushion.png"],
-    163: ["saleor-gift-500.png"],
-    164: ["saleor-gift-50.png"],
+    160: ["pint-gift-100.png"],
+    161: ["pint-white-cubes-tee-front.png", "pint-white-cubes-tee-back.png"],
+    162: ["pint-white-parrot-cushion.png"],
+    163: ["pint-gift-500.png"],
+    164: ["pint-gift-50.png"],
 }
 
 CATEGORY_IMAGES = {
@@ -164,7 +164,7 @@ COLLECTION_IMAGES = {1: "summer.jpg", 2: "clothing.jpg", 3: "clothing.jpg"}
 @lru_cache()
 def get_sample_data():
     path = os.path.join(
-        settings.PROJECT_ROOT, "saleor", "static", "populatedb_data.json"
+        settings.PROJECT_ROOT, "pint", "static", "populatedb_data.json"
     )
     with open(path, encoding="utf8") as f:
         db_items = json.load(f)
@@ -564,7 +564,7 @@ def create_fake_user(user_password, save=True):
 
 # We don't want to spam the console with payment confirmations sent to
 # fake customers.
-@patch("saleor.plugins.manager.PluginsManager.notify")
+@patch("pint.plugins.manager.PluginsManager.notify")
 def create_fake_payment(mock_notify, order):
     payment = create_payment(
         gateway="mirumee.payments.dummy",

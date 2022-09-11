@@ -52,7 +52,7 @@ def test_external_obtain_access_tokens(
     )
     mocked_plugin_fun.return_value = expected_return
     monkeypatch.setattr(
-        "saleor.plugins.manager.PluginsManager.external_obtain_access_tokens",
+        "pint.plugins.manager.PluginsManager.external_obtain_access_tokens",
         mocked_plugin_fun,
     )
     variables = {

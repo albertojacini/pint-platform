@@ -32,7 +32,7 @@ def test_trigger_webhooks_with_aws_sqs(
     mocked_client_constructor = MagicMock(spec=boto3.client, return_value=mocked_client)
 
     monkeypatch.setattr(
-        "saleor.plugins.webhook.tasks.boto3.client",
+        "pint.plugins.webhook.tasks.boto3.client",
         mocked_client_constructor,
     )
 
@@ -94,7 +94,7 @@ def test_trigger_webhooks_with_aws_sqs_and_secret_key(
     mocked_client_constructor = MagicMock(spec=boto3.client, return_value=mocked_client)
 
     monkeypatch.setattr(
-        "saleor.plugins.webhook.tasks.boto3.client",
+        "pint.plugins.webhook.tasks.boto3.client",
         mocked_client_constructor,
     )
 
@@ -146,11 +146,11 @@ def test_trigger_webhooks_with_google_pub_sub(
     mocked_publisher = MagicMock(spec=PublisherClient)
     mocked_publisher.publish.return_value.result.return_value = "message_id"
     monkeypatch.setattr(
-        "saleor.plugins.webhook.tasks.pubsub_v1.PublisherClient",
+        "pint.plugins.webhook.tasks.pubsub_v1.PublisherClient",
         lambda: mocked_publisher,
     )
     webhook.app.permissions.add(permission_manage_orders)
-    webhook.target_url = "gcpubsub://cloud.google.com/projects/saleor/topics/test"
+    webhook.target_url = "gcpubsub://cloud.google.com/projects/pint/topics/test"
     webhook.save()
     expected_data = serialize("json", [order_with_lines])
     expected_signature = signature_for_payload(expected_data.encode("utf-8"), None)
@@ -159,7 +159,7 @@ def test_trigger_webhooks_with_google_pub_sub(
         expected_data, WebhookEventAsyncType.ORDER_CREATED, [webhook]
     )
     mocked_publisher.publish.assert_called_once_with(
-        "projects/saleor/topics/test",
+        "projects/pint/topics/test",
         expected_data.encode("utf-8"),
         saleorDomain="mirumee.com",
         eventType=WebhookEventAsyncType.ORDER_CREATED,
@@ -178,11 +178,11 @@ def test_trigger_webhooks_with_google_pub_sub_and_secret_key(
     mocked_publisher = MagicMock(spec=PublisherClient)
     mocked_publisher.publish.return_value.result.return_value = "message_id"
     monkeypatch.setattr(
-        "saleor.plugins.webhook.tasks.pubsub_v1.PublisherClient",
+        "pint.plugins.webhook.tasks.pubsub_v1.PublisherClient",
         lambda: mocked_publisher,
     )
     webhook.app.permissions.add(permission_manage_orders)
-    webhook.target_url = "gcpubsub://cloud.google.com/projects/saleor/topics/test"
+    webhook.target_url = "gcpubsub://cloud.google.com/projects/pint/topics/test"
     webhook.secret_key = "secret_key"
     webhook.save()
 
@@ -195,7 +195,7 @@ def test_trigger_webhooks_with_google_pub_sub_and_secret_key(
         expected_data, WebhookEventAsyncType.ORDER_CREATED, [webhook]
     )
     mocked_publisher.publish.assert_called_once_with(
-        "projects/saleor/topics/test",
+        "projects/pint/topics/test",
         message.encode("utf-8"),
         saleorDomain="mirumee.com",
         eventType=WebhookEventAsyncType.ORDER_CREATED,
@@ -203,7 +203,7 @@ def test_trigger_webhooks_with_google_pub_sub_and_secret_key(
     )
 
 
-@patch("saleor.plugins.webhook.tasks.requests.post")
+@patch("pint.plugins.webhook.tasks.requests.post")
 def test_trigger_webhooks_with_http(
     mock_request,
     webhook,
@@ -251,7 +251,7 @@ def test_trigger_webhooks_with_http(
     )
 
 
-@patch("saleor.plugins.webhook.tasks.requests.post")
+@patch("pint.plugins.webhook.tasks.requests.post")
 def test_trigger_webhooks_with_http_and_secret_key(
     mock_request, webhook, order_with_lines, permission_manage_orders
 ):
@@ -294,7 +294,7 @@ def test_trigger_webhooks_with_http_and_secret_key(
     )
 
 
-@patch("saleor.plugins.webhook.tasks.requests.post")
+@patch("pint.plugins.webhook.tasks.requests.post")
 def test_trigger_webhooks_with_http_and_secret_key_as_empty_string(
     mock_request, webhook, order_with_lines, permission_manage_orders
 ):

@@ -32,7 +32,7 @@ from ..tests.sample_plugins import (
 
 
 def test_get_plugins_manager(settings):
-    plugin_path = "saleor.plugins.tests.sample_plugins.PluginSample"
+    plugin_path = "pint.plugins.tests.sample_plugins.PluginSample"
     settings.PLUGINS = [plugin_path]
     manager = get_plugins_manager()
     assert isinstance(manager, PluginsManager)
@@ -43,8 +43,8 @@ def test_manager_with_default_configuration_for_channel_plugins(
     settings, channel_USD, channel_PLN
 ):
     settings.PLUGINS = [
-        "saleor.plugins.tests.sample_plugins.ChannelPluginSample",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.ChannelPluginSample",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = get_plugins_manager()
     assert len(manager.global_plugins) == 1
@@ -70,7 +70,7 @@ def test_manager_with_channel_plugins(
     settings, channel_USD, channel_PLN, channel_plugin_configurations
 ):
     settings.PLUGINS = [
-        "saleor.plugins.tests.sample_plugins.ChannelPluginSample",
+        "pint.plugins.tests.sample_plugins.ChannelPluginSample",
     ]
     manager = get_plugins_manager()
 
@@ -91,8 +91,8 @@ def test_manager_get_plugins_with_channel_slug(
     settings, channel_USD, plugin_configuration, inactive_plugin_configuration
 ):
     settings.PLUGINS = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = get_plugins_manager()
 
@@ -105,8 +105,8 @@ def test_manager_get_active_plugins_with_channel_slug(
     settings, channel_USD, plugin_configuration, inactive_plugin_configuration
 ):
     settings.PLUGINS = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = get_plugins_manager()
 
@@ -120,8 +120,8 @@ def test_manager_get_plugins_without_channel_slug(
     settings, channel_USD, plugin_configuration, inactive_plugin_configuration
 ):
     settings.PLUGINS = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = get_plugins_manager()
 
@@ -134,8 +134,8 @@ def test_manager_get_active_plugins_without_channel_slug(
     settings, channel_USD, plugin_configuration, inactive_plugin_configuration
 ):
     settings.PLUGINS = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = get_plugins_manager()
 
@@ -147,7 +147,7 @@ def test_manager_get_active_plugins_without_channel_slug(
 
 @pytest.mark.parametrize(
     "plugins, total_amount",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "15.0")],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "15.0")],
 )
 def test_manager_calculates_checkout_total(
     checkout_with_item, discount_info, plugins, total_amount
@@ -167,7 +167,7 @@ def test_manager_calculates_checkout_total(
 
 @pytest.mark.parametrize(
     "plugins, subtotal_amount",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "15.0")],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "15.0")],
 )
 def test_manager_calculates_checkout_subtotal(
     checkout_with_item, discount_info, plugins, subtotal_amount
@@ -187,7 +187,7 @@ def test_manager_calculates_checkout_subtotal(
 
 @pytest.mark.parametrize(
     "plugins, shipping_amount",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "0.0")],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "0.0")],
 )
 def test_manager_calculates_checkout_shipping(
     checkout_with_item, discount_info, plugins, shipping_amount
@@ -210,7 +210,7 @@ def test_manager_calculates_checkout_shipping(
 
 @pytest.mark.parametrize(
     "plugins, shipping_amount",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "10.0")],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "10.0")],
 )
 def test_manager_calculates_order_shipping(order_with_lines, plugins, shipping_amount):
     currency = order_with_lines.total.currency
@@ -227,7 +227,7 @@ def test_manager_calculates_order_shipping(order_with_lines, plugins, shipping_a
 
 @pytest.mark.parametrize(
     "plugins, amount",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "15.0")],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "15.0")],
 )
 def test_manager_calculates_checkout_line_total(
     checkout_with_item, discount_info, plugins, amount
@@ -252,7 +252,7 @@ def test_manager_calculates_checkout_line_total(
 
 @pytest.mark.parametrize(
     "plugins",
-    [["saleor.plugins.tests.sample_plugins.PluginSample"], []],
+    [["pint.plugins.tests.sample_plugins.PluginSample"], []],
 )
 def test_manager_calculates_order_line_total(order_line, plugins):
     currency = order_line.order.currency
@@ -278,7 +278,7 @@ def test_manager_calculates_order_line_total(order_line, plugins):
 def test_manager_get_checkout_line_tax_rate_sample_plugin(
     checkout_with_item, discount_info
 ):
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
     unit_price = TaxedMoney(Money(12, "USD"), Money(15, "USD"))
 
     manager = get_plugins_manager()
@@ -330,7 +330,7 @@ def test_manager_get_order_line_tax_rate_sample_plugin(order_with_lines):
     order = order_with_lines
     line = order.lines.first()
     product = Product.objects.get(name=line.product_name)
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
     unit_price = TaxedMoney(Money(12, "USD"), Money(15, "USD"))
     tax_rate = PluginsManager(plugins=plugins).get_order_line_tax_rate(
         order,
@@ -368,7 +368,7 @@ def test_manager_get_order_line_tax_rate_no_plugins(
 def test_manager_get_checkout_shipping_tax_rate_sample_plugin(
     checkout_with_item, discount_info
 ):
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
     shipping_price = TaxedMoney(Money(12, "USD"), Money(14, "USD"))
 
     manager = get_plugins_manager()
@@ -415,7 +415,7 @@ def test_manager_get_checkout_shipping_tax_rate_no_plugins(
 
 def test_manager_get_order_shipping_tax_rate_sample_plugin(order_with_lines):
     order = order_with_lines
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
     shipping_price = TaxedMoney(Money(12, "USD"), Money(14, "USD"))
     tax_rate = PluginsManager(plugins=plugins).get_order_shipping_tax_rate(
         order,
@@ -446,7 +446,7 @@ def test_manager_get_order_shipping_tax_rate_no_plugins(
     "plugins, total_line_price, quantity",
     [
         (
-            ["saleor.plugins.tests.sample_plugins.PluginSample"],
+            ["pint.plugins.tests.sample_plugins.PluginSample"],
             TaxedMoney(
                 net=Money(amount=10, currency="USD"),
                 gross=Money(amount=10, currency="USD"),
@@ -490,7 +490,7 @@ def test_manager_calculates_checkout_line_unit_price(
 
 @pytest.mark.parametrize(
     "plugins, amount",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "12.30")],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "12.30")],
 )
 def test_manager_calculates_order_line(order_line, plugins, amount):
     variant = order_line.variant
@@ -510,7 +510,7 @@ def test_manager_calculates_order_line(order_line, plugins, amount):
     "plugins, tax_rate_list",
     [
         (
-            ["saleor.plugins.tests.sample_plugins.PluginSample"],
+            ["pint.plugins.tests.sample_plugins.PluginSample"],
             [TaxType(code="123", description="abc")],
         ),
         ([], []),
@@ -526,7 +526,7 @@ def sample_none_data(obj):
 
 @pytest.mark.parametrize(
     "plugins, show_taxes",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], True), ([], False)],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], True), ([], False)],
 )
 def test_manager_show_taxes_on_storefront(plugins, show_taxes):
     assert show_taxes == PluginsManager(plugins=plugins).show_taxes_on_storefront()
@@ -536,7 +536,7 @@ def test_manager_show_taxes_on_storefront(plugins, show_taxes):
     "plugins, expected_tax_data",
     [
         ([], sample_none_data),
-        (["saleor.plugins.tests.sample_plugins.PluginSample"], sample_tax_data),
+        (["pint.plugins.tests.sample_plugins.PluginSample"], sample_tax_data),
     ],
 )
 def test_manager_get_taxes_for_checkout(
@@ -556,7 +556,7 @@ def test_manager_get_taxes_for_checkout(
     "plugins, expected_tax_data",
     [
         ([], sample_none_data),
-        (["saleor.plugins.tests.sample_plugins.PluginSample"], sample_tax_data),
+        (["pint.plugins.tests.sample_plugins.PluginSample"], sample_tax_data),
     ],
 )
 def test_manager_get_taxes_for_order(
@@ -571,7 +571,7 @@ def test_manager_get_taxes_for_order(
 
 @pytest.mark.parametrize(
     "plugins, price",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "10.0")],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], "1.0"), ([], "10.0")],
 )
 def test_manager_apply_taxes_to_product(product, plugins, price, channel_USD):
     country = Country("PL")
@@ -593,7 +593,7 @@ def test_manager_apply_taxes_to_product(product, plugins, price, channel_USD):
 
 
 def test_manager_sale_created(sale):
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
 
     current_catalogue = convert_catalogue_info_to_global_ids(fetch_catalogue_info(sale))
     sale_returned, current_catalogue_returned = PluginsManager(
@@ -605,7 +605,7 @@ def test_manager_sale_created(sale):
 
 
 def test_manager_sale_updated(sale):
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
 
     previous_catalogue = convert_catalogue_info_to_global_ids(
         fetch_catalogue_info(sale)
@@ -625,7 +625,7 @@ def test_manager_sale_updated(sale):
 
 
 def test_manager_sale_deleted(sale):
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
 
     previous_catalogue = convert_catalogue_info_to_global_ids(
         fetch_catalogue_info(sale)
@@ -639,7 +639,7 @@ def test_manager_sale_deleted(sale):
 
 
 def test_manager_sale_toggle(sale):
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
 
     current_catalogue = convert_catalogue_info_to_global_ids(fetch_catalogue_info(sale))
     sale_returned, current_catalogue_returned = PluginsManager(
@@ -652,7 +652,7 @@ def test_manager_sale_toggle(sale):
 
 @pytest.mark.parametrize(
     "plugins, amount",
-    [(["saleor.plugins.tests.sample_plugins.PluginSample"], "15.0"), ([], "0")],
+    [(["pint.plugins.tests.sample_plugins.PluginSample"], "15.0"), ([], "0")],
 )
 def test_manager_get_tax_rate_percentage_value(plugins, amount, product):
     country = Country("PL")
@@ -664,8 +664,8 @@ def test_manager_get_tax_rate_percentage_value(plugins, amount, product):
 
 def test_manager_get_plugin_configuration(plugin_configuration):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginSample",
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
     ]
     manager = PluginsManager(plugins=plugins)
     plugin = manager.get_plugin(PluginSample.PLUGIN_ID)
@@ -676,7 +676,7 @@ def test_manager_get_plugin_configuration(plugin_configuration):
 
 
 def test_manager_save_plugin_configuration(plugin_configuration):
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
     manager = PluginsManager(plugins=plugins)
     manager.save_plugin_configuration(PluginSample.PLUGIN_ID, None, {"active": False})
     plugin_configuration.refresh_from_db()
@@ -701,7 +701,7 @@ def test_plugin_updates_configuration_shape(
     )
 
     manager = PluginsManager(
-        plugins=["saleor.plugins.tests.sample_plugins.PluginSample"]
+        plugins=["pint.plugins.tests.sample_plugins.PluginSample"]
     )
     plugin = manager.get_plugin(PluginSample.PLUGIN_ID)
 
@@ -723,7 +723,7 @@ def test_plugin_add_new_configuration(
     config_structure = {"Foo": new_config_structure}
     monkeypatch.setattr(PluginInactive, "CONFIG_STRUCTURE", config_structure)
     manager = PluginsManager(
-        plugins=["saleor.plugins.tests.sample_plugins.PluginInactive"]
+        plugins=["pint.plugins.tests.sample_plugins.PluginInactive"]
     )
     plugin = manager.get_plugin(PluginInactive.PLUGIN_ID)
     assert len(plugin.configuration) == 1
@@ -738,9 +738,9 @@ def test_manager_serve_list_of_payment_gateways(channel_USD):
         currencies=ActivePaymentGateway.SUPPORTED_CURRENCIES,
     )
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginSample",
-        "saleor.plugins.tests.sample_plugins.ActivePaymentGateway",
-        "saleor.plugins.tests.sample_plugins.InactivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.ActivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.InactivePaymentGateway",
     ]
     manager = PluginsManager(plugins=plugins)
     assert manager.list_payment_gateways() == [expected_gateway]
@@ -763,8 +763,8 @@ def test_manager_serve_list_all_payment_gateways(channel_USD):
     ]
 
     plugins = [
-        "saleor.plugins.tests.sample_plugins.ActivePaymentGateway",
-        "saleor.plugins.tests.sample_plugins.InactivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.ActivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.InactivePaymentGateway",
     ]
     manager = PluginsManager(plugins=plugins)
     assert manager.list_payment_gateways(active_only=False) == expected_gateways
@@ -781,9 +781,9 @@ def test_manager_serve_list_all_payment_gateways_specified_currency(channel_USD)
     ]
 
     plugins = [
-        "saleor.plugins.tests.sample_plugins.ActivePaymentGateway",
-        "saleor.plugins.tests.sample_plugins.InactivePaymentGateway",
-        "saleor.plugins.tests.sample_plugins.ActiveDummyPaymentGateway",
+        "pint.plugins.tests.sample_plugins.ActivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.InactivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.ActiveDummyPaymentGateway",
     ]
     manager = PluginsManager(plugins=plugins)
     assert (
@@ -811,9 +811,9 @@ def test_manager_serve_list_all_payment_gateways_specified_currency_two_gateways
     ]
 
     plugins = [
-        "saleor.plugins.tests.sample_plugins.ActivePaymentGateway",
-        "saleor.plugins.tests.sample_plugins.InactivePaymentGateway",
-        "saleor.plugins.tests.sample_plugins.ActiveDummyPaymentGateway",
+        "pint.plugins.tests.sample_plugins.ActivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.InactivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.ActiveDummyPaymentGateway",
     ]
     manager = PluginsManager(plugins=plugins)
     assert (
@@ -824,8 +824,8 @@ def test_manager_serve_list_all_payment_gateways_specified_currency_two_gateways
 
 def test_manager_webhook(rf):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginSample",
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
     ]
     manager = PluginsManager(plugins=plugins)
     plugin_path = "/webhook/paid"
@@ -839,7 +839,7 @@ def test_manager_webhook(rf):
 
 def test_manager_webhook_plugin_doesnt_have_webhook_support(rf):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
     ]
 
     manager = PluginsManager(plugins=plugins)
@@ -852,8 +852,8 @@ def test_manager_webhook_plugin_doesnt_have_webhook_support(rf):
 
 def test_manager_inncorrect_plugin(rf):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginSample",
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
     ]
     manager = PluginsManager(plugins=plugins)
     plugin_path = "/webhook/paid"
@@ -865,8 +865,8 @@ def test_manager_inncorrect_plugin(rf):
 
 def test_manager_external_authentication(rf):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = PluginsManager(plugins=plugins)
 
@@ -878,8 +878,8 @@ def test_manager_external_authentication(rf):
 
 def test_manager_external_refresh(rf):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = PluginsManager(plugins=plugins)
     response = manager.external_refresh(
@@ -894,8 +894,8 @@ def test_manager_external_refresh(rf):
 
 def test_manager_external_obtain_access_tokens(rf):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = PluginsManager(plugins=plugins)
     response = manager.external_obtain_access_tokens(
@@ -910,8 +910,8 @@ def test_manager_external_obtain_access_tokens(rf):
 
 def test_manager_authenticate_user(rf, admin_user):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = PluginsManager(plugins=plugins)
     user = manager.authenticate_user(rf.request())
@@ -920,8 +920,8 @@ def test_manager_authenticate_user(rf, admin_user):
 
 def test_manager_external_logout(rf, admin_user):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = PluginsManager(plugins=plugins)
     response = manager.external_logout(PluginSample.PLUGIN_ID, {}, rf.request())
@@ -930,8 +930,8 @@ def test_manager_external_logout(rf, admin_user):
 
 def test_manager_external_verify(rf, admin_user):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = PluginsManager(plugins=plugins)
     user, response_data = manager.external_verify(
@@ -943,9 +943,9 @@ def test_manager_external_verify(rf, admin_user):
 
 def test_list_external_authentications(channel_USD):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.ActivePaymentGateway",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.ActivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
     manager = PluginsManager(plugins=plugins)
     external_auths = manager.list_external_authentications(active_only=False)
@@ -962,9 +962,9 @@ def test_list_external_authentications(channel_USD):
 
 def test_list_external_authentications_active_only(channel_USD):
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
-        "saleor.plugins.tests.sample_plugins.ActivePaymentGateway",
-        "saleor.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.ActivePaymentGateway",
+        "pint.plugins.tests.sample_plugins.PluginSample",
     ]
 
     manager = PluginsManager(plugins=plugins)
@@ -1011,7 +1011,7 @@ def test_run_method_on_plugins_value_overridden_by_plugin_method(
 
 
 @mock.patch(
-    "saleor.plugins.manager.PluginsManager._PluginsManager__run_method_on_single_plugin"
+    "pint.plugins.manager.PluginsManager._PluginsManager__run_method_on_single_plugin"
 )
 def test_run_method_on_plugins_only_on_active_ones(
     mocked_method, channel_USD, all_plugins_manager
@@ -1075,14 +1075,14 @@ def test_run_method_on_single_plugin_valid_response(plugins_manager):
 
 
 def test_run_check_payment_balance(channel_USD):
-    plugins = ["saleor.plugins.tests.sample_plugins.ActiveDummyPaymentGateway"]
+    plugins = ["pint.plugins.tests.sample_plugins.ActiveDummyPaymentGateway"]
 
     manager = PluginsManager(plugins=plugins)
     assert manager.check_payment_balance({}, "main") == {"test_response": "success"}
 
 
 def test_run_check_payment_balance_not_implemented(channel_USD):
-    plugins = ["saleor.plugins.tests.sample_plugins.ActivePlugin"]
+    plugins = ["pint.plugins.tests.sample_plugins.ActivePlugin"]
 
     manager = PluginsManager(plugins=plugins)
     assert not manager.check_payment_balance({}, "main")
@@ -1096,7 +1096,7 @@ def test_create_plugin_manager_initializes_requestor_lazily(channel_USD):
     user_mock.return_value.id = "some id"
     user_mock.return_value.name = "some name"
 
-    plugins = ["saleor.plugins.tests.sample_plugins.ActivePlugin"]
+    plugins = ["pint.plugins.tests.sample_plugins.ActivePlugin"]
 
     manager = PluginsManager(
         plugins=plugins, requestor_getter=partial(fake_request_getter, user_mock)
@@ -1112,16 +1112,16 @@ def test_create_plugin_manager_initializes_requestor_lazily(channel_USD):
 
 
 def test_manager_delivery_retry(event_delivery):
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
     manager = PluginsManager(plugins=plugins)
     delivery_retry = manager.event_delivery_retry(event_delivery=event_delivery)
     assert delivery_retry
 
 
 @mock.patch(
-    "saleor.plugins.manager.PluginsManager._PluginsManager__run_method_on_single_plugin"
+    "pint.plugins.manager.PluginsManager._PluginsManager__run_method_on_single_plugin"
 )
-@mock.patch("saleor.plugins.manager.base_calculations.base_checkout_total")
+@mock.patch("pint.plugins.manager.base_calculations.base_checkout_total")
 def test_calculate_checkout_total_zero_default_value(
     mocked_base_checkout_total,
     mocked_run_method,
@@ -1129,7 +1129,7 @@ def test_calculate_checkout_total_zero_default_value(
     discount_info,
 ):
     # given
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginSample"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginSample"]
     currency = checkout_with_item.currency
     mocked_base_checkout_total.return_value = zero_money(currency)
     manager = PluginsManager(plugins=plugins)
@@ -1150,7 +1150,7 @@ def test_calculate_checkout_total_zero_default_value(
 
 def test_manager_is_event_active_for_any_plugin_with_inactive_plugin(channel_USD):
     # given
-    plugins = ["saleor.plugins.tests.sample_plugins.PluginInactive"]
+    plugins = ["pint.plugins.tests.sample_plugins.PluginInactive"]
 
     manager = PluginsManager(plugins=plugins)
 
@@ -1163,8 +1163,8 @@ def test_manager_is_event_active_for_any_plugin_with_inactive_plugin(channel_USD
 def test_manager_is_event_active_for_any_plugin(channel_USD):
     # given
     plugins = [
-        "saleor.plugins.tests.sample_plugins.PluginSample",
-        "saleor.plugins.tests.sample_plugins.PluginInactive",
+        "pint.plugins.tests.sample_plugins.PluginSample",
+        "pint.plugins.tests.sample_plugins.PluginInactive",
     ]
 
     manager = PluginsManager(plugins=plugins)

@@ -19,7 +19,7 @@ jobs:
         id: set-domain
         # Set test instance domain based on branch name slug
         run: |
-          echo "::set-output name=domain::${{ env.GITHUB_HEAD_REF_SLUG_URL }}.api.saleor.rocks"
+          echo "::set-output name=domain::${{ env.GITHUB_HEAD_REF_SLUG_URL }}.api.pint.rocks"
 
       - name: Start deployment
         uses: bobheadxi/deployments@v0.4.2
@@ -36,7 +36,7 @@ jobs:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          repo: saleor-testenvs
+          repo: pint-testenvs
           region: us-east-1
           tags: ${{ env.GITHUB_HEAD_REF_SLUG_URL }},${{ github.sha }}
 
@@ -51,7 +51,7 @@ jobs:
             {
               "action": "${{ github.event.action }}",
               "label": "${{ env.GITHUB_HEAD_REF_SLUG_URL }}",
-              "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/saleor-testenvs:${{ github.sha }}"
+              "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/pint-testenvs:${{ github.sha }}"
             }
           LogType: Tail
 

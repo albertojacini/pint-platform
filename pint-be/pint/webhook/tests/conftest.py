@@ -101,7 +101,7 @@ def mocked_fetch_checkout():
         return checkout_info, lines
 
     with patch(
-        "saleor.checkout.calculations.fetch_checkout_prices_if_expired",
+        "pint.checkout.calculations.fetch_checkout_prices_if_expired",
         new=Mock(side_effect=mocked_fetch_side_effect),
     ) as mocked_fetch:
         yield mocked_fetch
@@ -113,7 +113,7 @@ def mocked_fetch_order():
         return order, lines
 
     with patch(
-        "saleor.order.calculations.fetch_order_prices_if_expired",
+        "pint.order.calculations.fetch_order_prices_if_expired",
         new=Mock(side_effect=mocked_fetch_side_effect),
     ) as mocked_fetch:
         yield mocked_fetch

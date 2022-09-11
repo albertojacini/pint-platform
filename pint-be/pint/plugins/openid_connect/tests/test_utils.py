@@ -49,16 +49,16 @@ def test_fetch_jwks_raises_error(monkeypatch, error):
     mocked_get = Mock()
     mocked_get.side_effect = error
     jwks_url = "http://localhost:3000/"
-    monkeypatch.setattr("saleor.plugins.openid_connect.utils.requests.get", mocked_get)
+    monkeypatch.setattr("pint.plugins.openid_connect.utils.requests.get", mocked_get)
 
     with pytest.raises(AuthenticationError):
         fetch_jwks(jwks_url)
 
 
 @pytest.mark.vcr
-@mock.patch("saleor.plugins.openid_connect.utils.cache.set")
+@mock.patch("pint.plugins.openid_connect.utils.cache.set")
 def test_fetch_jwks(mocked_cache_set):
-    jwks_url = "https://saleor.io/.well-known/jwks.json"
+    jwks_url = "https://pint.io/.well-known/jwks.json"
     keys = fetch_jwks(jwks_url)
     assert len(keys) == 2
     mocked_cache_set.assert_called_once_with(JWKS_KEY, keys, JWKS_CACHE_TIME)
@@ -67,14 +67,14 @@ def test_fetch_jwks(mocked_cache_set):
 def test_get_or_create_user_from_token_missing_email(id_payload):
     del id_payload["email"]
     with pytest.raises(AuthenticationError):
-        get_or_create_user_from_payload(id_payload, "https://saleor.io/oauth")
+        get_or_create_user_from_payload(id_payload, "https://pint.io/oauth")
 
 
 def test_get_or_create_user_from_token_user_not_active(id_payload, admin_user):
     admin_user.is_active = False
     admin_user.save()
     with pytest.raises(AuthenticationError):
-        get_or_create_user_from_payload(id_payload, "https://saleor.io/oauth")
+        get_or_create_user_from_payload(id_payload, "https://pint.io/oauth")
 
 
 def test_get_user_from_token_missing_email(id_payload):
@@ -102,7 +102,7 @@ def test_create_tokens_from_oauth_payload(monkeypatch, id_token, id_payload):
     mocked_jwt_validator.__getitem__.side_effect = id_payload.__getitem__
 
     monkeypatch.setattr(
-        "saleor.plugins.openid_connect.utils.get_decoded_token",
+        "pint.plugins.openid_connect.utils.get_decoded_token",
         Mock(return_value=mocked_jwt_validator),
     )
     permissions_from_scope = [
@@ -113,13 +113,13 @@ def test_create_tokens_from_oauth_payload(monkeypatch, id_token, id_payload):
         "refresh_token": "refresh",
         "id_token": id_token,
         "scope": (
-            "openid profile email offline_access saleor:manage_orders saleor:staff"
+            "openid profile email offline_access pint:manage_orders pint:staff"
         ),
         "expires_in": 86400,
         "token_type": "Bearer",
         "expires_at": 1600851112,
     }
-    user = get_or_create_user_from_payload(id_payload, "https://saleor.io/oauth")
+    user = get_or_create_user_from_payload(id_payload, "https://pint.io/oauth")
     permissions = get_saleor_permissions_qs_from_scope(auth_payload.get("scope"))
     perms = get_saleor_permission_names(permissions)
     tokens = create_tokens_from_oauth_payload(
@@ -178,8 +178,8 @@ def test_get_saleor_permissions_from_scope():
         "access_token": "FeHkE_QbuU3cYy1a1eQUrCE5jRcUnBK3",
         "refresh_token": "refresh",
         "scope": (
-            "openid profile email offline_access saleor:manage_orders "
-            "saleor:non_existing saleor saleor: saleor:manage_users"
+            "openid profile email offline_access pint:manage_orders "
+            "pint:non_existing pint pint: pint:manage_users"
         ),
     }
     expected_permissions = {"MANAGE_USERS", "MANAGE_ORDERS"}
@@ -192,10 +192,10 @@ def test_get_user_info_raises_decode_error(monkeypatch):
     response = Response()
     response.status_code = 200
     monkeypatch.setattr(
-        "saleor.plugins.openid_connect.utils.requests.get", Mock(return_value=response)
+        "pint.plugins.openid_connect.utils.requests.get", Mock(return_value=response)
     )
 
-    user_info = get_user_info("https://saleor.io/userinfo", "access_token")
+    user_info = get_user_info("https://pint.io/userinfo", "access_token")
     assert user_info is None
 
 
@@ -203,15 +203,15 @@ def test_get_user_info_raises_http_error(monkeypatch):
     response = Response()
     response.status_code = 500
     monkeypatch.setattr(
-        "saleor.plugins.openid_connect.utils.requests.get", Mock(return_value=response)
+        "pint.plugins.openid_connect.utils.requests.get", Mock(return_value=response)
     )
 
-    user_info = get_user_info("https://saleor.io/userinfo", "access_token")
+    user_info = get_user_info("https://pint.io/userinfo", "access_token")
     assert user_info is None
 
 
 def test_get_or_create_user_from_payload_retrieve_user_by_sub(customer_user):
-    oauth_url = "https://saleor.io/oauth"
+    oauth_url = "https://pint.io/oauth"
     sub_id = "oauth|1234"
     customer_user.private_metadata = {f"oidc-{oauth_url}": sub_id}
     customer_user.save()
@@ -226,7 +226,7 @@ def test_get_or_create_user_from_payload_retrieve_user_by_sub(customer_user):
 
 
 def test_get_or_create_user_from_payload_updates_sub(customer_user):
-    oauth_url = "https://saleor.io/oauth"
+    oauth_url = "https://pint.io/oauth"
     sub_id = "oauth|1234"
     customer_user.private_metadata = {f"oidc-{oauth_url}": "old-sub"}
     customer_user.save()
@@ -241,7 +241,7 @@ def test_get_or_create_user_from_payload_updates_sub(customer_user):
 
 
 def test_get_or_create_user_from_payload_assigns_sub(customer_user):
-    oauth_url = "https://saleor.io/oauth"
+    oauth_url = "https://pint.io/oauth"
     sub_id = "oauth|1234"
 
     user_from_payload = get_or_create_user_from_payload(
@@ -254,7 +254,7 @@ def test_get_or_create_user_from_payload_assigns_sub(customer_user):
 
 
 def test_get_or_create_user_from_payload_creates_user_with_sub():
-    oauth_url = "https://saleor.io/oauth"
+    oauth_url = "https://pint.io/oauth"
     sub_id = "oauth|1234"
     customer_email = "email.customer@example.com"
 
@@ -268,7 +268,7 @@ def test_get_or_create_user_from_payload_creates_user_with_sub():
 
 
 def test_get_or_create_user_from_payload_multiple_subs(customer_user, admin_user):
-    oauth_url = "https://saleor.io/oauth"
+    oauth_url = "https://pint.io/oauth"
     sub_id = "oauth|1234"
 
     customer_user.private_metadata = {f"oidc-{oauth_url}": sub_id}
@@ -288,7 +288,7 @@ def test_get_or_create_user_from_payload_multiple_subs(customer_user, admin_user
 
 
 def test_get_or_create_user_from_payload_different_email(customer_user):
-    oauth_url = "https://saleor.io/oauth"
+    oauth_url = "https://pint.io/oauth"
     sub_id = "oauth|1234"
     new_customer_email = "new.customer@example.com"
 
@@ -311,7 +311,7 @@ def test_get_or_create_user_from_payload_with_last_login(customer_user, settings
     settings.TIME_ZONE = "UTC"
     current_ts = int(time.time())
 
-    oauth_url = "https://saleor.io/oauth"
+    oauth_url = "https://pint.io/oauth"
     sub_id = "oauth|1234"
 
     customer_user.last_login = make_aware(

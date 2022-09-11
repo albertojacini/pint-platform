@@ -25,7 +25,7 @@ jobs:
             {
               "action": "${{ github.event.action }}",
               "label": "${{ env.GITHUB_HEAD_REF_SLUG_URL }}",
-              "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/saleor-testenvs:${{ env.GITHUB_HEAD_REF_SLUG_URL }}"
+              "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/pint-testenvs:${{ env.GITHUB_HEAD_REF_SLUG_URL }}"
             }
           LogType: Tail
 

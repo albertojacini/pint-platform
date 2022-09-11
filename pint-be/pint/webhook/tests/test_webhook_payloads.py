@@ -112,8 +112,8 @@ def payment_for_payload(payment_txn_captured):
 
 
 @freeze_time()
-@mock.patch("saleor.webhook.payloads.generate_order_lines_payload")
-@mock.patch("saleor.webhook.payloads.generate_fulfillment_lines_payload")
+@mock.patch("pint.webhook.payloads.generate_order_lines_payload")
+@mock.patch("pint.webhook.payloads.generate_fulfillment_lines_payload")
 def test_generate_order_payload(
     mocked_fulfillment_lines,
     mocked_order_lines,
@@ -296,7 +296,7 @@ def test_generate_order_payload(
 
 @freeze_time()
 @pytest.mark.parametrize("taxes_included", [True, False])
-@mock.patch("saleor.webhook.payloads._generate_order_lines_payload_for_tax_calculation")
+@mock.patch("pint.webhook.payloads._generate_order_lines_payload_for_tax_calculation")
 def test_generate_order_payload_for_tax_calculation(
     mocked_order_lines,
     order_for_payload,
@@ -368,8 +368,8 @@ def test_generate_order_payload_for_tax_calculation(
 
 
 @freeze_time()
-@mock.patch("saleor.webhook.payloads.generate_order_lines_payload")
-@mock.patch("saleor.webhook.payloads.generate_fulfillment_lines_payload")
+@mock.patch("pint.webhook.payloads.generate_order_lines_payload")
+@mock.patch("pint.webhook.payloads.generate_fulfillment_lines_payload")
 def test_generate_order_payload_no_user_email_but_user_set(
     mocked_fulfillment_lines,
     mocked_order_lines,
@@ -1352,7 +1352,7 @@ def test_generate_sale_toggle_payload(sale):
     assert set(payload["variants"]) == current_info["variants"]
 
 
-@patch("saleor.webhook.payloads.serialize_checkout_lines_for_tax_calculation")
+@patch("pint.webhook.payloads.serialize_checkout_lines_for_tax_calculation")
 @pytest.mark.parametrize("taxes_included", [True, False])
 def test_generate_checkout_payload_for_tax_calculation(
     mocked_serialize_checkout_lines_for_tax_calculation,
@@ -1443,7 +1443,7 @@ def test_generate_checkout_payload_for_tax_calculation(
     )
 
 
-@patch("saleor.webhook.payloads.serialize_checkout_lines_for_tax_calculation")
+@patch("pint.webhook.payloads.serialize_checkout_lines_for_tax_calculation")
 def test_generate_checkout_payload_for_tax_calculation_digital_checkout(
     mocked_serialize_checkout_lines_for_tax_calculation,
     mocked_fetch_checkout,
@@ -1626,7 +1626,7 @@ def test_generate_checkout_payload(
     }
 
 
-@patch("saleor.order.calculations.fetch_order_prices_if_expired")
+@patch("pint.order.calculations.fetch_order_prices_if_expired")
 def test_generate_excluded_shipping_methods_for_order(mocked_fetch, order):
     shipping_method = ShippingMethodData(
         id="123",

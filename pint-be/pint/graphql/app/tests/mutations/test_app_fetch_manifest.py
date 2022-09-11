@@ -147,7 +147,7 @@ def test_app_fetch_manifest_timeout(
 ):
     mocked_request = Mock()
     mocked_request.side_effect = requests.Timeout()
-    monkeypatch.setattr("saleor.graphql.app.mutations.requests.get", mocked_request)
+    monkeypatch.setattr("pint.graphql.app.mutations.requests.get", mocked_request)
     manifest_url = "http://localhost:3000/manifest-doesnt-exist"
     query = APP_FETCH_MANIFEST_MUTATION
     variables = {

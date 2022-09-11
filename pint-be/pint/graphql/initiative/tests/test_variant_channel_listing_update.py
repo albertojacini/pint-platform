@@ -241,7 +241,7 @@ def test_variant_channel_listing_update_as_staff_user(
     assert channel_pln_data["channel"]["slug"] == channel_PLN.slug
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_variant_updated")
+@patch("pint.plugins.manager.PluginsManager.product_variant_updated")
 def test_variant_channel_listing_update_trigger_webhook_product_variant_updated(
     mock_product_variant_updated,
     staff_api_client,
@@ -401,7 +401,7 @@ def test_variant_channel_listing_update_as_anonymous(
     assert_no_permission(response)
 
 
-@patch("saleor.graphql.product.mutations.channels.update_product_discounted_price_task")
+@patch("pint.graphql.product.mutations.channels.update_product_discounted_price_task")
 def test_product_variant_channel_listing_update_updates_discounted_price(
     mock_update_product_discounted_price_task,
     staff_api_client,

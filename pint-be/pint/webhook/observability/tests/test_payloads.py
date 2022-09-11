@@ -448,7 +448,7 @@ def test_generate_event_delivery_attempt_payload_with_non_empty_headers(
 
 
 @patch(
-    "saleor.webhook.observability.payloads.SENSITIVE_GQL_FIELDS", {"Product": {"name"}}
+    "pint.webhook.observability.payloads.SENSITIVE_GQL_FIELDS", {"Product": {"name"}}
 )
 def test_generate_event_delivery_attempt_payload_with_subscription_query(
     webhook,

@@ -9,7 +9,7 @@ on:
       - "**/migrations/**"
 
 env:
-  DATABASE_URL: "postgres://saleor:saleor@postgres:5432/saleor"
+  DATABASE_URL: "postgres://pint:pint@postgres:5432/pint"
   SECRET_KEY: ci-test
 
 jobs:
@@ -21,8 +21,8 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: saleor
-          POSTGRES_USER: saleor
+          POSTGRES_PASSWORD: pint
+          POSTGRES_USER: pint
         options: >-
           --health-cmd pg_isready
           --health-interval 10s

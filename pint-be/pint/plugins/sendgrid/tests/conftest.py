@@ -28,7 +28,7 @@ def sendgrid_email_plugin(settings, channel_USD):
         api_key=None,
     ):
 
-        settings.PLUGINS = ["saleor.plugins.sendgrid.plugin.SendgridEmailPlugin"]
+        settings.PLUGINS = ["pint.plugins.sendgrid.plugin.SendgridEmailPlugin"]
         manager = get_plugins_manager()
         manager.save_plugin_configuration(
             SendgridEmailPlugin.PLUGIN_ID,

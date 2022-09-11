@@ -22,7 +22,7 @@ JWT_REFRESH_TOKEN_COOKIE_NAME = "refreshToken"
 
 PERMISSIONS_FIELD = "permissions"
 USER_PERMISSION_FIELD = "user_permissions"
-JWT_SALEOR_OWNER_NAME = "saleor"
+JWT_SALEOR_OWNER_NAME = "pint"
 JWT_OWNER_FIELD = "owner"
 
 

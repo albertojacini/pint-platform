@@ -17,7 +17,7 @@ def test_get_event_map():
         assert event in EVENT_MAP
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email_with_dynamic_template_id.delay")
+@patch("pint.plugins.sendgrid.tasks.send_email_with_dynamic_template_id.delay")
 def test_notify_via_external_notification_trigger_with_extra_payload(
     mocked_event_map,
     staff_users,
@@ -66,7 +66,7 @@ def test_send_notification_to_customers_with_product_variant_payload(
     base_interface_mock.assert_called_once()
 
 
-@patch("saleor.plugins.sendgrid.plugin.EVENT_MAP")
+@patch("pint.plugins.sendgrid.plugin.EVENT_MAP")
 def test_notify_when_plugin_disabled(mocked_event_map, sendgrid_email_plugin):
     mocked_event_task = MagicMock()
     event_map = {
@@ -85,7 +85,7 @@ def test_notify_when_plugin_disabled(mocked_event_map, sendgrid_email_plugin):
     assert not mocked_event_task.delay.called
 
 
-@patch("saleor.plugins.sendgrid.plugin.EVENT_MAP")
+@patch("pint.plugins.sendgrid.plugin.EVENT_MAP")
 def test_notify_not_valid_event_type(mocked_event_map, sendgrid_email_plugin):
     mocked_event_task = MagicMock()
     event_map = {
@@ -104,7 +104,7 @@ def test_notify_not_valid_event_type(mocked_event_map, sendgrid_email_plugin):
     assert not mocked_event_task.delay.called
 
 
-@patch("saleor.plugins.sendgrid.plugin.EVENT_MAP")
+@patch("pint.plugins.sendgrid.plugin.EVENT_MAP")
 def test_notify_missing_handler(mocked_event_map, sendgrid_email_plugin):
     sample_payload = {"key_1": "value"}
 
@@ -125,7 +125,7 @@ def test_notify_missing_handler(mocked_event_map, sendgrid_email_plugin):
     assert not mocked_event_task.delay.called
 
 
-@patch("saleor.plugins.sendgrid.plugin.EVENT_MAP")
+@patch("pint.plugins.sendgrid.plugin.EVENT_MAP")
 def test_notify_missing_template_id(mocked_event_map, sendgrid_email_plugin):
     sample_payload = {"key_1": "value"}
 
@@ -150,7 +150,7 @@ def test_notify_missing_template_id(mocked_event_map, sendgrid_email_plugin):
     assert not mocked_event_task.delay.called
 
 
-@patch("saleor.plugins.sendgrid.plugin.EVENT_MAP")
+@patch("pint.plugins.sendgrid.plugin.EVENT_MAP")
 def test_notify(mocked_event_map, sendgrid_email_plugin):
     sample_payload = {"key_1": "value"}
 

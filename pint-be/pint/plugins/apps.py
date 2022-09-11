@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class PluginConfig(AppConfig):
-    name = "saleor.plugins"
+    name = "pint.plugins"
     verbose_name = "Plugins"
 
     def ready(self):

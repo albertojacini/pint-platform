@@ -13,7 +13,7 @@ from ....webhook.payloads import generate_order_payload_for_tax_calculation
 from ..utils import DEFAULT_TAX_CODE, DEFAULT_TAX_DESCRIPTION, parse_tax_data
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_get_taxes_for_checkout_no_permission(
     mock_request,
     webhook_plugin,
@@ -33,8 +33,8 @@ def test_get_taxes_for_checkout_no_permission(
 
 
 @freeze_time()
-@mock.patch("saleor.order.calculations.fetch_order_prices_if_expired")
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.order.calculations.fetch_order_prices_if_expired")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_get_taxes_for_order(
     mock_request,
     mock_fetch,
@@ -65,7 +65,7 @@ def test_get_taxes_for_order(
     assert tax_data == parse_tax_data(tax_data_response)
 
 
-@mock.patch("saleor.plugins.webhook.tasks.send_webhook_request_sync")
+@mock.patch("pint.plugins.webhook.tasks.send_webhook_request_sync")
 def test_get_taxes_for_order_no_permission(
     mock_request,
     webhook_plugin,

@@ -15,9 +15,9 @@ def vatlayer_plugin(settings, vatlayer, channel_USD):
         countries_to_calculate_taxes_from_origin=None,
         excluded_countries=None,
     ):
-        settings.PLUGINS = ["saleor.plugins.vatlayer.plugin.VatlayerPlugin"]
+        settings.PLUGINS = ["pint.plugins.vatlayer.plugin.VatlayerPlugin"]
         manager = get_plugins_manager()
-        with patch("saleor.plugins.vatlayer.plugin.fetch_rate_types"):
+        with patch("pint.plugins.vatlayer.plugin.fetch_rate_types"):
             manager.save_plugin_configuration(
                 VatlayerPlugin.PLUGIN_ID,
                 channel_USD.slug,

@@ -1,1 +1,1 @@
-SALEOR_STAFF_PERMISSION = "saleor:staff"
+SALEOR_STAFF_PERMISSION = "pint:staff"

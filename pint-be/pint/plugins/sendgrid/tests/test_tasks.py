@@ -50,8 +50,8 @@ def sample_payload(customer_user):
     }
 
 
-@patch("saleor.plugins.sendgrid.tasks.Mail")
-@patch("saleor.plugins.sendgrid.tasks.SendGridAPIClient.send")
+@patch("pint.plugins.sendgrid.tasks.Mail")
+@patch("pint.plugins.sendgrid.tasks.SendGridAPIClient.send")
 def test_send_email(
     mocked_api_client, mocked_mail, sendgrid_email_plugin, sample_payload
 ):
@@ -81,7 +81,7 @@ def test_send_email(
     mocked_api_client.assert_called_with(mock_message)
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_account_confirmation_email_task(
     mocked_send_email, customer_user, sendgrid_email_plugin
 ):
@@ -110,7 +110,7 @@ def test_send_account_confirmation_email_task(
     )
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_password_reset_email_task(
     mocked_send_email, customer_user, sendgrid_email_plugin
 ):
@@ -145,7 +145,7 @@ def test_send_password_reset_email_task(
     assert event.user == customer_user
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_request_email_change_email_task(
     mocked_send_email, customer_user, sendgrid_email_plugin
 ):
@@ -186,7 +186,7 @@ def test_send_request_email_change_email_task(
     }
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_user_change_email_notification_task(
     mocked_send_email, customer_user, sendgrid_email_plugin
 ):
@@ -225,7 +225,7 @@ def test_send_user_change_email_notification_task(
     }
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_account_delete_confirmation_email_task(
     mocked_send_email, customer_user, sendgrid_email_plugin
 ):
@@ -258,7 +258,7 @@ def test_send_account_delete_confirmation_email_task(
     )
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_set_user_password_email_task(
     mocked_send_email, customer_user, sendgrid_email_plugin
 ):
@@ -291,7 +291,7 @@ def test_send_set_user_password_email_task(
     )
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_invoice_email_task_by_user(
     mocked_send_email, staff_user, order, sendgrid_email_plugin
 ):
@@ -338,7 +338,7 @@ def test_send_invoice_email_task_by_user(
     assert not order_event.app
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_invoice_email_task_by_app(
     mocked_send_email, app, order, sendgrid_email_plugin
 ):
@@ -385,7 +385,7 @@ def test_send_invoice_email_task_by_app(
     assert not order_event.user
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_order_confirmation_email_task(
     mocked_send_email, staff_user, order, sendgrid_email_plugin
 ):
@@ -422,7 +422,7 @@ def test_send_order_confirmation_email_task(
     }
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_fulfillment_confirmation_email_task_by_user(
     mocked_send_email, staff_user, fulfillment, order, sendgrid_email_plugin
 ):
@@ -457,7 +457,7 @@ def test_send_fulfillment_confirmation_email_task_by_user(
     }
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_fulfillment_confirmation_email_task_by_app(
     mocked_send_email, app, fulfillment, order, sendgrid_email_plugin
 ):
@@ -492,7 +492,7 @@ def test_send_fulfillment_confirmation_email_task_by_app(
     }
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_fulfillment_update_email_task(
     mocked_send_email, staff_user, fulfillment, order, sendgrid_email_plugin
 ):
@@ -516,7 +516,7 @@ def test_send_fulfillment_update_email_task(
     )
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_payment_confirmation_email_task(
     mocked_send_email, payment_dummy, staff_user, order, sendgrid_email_plugin
 ):
@@ -561,7 +561,7 @@ def test_send_payment_confirmation_email_task(
     }
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_order_canceled_email_task_by_user(
     mocked_send_email, staff_user, order, sendgrid_email_plugin
 ):
@@ -602,7 +602,7 @@ def test_send_order_canceled_email_task_by_user(
     assert order_event.user == staff_user
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_order_canceled_email_task_by_app(
     mocked_send_email, app, order, sendgrid_email_plugin
 ):
@@ -643,7 +643,7 @@ def test_send_order_canceled_email_task_by_app(
     assert order_event.app == app
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_order_refund_email_task_by_user(
     mocked_send_email, staff_user, order, sendgrid_email_plugin
 ):
@@ -686,7 +686,7 @@ def test_send_order_refund_email_task_by_user(
     assert order_event.user == staff_user
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_order_refund_email_task_by_app(
     mocked_send_email, app, order, sendgrid_email_plugin
 ):
@@ -729,7 +729,7 @@ def test_send_order_refund_email_task_by_app(
     assert order_event.app == app
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_gift_card_email_task_by_user(
     mocked_send_email, staff_user, gift_card, sendgrid_email_plugin
 ):
@@ -774,7 +774,7 @@ def test_send_gift_card_email_task_by_user(
     assert not gift_card_event.app
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_gift_card_email_task_by_user_resending(
     mocked_send_email, staff_user, gift_card, sendgrid_email_plugin
 ):
@@ -819,7 +819,7 @@ def test_send_gift_card_email_task_by_user_resending(
     assert not gift_card_event.app
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_gift_card_email_task_by_app(
     mocked_send_email, app, gift_card, sendgrid_email_plugin
 ):
@@ -864,7 +864,7 @@ def test_send_gift_card_email_task_by_app(
     assert gift_card_event.app == app
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_order_confirmed_email_task_by_user(
     mocked_send_email, staff_user, order, sendgrid_email_plugin
 ):
@@ -907,7 +907,7 @@ def test_send_order_confirmed_email_task_by_user(
     assert not order_event.app
 
 
-@patch("saleor.plugins.sendgrid.tasks.send_email")
+@patch("pint.plugins.sendgrid.tasks.send_email")
 def test_send_order_confirmed_email_task_by_app(
     mocked_send_email, app, order, sendgrid_email_plugin
 ):

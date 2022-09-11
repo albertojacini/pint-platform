@@ -46,9 +46,9 @@ SITE_ID = 1
 
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 
-ROOT_URLCONF = "saleor.urls"
+ROOT_URLCONF = "pint.urls"
 
-WSGI_APPLICATION = "saleor.wsgi.application"
+WSGI_APPLICATION = "pint.wsgi.application"
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -74,18 +74,18 @@ INTERNAL_IPS = get_list(os.environ.get("INTERNAL_IPS", "127.0.0.1"))
 
 DATABASE_CONNECTION_DEFAULT_NAME = "default"
 # TODO: For local envs will be activated in separate PR.
-# We need to update docs an saleor platform.
+# We need to update docs an pint platform.
 # This variable should be set to `replica`
 DATABASE_CONNECTION_REPLICA_NAME = "default"
 
 DATABASES = {
     DATABASE_CONNECTION_DEFAULT_NAME: dj_database_url.config(
-        default="postgres://saleor:saleor@localhost:5432/saleor", conn_max_age=600
+        default="postgres://pint:pint@localhost:5432/pint", conn_max_age=600
     ),
-    # TODO: We need to add read only user to saleor platfrom, and we need to update
+    # TODO: We need to add read only user to pint platfrom, and we need to update
     # docs.
     # DATABASE_CONNECTION_REPLICA_NAME: dj_database_url.config(
-    #     default="postgres://saleor_read_only:saleor@localhost:5432/saleor",
+    #     default="postgres://pint_read_only:pint@localhost:5432/pint",
     #     conn_max_age=600,
     # ),
 }
@@ -143,7 +143,7 @@ MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "static")
 STATIC_URL = os.environ.get("STATIC_URL", "/static/")
 STATICFILES_DIRS = [
-    ("images", os.path.join(PROJECT_ROOT, "saleor", "static", "images"))
+    ("images", os.path.join(PROJECT_ROOT, "pint", "static", "images"))
 ]
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -154,7 +154,7 @@ context_processors = [
     "django.template.context_processors.debug",
     "django.template.context_processors.media",
     "django.template.context_processors.static",
-    "saleor.site.context_processors.site",
+    "pint.site.context_processors.site",
 ]
 
 loaders = [
@@ -179,7 +179,7 @@ TEMPLATES = [
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# Additional password algorithms that can be used by Saleor.
+# Additional password algorithms that can be used by pint.
 # The first algorithm defined by Django is the preferred one; users not using the
 # first algorithm will automatically be upgraded to it upon login
 PASSWORD_HASHERS = [
@@ -219,14 +219,14 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     # "django_celery_beat",
     # Local apps
-    # "saleor.account",
+    "pint.account",
     "pint.initiative",
     # "pint.seo",
-    # "pint.core",
-    # "saleor.csv",
-    # "saleor.graphql",
-    # "saleor.webhook",
-    # "saleor.app",
+    "pint.core",
+    # "pint.csv",
+    "pint.graphql",
+    # "pint.webhook",
+    "pint.app",
     # External apps
     # "django_measurement",
     # "django_prices",
@@ -257,7 +257,7 @@ if ENABLE_DEBUG_TOOLBAR:
         warnings.warn(msg)
     else:
         INSTALLED_APPS += ["django.forms", "debug_toolbar", "graphiql_debug_toolbar"]
-        MIDDLEWARE.append("saleor.graphql.middleware.DebugToolbarMiddleware")
+        MIDDLEWARE.append("pint.graphql.middleware.DebugToolbarMiddleware")
 
         DEBUG_TOOLBAR_PANELS = [
             "ddt_request_history.panels.request_history.RequestHistoryPanel",
@@ -355,8 +355,8 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
-        "saleor": {"level": "DEBUG", "propagate": True},
-        "saleor.graphql.errors.handled": {
+        "pint": {"level": "DEBUG", "propagate": True},
+        "pint.graphql.errors.handled": {
             "handlers": ["default"],
             "level": "INFO",
             "propagate": False,
@@ -404,7 +404,7 @@ PAYMENT_MODEL = "order.Payment"
 
 MAX_USER_ADDRESSES = int(os.environ.get("MAX_USER_ADDRESSES", 100))
 
-TEST_RUNNER = "saleor.tests.runner.PytestTestRunner"
+TEST_RUNNER = "pint.tests.runner.PytestTestRunner"
 
 
 PLAYGROUND_ENABLED = get_bool_from_env("PLAYGROUND_ENABLED", True)
@@ -509,29 +509,29 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", None)
 CELERY_TASK_ROUTES = {
-    "saleor.plugins.webhook.tasks.observability_reporter_task": {
+    "pint.plugins.webhook.tasks.observability_reporter_task": {
         "queue": "observability"
     },
-    "saleor.plugins.webhook.tasks.observability_send_events": {
+    "pint.plugins.webhook.tasks.observability_send_events": {
         "queue": "observability"
     },
 }
 
 # CELERY_BEAT_SCHEDULE = {
 #     "delete-empty-allocations": {
-#         "task": "saleor.warehouse.tasks.delete_empty_allocations_task",
+#         "task": "pint.warehouse.tasks.delete_empty_allocations_task",
 #         "schedule": timedelta(days=1),
 #     },
 #     "deactivate-preorder-for-variants": {
-#         "task": "saleor.product.tasks.deactivate_preorder_for_variants_task",
+#         "task": "pint.product.tasks.deactivate_preorder_for_variants_task",
 #         "schedule": timedelta(hours=1),
 #     },
 #     "delete-expired-reservations": {
-#         "task": "saleor.warehouse.tasks.delete_expired_reservations_task",
+#         "task": "pint.warehouse.tasks.delete_expired_reservations_task",
 #         "schedule": timedelta(days=1),
 #     },
 #     "delete-expired-checkouts": {
-#         "task": "saleor.checkout.tasks.delete_expired_checkouts",
+#         "task": "pint.checkout.tasks.delete_expired_checkouts",
 #         "schedule": crontab(hour=0, minute=0),
 #     },
 #     "delete-outdated-event-data": {
@@ -539,23 +539,23 @@ CELERY_TASK_ROUTES = {
 #         "schedule": timedelta(days=1),
 #     },
 #     "deactivate-expired-gift-cards": {
-#         "task": "saleor.giftcard.tasks.deactivate_expired_cards_task",
+#         "task": "pint.giftcard.tasks.deactivate_expired_cards_task",
 #         "schedule": crontab(hour=0, minute=0),
 #     },
 #     "update-stocks-quantity-allocated": {
-#         "task": "saleor.warehouse.tasks.update_stocks_quantity_allocated_task",
+#         "task": "pint.warehouse.tasks.update_stocks_quantity_allocated_task",
 #         "schedule": crontab(hour=0, minute=0),
 #     },
 #     "delete-old-export-files": {
-#         "task": "saleor.csv.tasks.delete_old_export_files",
+#         "task": "pint.csv.tasks.delete_old_export_files",
 #         "schedule": crontab(hour=1, minute=0),
 #     },
 #     "send-sale-toggle-notifications": {
-#         "task": "saleor.discount.tasks.send_sale_toggle_notifications",
+#         "task": "pint.discount.tasks.send_sale_toggle_notifications",
 #         "schedule": initiated_sale_webhook_schedule,
 #     },
 #     "update-products-search-vectors": {
-#         "task": "saleor.product.tasks.update_products_search_vector_task",
+#         "task": "pint.product.tasks.update_products_search_vector_task",
 #         "schedule": timedelta(seconds=20),
 #     },
 # }
@@ -592,7 +592,7 @@ OBSERVABILITY_BUFFER_TIMEOUT = timedelta(
 )
 if OBSERVABILITY_ACTIVE:
     CELERY_BEAT_SCHEDULE["observability-reporter"] = {
-        "task": "saleor.plugins.webhook.tasks.observability_reporter_task",
+        "task": "pint.plugins.webhook.tasks.observability_reporter_task",
         "schedule": OBSERVABILITY_REPORT_PERIOD,
         "options": {"expires": OBSERVABILITY_REPORT_PERIOD.total_seconds()},
     }
@@ -652,28 +652,28 @@ GRAPHQL_QUERY_MAX_COMPLEXITY = int(
 FEDERATED_QUERY_MAX_ENTITIES = int(os.environ.get("FEDERATED_QUERY_MAX_ENTITIES", 100))
 
 BUILTIN_PLUGINS = [
-    "saleor.plugins.avatax.plugin.AvataxPlugin",
-    "saleor.plugins.vatlayer.plugin.VatlayerPlugin",
-    "saleor.plugins.webhook.plugin.WebhookPlugin",
-    "saleor.payment.gateways.dummy.plugin.DummyGatewayPlugin",
-    "saleor.payment.gateways.dummy_credit_card.plugin.DummyCreditCardGatewayPlugin",
-    "saleor.payment.gateways.stripe.deprecated.plugin.DeprecatedStripeGatewayPlugin",
-    "saleor.payment.gateways.stripe.plugin.StripeGatewayPlugin",
-    "saleor.payment.gateways.braintree.plugin.BraintreeGatewayPlugin",
-    "saleor.payment.gateways.razorpay.plugin.RazorpayGatewayPlugin",
-    "saleor.payment.gateways.adyen.plugin.AdyenGatewayPlugin",
-    "saleor.payment.gateways.authorize_net.plugin.AuthorizeNetGatewayPlugin",
-    "saleor.payment.gateways.np_atobarai.plugin.NPAtobaraiGatewayPlugin",
-    "saleor.plugins.invoicing.plugin.InvoicingPlugin",
-    "saleor.plugins.user_email.plugin.UserEmailPlugin",
-    "saleor.plugins.admin_email.plugin.AdminEmailPlugin",
-    "saleor.plugins.sendgrid.plugin.SendgridEmailPlugin",
-    "saleor.plugins.openid_connect.plugin.OpenIDConnectPlugin",
+    "pint.plugins.avatax.plugin.AvataxPlugin",
+    "pint.plugins.vatlayer.plugin.VatlayerPlugin",
+    "pint.plugins.webhook.plugin.WebhookPlugin",
+    "pint.payment.gateways.dummy.plugin.DummyGatewayPlugin",
+    "pint.payment.gateways.dummy_credit_card.plugin.DummyCreditCardGatewayPlugin",
+    "pint.payment.gateways.stripe.deprecated.plugin.DeprecatedStripeGatewayPlugin",
+    "pint.payment.gateways.stripe.plugin.StripeGatewayPlugin",
+    "pint.payment.gateways.braintree.plugin.BraintreeGatewayPlugin",
+    "pint.payment.gateways.razorpay.plugin.RazorpayGatewayPlugin",
+    "pint.payment.gateways.adyen.plugin.AdyenGatewayPlugin",
+    "pint.payment.gateways.authorize_net.plugin.AuthorizeNetGatewayPlugin",
+    "pint.payment.gateways.np_atobarai.plugin.NPAtobaraiGatewayPlugin",
+    "pint.plugins.invoicing.plugin.InvoicingPlugin",
+    "pint.plugins.user_email.plugin.UserEmailPlugin",
+    "pint.plugins.admin_email.plugin.AdminEmailPlugin",
+    "pint.plugins.sendgrid.plugin.SendgridEmailPlugin",
+    "pint.plugins.openid_connect.plugin.OpenIDConnectPlugin",
 ]
 
 # Plugin discovery
 EXTERNAL_PLUGINS = []
-installed_plugins = pkg_resources.iter_entry_points("saleor.plugins")
+installed_plugins = pkg_resources.iter_entry_points("pint.plugins")
 for entry_point in installed_plugins:
     plugin_path = "{}.{}".format(entry_point.module_name, entry_point.attrs[0])
     if plugin_path not in BUILTIN_PLUGINS and plugin_path not in EXTERNAL_PLUGINS:
@@ -701,7 +701,7 @@ WEBHOOK_SYNC_TIMEOUT = 20
 # Initialize a simple and basic Jaeger Tracing integration
 # for open-tracing if enabled.
 #
-# Refer to our guide on https://docs.saleor.io/docs/next/guides/opentracing-jaeger/.
+# Refer to our guide on https://docs.pint.io/docs/next/guides/opentracing-jaeger/.
 #
 # If running locally, set:
 #   JAEGER_AGENT_HOST=localhost
@@ -717,7 +717,7 @@ if "JAEGER_AGENT_HOST" in os.environ:
             },
             "logging": get_bool_from_env("JAEGER_LOGGING", False),
         },
-        service_name="saleor",
+        service_name="pint",
         validate=True,
     ).initialize_tracer()
 

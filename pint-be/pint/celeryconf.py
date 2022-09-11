@@ -21,9 +21,9 @@ def setup_celery_logging(loglevel=None, **kwargs):
         logging.getLogger(CELERY_LOGGER_NAME).setLevel(loglevel)
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "saleor.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pint.settings")
 
-app = Celery("saleor")
+app = Celery("pint")
 
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()

@@ -9,7 +9,7 @@ from ....tests.utils import get_graphql_content
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-@patch("saleor.plugins.manager.PluginsManager.product_variant_back_in_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_back_in_stock")
 def test_product_variants_stocks_create(
     product_variant_back_in_stock_webhook_mock,
     staff_api_client,
@@ -78,7 +78,7 @@ def test_product_variants_stocks_create(
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-@patch("saleor.plugins.manager.PluginsManager.product_variant_back_in_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_back_in_stock")
 def test_product_variants_stocks_create_with_single_webhook_called(
     product_variant_back_in_stock_webhook_mock,
     staff_api_client,
@@ -203,7 +203,7 @@ def test_product_variants_stocks_update(
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-@patch("saleor.plugins.manager.PluginsManager.product_variant_out_of_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_out_of_stock")
 def test_product_variants_stocks_delete(
     product_variant_out_of_stock_webhook_mock,
     staff_api_client,
@@ -272,7 +272,7 @@ def test_product_variants_stocks_delete(
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-@patch("saleor.plugins.manager.PluginsManager.product_variant_out_of_stock")
+@patch("pint.plugins.manager.PluginsManager.product_variant_out_of_stock")
 def test_product_variants_stocks_delete_with_out_of_stock_webhook_many_calls(
     product_variant_out_of_stock_webhook_mock,
     staff_api_client,

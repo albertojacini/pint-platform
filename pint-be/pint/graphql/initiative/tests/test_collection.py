@@ -127,7 +127,7 @@ def test_collection_query_error_when_id_and_slug_provided(
     }
     response = user_api_client.post_graphql(QUERY_COLLECTION, variables=variables)
     assert graphql_log_handler.messages == [
-        "saleor.graphql.errors.handled[INFO].GraphQLError"
+        "pint.graphql.errors.handled[INFO].GraphQLError"
     ]
     content = get_graphql_content(response, ignore_errors=True)
     assert len(content["errors"]) == 1
@@ -141,7 +141,7 @@ def test_collection_query_error_when_no_param(
     variables = {}
     response = user_api_client.post_graphql(QUERY_COLLECTION, variables=variables)
     assert graphql_log_handler.messages == [
-        "saleor.graphql.errors.handled[INFO].GraphQLError"
+        "pint.graphql.errors.handled[INFO].GraphQLError"
     ]
     content = get_graphql_content(response, ignore_errors=True)
     assert len(content["errors"]) == 1
@@ -463,8 +463,8 @@ CREATE_COLLECTION_MUTATION = """
 """
 
 
-@patch("saleor.plugins.manager.PluginsManager.collection_updated")
-@patch("saleor.plugins.manager.PluginsManager.collection_created")
+@patch("pint.plugins.manager.PluginsManager.collection_updated")
+@patch("pint.plugins.manager.PluginsManager.collection_created")
 def test_create_collection(
     created_webhook_mock,
     updated_webhook_mock,
@@ -513,7 +513,7 @@ def test_create_collection(
     updated_webhook_mock.assert_not_called()
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_create_collection_trigger_product_update_webhook(
     product_updated_mock,
     staff_api_client,
@@ -603,8 +603,8 @@ def test_create_collection_name_with_unicode(
     assert data["collection"]["slug"] == "わたし-わ-にっぽん-です"
 
 
-@patch("saleor.plugins.manager.PluginsManager.collection_updated")
-@patch("saleor.plugins.manager.PluginsManager.collection_created")
+@patch("pint.plugins.manager.PluginsManager.collection_updated")
+@patch("pint.plugins.manager.PluginsManager.collection_created")
 def test_update_collection(
     created_webhook_mock,
     updated_webhook_mock,
@@ -945,7 +945,7 @@ DELETE_COLLECTION_MUTATION = """
 """
 
 
-@patch("saleor.plugins.manager.PluginsManager.collection_deleted")
+@patch("pint.plugins.manager.PluginsManager.collection_deleted")
 def test_delete_collection(
     deleted_webhook_mock,
     staff_api_client,
@@ -1007,7 +1007,7 @@ def test_delete_collection_with_background_image(
     assert delete_from_storage_task_mock.call_count == 3
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_delete_collection_trigger_product_updated_webhook(
     product_updated_mock,
     staff_api_client,
@@ -1065,7 +1065,7 @@ def test_add_products_to_collection(
     assert data["products"]["totalCount"] == products_before + len(product_ids)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_add_products_to_collection_trigger_product_updated_webhook(
     product_updated_mock,
     staff_api_client,
@@ -1162,7 +1162,7 @@ def test_remove_products_from_collection(
     assert data["products"]["totalCount"] == products_before - len(product_ids)
 
 
-@patch("saleor.plugins.manager.PluginsManager.product_updated")
+@patch("pint.plugins.manager.PluginsManager.product_updated")
 def test_remove_products_from_collection_trigger_product_updated_webhook(
     product_updated_mock,
     staff_api_client,

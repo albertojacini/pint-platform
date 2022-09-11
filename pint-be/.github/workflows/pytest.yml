@@ -7,7 +7,7 @@ on:
       - "**.py"
       - Dockerfile
       - requirements_dev.txt
-      - "saleor/**"
+      - "pint/**"
       - ".github/workflows/pytest.yml"
   push:
     branches:
@@ -17,11 +17,11 @@ on:
       - "**.py"
       - Dockerfile
       - requirements_dev.txt
-      - "saleor/**"
+      - "pint/**"
 
 env:
   BENCH_PATH: ./queries-results.json
-  DATABASE_URL: "postgres://saleor:saleor@postgres:5432/saleor"
+  DATABASE_URL: "postgres://pint:pint@postgres:5432/pint"
   SECRET_KEY: ci-test
 
 jobs:
@@ -33,8 +33,8 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: saleor
-          POSTGRES_USER: saleor
+          POSTGRES_PASSWORD: pint
+          POSTGRES_USER: pint
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -86,9 +86,9 @@ jobs:
       - uses: NyanKiyoshi/pytest-django-queries-ci-tools@v1
         with:
           query_raw_dump_path: ${{ env.BENCH_PATH }}
-          diff_endpoint: "https://dtab784j47g1o.cloudfront.net/default/saleor-db-queries-bot-diff"
+          diff_endpoint: "https://dtab784j47g1o.cloudfront.net/default/pint-db-queries-bot-diff"
           diff_results_base_url: "https://dtab784j47g1o.cloudfront.net"
-        if: github.event_name == 'pull_request' && github.repository == 'saleor/saleor'
+        if: github.event_name == 'pull_request' && github.repository == 'pint/pint'
 
       # Save results for future comparison against pull requests
       - uses: NyanKiyoshi/pytest-django-queries-ci-tools@v1
@@ -96,7 +96,7 @@ jobs:
           query_raw_dump_path: ${{ env.BENCH_PATH }}
           upload_endpoint: ${{ secrets.QUERIES_UPLOAD_ENDPOINT_URL }}
           upload_secret_key: ${{ secrets.QUERIES_UPLOAD_SECRET }}
-        if: github.event_name == 'push' && github.repository == 'saleor/saleor'
+        if: github.event_name == 'push' && github.repository == 'pint/pint'
 
       # Run linters and Django related checks
       - name: Run Linters and Checks

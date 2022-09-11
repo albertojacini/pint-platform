@@ -3,11 +3,11 @@ from unittest.mock import patch
 import pytest
 from django.core.exceptions import ValidationError
 
-from saleor.plugins.email_common import (
+from pint.plugins.email_common import (
     DEFAULT_EMAIL_CONFIGURATION,
     validate_default_email_configuration,
 )
-from saleor.plugins.error_codes import PluginErrorCode
+from pint.plugins.error_codes import PluginErrorCode
 
 
 @pytest.mark.parametrize(
@@ -31,7 +31,7 @@ def test_validate_default_email_configuration_bad_email(
     assert e.value.args[0]["sender_address"].code == PluginErrorCode.INVALID.value
 
 
-@patch("saleor.plugins.email_common.validate_email_config")
+@patch("pint.plugins.email_common.validate_email_config")
 def test_validate_default_email_configuration_correct_email(
     mock_email_config, plugin_configuration, email_configuration
 ):
@@ -40,7 +40,7 @@ def test_validate_default_email_configuration_correct_email(
     validate_default_email_configuration(plugin_configuration, email_configuration)
 
 
-@patch("saleor.plugins.email_common.validate_email_config")
+@patch("pint.plugins.email_common.validate_email_config")
 def test_validate_default_email_configuration_backend_raises(
     validate_email_config_mock, plugin_configuration, email_configuration
 ):

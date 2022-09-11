@@ -24,7 +24,7 @@ from ..notify_events import (
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_password_reset_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_password_reset_email_task.delay"
 )
 def test_send_account_password_reset_event(
     mocked_email_task, customer_user, user_email_plugin
@@ -48,7 +48,7 @@ def test_send_account_password_reset_event(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_password_reset_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_password_reset_email_task.delay"
 )
 def test_send_account_password_reset_event_with_empty_template(
     mocked_email_task, customer_user, user_email_plugin
@@ -72,7 +72,7 @@ def test_send_account_password_reset_event_with_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_account_confirmation_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_account_confirmation_email_task.delay"
 )
 def test_send_account_confirmation(mocked_email_task, customer_user, user_email_plugin):
     token = "token123"
@@ -94,7 +94,7 @@ def test_send_account_confirmation(mocked_email_task, customer_user, user_email_
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_account_confirmation_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_account_confirmation_email_task.delay"
 )
 def test_send_account_confirmation_with_empty_template(
     mocked_email_task, customer_user, user_email_plugin
@@ -118,7 +118,7 @@ def test_send_account_confirmation_with_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_request_email_change_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_request_email_change_email_task.delay"
 )
 def test_send_account_change_email_request(
     mocked_email_task, customer_user, user_email_plugin
@@ -144,7 +144,7 @@ def test_send_account_change_email_request(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_request_email_change_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_request_email_change_email_task.delay"
 )
 def test_send_account_change_email_request_empty_template(
     mocked_email_task, customer_user, user_email_plugin
@@ -170,7 +170,7 @@ def test_send_account_change_email_request_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_user_change_email_notification_task."
+    "pint.plugins.user_email.notify_events.send_user_change_email_notification_task."
     "delay"
 )
 def test_send_account_change_email_confirm(
@@ -192,7 +192,7 @@ def test_send_account_change_email_confirm(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_user_change_email_notification_task."
+    "pint.plugins.user_email.notify_events.send_user_change_email_notification_task."
     "delay"
 )
 def test_send_account_change_email_confirm_empty_template(
@@ -214,7 +214,7 @@ def test_send_account_change_email_confirm_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events."
+    "pint.plugins.user_email.notify_events."
     "send_account_delete_confirmation_email_task.delay"
 )
 def test_send_account_delete(mocked_email_task, customer_user, user_email_plugin):
@@ -235,7 +235,7 @@ def test_send_account_delete(mocked_email_task, customer_user, user_email_plugin
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events."
+    "pint.plugins.user_email.notify_events."
     "send_account_delete_confirmation_email_task.delay"
 )
 def test_send_account_delete_with_empty_template(
@@ -260,7 +260,7 @@ def test_send_account_delete_with_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_set_user_password_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_set_user_password_email_task.delay"
 )
 def test_send_account_set_customer_password(
     mocked_email_task, customer_user, user_email_plugin
@@ -284,7 +284,7 @@ def test_send_account_set_customer_password(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_set_user_password_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_set_user_password_email_task.delay"
 )
 def test_send_account_set_customer_password_empty_template(
     mocked_email_task, customer_user, user_email_plugin
@@ -307,7 +307,7 @@ def test_send_account_set_customer_password_empty_template(
     assert not mocked_email_task.called
 
 
-@mock.patch("saleor.plugins.user_email.notify_events.send_invoice_email_task.delay")
+@mock.patch("pint.plugins.user_email.notify_events.send_invoice_email_task.delay")
 def test_send_invoice(mocked_email_task, user_email_plugin):
     payload = {
         "invoice": {
@@ -326,7 +326,7 @@ def test_send_invoice(mocked_email_task, user_email_plugin):
     )
 
 
-@mock.patch("saleor.plugins.user_email.notify_events.send_invoice_email_task.delay")
+@mock.patch("pint.plugins.user_email.notify_events.send_invoice_email_task.delay")
 def test_send_invoice_with_empty_template(mocked_email_task, user_email_plugin):
     payload = {
         "invoice": {
@@ -348,7 +348,7 @@ def test_send_invoice_with_empty_template(mocked_email_task, user_email_plugin):
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_order_confirmation_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_order_confirmation_email_task.delay"
 )
 def test_send_order_confirmation(mocked_email_task, order, user_email_plugin):
     payload = {
@@ -365,7 +365,7 @@ def test_send_order_confirmation(mocked_email_task, order, user_email_plugin):
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_order_confirmation_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_order_confirmation_email_task.delay"
 )
 def test_send_order_confirmation_empty_template(
     mocked_email_task, order, user_email_plugin
@@ -386,7 +386,7 @@ def test_send_order_confirmation_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_fulfillment_confirmation_email_task."
+    "pint.plugins.user_email.notify_events.send_fulfillment_confirmation_email_task."
     "delay"
 )
 def test_send_fulfillment_confirmation(
@@ -403,7 +403,7 @@ def test_send_fulfillment_confirmation(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_fulfillment_confirmation_email_task."
+    "pint.plugins.user_email.notify_events.send_fulfillment_confirmation_email_task."
     "delay"
 )
 def test_send_fulfillment_confirmation_empty_template(
@@ -420,7 +420,7 @@ def test_send_fulfillment_confirmation_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_fulfillment_update_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_fulfillment_update_email_task.delay"
 )
 def test_send_fulfillment_update(
     mocked_email_task, order, fulfillment, user_email_plugin
@@ -434,7 +434,7 @@ def test_send_fulfillment_update(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_fulfillment_update_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_fulfillment_update_email_task.delay"
 )
 def test_send_fulfillment_update_empty_template(
     mocked_email_task, order, fulfillment, user_email_plugin
@@ -450,7 +450,7 @@ def test_send_fulfillment_update_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_payment_confirmation_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_payment_confirmation_email_task.delay"
 )
 def test_send_payment_confirmation(
     mocked_email_task, order, payment_dummy, user_email_plugin
@@ -479,7 +479,7 @@ def test_send_payment_confirmation(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_payment_confirmation_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_payment_confirmation_email_task.delay"
 )
 def test_send_payment_confirmation_empty_template(
     mocked_email_task, order, payment_dummy, user_email_plugin
@@ -508,7 +508,7 @@ def test_send_payment_confirmation_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_order_canceled_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_order_canceled_email_task.delay"
 )
 def test_send_order_canceled(mocked_email_task, order, user_email_plugin):
     payload = {
@@ -525,7 +525,7 @@ def test_send_order_canceled(mocked_email_task, order, user_email_plugin):
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_order_canceled_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_order_canceled_email_task.delay"
 )
 def test_send_order_canceled_empty_template(
     mocked_email_task, order, user_email_plugin
@@ -546,7 +546,7 @@ def test_send_order_canceled_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_order_refund_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_order_refund_email_task.delay"
 )
 def test_send_order_refund(mocked_email_task, order, user_email_plugin):
     payload = {
@@ -565,7 +565,7 @@ def test_send_order_refund(mocked_email_task, order, user_email_plugin):
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_order_refund_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_order_refund_email_task.delay"
 )
 def test_send_order_refund_with_empty_template(
     mocked_email_task, order, user_email_plugin
@@ -588,7 +588,7 @@ def test_send_order_refund_with_empty_template(
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_order_confirmed_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_order_confirmed_email_task.delay"
 )
 def test_send_order_confirmed(mocked_email_task, order, user_email_plugin):
     payload = {
@@ -605,7 +605,7 @@ def test_send_order_confirmed(mocked_email_task, order, user_email_plugin):
 
 
 @mock.patch(
-    "saleor.plugins.user_email.notify_events.send_order_confirmed_email_task.delay"
+    "pint.plugins.user_email.notify_events.send_order_confirmed_email_task.delay"
 )
 def test_send_order_confirmed_empty_template(
     mocked_email_task, order, user_email_plugin

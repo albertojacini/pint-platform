@@ -541,14 +541,14 @@ def get_saleor_permissions_qs_from_scope(scope: str) -> QuerySet[Permission]:
 
 
 def get_saleor_permissions_from_list(permissions: list) -> QuerySet[Permission]:
-    saleor_permissions_str = [s for s in permissions if s.startswith("saleor:")]
+    saleor_permissions_str = [s for s in permissions if s.startswith("pint:")]
     if SALEOR_STAFF_PERMISSION in saleor_permissions_str:
         saleor_permissions_str.remove(SALEOR_STAFF_PERMISSION)
     if not saleor_permissions_str:
         return Permission.objects.none()
 
     permission_codenames = list(
-        map(lambda perm: perm.replace("saleor:", ""), saleor_permissions_str)
+        map(lambda perm: perm.replace("pint:", ""), saleor_permissions_str)
     )
     permissions = get_permissions_from_codenames(permission_codenames)
     return permissions

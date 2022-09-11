@@ -4,18 +4,18 @@ Tagging Process
 +-----------------------------------+-----------------------------------------------------------------------+
 | Git Ref                           | Container Tags                                                        |
 +===================================+=======================================================================+
-| ``refs/tags/1.0.0``               | ghcr.io/saleor/saleor:1.0.0                                           |
-|                                   | ghcr.io/saleor/saleor:latest                                          |
+| ``refs/tags/1.0.0``               | ghcr.io/pint/pint:1.0.0                                           |
+|                                   | ghcr.io/pint/pint:latest                                          |
 +-----------------------------------+-----------------------------------------------------------------------+
-| ``refs/tags/1.0.0a1``             | ghcr.io/saleor/saleor:1.0.0a1                                         |
-|                                   | ghcr.io/saleor/saleor:snapshot                                        |
+| ``refs/tags/1.0.0a1``             | ghcr.io/pint/pint:1.0.0a1                                         |
+|                                   | ghcr.io/pint/pint:snapshot                                        |
 +-----------------------------------+-----------------------------------------------------------------------+
-| ``refs/tags/1.0.0rc1``            | ghcr.io/saleor/saleor:1.0.0rc1                                        |
-|                                   | ghcr.io/saleor/saleor:snapshot                                        |
+| ``refs/tags/1.0.0rc1``            | ghcr.io/pint/pint:1.0.0rc1                                        |
+|                                   | ghcr.io/pint/pint:snapshot                                        |
 +-----------------------------------+-----------------------------------------------------------------------+
-| ``refs/heads/main``               | ghcr.io/saleor/saleor:unstable-main                                   |
+| ``refs/heads/main``               | ghcr.io/pint/pint:unstable-main                                   |
 +-----------------------------------+-----------------------------------------------------------------------+
-| ``refs/heads/preview/my-feature`` | ghcr.io/saleor/saleor:unstable-my-feature                             |
+| ``refs/heads/preview/my-feature`` | ghcr.io/pint/pint:unstable-my-feature                             |
 +-----------------------------------+-----------------------------------------------------------------------+
 
 

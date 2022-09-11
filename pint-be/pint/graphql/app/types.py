@@ -95,7 +95,7 @@ class AppManifestExtension(graphene.ObjectType):
 
 class AppExtension(AppManifestExtension, ModelObjectType):
     id = graphene.GlobalID(required=True)
-    app = graphene.Field("saleor.graphql.app.types.App", required=True)
+    app = graphene.Field("pint.graphql.app.types.App", required=True)
     access_token = graphene.String(
         description="JWT token used to authenticate by thridparty app extension."
     )

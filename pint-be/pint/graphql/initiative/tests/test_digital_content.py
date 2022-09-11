@@ -236,7 +236,7 @@ DIGITAL_CONTENT_DELETE_MUTATION = """
 """
 
 
-@patch("saleor.product.signals.delete_from_storage_task.delay")
+@patch("pint.product.signals.delete_from_storage_task.delay")
 def test_digital_content_delete_mutation(
     delete_from_storage_task_mock,
     monkeypatch,

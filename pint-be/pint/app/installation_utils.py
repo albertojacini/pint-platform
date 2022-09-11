@@ -17,8 +17,8 @@ def send_app_token(target_url: str, token: str):
     headers = {
         "Content-Type": "application/json",
         # X- headers will be deprecated in Saleor 4.0, proper headers are without X-
-        "x-saleor-domain": domain,
-        "saleor-domain": domain,
+        "x-pint-domain": domain,
+        "pint-domain": domain,
     }
     json_data = {"auth_token": token}
     response = requests.post(

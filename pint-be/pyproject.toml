@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "saleor"
+name = "pint"
 version = "3.7.6"
 description = "A modular, high performance, headless e-commerce platform built with Python, GraphQL, Django, and React."
-authors = [ "Saleor Commerce <hello@saleor.io>" ]
+authors = [ "Saleor Commerce <hello@pint.io>" ]
 license = "BSD-3-Clause"
 readme = "README.md"
-homepage = "https://saleor.io/"
-repository = "https://github.com/mirumee/saleor"
-documentation = "https://docs.saleor.io/"
+homepage = "https://pint.io/"
+repository = "https://github.com/mirumee/pint"
+documentation = "https://docs.pint.io/"
 
   [tool.poetry.dependencies]
   python = "~3.9"

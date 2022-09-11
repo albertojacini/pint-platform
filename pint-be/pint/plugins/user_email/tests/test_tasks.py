@@ -31,7 +31,7 @@ from ...user_email.tasks import (
 )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_account_confirmation_email_task_default_template(
     mocked_send_mail, user_email_dict_config, customer_user
 ):
@@ -54,7 +54,7 @@ def test_send_account_confirmation_email_task_default_template(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_account_confirmation_email_task_custom_template(
     mocked_send_email, user_email_dict_config, customer_user
 ):
@@ -89,7 +89,7 @@ def test_send_account_confirmation_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_password_reset_email_task_default_template(
     mocked_send_mail, user_email_dict_config, customer_user
 ):
@@ -116,7 +116,7 @@ def test_send_password_reset_email_task_default_template(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_password_reset_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, customer_user
 ):
@@ -155,7 +155,7 @@ def test_send_password_reset_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_request_email_change_email_task_default_template(
     mocked_send_mail, user_email_dict_config, customer_user
 ):
@@ -180,7 +180,7 @@ def test_send_request_email_change_email_task_default_template(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_request_email_change_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, customer_user
 ):
@@ -221,7 +221,7 @@ def test_send_request_email_change_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_user_change_email_notification_task_default_template(
     mocked_send_mail, user_email_dict_config, customer_user
 ):
@@ -243,7 +243,7 @@ def test_send_user_change_email_notification_task_default_template(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_user_change_email_notification_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, customer_user
 ):
@@ -281,7 +281,7 @@ def test_send_user_change_email_notification_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_account_delete_confirmation_email_task_default_template(
     mocked_send_mail, user_email_dict_config, customer_user
 ):
@@ -304,7 +304,7 @@ def test_send_account_delete_confirmation_email_task_default_template(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_account_delete_confirmation_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, customer_user
 ):
@@ -343,7 +343,7 @@ def test_send_account_delete_confirmation_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_set_user_password_email_task_default_template(
     mocked_send_mail, user_email_dict_config, customer_user
 ):
@@ -366,7 +366,7 @@ def test_send_set_user_password_email_task_default_template(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_set_user_password_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, customer_user
 ):
@@ -405,7 +405,7 @@ def test_send_set_user_password_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_invoice_email_task_default_template_by_user(
     mocked_send_mail,
     user_email_dict_config,
@@ -448,7 +448,7 @@ def test_send_invoice_email_task_default_template_by_user(
     ).exists()
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_invoice_email_task_default_template_by_app(
     mocked_send_mail,
     user_email_dict_config,
@@ -491,7 +491,7 @@ def test_send_invoice_email_task_default_template_by_app(
     ).exists()
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_invoice_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, staff_user, order
 ):
@@ -547,7 +547,7 @@ def test_send_invoice_email_task_custom_template(
     ).exists()
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_order_confirmation_email_task_default_template(
     mocked_send_mail, user_email_dict_config, order
 ):
@@ -567,7 +567,7 @@ def test_send_order_confirmation_email_task_default_template(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_order_confirmation_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, order
 ):
@@ -603,7 +603,7 @@ def test_send_order_confirmation_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_fulfillment_confirmation_email_task_default_template(
     mocked_send_mail, user_email_dict_config, order, fulfillment, staff_user
 ):
@@ -630,7 +630,7 @@ def test_send_fulfillment_confirmation_email_task_default_template(
     }
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_fulfillment_confirmation_email_task_custom_template_by_user(
     mocked_send_email,
     user_email_dict_config,
@@ -683,7 +683,7 @@ def test_send_fulfillment_confirmation_email_task_custom_template_by_user(
     }
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_fulfillment_confirmation_email_task_custom_template_by_app(
     mocked_send_email,
     user_email_dict_config,
@@ -736,7 +736,7 @@ def test_send_fulfillment_confirmation_email_task_custom_template_by_app(
     }
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_fulfillment_update_email_task_default_template(
     mocked_send_mail, user_email_dict_config, order, fulfillment
 ):
@@ -754,7 +754,7 @@ def test_send_fulfillment_update_email_task_default_template(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_fulfillment_update_email_task_custom_template(
     mocked_send_email,
     user_email_dict_config,
@@ -789,7 +789,7 @@ def test_send_fulfillment_update_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_payment_confirmation_email_task_default_template(
     mocked_send_mail, user_email_dict_config, order, payment_dummy
 ):
@@ -823,7 +823,7 @@ def test_send_payment_confirmation_email_task_default_template(
     }
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_payment_confirmation_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, order, payment_dummy
 ):
@@ -866,7 +866,7 @@ def test_send_payment_confirmation_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_order_canceled_email_task_default_template_by_user(
     mocked_send_mail, user_email_dict_config, order, staff_user
 ):
@@ -888,7 +888,7 @@ def test_send_order_canceled_email_task_default_template_by_user(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_order_canceled_email_task_default_template_by_app(
     mocked_send_mail, user_email_dict_config, order, app
 ):
@@ -910,7 +910,7 @@ def test_send_order_canceled_email_task_default_template_by_app(
     assert mocked_send_mail.called
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_order_canceled_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, order, staff_user
 ):
@@ -947,7 +947,7 @@ def test_send_order_canceled_email_task_custom_template(
     )
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_order_refund_email_task_default_template_by_user(
     mocked_send_mail, user_email_dict_config, order, staff_user
 ):
@@ -977,7 +977,7 @@ def test_send_order_refund_email_task_default_template_by_user(
     }
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_order_refund_email_task_default_template_by_app(
     mocked_send_mail, user_email_dict_config, order, app
 ):
@@ -1007,7 +1007,7 @@ def test_send_order_refund_email_task_default_template_by_app(
     }
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_order_refund_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, order, staff_user
 ):
@@ -1051,7 +1051,7 @@ def test_send_order_refund_email_task_custom_template(
     }
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_order_confirmed_email_task_default_template_by_user(
     mocked_send_mail, user_email_dict_config, order, staff_user
 ):
@@ -1081,7 +1081,7 @@ def test_send_order_confirmed_email_task_default_template_by_user(
     ).exists()
 
 
-@mock.patch("saleor.plugins.email_common.send_mail")
+@mock.patch("pint.plugins.email_common.send_mail")
 def test_send_order_confirmed_email_task_default_template_by_app(
     mocked_send_mail, user_email_dict_config, order, app
 ):
@@ -1111,7 +1111,7 @@ def test_send_order_confirmed_email_task_default_template_by_app(
     ).exists()
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_order_confirmed_email_task_custom_template(
     mocked_send_email, user_email_dict_config, user_email_plugin, order, staff_user
 ):
@@ -1156,7 +1156,7 @@ def test_send_order_confirmed_email_task_custom_template(
     ).exists()
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_gift_card_email_task_by_user(
     mocked_send_email, user_email_dict_config, staff_user, gift_card, user_email_plugin
 ):
@@ -1209,7 +1209,7 @@ def test_send_gift_card_email_task_by_user(
     assert not gift_card_event.app
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_gift_card_email_task_by_user_resending(
     mocked_send_email, user_email_dict_config, staff_user, gift_card, user_email_plugin
 ):
@@ -1263,7 +1263,7 @@ def test_send_gift_card_email_task_by_user_resending(
     assert not gift_card_event.app
 
 
-@mock.patch("saleor.plugins.user_email.tasks.send_email")
+@mock.patch("pint.plugins.user_email.tasks.send_email")
 def test_send_gift_card_email_task_by_app(
     mocked_send_email, user_email_dict_config, app, gift_card, user_email_plugin
 ):

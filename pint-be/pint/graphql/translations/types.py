@@ -85,7 +85,7 @@ class AttributeValueTranslatableContent(ModelObjectType):
         AttributeValueTranslation, type_name="attribute value"
     )
     attribute_value = graphene.Field(
-        "saleor.graphql.attribute.types.AttributeValue",
+        "pint.graphql.attribute.types.AttributeValue",
         description="Represents a value of an attribute.",
         deprecation_reason=(
             f"{DEPRECATED_IN_3X_FIELD} Get model fields from the root level queries."
@@ -115,7 +115,7 @@ class AttributeTranslatableContent(ModelObjectType):
     name = graphene.String(required=True)
     translation = TranslationField(AttributeTranslation, type_name="attribute")
     attribute = graphene.Field(
-        "saleor.graphql.attribute.types.Attribute",
+        "pint.graphql.attribute.types.Attribute",
         description="Custom attribute of a product.",
         deprecation_reason=(
             f"{DEPRECATED_IN_3X_FIELD} Get model fields from the root level queries."
@@ -147,7 +147,7 @@ class ProductVariantTranslatableContent(ModelObjectType):
         ProductVariantTranslation, type_name="product variant"
     )
     product_variant = graphene.Field(
-        "saleor.graphql.product.types.products.ProductVariant",
+        "pint.graphql.product.types.products.ProductVariant",
         description=(
             "Represents a version of a product such as different size or color."
         ),
@@ -217,7 +217,7 @@ class ProductTranslatableContent(ModelObjectType):
     )
     translation = TranslationField(ProductTranslation, type_name="product")
     product = graphene.Field(
-        "saleor.graphql.product.types.products.Product",
+        "pint.graphql.product.types.products.Product",
         description="Represents an individual item for sale in the storefront.",
         deprecation_reason=(
             f"{DEPRECATED_IN_3X_FIELD} Get model fields from the root level queries."
@@ -292,7 +292,7 @@ class CollectionTranslatableContent(ModelObjectType):
     )
     translation = TranslationField(CollectionTranslation, type_name="collection")
     collection = graphene.Field(
-        "saleor.graphql.product.types.products.Collection",
+        "pint.graphql.product.types.products.Collection",
         description="Represents a collection of products.",
         deprecation_reason=(
             f"{DEPRECATED_IN_3X_FIELD} Get model fields from the root level queries."
@@ -355,7 +355,7 @@ class CategoryTranslatableContent(ModelObjectType):
     )
     translation = TranslationField(CategoryTranslation, type_name="category")
     category = graphene.Field(
-        "saleor.graphql.product.types.products.Category",
+        "pint.graphql.product.types.products.Category",
         description="Represents a single category of products.",
         deprecation_reason=(
             f"{DEPRECATED_IN_3X_FIELD} Get model fields from the root level queries."
@@ -409,7 +409,7 @@ class PageTranslatableContent(ModelObjectType):
     )
     translation = TranslationField(PageTranslation, type_name="page")
     page = graphene.Field(
-        "saleor.graphql.page.types.Page",
+        "pint.graphql.page.types.Page",
         description=(
             "A static page that can be manually added by a shop operator "
             "through the dashboard."
@@ -464,7 +464,7 @@ class VoucherTranslatableContent(ModelObjectType):
     name = graphene.String()
     translation = TranslationField(VoucherTranslation, type_name="voucher")
     voucher = PermissionsField(
-        "saleor.graphql.discount.types.Voucher",
+        "pint.graphql.discount.types.Voucher",
         description=(
             "Vouchers allow giving discounts to particular customers on categories, "
             "collections or specific products. They can be used during checkout by "
@@ -499,7 +499,7 @@ class SaleTranslatableContent(ModelObjectType):
     name = graphene.String(required=True)
     translation = TranslationField(SaleTranslation, type_name="sale")
     sale = PermissionsField(
-        "saleor.graphql.discount.types.Sale",
+        "pint.graphql.discount.types.Sale",
         description=(
             "Sales allow creating discounts for categories, collections "
             "or products and are visible to all the customers."
@@ -543,7 +543,7 @@ class MenuItemTranslatableContent(ModelObjectType):
     name = graphene.String(required=True)
     translation = TranslationField(MenuItemTranslation, type_name="menu item")
     menu_item = graphene.Field(
-        "saleor.graphql.menu.types.MenuItem",
+        "pint.graphql.menu.types.MenuItem",
         description=(
             "Represents a single item of the related menu. Can store categories, "
             "collection or pages."
@@ -584,7 +584,7 @@ class ShippingMethodTranslatableContent(ModelObjectType):
         ShippingMethodTranslation, type_name="shipping method"
     )
     shipping_method = PermissionsField(
-        "saleor.graphql.shipping.types.ShippingMethodType",
+        "pint.graphql.shipping.types.ShippingMethodType",
         description=(
             "Shipping method are the methods you'll use to get customer's orders "
             " to them. They are directly exposed to the customers."

@@ -101,7 +101,7 @@ query FetchProduct($id: ID, $channel: String) {
 
 
 @mock.patch(
-    "saleor.graphql.product.types.products.get_product_availability",
+    "pint.graphql.product.types.products.get_product_availability",
     wraps=get_product_availability,
 )
 def test_product_channel_listing_pricing_field_no_address(
