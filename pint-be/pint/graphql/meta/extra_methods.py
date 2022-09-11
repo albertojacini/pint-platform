@@ -1,4 +1,5 @@
-from ...product.models import Product, ProductVariant
+# from ...product.models import Product, ProductVariant
+from ...initiative.models import Initiative
 
 
 def extra_checkout_actions(instance, info, **data):
@@ -26,6 +27,6 @@ MODEL_EXTRA_METHODS = {
 
 
 MODEL_EXTRA_PREFETCH = {
-    "Product": Product.objects.prefetched_for_webhook,
-    "ProductVariant": ProductVariant.objects.prefetched_for_webhook,
+    "Initiative": Initiative.objects.prefetched_for_webhook,
+    # "ProductVariant": ProductVariant.objects.prefetched_for_webhook,
 }

@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 from django.db.models import QuerySet
 from graphql.error import GraphQLError
 
-from ..channel.utils import get_default_channel_slug_or_graphql_error
+# from ..channel.utils import get_default_channel_slug_or_graphql_error
 from ..core.enums import OrderDirection
 from ..core.types import SortInputObjectType
 from ..core.utils import from_global_id_or_error
@@ -33,7 +33,7 @@ def sort_queryset_for_connection(iterable, args):
             sort_by=sort_by,
             reversed=reversed,
             channel_slug=args.get("channel")
-            or get_default_channel_slug_or_graphql_error(),
+            # or get_default_channel_slug_or_graphql_error(),
         )
     else:
         iterable, sort_by = sort_queryset_by_default(

@@ -1,3 +1,22 @@
 default_app_config = "pint.initiative.app.InitiativeAppConfig"
 
 
+class InitiativeMediaTypes:
+    IMAGE = "IMAGE"
+    VIDEO = "VIDEO"
+
+    CHOICES = [
+        (IMAGE, "An uploaded image or an URL to an image"),
+        (VIDEO, "A URL to an external video"),
+    ]
+
+
+# class ProductTypeKind:
+#     NORMAL = "normal"
+#     GIFT_CARD = "gift_card"
+#
+#     CHOICES = [
+#         (NORMAL, "A standard product type."),
+#         (GIFT_CARD, "A gift card product type."),
+#     ]
+

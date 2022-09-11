@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 
 from ...account import models as account_models
 from ...account.error_codes import AccountErrorCode
-from ...attribute import AttributeType
-from ...attribute import models as attribute_models
+# from ...attribute import AttributeType
+# from ...attribute import models as attribute_models
 from ...core.exceptions import PermissionDenied
 from ...core.jwt import JWT_THIRDPARTY_ACCESS_TYPE
 from ...core.permissions import (
@@ -24,7 +24,7 @@ from ...core.permissions import (
     ProductTypePermissions,
     ShippingPermissions,
 )
-from ...payment.utils import payment_owned_by_user
+# from ...payment.utils import payment_owned_by_user
 from ..core.utils import from_global_id_or_error
 
 

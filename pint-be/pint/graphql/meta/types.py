@@ -2,7 +2,7 @@ import graphene
 from graphene.types.generic import GenericScalar
 
 from ...core.models import ModelWithMetadata
-from ..channel import ChannelContext
+# from ..channel import ChannelContext
 from ..core.descriptions import ADDED_IN_33, PREVIEW_FEATURE
 from ..core.types import NonNullList
 from .resolvers import (
@@ -116,8 +116,8 @@ class ObjectWithMetadata(graphene.Interface):
 
     @classmethod
     def resolve_type(cls, instance: ModelWithMetadata, _info):
-        if isinstance(instance, ChannelContext):
-            # Return instance for types that use ChannelContext
-            instance = instance.node
+        # if isinstance(instance, ChannelContext):
+        #     # Return instance for types that use ChannelContext
+        #     instance = instance.node
         item_type, _ = resolve_object_with_metadata_type(instance)
         return item_type

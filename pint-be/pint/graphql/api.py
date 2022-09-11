@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.utils.functional import SimpleLazyObject
 
 # from ..graphql.notifications.schema import ExternalNotificationMutations
-# from .account.schema import AccountMutations, AccountQueries
+from .account.schema import AccountMutations, AccountQueries
 # from .app.schema import AppMutations, AppQueries
 # from .attribute.schema import AttributeMutations, AttributeQueries
 # from .channel.schema import ChannelMutations, ChannelQueries
@@ -32,7 +32,7 @@ API_PATH = SimpleLazyObject(lambda: reverse("api"))
 
 
 class Query(
-    # AccountQueries,
+    AccountQueries,
     # AppQueries,
     # AttributeQueries,
     # ChannelQueries,
@@ -58,7 +58,7 @@ class Query(
 
 
 class Mutation(
-    # AccountMutations,
+    AccountMutations,
     # AppMutations,
     # AttributeMutations,
     # ChannelMutations,

@@ -120,7 +120,8 @@ def send_user_change_email_notification(recipient_email, user, manager, channel_
 
 
 def send_account_delete_confirmation_notification(
-    redirect_url, user, manager, channel_slug
+    redirect_url, user, manager
+    # redirect_url, user, manager, channel_slug
 ):
     """Trigger sending a account delete notification for the given user."""
     token = account_delete_token_generator.make_token(user)
@@ -131,7 +132,7 @@ def send_account_delete_confirmation_notification(
         "recipient_email": user.email,
         "token": token,
         "delete_url": delete_url,
-        "channel_slug": channel_slug,
+        # "channel_slug": channel_slug,
         **get_site_context(),
     }
     manager.notify(

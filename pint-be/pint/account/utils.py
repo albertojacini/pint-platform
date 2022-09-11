@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from django.conf import settings
 
-from ..checkout import AddressType
+# from ..checkout import AddressType
 from .models import User
 
 if TYPE_CHECKING:
@@ -72,18 +72,18 @@ def set_user_default_shipping_address(user, address):
     user.save(update_fields=["default_shipping_address", "updated_at"])
 
 
-def change_user_default_address(
-    user: User, address: "Address", address_type: str, manager: "PluginsManager"
-):
-    address = manager.change_user_address(address, address_type, user)
-    if address_type == AddressType.BILLING:
-        if user.default_billing_address:
-            user.addresses.add(user.default_billing_address)
-        set_user_default_billing_address(user, address)
-    elif address_type == AddressType.SHIPPING:
-        if user.default_shipping_address:
-            user.addresses.add(user.default_shipping_address)
-        set_user_default_shipping_address(user, address)
+# def change_user_default_address(
+#     user: User, address: "Address", address_type: str, manager: "PluginsManager"
+# ):
+#     address = manager.change_user_address(address, address_type, user)
+#     if address_type == AddressType.BILLING:
+#         if user.default_billing_address:
+#             user.addresses.add(user.default_billing_address)
+#         set_user_default_billing_address(user, address)
+#     elif address_type == AddressType.SHIPPING:
+#         if user.default_shipping_address:
+#             user.addresses.add(user.default_shipping_address)
+#         set_user_default_shipping_address(user, address)
 
 
 def create_superuser(credentials):

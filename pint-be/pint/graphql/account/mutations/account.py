@@ -9,22 +9,23 @@ from ....account import events as account_events
 from ....account import models, notifications, search, utils
 from ....account.error_codes import AccountErrorCode
 from ....account.utils import remove_the_oldest_user_address_if_address_limit_is_reached
-from ....checkout import AddressType
+# from ....checkout import AddressType
 from ....core.jwt import create_token, jwt_decode
 from ....core.permissions import AuthorizationFilters
 from ....core.tokens import account_delete_token_generator
 from ....core.tracing import traced_atomic_transaction
 from ....core.utils.url import validate_storefront_url
-from ....giftcard.utils import assign_user_gift_cards
-from ....order.utils import match_orders_with_new_user
-from ...channel.utils import clean_channel
+# from ....giftcard.utils import assign_user_gift_cards
+# from ....order.utils import match_orders_with_new_user
+# from ...channel.utils import clean_channel
 from ...core.enums import LanguageCodeEnum
 from ...core.mutations import BaseMutation, ModelDeleteMutation, ModelMutation
 from ...core.types import AccountError, NonNullList
 from ...meta.mutations import MetadataInput
-from ..enums import AddressTypeEnum
+# from ..enums import AddressTypeEnum
 from ..i18n import I18nMixin
-from ..types import Address, AddressInput, User
+from ..types import User
+# from ..types import Address, AddressInput, User
 from .base import (
     INVALID_TOKEN,
     BaseAddressDelete,
@@ -119,9 +120,9 @@ class AccountRegister(ModelMutation):
                 }
             )
 
-        data["channel"] = clean_channel(
-            data.get("channel"), error_class=AccountErrorCode
-        ).slug
+        # data["channel"] = clean_channel(
+        #     data.get("channel"), error_class=AccountErrorCode
+        # ).slug
 
         password = data["password"]
         try:
@@ -157,12 +158,13 @@ class AccountRegister(ModelMutation):
 
 
 class AccountInput(AccountBaseInput):
-    default_billing_address = AddressInput(
-        description="Billing address of the customer."
-    )
-    default_shipping_address = AddressInput(
-        description="Shipping address of the customer."
-    )
+    # default_billing_address = AddressInput(
+    #     description="Billing address of the customer."
+    # )
+    # default_shipping_address = AddressInput(
+    #     description="Shipping address of the customer."
+    # )
+    pass
 
 
 class AccountUpdate(BaseCustomerCreate):
@@ -222,11 +224,12 @@ class AccountRequestDeletion(BaseMutation):
             raise ValidationError(
                 {"redirect_url": error}, code=AccountErrorCode.INVALID
             )
-        channel_slug = clean_channel(
-            data.get("channel"), error_class=AccountErrorCode
-        ).slug
+        # channel_slug = clean_channel(
+        #     data.get("channel"), error_class=AccountErrorCode
+        # ).slug
         notifications.send_account_delete_confirmation_notification(
-            redirect_url, user, info.context.plugins, channel_slug=channel_slug
+            # redirect_url, user, info.context.plugins, channel_slug=channel_slug
+            redirect_url, user, info.context.plugins
         )
         return AccountRequestDeletion()
 
@@ -278,136 +281,136 @@ class AccountDelete(ModelDeleteMutation):
         return cls.success_response(user)
 
 
-class AccountAddressCreate(ModelMutation, I18nMixin):
-    user = graphene.Field(
-        User, description="A user instance for which the address was created."
-    )
-
-    class Arguments:
-        input = AddressInput(
-            description="Fields required to create address.", required=True
-        )
-        type = AddressTypeEnum(
-            required=False,
-            description=(
-                "A type of address. If provided, the new address will be "
-                "automatically assigned as the customer's default address "
-                "of that type."
-            ),
-        )
-
-    class Meta:
-        description = "Create a new address for the customer."
-        model = models.Address
-        object_type = Address
-        error_type_class = AccountError
-        error_type_field = "account_errors"
-        permissions = (AuthorizationFilters.AUTHENTICATED_USER,)
-
-    @classmethod
-    @traced_atomic_transaction()
-    def perform_mutation(cls, _root, info, **data):
-        address_type = data.get("type", None)
-        user = info.context.user
-        cleaned_input = cls.clean_input(
-            info=info, instance=Address(), data=data.get("input")
-        )
-        address = cls.validate_address(cleaned_input, address_type=address_type)
-        cls.clean_instance(info, address)
-        cls.save(info, address, cleaned_input)
-        cls._save_m2m(info, address, cleaned_input)
-        if address_type:
-            utils.change_user_default_address(
-                user, address, address_type, info.context.plugins
-            )
-        return AccountAddressCreate(user=user, address=address)
-
-    @classmethod
-    def save(cls, info, instance, cleaned_input):
-        super().save(info, instance, cleaned_input)
-        user = info.context.user
-        remove_the_oldest_user_address_if_address_limit_is_reached(user)
-        instance.user_addresses.add(user)
-        user.search_document = search.prepare_user_search_document_value(user)
-        user.save(update_fields=["search_document", "updated_at"])
-        transaction.on_commit(
-            lambda: cls.trigger_post_account_address_create_webhooks(
-                info, instance, user
-            )
-        )
-
-    @classmethod
-    def trigger_post_account_address_create_webhooks(cls, info, address, user):
-        info.context.plugins.customer_updated(user)
-        info.context.plugins.address_created(address)
-
-
-class AccountAddressUpdate(BaseAddressUpdate):
-    class Meta:
-        auto_permission_message = False
-        description = (
-            "Updates an address of the logged-in user. Requires one of the following "
-            "permissions: MANAGE_USERS, IS_OWNER."
-        )
-        error_type_class = AccountError
-        error_type_field = "account_errors"
-        model = models.Address
-        object_type = Address
-
-
-class AccountAddressDelete(BaseAddressDelete):
-    class Meta:
-        auto_permission_message = False
-        description = (
-            "Delete an address of the logged-in user. Requires one of the following "
-            "permissions: MANAGE_USERS, IS_OWNER."
-        )
-        model = models.Address
-        object_type = Address
-        error_type_class = AccountError
-        error_type_field = "account_errors"
-
-
-class AccountSetDefaultAddress(BaseMutation):
-    user = graphene.Field(User, description="An updated user instance.")
-
-    class Arguments:
-        id = graphene.ID(
-            required=True, description="ID of the address to set as default."
-        )
-        type = AddressTypeEnum(required=True, description="The type of address.")
-
-    class Meta:
-        description = "Sets a default address for the authenticated user."
-        error_type_class = AccountError
-        error_type_field = "account_errors"
-        permissions = (AuthorizationFilters.AUTHENTICATED_USER,)
-
-    @classmethod
-    def perform_mutation(cls, _root, info, **data):
-        address = cls.get_node_or_error(info, data.get("id"), Address)
-        user = info.context.user
-
-        if not user.addresses.filter(pk=address.pk).exists():
-            raise ValidationError(
-                {
-                    "id": ValidationError(
-                        "The address doesn't belong to that user.",
-                        code=AccountErrorCode.INVALID,
-                    )
-                }
-            )
-
-        if data.get("type") == AddressTypeEnum.BILLING.value:
-            address_type = AddressType.BILLING
-        else:
-            address_type = AddressType.SHIPPING
-
-        utils.change_user_default_address(
-            user, address, address_type, info.context.plugins
-        )
-        info.context.plugins.customer_updated(user)
-        return cls(user=user)
+# class AccountAddressCreate(ModelMutation, I18nMixin):
+#     user = graphene.Field(
+#         User, description="A user instance for which the address was created."
+#     )
+#
+#     class Arguments:
+#         input = AddressInput(
+#             description="Fields required to create address.", required=True
+#         )
+#         type = AddressTypeEnum(
+#             required=False,
+#             description=(
+#                 "A type of address. If provided, the new address will be "
+#                 "automatically assigned as the customer's default address "
+#                 "of that type."
+#             ),
+#         )
+#
+#     class Meta:
+#         description = "Create a new address for the customer."
+#         model = models.Address
+#         object_type = Address
+#         error_type_class = AccountError
+#         error_type_field = "account_errors"
+#         permissions = (AuthorizationFilters.AUTHENTICATED_USER,)
+#
+#     @classmethod
+#     @traced_atomic_transaction()
+#     def perform_mutation(cls, _root, info, **data):
+#         address_type = data.get("type", None)
+#         user = info.context.user
+#         cleaned_input = cls.clean_input(
+#             info=info, instance=Address(), data=data.get("input")
+#         )
+#         address = cls.validate_address(cleaned_input, address_type=address_type)
+#         cls.clean_instance(info, address)
+#         cls.save(info, address, cleaned_input)
+#         cls._save_m2m(info, address, cleaned_input)
+#         if address_type:
+#             utils.change_user_default_address(
+#                 user, address, address_type, info.context.plugins
+#             )
+#         return AccountAddressCreate(user=user, address=address)
+#
+#     @classmethod
+#     def save(cls, info, instance, cleaned_input):
+#         super().save(info, instance, cleaned_input)
+#         user = info.context.user
+#         remove_the_oldest_user_address_if_address_limit_is_reached(user)
+#         instance.user_addresses.add(user)
+#         user.search_document = search.prepare_user_search_document_value(user)
+#         user.save(update_fields=["search_document", "updated_at"])
+#         transaction.on_commit(
+#             lambda: cls.trigger_post_account_address_create_webhooks(
+#                 info, instance, user
+#             )
+#         )
+#
+#     @classmethod
+#     def trigger_post_account_address_create_webhooks(cls, info, address, user):
+#         info.context.plugins.customer_updated(user)
+#         info.context.plugins.address_created(address)
+#
+#
+# class AccountAddressUpdate(BaseAddressUpdate):
+#     class Meta:
+#         auto_permission_message = False
+#         description = (
+#             "Updates an address of the logged-in user. Requires one of the following "
+#             "permissions: MANAGE_USERS, IS_OWNER."
+#         )
+#         error_type_class = AccountError
+#         error_type_field = "account_errors"
+#         model = models.Address
+#         object_type = Address
+#
+#
+# class AccountAddressDelete(BaseAddressDelete):
+#     class Meta:
+#         auto_permission_message = False
+#         description = (
+#             "Delete an address of the logged-in user. Requires one of the following "
+#             "permissions: MANAGE_USERS, IS_OWNER."
+#         )
+#         model = models.Address
+#         object_type = Address
+#         error_type_class = AccountError
+#         error_type_field = "account_errors"
+#
+#
+# class AccountSetDefaultAddress(BaseMutation):
+#     user = graphene.Field(User, description="An updated user instance.")
+#
+#     class Arguments:
+#         id = graphene.ID(
+#             required=True, description="ID of the address to set as default."
+#         )
+#         type = AddressTypeEnum(required=True, description="The type of address.")
+#
+#     class Meta:
+#         description = "Sets a default address for the authenticated user."
+#         error_type_class = AccountError
+#         error_type_field = "account_errors"
+#         permissions = (AuthorizationFilters.AUTHENTICATED_USER,)
+#
+#     @classmethod
+#     def perform_mutation(cls, _root, info, **data):
+#         address = cls.get_node_or_error(info, data.get("id"), Address)
+#         user = info.context.user
+#
+#         if not user.addresses.filter(pk=address.pk).exists():
+#             raise ValidationError(
+#                 {
+#                     "id": ValidationError(
+#                         "The address doesn't belong to that user.",
+#                         code=AccountErrorCode.INVALID,
+#                     )
+#                 }
+#             )
+#
+#         if data.get("type") == AddressTypeEnum.BILLING.value:
+#             address_type = AddressType.BILLING
+#         else:
+#             address_type = AddressType.SHIPPING
+#
+#         utils.change_user_default_address(
+#             user, address, address_type, info.context.plugins
+#         )
+#         info.context.plugins.customer_updated(user)
+#         return cls(user=user)
 
 
 class RequestEmailChange(BaseMutation):
@@ -466,10 +469,10 @@ class RequestEmailChange(BaseMutation):
             raise ValidationError(
                 {"redirect_url": error}, code=AccountErrorCode.INVALID
             )
-        channel_slug = clean_channel(
-            data.get("channel"),
-            error_class=AccountErrorCode,
-        ).slug
+        # channel_slug = clean_channel(
+        #     data.get("channel"),
+        #     error_class=AccountErrorCode,
+        # ).slug
 
         token_payload = {
             "old_email": user.email,
@@ -482,8 +485,8 @@ class RequestEmailChange(BaseMutation):
             user,
             new_email,
             token,
-            info.context.plugins,
-            channel_slug=channel_slug,
+            info.context.plugins
+            # channel_slug=channel_slug,
         )
         return RequestEmailChange(user=user)
 
@@ -545,15 +548,16 @@ class ConfirmEmailChange(BaseMutation):
         user.search_document = search.prepare_user_search_document_value(user)
         user.save(update_fields=["email", "search_document", "updated_at"])
 
-        channel_slug = clean_channel(
-            data.get("channel"), error_class=AccountErrorCode
-        ).slug
+        # channel_slug = clean_channel(
+        #     data.get("channel"), error_class=AccountErrorCode
+        # ).slug
 
-        assign_user_gift_cards(user)
-        match_orders_with_new_user(user)
+        # assign_user_gift_cards(user)
+        # match_orders_with_new_user(user)
 
         notifications.send_user_change_email_notification(
-            old_email, user, info.context.plugins, channel_slug=channel_slug
+            # old_email, user, info.context.plugins, channel_slug=channel_slug
+            old_email, user, info.context.plugins
         )
         info.context.plugins.customer_updated(user)
         return ConfirmEmailChange(user=user)

@@ -13,9 +13,9 @@ from graphql_relay.connection.arrayconnection import connection_from_list_slice
 from graphql_relay.connection.connectiontypes import Edge, PageInfo
 from graphql_relay.utils import base64, unbase64
 
-from ...channel.exceptions import ChannelNotDefined, NoDefaultChannel
-from ..channel import ChannelContext, ChannelQsContext
-from ..channel.utils import get_default_channel_slug_or_graphql_error
+# from ...channel.exceptions import ChannelNotDefined, NoDefaultChannel
+# from ..channel import ChannelContext, ChannelQsContext
+# from ..channel.utils import get_default_channel_slug_or_graphql_error
 from ..core.enums import OrderDirection
 from ..core.types import NonNullList
 from ..utils.sorting import sort_queryset_for_connection
@@ -323,8 +323,8 @@ def create_connection_slice(
             pageinfo_type,
         )
 
-    if isinstance(iterable, ChannelQsContext):
-        queryset = iterable.qs
+    # if isinstance(iterable, ChannelQsContext):
+    #     queryset = iterable.qs
     else:
         queryset = iterable
 
@@ -339,13 +339,13 @@ def create_connection_slice(
         pageinfo_type or graphene.relay.PageInfo,
     )
 
-    if isinstance(iterable, ChannelQsContext):
-        edges_with_context = []
-        for edge in slice.edges:
-            node = edge.node
-            edge.node = ChannelContext(node=node, channel_slug=iterable.channel_slug)
-            edges_with_context.append(edge)
-        slice.edges = edges_with_context
+    # if isinstance(iterable, ChannelQsContext):
+    #     edges_with_context = []
+    #     for edge in slice.edges:
+    #         node = edge.node
+    #         edge.node = ChannelContext(node=node, channel_slug=iterable.channel_slug)
+    #         edges_with_context.append(edge)
+    #     slice.edges = edges_with_context
 
     return slice
 
@@ -445,25 +445,25 @@ def filter_connection_queryset(iterable, args, request=None, root=None):
 
         try:
             filter_channel = str(filter_input["channel"])
-        except (NoDefaultChannel, ChannelNotDefined, GraphQLError, KeyError):
+        except (GraphQLError, KeyError):
             filter_channel = None
         filter_input["channel"] = (
             args.get("channel")
             or filter_channel
-            or get_default_channel_slug_or_graphql_error()
+            # or get_default_channel_slug_or_graphql_error()
         )
 
-        if isinstance(iterable, ChannelQsContext):
-            queryset = iterable.qs
-        else:
-            queryset = iterable
+        # if isinstance(iterable, ChannelQsContext):
+        #     queryset = iterable.qs
+        # else:
+        queryset = iterable
 
         filterset = filterset_class(filter_input, queryset=queryset, request=request)
         if not filterset.is_valid():
             raise GraphQLError(json.dumps(filterset.errors.get_json_data()))
 
-        if isinstance(iterable, ChannelQsContext):
-            return ChannelQsContext(filterset.qs, iterable.channel_slug)
+        # if isinstance(iterable, ChannelQsContext):
+        #     return ChannelQsContext(filterset.qs, iterable.channel_slug)
 
         return filterset.qs
 

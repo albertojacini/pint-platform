@@ -1,14 +1,15 @@
 from collections import defaultdict
 from typing import Any
-
 import graphene
 from django.conf import settings
 from graphene.utils.str_converters import to_snake_case
 from graphql import GraphQLArgument, GraphQLError, GraphQLField, GraphQLList
 
-from ...channel import ChannelContext
+# from ...channel import ChannelContext
 from ...schema_printer import print_schema
 from .entities import federated_entities
+import logging
+logger = logging.Logger(__name__)
 
 
 class _Any(graphene.Scalar):
@@ -33,6 +34,8 @@ class _Entity(graphene.Union):
     """_Entity union as defined by Federation spec."""
 
     class Meta:
+        logger.warning("federated_entities.values()++++++++++++++++++++++++++")
+        logger.warning(federated_entities.values())
         types = tuple(federated_entities.values())
 
 
@@ -77,10 +80,10 @@ def create_entity_type_resolver(schema):
 
     def resolve_entity_type(instance, info):
         # Use new strategy to resolve GraphQL Type for `ObjectType`
-        if isinstance(instance, ChannelContext):
-            model = type(instance.node)
-        else:
-            model = type(instance)
+        # if isinstance(instance, ChannelContext):
+        #     model = type(instance.node)
+        # else:
+        model = type(instance)
 
         model_type = schema.get_type(model._meta.object_name)
         if model_type is None:
