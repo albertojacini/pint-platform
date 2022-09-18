@@ -5,7 +5,7 @@ on:
     - cron: '0 9 * * 5' # 9:00AM on Friday
 jobs:
   open_pull_request:
-    if: github.repository == 'saleor/saleor-platform'
+    if: github.repository == 'pint/pint-platform'
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout recursively
@@ -15,7 +15,7 @@ jobs:
       - name: Configure git
         run: |
           git config user.name 'DevRel Bot'
-          git config user.email 'noreply@saleor.io'
+          git config user.email 'noreply@pint.io'
       - name: Update submodules
         run: |
           git submodule foreach git checkout main

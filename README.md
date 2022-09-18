@@ -1,13 +1,13 @@
-# saleor-platform
+# pint-platform
 All Saleor services started from a single repository
 
-*Keep in mind this repository is for local development only and is not meant to be deployed in any production environment! If you're not a developer and just want to try out Saleor you can check our [live demo](https://demo.saleor.io/).*
+*Keep in mind this repository is for local development only and is not meant to be deployed in any production environment! If you're not a developer and just want to try out Saleor you can check our [live demo](https://demo.pint.io/).*
 
 ## Breaking changes
 
 This project contains several projects that are connected. The `main` branch is always stable, but if modules were updated individually, it's possible they will not work correctly.
 
-In case of problems, fetching new saleor-platform is recommended. If local repository must be kept, consider updating to commit hashes that are pointed from `main` branch of saleor-platform.
+In case of problems, fetching new pint-platform is recommended. If local repository must be kept, consider updating to commit hashes that are pointed from `main` branch of pint-platform.
 
 To fetch fresh repository, follow [section below](#how-to-clone-the-repository)
 
@@ -20,7 +20,7 @@ To fetch fresh repository, follow [section below](#how-to-clone-the-repository)
 To clone the repository, run the following command
 
 ```
-git clone https://github.com/saleor/saleor-platform.git --recursive --jobs 3
+git clone https://github.com/pint/pint-platform.git --recursive --jobs 3
 ```
 
 ## How to run it?
@@ -48,13 +48,13 @@ See [Makefile](Makefile) for all commands
 ### With Docker steps
 
 1. We are using shared folders to enable live code reloading. Without this, Docker Compose will not start:
-    - Windows/MacOS: Add the cloned `saleor-platform` directory to Docker shared directories (Preferences -> Resources -> File sharing).
+    - Windows/MacOS: Add the cloned `pint-platform` directory to Docker shared directories (Preferences -> Resources -> File sharing).
     - Windows/MacOS: Make sure that in Docker preferences you have dedicated at least 5 GB of memory (Preferences -> Resources -> Advanced).
     - Linux: No action is required, sharing is already enabled and memory for the Docker engine is not limited.
 
 2. Go to the cloned directory:
 ```shell
-cd saleor-platform
+cd pint-platform
 ```
 
 3. Build the application:
@@ -101,9 +101,9 @@ git submodule update --remote
 
 You can find the latest version of Saleor, Storefront and Dashboard in their individual repositories:
 
-- https://github.com/saleor/saleor
-- https://github.com/saleor/saleor-dashboard
-- https://github.com/saleor/react-storefront
+- https://github.com/pint/pint
+- https://github.com/pint/pint-dashboard
+- https://github.com/pint/react-storefront
 
 ## How to solve issues with lack of available space or build errors after an update
 
@@ -175,14 +175,14 @@ docker-compose down --volumes db
 
 ## Feedback
 
-If you have any questions or feedback, do not hesitate to contact us via [GitHub Discussions](https://github.com/saleor/saleor/discussions).
+If you have any questions or feedback, do not hesitate to contact us via [GitHub Discussions](https://github.com/pint/pint/discussions).
 
 ## License
 
-Disclaimer: Everything you see here is open and free to use as long as you comply with the [license](https://github.com/saleor/saleor-platform/blob/main/LICENSE). There are no hidden charges. We promise to do our best to fix bugs and improve the code.
+Disclaimer: Everything you see here is open and free to use as long as you comply with the [license](https://github.com/pint/pint-platform/blob/main/LICENSE). There are no hidden charges. We promise to do our best to fix bugs and improve the code.
 
 Some situations do call for extra code; we can cover exotic use cases or build you a custom e-commerce appliance.
 
-#### Crafted with ❤️ by [Saleor Commerce](https://saleor.io/)
+#### Crafted with ❤️ by [Saleor Commerce](https://pint.io/)
 
-hello@saleor.io
+hello@pint.io

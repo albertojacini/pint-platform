@@ -54,44 +54,48 @@ from ...core.types import (
     NonNullList,
     TaxedMoney,
     TaxedMoneyRange,
-    TaxType,
+    # TaxType,
     ThumbnailField,
-    Weight,
+    # Weight,
 )
 from ...core.utils import from_global_id_or_error
 
 from ...meta.types import ObjectWithMetadata
 from ...translations.fields import TranslationField
 from ...translations.types import (
-    ProductTranslation,
+    InitiativeTranslation,
 )
+# from ...translations.types import (
+#     ProductTranslation,
+# )
 from ...utils import get_user_or_app_from_context
 from ..dataloaders import (
-    CategoryByIdLoader,
-    CategoryChildrenByCategoryIdLoader,
-    CollectionChannelListingByCollectionIdAndChannelSlugLoader,
-    CollectionChannelListingByCollectionIdLoader,
-    CollectionsByProductIdLoader,
-    ImagesByProductIdLoader,
-    ImagesByProductVariantIdLoader,
-    MediaByProductIdLoader,
-    MediaByProductVariantIdLoader,
-    ProductAttributesByProductTypeIdLoader,
-    ProductByIdLoader,
-    ProductChannelListingByProductIdAndChannelSlugLoader,
-    ProductChannelListingByProductIdLoader,
-    ProductTypeByIdLoader,
-    ProductVariantByIdLoader,
-    ProductVariantsByProductIdLoader,
-    SelectedAttributesByProductIdLoader,
-    SelectedAttributesByProductVariantIdLoader,
-    ThumbnailByCategoryIdSizeAndFormatLoader,
-    ThumbnailByCollectionIdSizeAndFormatLoader,
+    # CategoryByIdLoader,
+    # CategoryChildrenByCategoryIdLoader,
+    # CollectionChannelListingByCollectionIdAndChannelSlugLoader,
+    # CollectionChannelListingByCollectionIdLoader,
+    # CollectionsByProductIdLoader,
+    # ImagesByProductIdLoader,
+    # ImagesByProductVariantIdLoader,
+    # MediaByProductIdLoader,
+    # MediaByProductVariantIdLoader,
+    # ProductAttributesByProductTypeIdLoader,
+    InitiativeByIdLoader,
+    # ProductByIdLoader,
+    # ProductChannelListingByProductIdAndChannelSlugLoader,
+    # ProductChannelListingByProductIdLoader,
+    # ProductTypeByIdLoader,
+    # ProductVariantByIdLoader,
+    # ProductVariantsByProductIdLoader,
+    # SelectedAttributesByProductIdLoader,
+    # SelectedAttributesByProductVariantIdLoader,
+    # ThumbnailByCategoryIdSizeAndFormatLoader,
+    # ThumbnailByCollectionIdSizeAndFormatLoader,
     ThumbnailByProductMediaIdSizeAndFormatLoader,
-    VariantAttributesByProductTypeIdLoader,
-    VariantChannelListingByVariantIdAndChannelSlugLoader,
-    VariantChannelListingByVariantIdLoader,
-    VariantsChannelListingByProductIdAndChannelSlugLoader,
+    # VariantAttributesByProductTypeIdLoader,
+    # VariantChannelListingByVariantIdAndChannelSlugLoader,
+    # VariantChannelListingByVariantIdLoader,
+    # VariantsChannelListingByProductIdAndChannelSlugLoader,
 )
 from ..enums import InitiativeMediaType, ProductTypeKindEnum, VariantAttributeScope
 from ..filters import ProductFilterInput

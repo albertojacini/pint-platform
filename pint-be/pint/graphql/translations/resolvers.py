@@ -1,41 +1,42 @@
-from ...attribute import models as attribute_models
-from ...discount import models as discount_models
-from ...menu import models as menu_models
-from ...page import models as page_models
-from ...product import models as product_models
-from ...shipping import interface as shipping_interface
-from ...shipping import models as shipping_models
-from ...site import models as site_models
-from . import dataloaders
+# from ...attribute import models as attribute_models
+# from ...discount import models as discount_models
+# from ...menu import models as menu_models
+# from ...page import models as page_models
+from ...initiative import models as product_models
+# from ...product import models as product_models
+# from ...shipping import interface as shipping_interface
+# from ...shipping import models as shipping_models
+# from ...site import models as site_models
+# from . import dataloaders
 
 TYPE_TO_TRANSLATION_LOADER_MAP = {
-    attribute_models.Attribute: (
-        dataloaders.AttributeTranslationByIdAndLanguageCodeLoader
-    ),
-    attribute_models.AttributeValue: (
-        dataloaders.AttributeValueTranslationByIdAndLanguageCodeLoader
-    ),
-    product_models.Category: (dataloaders.CategoryTranslationByIdAndLanguageCodeLoader),
-    product_models.Collection: (
-        dataloaders.CollectionTranslationByIdAndLanguageCodeLoader
-    ),
-    menu_models.MenuItem: (dataloaders.MenuItemTranslationByIdAndLanguageCodeLoader),
-    page_models.Page: dataloaders.PageTranslationByIdAndLanguageCodeLoader,
-    product_models.Product: (dataloaders.ProductTranslationByIdAndLanguageCodeLoader),
-    product_models.ProductVariant: (
-        dataloaders.ProductVariantTranslationByIdAndLanguageCodeLoader
-    ),
-    discount_models.Sale: dataloaders.SaleTranslationByIdAndLanguageCodeLoader,
-    shipping_models.ShippingMethod: (
-        dataloaders.ShippingMethodTranslationByIdAndLanguageCodeLoader
-    ),
-    shipping_interface.ShippingMethodData: (
-        dataloaders.ShippingMethodTranslationByIdAndLanguageCodeLoader
-    ),
-    site_models.SiteSettings: (
-        dataloaders.SiteSettingsTranslationByIdAndLanguageCodeLoader
-    ),
-    discount_models.Voucher: (dataloaders.VoucherTranslationByIdAndLanguageCodeLoader),
+    # attribute_models.Attribute: (
+    #     dataloaders.AttributeTranslationByIdAndLanguageCodeLoader
+    # ),
+    # attribute_models.AttributeValue: (
+    #     dataloaders.AttributeValueTranslationByIdAndLanguageCodeLoader
+    # ),
+    # product_models.Category: (dataloaders.CategoryTranslationByIdAndLanguageCodeLoader),
+    # product_models.Collection: (
+    #     dataloaders.CollectionTranslationByIdAndLanguageCodeLoader
+    # ),
+    # menu_models.MenuItem: (dataloaders.MenuItemTranslationByIdAndLanguageCodeLoader),
+    # page_models.Page: dataloaders.PageTranslationByIdAndLanguageCodeLoader,
+    # product_models.Product: (dataloaders.ProductTranslationByIdAndLanguageCodeLoader),
+    # product_models.ProductVariant: (
+    #     dataloaders.ProductVariantTranslationByIdAndLanguageCodeLoader
+    # ),
+    # discount_models.Sale: dataloaders.SaleTranslationByIdAndLanguageCodeLoader,
+    # shipping_models.ShippingMethod: (
+    #     dataloaders.ShippingMethodTranslationByIdAndLanguageCodeLoader
+    # ),
+    # shipping_interface.ShippingMethodData: (
+    #     dataloaders.ShippingMethodTranslationByIdAndLanguageCodeLoader
+    # ),
+    # site_models.SiteSettings: (
+    #     dataloaders.SiteSettingsTranslationByIdAndLanguageCodeLoader
+    # ),
+    # discount_models.Voucher: (dataloaders.VoucherTranslationByIdAndLanguageCodeLoader),
 }
 
 
@@ -48,16 +49,18 @@ def resolve_translation(instance, info, *, language_code):
     raise TypeError(f"No dataloader found to {type(instance)}")
 
 
-def resolve_shipping_methods(_info):
-    return shipping_models.ShippingMethod.objects.all()
+# def resolve_shipping_methods(_info):
+#     return shipping_models.ShippingMethod.objects.all()
+#
+#
+# def resolve_attribute_values(_info):
+#     return attribute_models.AttributeValue.objects.all()
 
+def resolve_initiatives(_info):
+    return initiative_models.Initiative.objects.all()
 
-def resolve_attribute_values(_info):
-    return attribute_models.AttributeValue.objects.all()
-
-
-def resolve_products(_info):
-    return product_models.Product.objects.all()
+# def resolve_products(_info):
+#     return product_models.Product.objects.all()
 
 
 def resolve_product_variants(_info):

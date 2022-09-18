@@ -5,7 +5,7 @@ from graphql import GraphQLError
 
 from ...core.permissions import InitiativePermissions, has_one_of_permissions
 from ...core.tracing import traced_resolver
-from ...initiative.models import ALL_InitiativeS_PERMISSIONS
+from ...initiative.models import ALL_INITIATIVES_PERMISSIONS
 from ..core.connection import create_connection_slice, filter_connection_queryset
 from ..core.enums import ReportingPeriod
 from ..core.fields import ConnectionField, FilterConnectionField, PermissionsField
@@ -88,7 +88,7 @@ class InitiativeQueries(graphene.ObjectType):
         description=(
             "Look up a initiative by ID. Requires one of the following permissions to "
             "include the unpublished items: "
-            f"{', '.join([p.name for p in ALL_InitiativeS_PERMISSIONS])}."
+            f"{', '.join([p.name for p in ALL_INITIATIVES_PERMISSIONS])}."
         ),
     )
     initiatives = FilterConnectionField(
@@ -101,7 +101,7 @@ class InitiativeQueries(graphene.ObjectType):
         description=(
             "List of the shop's initiatives. Requires one of the following permissions to "
             "include the unpublished items: "
-            f"{', '.join([p.name for p in ALL_InitiativeS_PERMISSIONS])}."
+            f"{', '.join([p.name for p in ALL_INITIATIVES_PERMISSIONS])}."
         ),
     )
 

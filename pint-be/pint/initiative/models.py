@@ -39,7 +39,7 @@ from mptt.managers import TreeManager
 from mptt.models import MPTTModel
 from prices import Money
 #
-# from ..core.db.fields import SanitizedJSONField
+from ..core.db.fields import SanitizedJSONField
 from ..core.models import ModelWithMetadata, PublishableModel, SortableModel
 from ..core.permissions import (
     # DiscountPermissions,
@@ -50,7 +50,7 @@ from ..core.permissions import (
 )
 # from ..core.utils import build_absolute_uri
 # from ..core.utils.draftjs import json_content_to_raw_text
-# from ..core.utils.editorjs import clean_editor_js
+from ..core.utils.editorjs import clean_editor_js
 from ..core.utils.translations import Translation, TranslationProxy
 from ..seo.models import SeoModel, SeoModelTranslation
 # from . import ProductMediaTypes, ProductTypeKind
@@ -290,6 +290,42 @@ class Initiative(SeoModel, ModelWithMetadata):
 
     def __str__(self) -> str:
         return self.title
+
+
+class InitiativeTranslation(SeoModelTranslation):
+    product = models.ForeignKey(
+        Initiative, related_name="translations", on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=250, blank=True, null=True)
+    description = SanitizedJSONField(blank=True, null=True, sanitizer=clean_editor_js)
+
+    class Meta:
+        unique_together = (("language_code", "product"),)
+
+    def __str__(self) -> str:
+        return self.name if self.name else str(self.pk)
+
+    def __repr__(self) -> str:
+        class_ = type(self)
+        return "%s(pk=%r, name=%r, product_pk=%r)" % (
+            class_.__name__,
+            self.pk,
+            self.name,
+            self.product_id,
+        )
+
+    def get_translated_object_id(self):
+        return "Initiative", self.product_id
+
+    def get_translated_keys(self):
+        translated_keys = super().get_translated_keys()
+        translated_keys.update(
+            {
+                "name": self.name,
+                "description": self.description,
+            }
+        )
+        return translated_keys
 
 
 class InitiativeMedia(SortableModel):
