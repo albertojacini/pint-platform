@@ -26,7 +26,7 @@ from ..core.utils import str_to_enum
 #     SelectedAttributesByProductIdLoader,
 #     SelectedAttributesByProductVariantIdLoader,
 # )
-# from .fields import TranslationField
+from .fields import TranslationField
 
 
 # def get_translatable_attribute_values(attributes: list) -> List[AttributeValue]:
@@ -229,52 +229,59 @@ class InitiativeTranslation(BaseTranslationType):
 #         return description if description is not None else {}
 #
 #
-# class ProductTranslatableContent(ModelObjectType):
-#     id = graphene.GlobalID(required=True)
-#     seo_title = graphene.String()
-#     seo_description = graphene.String()
-#     name = graphene.String(required=True)
-#     description = JSONString(description="Description of the product." + RICH_CONTENT)
-#     description_json = JSONString(
-#         description="Description of the product." + RICH_CONTENT,
-#         deprecation_reason=(
-#             f"{DEPRECATED_IN_3X_FIELD} Use the `description` field instead."
-#         ),
-#     )
-#     translation = TranslationField(ProductTranslation, type_name="product")
-#     product = graphene.Field(
-#         "pint.graphql.product.types.products.Product",
-#         description="Represents an individual item for sale in the storefront.",
-#         deprecation_reason=(
-#             f"{DEPRECATED_IN_3X_FIELD} Get model fields from the root level queries."
-#         ),
-#     )
-#     attribute_values = NonNullList(
-#         AttributeValueTranslatableContent,
-#         required=True,
-#         description="List of product attribute values that can be translated.",
-#     )
-#
-#     class Meta:
-#         model = product_models.Product
-#         interfaces = [graphene.relay.Node]
-#
-#     @staticmethod
-#     def resolve_product(root: product_models.Product, info):
-#         return ChannelContext(node=root, channel_slug=None)
-#
-#     @staticmethod
-#     def resolve_description_json(root: product_models.Product, _info):
-#         description = root.description
-#         return description if description is not None else {}
-#
-#     @staticmethod
-#     def resolve_attribute_values(root: product_models.Product, info):
-#         return (
-#             SelectedAttributesByProductIdLoader(info.context)
-#             .load(root.id)
-#             .then(get_translatable_attribute_values)
-#         )
+class InitiativeTranslatableContent(ModelObjectType):
+    id = graphene.GlobalID(required=True)
+    seo_title = graphene.String()
+    seo_description = graphene.String()
+    name = graphene.String(required=True)
+    description = JSONString(description="Description of the initiative." + RICH_CONTENT)
+    description_json = JSONString(
+        description="Description of the initiative." + RICH_CONTENT,
+        deprecation_reason=(
+            f"{DEPRECATED_IN_3X_FIELD} Use the `description` field instead."
+        ),
+    )
+    translation = TranslationField(InitiativeTranslation, type_name="initiative")
+    initiative = graphene.Field(
+        "pint.graphql.initiative.types.initiatives.Initiative",
+        description="Represents an individual item for sale in the storefront.",
+        deprecation_reason=(
+            f"{DEPRECATED_IN_3X_FIELD} Get model fields from the root level queries."
+        ),
+    )
+    # initiative = graphene.Field(
+    #     "pint.graphql.initiative.types.initiatives.Initiative",
+    #     description="Represents an individual item for sale in the storefront.",
+    #     deprecation_reason=(
+    #         f"{DEPRECATED_IN_3X_FIELD} Get model fields from the root level queries."
+    #     ),
+    # )
+    # attribute_values = NonNullList(
+    #     AttributeValueTranslatableContent,
+    #     required=True,
+    #     description="List of initiative attribute values that can be translated.",
+    # )
+
+    class Meta:
+        model = initiative_models.Initiative
+        interfaces = [graphene.relay.Node]
+
+    # @staticmethod
+    # def resolve_initiative(root: initiative_models.Initiative, info):
+    #     return ChannelContext(node=root, channel_slug=None)
+
+    @staticmethod
+    def resolve_description_json(root: initiative_models.Initiative, _info):
+        description = root.description
+        return description if description is not None else {}
+
+    # @staticmethod
+    # def resolve_attribute_values(root: initiative_models.Initiative, info):
+    #     return (
+    #         SelectedAttributesByInitiativeIdLoader(info.context)
+    #         .load(root.id)
+    #         .then(get_translatable_attribute_values)
+    #     )
 
 
 # class CollectionTranslation(BaseTranslationType):

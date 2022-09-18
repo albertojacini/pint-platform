@@ -741,9 +741,14 @@ class BaseThumbnailBySizeAndFormatLoader(DataLoader):
 #
 # class ThumbnailByCollectionIdSizeAndFormatLoader(BaseThumbnailBySizeAndFormatLoader):
 #     context_key = "thumbnail_by_collection_size_and_format"
-#     model_name = "collection"
+# #     model_name = "collection"
+#
+#
+# class ThumbnailByProductMediaIdSizeAndFormatLoader(BaseThumbnailBySizeAndFormatLoader):
+#     context_key = "thumbnail_by_productmedia_size_and_format"
+#     model_name = "product_media"
 
 
-class ThumbnailByProductMediaIdSizeAndFormatLoader(BaseThumbnailBySizeAndFormatLoader):
-    context_key = "thumbnail_by_productmedia_size_and_format"
-    model_name = "product_media"
+class ThumbnailByInitiativeMediaIdSizeAndFormatLoader(BaseThumbnailBySizeAndFormatLoader):
+    context_key = "thumbnail_by_initiativemedia_size_and_format"
+    model_name = "initiative_media"

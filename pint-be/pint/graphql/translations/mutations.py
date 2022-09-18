@@ -32,7 +32,7 @@ from . import types as translation_types
 
 TRANSLATABLE_CONTENT_TO_MODEL = {
     str(
-        translation_types.ProductTranslatableContent
+        translation_types.InitiativeTranslatableContent
     ): initiative_models.Initiative._meta.object_name,
     # str(
     #     translation_types.CollectionTranslatableContent

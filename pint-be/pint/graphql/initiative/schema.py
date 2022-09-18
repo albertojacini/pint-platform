@@ -13,10 +13,10 @@ from ..core.types import NonNullList
 from ..core.utils import from_global_id_or_error
 from ..core.validators import validate_one_of_args_is_in_query
 from ..translations.mutations import (
-    CategoryTranslate,
-    CollectionTranslate,
+    # CategoryTranslate,
+    # CollectionTranslate,
     InitiativeTranslate,
-    InitiativeVariantTranslate,
+    # InitiativeVariantTranslate,
 )
 from ..utils import get_user_or_app_from_context
 from .filters import (

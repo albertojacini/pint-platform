@@ -27,38 +27,38 @@ from ....initiative import models
 # from ....product.utils.variants import get_variant_selection_attributes
 from ....thumbnail.utils import get_image_or_proxy_url, get_thumbnail_size
 from ...account import types as account_types
-from ...account.enums import CountryCodeEnum
+# from ...account.enums import CountryCodeEnum
 from ...core.connection import (
     CountableConnection,
     create_connection_slice,
-    filter_connection_queryset,
+    # filter_connection_queryset,
 )
 from ...core.descriptions import (
-    ADDED_IN_31,
+    # ADDED_IN_31,
     DEPRECATED_IN_3X_FIELD,
-    DEPRECATED_IN_3X_INPUT,
-    PREVIEW_FEATURE,
+    # DEPRECATED_IN_3X_INPUT,
+    # PREVIEW_FEATURE,
     RICH_CONTENT,
 )
-from ...core.enums import ReportingPeriod
+# from ...core.enums import ReportingPeriod
 from ...core.federation import federated_entity, resolve_federation_references
 from ...core.fields import (
-    ConnectionField,
-    FilterConnectionField,
+    # ConnectionField,
+    # FilterConnectionField,
     JSONString,
-    PermissionsField,
+    # PermissionsField,
 )
 from ...core.types import (
     Image,
     ModelObjectType,
-    NonNullList,
-    TaxedMoney,
-    TaxedMoneyRange,
+    # NonNullList,
+    # TaxedMoney,
+    # TaxedMoneyRange,
     # TaxType,
     ThumbnailField,
     # Weight,
 )
-from ...core.utils import from_global_id_or_error
+# from ...core.utils import from_global_id_or_error
 
 from ...meta.types import ObjectWithMetadata
 from ...translations.fields import TranslationField
@@ -91,26 +91,26 @@ from ..dataloaders import (
     # SelectedAttributesByProductVariantIdLoader,
     # ThumbnailByCategoryIdSizeAndFormatLoader,
     # ThumbnailByCollectionIdSizeAndFormatLoader,
-    ThumbnailByProductMediaIdSizeAndFormatLoader,
+    ThumbnailByInitiativeMediaIdSizeAndFormatLoader,
     # VariantAttributesByProductTypeIdLoader,
     # VariantChannelListingByVariantIdAndChannelSlugLoader,
     # VariantChannelListingByVariantIdLoader,
     # VariantsChannelListingByProductIdAndChannelSlugLoader,
 )
-from ..enums import InitiativeMediaType, ProductTypeKindEnum, VariantAttributeScope
-from ..filters import ProductFilterInput
-from ..resolvers import resolve_product_variants, resolve_products
-from ..sorters import ProductOrder
+# from ..enums import InitiativeMediaType, ProductTypeKindEnum, VariantAttributeScope
+# from ..filters import ProductFilterInput
+# from ..resolvers import resolve_product_variants, resolve_products
+# from ..sorters import ProductOrder
 
-destination_address_argument = graphene.Argument(
-    account_types.AddressInput,
-    description=(
-        "Destination address used to find warehouses where stock availability "
-        "for this product is checked. If address is empty, uses "
-        "`Shop.companyAddress` or fallbacks to server's "
-        "`settings.DEFAULT_COUNTRY` configuration."
-    ),
-)
+# destination_address_argument = graphene.Argument(
+#     account_types.AddressInput,
+#     description=(
+#         "Destination address used to find warehouses where stock availability "
+#         "for this product is checked. If address is empty, uses "
+#         "`Shop.companyAddress` or fallbacks to server's "
+#         "`settings.DEFAULT_COUNTRY` configuration."
+#     ),
+# )
 
 
 @federated_entity("id channel")
@@ -120,74 +120,74 @@ class Initiative(ModelObjectType):
     seo_description = graphene.String()
     title = graphene.String(required=True)
     description_json = JSONString(
-        description="Description of the product." + RICH_CONTENT,
+        description="Description of the initiative." + RICH_CONTENT,
         deprecation_reason=(
             f"{DEPRECATED_IN_3X_FIELD} Use the `description` field instead."
         ),
     )
     thumbnail = ThumbnailField()
-    is_available = graphene.Boolean(
-        address=destination_address_argument,
-        description="Whether the product is in stock and visible or not.",
-    )
+    # is_available = graphene.Boolean(
+    #     address=destination_address_argument,
+    #     description="Whether the initiative is in stock and visible or not.",
+    # )
 
-    translation = TranslationField(
-        InitiativeTranslation,
-        type_name="product",
-        resolver=ChannelContextType.resolve_translation,
-    )
+    # translation = TranslationField(
+    #     InitiativeTranslation,
+    #     type_name="initiative",
+    #     resolver=ChannelContextType.resolve_translation,
+    # )
 
     class Meta:
-        default_resolver = ChannelContextType.resolver_with_context
+        # default_resolver = ChannelContextType.resolver_with_context
         description = "Represents an individual item for sale in the storefront."
         interfaces = [relay.Node, ObjectWithMetadata]
         model = models.Initiative
 
-    @staticmethod
-    def resolve_created(root: ChannelContext[models.Product], _info):
-        created_at = root.node.created_at
-        return created_at
+    # @staticmethod
+    # def resolve_created(root: ChannelContext[models.Initiative], _info):
+    #     created_at = root.node.created_at
+    #     return created_at
+    #
+    # @staticmethod
+    # def resolve_description_json(root: ChannelContext[models.Initiative], _info):
+    #     description = root.node.description
+    #     return description if description is not None else {}
 
-    @staticmethod
-    def resolve_description_json(root: ChannelContext[models.Product], _info):
-        description = root.node.description
-        return description if description is not None else {}
-
-    @staticmethod
-    @traced_resolver
-    def resolve_thumbnail(
-        root: ChannelContext[models.Product], info, *, size=256, format=None
-    ):
-        format = format.lower() if format else None
-        size = get_thumbnail_size(size)
-
-        def return_first_thumbnail(product_media):
-            if not product_media:
-                return None
-
-            image = product_media[0]
-            oembed_data = image.oembed_data
-
-            if oembed_data.get("thumbnail_url"):
-                return Image(alt=oembed_data["title"], url=oembed_data["thumbnail_url"])
-
-            def _resolve_url(thumbnail):
-                url = get_image_or_proxy_url(
-                    thumbnail, image.id, "ProductMedia", size, format
-                )
-                return Image(alt=image.alt, url=info.context.build_absolute_uri(url))
-
-            return (
-                ThumbnailByProductMediaIdSizeAndFormatLoader(info.context)
-                .load((image.id, size, format))
-                .then(_resolve_url)
-            )
-
-        return (
-            MediaByProductIdLoader(info.context)
-            .load(root.node.id)
-            .then(return_first_thumbnail)
-        )
+    # @staticmethod
+    # @traced_resolver
+    # def resolve_thumbnail(
+    #     root: ChannelContext[models.Initiative], info, *, size=256, format=None
+    # ):
+    #     format = format.lower() if format else None
+    #     size = get_thumbnail_size(size)
+    #
+    #     def return_first_thumbnail(initiative_media):
+    #         if not initiative_media:
+    #             return None
+    #
+    #         image = initiative_media[0]
+    #         oembed_data = image.oembed_data
+    #
+    #         if oembed_data.get("thumbnail_url"):
+    #             return Image(alt=oembed_data["title"], url=oembed_data["thumbnail_url"])
+    #
+    #         def _resolve_url(thumbnail):
+    #             url = get_image_or_proxy_url(
+    #                 thumbnail, image.id, "InitiativeMedia", size, format
+    #             )
+    #             return Image(alt=image.alt, url=info.context.build_absolute_uri(url))
+    #
+    #         return (
+    #             ThumbnailByInitiativeMediaIdSizeAndFormatLoader(info.context)
+    #             .load((image.id, size, format))
+    #             .then(_resolve_url)
+    #         )
+    #
+    #     return (
+    #         MediaByInitiativeIdLoader(info.context)
+    #         .load(root.node.id)
+    #         .then(return_first_thumbnail)
+    #     )
 
     @staticmethod
     def resolve_url(_root, _info):
@@ -203,13 +203,13 @@ class Initiative(ModelObjectType):
     #     _type, pk = from_global_id_or_error(id, ProductImage)
     #     return root.node.media.filter(pk=pk).first()
 
-    @staticmethod
-    def resolve_media(root: ChannelContext[models.Product], info):
-        return MediaByProductIdLoader(info.context).load(root.node.id)
-
-    @staticmethod
-    def resolve_images(root: ChannelContext[models.Product], info):
-        return ImagesByProductIdLoader(info.context).load(root.node.id)
+    # @staticmethod
+    # def resolve_media(root: ChannelContext[models.Initiative], info):
+    #     return MediaByInitiativeIdLoader(info.context).load(root.node.id)
+    #
+    # @staticmethod
+    # def resolve_images(root: ChannelContext[models.Initiative], info):
+    #     return ImagesByInitiativeIdLoader(info.context).load(root.node.id)
 
 
 
@@ -219,30 +219,30 @@ class InitiativeCountableConnection(CountableConnection):
         node = Initiative
 
 
-@federated_entity("id")
-class InitiativeType(ModelObjectType):
-    id = graphene.GlobalID(required=True)
-    name = graphene.String(required=True)
-    slug = graphene.String(required=True)
-
-    class Meta:
-        description = (
-            "Represents a type of product. It defines what attributes are available to "
-            "products of this type."
-        )
-        interfaces = [relay.Node, ObjectWithMetadata]
-        model = models.ProductType
-
-    @staticmethod
-    def resolve_initiatives(root: models.InitiativeType, info, *, channel=None, **kwargs):
-        requestor = get_user_or_app_from_context(info.context)
-        qs = root.initiatives.visible_to_user(requestor, channel)  # type: ignore
-        return create_connection_slice(qs, info, kwargs, ProductCountableConnection)
-
-
-class InitiativeTypeCountableConnection(CountableConnection):
-    class Meta:
-        node = InitiativeType
+# @federated_entity("id")
+# class InitiativeType(ModelObjectType):
+#     id = graphene.GlobalID(required=True)
+#     name = graphene.String(required=True)
+#     slug = graphene.String(required=True)
+#
+#     class Meta:
+#         description = (
+#             "Represents a type of product. It defines what attributes are available to "
+#             "products of this type."
+#         )
+#         interfaces = [relay.Node, ObjectWithMetadata]
+#         model = models.ProductType
+#
+#     @staticmethod
+#     def resolve_initiatives(root: models.InitiativeType, info, *, channel=None, **kwargs):
+#         requestor = get_user_or_app_from_context(info.context)
+#         qs = root.initiatives.visible_to_user(requestor, channel)  # type: ignore
+#         return create_connection_slice(qs, info, kwargs, InitiativeCountableConnection)
+#
+#
+# class InitiativeTypeCountableConnection(CountableConnection):
+#     class Meta:
+#         node = InitiativeType
 
 
 # @federated_entity("id channel")

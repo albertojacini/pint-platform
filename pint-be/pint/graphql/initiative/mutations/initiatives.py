@@ -11,25 +11,27 @@ from django.db import transaction
 from django.db.models import Exists, OuterRef
 from django.utils.text import slugify
 
-from ....attribute import AttributeInputType
-from ....attribute import models as attribute_models
-from ....core.exceptions import PreorderAllocationError
-from ....core.permissions import ProductPermissions
+# from ....attribute import AttributeInputType
+# from ....attribute import models as attribute_models
+# from ....core.exceptions import PreorderAllocationError
+from ....core.permissions import InitiativePermissions
 from ....core.tracing import traced_atomic_transaction
 from ....core.utils.date_time import convert_to_utc_date_time
 from ....core.utils.editorjs import clean_editor_js
 from ....core.utils.validators import get_oembed_data
-from ....order import events as order_events
-from ....order import models as order_models
-from ....order.tasks import recalculate_orders_task
+# from ....order import events as order_events
+# from ....order import models as order_models
+# from ....order.tasks import recalculate_orders_task
 from ....product import ProductMediaTypes, models
-from ....product.error_codes import CollectionErrorCode, ProductErrorCode
-from ....product.search import update_product_search_vector
-from ....product.tasks import (
-    update_product_discounted_price_task,
-    update_products_discounted_prices_of_catalogues_task,
-)
-from ....product.utils import delete_categories, get_products_ids_without_variants
+from ....initiative.error_codes import ProductErrorCode
+# from ....product.error_codes import CollectionErrorCode, ProductErrorCode
+from ....initiative.search import update_initiative_search_vector
+# from ....product.search import update_product_search_vector
+# from ....product.tasks import (
+#     update_product_discounted_price_task,
+#     update_products_discounted_prices_of_catalogues_task,
+# )
+# from ....product.utils import delete_categories, get_products_ids_without_variants
 from ....product.utils.variants import generate_and_set_variant_name
 from ....thumbnail import models as thumbnail_models
 from ....warehouse.management import deactivate_preorder_for_variant
@@ -46,7 +48,8 @@ from ...core.fields import JSONString
 from ...core.inputs import ReorderInput
 from ...core.mutations import BaseMutation, ModelDeleteMutation, ModelMutation
 from ...core.scalars import WeightScalar
-from ...core.types import CollectionError, NonNullList, ProductError, SeoInput, Upload
+from ...core.types import NonNullList, InitiativeError, SeoInput, Upload
+# from ...core.types import CollectionError, NonNullList, ProductError, SeoInput, Upload
 from ...core.utils import (
     add_hash_to_file_name,
     clean_seo_fields,
@@ -58,8 +61,9 @@ from ...core.utils import (
     validate_slug_and_generate_if_needed,
 )
 from ...core.utils.reordering import perform_reordering
-from ...warehouse.types import Warehouse
-from ..types import Category, Collection, Product, ProductMedia, ProductVariant
+# from ...warehouse.types import Warehouse
+from ..types import Initiative
+# from ..types import Category, Collection, Product, ProductMedia, ProductVariant
 from ..utils import (
     clean_variant_sku,
     create_stocks,
@@ -70,17 +74,17 @@ from ..utils import (
 )
 
 
-class CategoryInput(graphene.InputObjectType):
-    description = JSONString(description="Category description." + RICH_CONTENT)
-    name = graphene.String(description="Category name.")
-    slug = graphene.String(description="Category slug.")
-    seo = SeoInput(description="Search engine optimization fields.")
-    background_image = Upload(description="Background image file.")
-    background_image_alt = graphene.String(description="Alt text for a product media.")
+# class CategoryInput(graphene.InputObjectType):
+#     description = JSONString(description="Category description." + RICH_CONTENT)
+#     name = graphene.String(description="Category name.")
+#     slug = graphene.String(description="Category slug.")
+#     seo = SeoInput(description="Search engine optimization fields.")
+#     background_image = Upload(description="Background image file.")
+#     background_image_alt = graphene.String(description="Alt text for a product media.")
 
 
 
-class ProductInput(graphene.InputObjectType):
+class InitiativeInput(graphene.InputObjectType):
     attributes = NonNullList(AttributeValueInput, description="List of attributes.")
     category = graphene.ID(description="ID of the product's category.", name="category")
     charge_taxes = graphene.Boolean(
@@ -91,16 +95,16 @@ class ProductInput(graphene.InputObjectType):
         description="List of IDs of collections that the product belongs to.",
         name="collections",
     )
-    description = JSONString(description="Product description." + RICH_CONTENT)
-    name = graphene.String(description="Product name.")
-    slug = graphene.String(description="Product slug.")
+    description = JSONString(description="Initiative description." + RICH_CONTENT)
+    name = graphene.String(description="Initiative name.")
+    slug = graphene.String(description="Initiative slug.")
     tax_code = graphene.String(description="Tax rate for enabled tax gateway.")
     seo = SeoInput(description="Search engine optimization fields.")
-    weight = WeightScalar(description="Weight of the Product.", required=False)
+    weight = WeightScalar(description="Weight of the Initiative.", required=False)
     rating = graphene.Float(description="Defines the product rating value.")
 
 
-class ProductCreateInput(ProductInput):
+class InitiativeCreateInput(InitiativeInput):
     product_type = graphene.ID(
         description="ID of the type that product belongs to.",
         name="productType",
@@ -108,26 +112,26 @@ class ProductCreateInput(ProductInput):
     )
 
 
-T_INPUT_MAP = List[Tuple[attribute_models.Attribute, AttrValuesInput]]
+# T_INPUT_MAP = List[Tuple[attribute_models.Attribute, AttrValuesInput]]
 
 
-class ProductCreate(ModelMutation):
+class InitiativeCreate(ModelMutation):
     class Arguments:
-        input = ProductCreateInput(
+        input = InitiativeCreateInput(
             required=True, description="Fields required to create a product."
         )
 
     class Meta:
         description = "Creates a new product."
-        model = models.Product
-        object_type = Product
-        permissions = (ProductPermissions.MANAGE_PRODUCTS,)
-        error_type_class = ProductError
+        model = models.Initiative
+        object_type = Initiative
+        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        error_type_class = InitiativeError
         error_type_field = "product_errors"
 
     @classmethod
     def clean_attributes(
-        cls, attributes: dict, product_type: models.ProductType
+        cls, attributes: dict, product_type: models.InitiativeType
     ) -> T_INPUT_MAP:
         attributes_qs = product_type.product_attributes
         attributes = AttributeAssignmentMixin.clean_input(attributes, attributes_qs)
@@ -147,28 +151,28 @@ class ProductCreate(ModelMutation):
             raise ValidationError(
                 {
                     "weight": ValidationError(
-                        "Product can't have negative weight.",
-                        code=ProductErrorCode.INVALID.value,
+                        "Initiative can't have negative weight.",
+                        code=InitiativeErrorCode.INVALID.value,
                     )
                 }
             )
 
         # Attributes are provided as list of `AttributeValueInput` objects.
         # We need to transform them into the format they're stored in the
-        # `Product` model, which is HStore field that maps attribute's PK to
+        # `Initiative` model, which is HStore field that maps attribute's PK to
         # the value's PK.
 
         attributes = cleaned_input.get("attributes")
         product_type = (
             instance.product_type if instance.pk else cleaned_input.get("product_type")
-        )  # type: models.ProductType
+        )  # type: models.InitiativeType
 
         try:
             cleaned_input = validate_slug_and_generate_if_needed(
                 instance, "name", cleaned_input
             )
         except ValidationError as error:
-            error.code = ProductErrorCode.REQUIRED.value
+            error.code = InitiativeErrorCode.REQUIRED.value
             raise ValidationError({"slug": error})
 
         if "tax_code" in cleaned_input:
@@ -201,7 +205,7 @@ class ProductCreate(ModelMutation):
                 "product_type__product_attributes__values",
                 "product_type__attributeproduct",
             )
-            return cls.get_node_or_error(info, object_id, only_type="Product", qs=qs)
+            return cls.get_node_or_error(info, object_id, only_type="Initiative", qs=qs)
 
         return super().get_instance(info, **data)
 
@@ -221,7 +225,7 @@ class ProductCreate(ModelMutation):
 
     @classmethod
     def post_save_action(cls, info, instance, _cleaned_input):
-        product = models.Product.objects.prefetched_for_webhook().get(pk=instance.pk)
+        product = models.Initiative.objects.prefetched_for_webhook().get(pk=instance.pk)
         update_product_search_vector(instance)
         info.context.plugins.product_created(product)
 
@@ -239,24 +243,24 @@ class ProductCreate(ModelMutation):
         return response
 
 
-class ProductUpdate(ProductCreate):
+class InitiativeUpdate(InitiativeCreate):
     class Arguments:
         id = graphene.ID(required=True, description="ID of a product to update.")
-        input = ProductInput(
+        input = InitiativeInput(
             required=True, description="Fields required to update a product."
         )
 
     class Meta:
         description = "Updates an existing product."
-        model = models.Product
-        object_type = Product
-        permissions = (ProductPermissions.MANAGE_PRODUCTS,)
-        error_type_class = ProductError
+        model = models.Initiative
+        object_type = Initiative
+        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        error_type_class = InitiativeError
         error_type_field = "product_errors"
 
     @classmethod
     def clean_attributes(
-        cls, attributes: dict, product_type: models.ProductType
+        cls, attributes: dict, product_type: models.InitiativeType
     ) -> T_INPUT_MAP:
         attributes_qs = product_type.product_attributes
         attributes = AttributeAssignmentMixin.clean_input(
@@ -274,21 +278,21 @@ class ProductUpdate(ProductCreate):
 
     @classmethod
     def post_save_action(cls, info, instance, _cleaned_input):
-        product = models.Product.objects.prefetched_for_webhook().get(pk=instance.pk)
+        product = models.Initiative.objects.prefetched_for_webhook().get(pk=instance.pk)
         update_product_search_vector(instance)
         info.context.plugins.product_updated(product)
 
 
-class ProductDelete(ModelDeleteMutation):
+class InitiativeDelete(ModelDeleteMutation):
     class Arguments:
         id = graphene.ID(required=True, description="ID of a product to delete.")
 
     class Meta:
         description = "Deletes a product."
-        model = models.Product
-        object_type = Product
-        permissions = (ProductPermissions.MANAGE_PRODUCTS,)
-        error_type_class = ProductError
+        model = models.Initiative
+        object_type = Initiative
+        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        error_type_class = InitiativeError
         error_type_field = "product_errors"
 
     @classmethod
@@ -301,7 +305,7 @@ class ProductDelete(ModelDeleteMutation):
     def perform_mutation(cls, _root, info, **data):
         node_id = data.get("id")
 
-        instance = cls.get_node_or_error(info, node_id, only_type=Product)
+        instance = cls.get_node_or_error(info, node_id, only_type=Initiative)
         variants_id = list(instance.variants.all().values_list("id", flat=True))
 
         cls.delete_assigned_attribute_values(instance)
@@ -339,7 +343,7 @@ class ProductDelete(ModelDeleteMutation):
 
 
 
-class ProductMediaCreateInput(graphene.InputObjectType):
+class InitiativeMediaCreateInput(graphene.InputObjectType):
     alt = graphene.String(description="Alt text for a product media.")
     image = Upload(
         required=False, description="Represents an image file in a multipart request."
@@ -352,12 +356,12 @@ class ProductMediaCreateInput(graphene.InputObjectType):
     )
 
 
-class ProductMediaCreate(BaseMutation):
-    product = graphene.Field(Product)
-    media = graphene.Field(ProductMedia)
+class InitiativeMediaCreate(BaseMutation):
+    product = graphene.Field(Initiative)
+    media = graphene.Field(InitiativeMedia)
 
     class Arguments:
-        input = ProductMediaCreateInput(
+        input = InitiativeMediaCreateInput(
             required=True, description="Fields required to create a product media."
         )
 
@@ -368,8 +372,8 @@ class ProductMediaCreate(BaseMutation):
             "More detailed specs of the upload format can be found here: "
             "https://github.com/jaydenseric/graphql-multipart-request-spec"
         )
-        permissions = (ProductPermissions.MANAGE_PRODUCTS,)
-        error_type_class = ProductError
+        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        error_type_class = InitiativeError
         error_type_field = "product_errors"
 
     @classmethod
@@ -382,7 +386,7 @@ class ProductMediaCreate(BaseMutation):
                 {
                     "input": ValidationError(
                         "Image or external URL is required.",
-                        code=ProductErrorCode.REQUIRED,
+                        code=InitiativeErrorCode.REQUIRED,
                     )
                 }
             )
@@ -391,7 +395,7 @@ class ProductMediaCreate(BaseMutation):
                 {
                     "input": ValidationError(
                         "Either image or external URL is required.",
-                        code=ProductErrorCode.DUPLICATED_INPUT_ITEM,
+                        code=InitiativeErrorCode.DUPLICATED_INPUT_ITEM,
                     )
                 }
             )
@@ -404,8 +408,8 @@ class ProductMediaCreate(BaseMutation):
             info,
             data["product"],
             field="product",
-            only_type=Product,
-            qs=models.Product.objects.prefetched_for_webhook(),
+            only_type=Initiative,
+            qs=models.Initiative.objects.prefetched_for_webhook(),
         )
 
         alt = data.get("alt", "")
@@ -413,24 +417,24 @@ class ProductMediaCreate(BaseMutation):
         media_url = data.get("media_url")
         if image:
             image_data = info.context.FILES.get(image)
-            validate_image_file(image_data, "image", ProductErrorCode)
+            validate_image_file(image_data, "image", InitiativeErrorCode)
             add_hash_to_file_name(image_data)
             media = product.media.create(
-                image=image_data, alt=alt, type=ProductMediaTypes.IMAGE
+                image=image_data, alt=alt, type=InitiativeMediaTypes.IMAGE
             )
         if media_url:
             # Remote URLs can point to the images or oembed data.
             # In case of images, file is downloaded. Otherwise we keep only
             # URL to remote media.
             if is_image_url(media_url):
-                validate_image_url(media_url, "media_url", ProductErrorCode.INVALID)
+                validate_image_url(media_url, "media_url", InitiativeErrorCode.INVALID)
                 filename = get_filename_from_url(media_url)
                 image_data = requests.get(media_url, stream=True)
                 image_file = File(image_data.raw, filename)
                 media = product.media.create(
                     image=image_file,
                     alt=alt,
-                    type=ProductMediaTypes.IMAGE,
+                    type=InitiativeMediaTypes.IMAGE,
                 )
             else:
                 oembed_data, media_type = get_oembed_data(media_url, "media_url")
@@ -443,33 +447,33 @@ class ProductMediaCreate(BaseMutation):
 
         info.context.plugins.product_updated(product)
         product = ChannelContext(node=product, channel_slug=None)
-        return ProductMediaCreate(product=product, media=media)
+        return InitiativeMediaCreate(product=product, media=media)
 
 
-class ProductMediaUpdateInput(graphene.InputObjectType):
+class InitiativeMediaUpdateInput(graphene.InputObjectType):
     alt = graphene.String(description="Alt text for a product media.")
 
 
-class ProductMediaUpdate(BaseMutation):
-    product = graphene.Field(Product)
-    media = graphene.Field(ProductMedia)
+class InitiativeMediaUpdate(BaseMutation):
+    product = graphene.Field(Initiative)
+    media = graphene.Field(InitiativeMedia)
 
     class Arguments:
         id = graphene.ID(required=True, description="ID of a product media to update.")
-        input = ProductMediaUpdateInput(
+        input = InitiativeMediaUpdateInput(
             required=True, description="Fields required to update a product media."
         )
 
     class Meta:
         description = "Updates a product media."
-        permissions = (ProductPermissions.MANAGE_PRODUCTS,)
-        error_type_class = ProductError
+        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        error_type_class = InitiativeError
         error_type_field = "product_errors"
 
     @classmethod
     def perform_mutation(cls, _root, info, **data):
-        media = cls.get_node_or_error(info, data.get("id"), only_type=ProductMedia)
-        product = models.Product.objects.prefetched_for_webhook().get(
+        media = cls.get_node_or_error(info, data.get("id"), only_type=InitiativeMedia)
+        product = models.Initiative.objects.prefetched_for_webhook().get(
             pk=media.product_id
         )
         alt = data.get("input").get("alt")
@@ -478,12 +482,12 @@ class ProductMediaUpdate(BaseMutation):
             media.save(update_fields=["alt"])
         info.context.plugins.product_updated(product)
         product = ChannelContext(node=product, channel_slug=None)
-        return ProductMediaUpdate(product=product, media=media)
+        return InitiativeMediaUpdate(product=product, media=media)
 
 
-class ProductMediaReorder(BaseMutation):
-    product = graphene.Field(Product)
-    media = NonNullList(ProductMedia)
+class InitiativeMediaReorder(BaseMutation):
+    product = graphene.Field(Initiative)
+    media = NonNullList(InitiativeMedia)
 
     class Arguments:
         product_id = graphene.ID(
@@ -498,8 +502,8 @@ class ProductMediaReorder(BaseMutation):
 
     class Meta:
         description = "Changes ordering of the product media."
-        permissions = (ProductPermissions.MANAGE_PRODUCTS,)
-        error_type_class = ProductError
+        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        error_type_class = InitiativeError
         error_type_field = "product_errors"
 
     @classmethod
@@ -508,8 +512,8 @@ class ProductMediaReorder(BaseMutation):
             info,
             product_id,
             field="product_id",
-            only_type=Product,
-            qs=models.Product.objects.prefetched_for_webhook(),
+            only_type=Initiative,
+            qs=models.Initiative.objects.prefetched_for_webhook(),
         )
 
         if len(media_ids) != product.media.count():
@@ -517,7 +521,7 @@ class ProductMediaReorder(BaseMutation):
                 {
                     "order": ValidationError(
                         "Incorrect number of media IDs provided.",
-                        code=ProductErrorCode.INVALID,
+                        code=InitiativeErrorCode.INVALID,
                     )
                 }
             )
@@ -525,14 +529,14 @@ class ProductMediaReorder(BaseMutation):
         ordered_media = []
         for media_id in media_ids:
             media = cls.get_node_or_error(
-                info, media_id, field="order", only_type=ProductMedia
+                info, media_id, field="order", only_type=InitiativeMedia
             )
             if media and media.product != product:
                 raise ValidationError(
                     {
                         "order": ValidationError(
                             "Media %(media_id)s does not belong to this product.",
-                            code=ProductErrorCode.NOT_PRODUCTS_IMAGE,
+                            code=InitiativeErrorCode.NOT_PRODUCTS_IMAGE,
                             params={"media_id": media_id},
                         )
                     }
@@ -543,4 +547,4 @@ class ProductMediaReorder(BaseMutation):
 
         info.context.plugins.product_updated(product)
         product = ChannelContext(node=product, channel_slug=None)
-        return ProductMediaReorder(product=product, media=ordered_media)
+        return InitiativeMediaReorder(product=product, media=ordered_media)
