@@ -15,11 +15,11 @@ from ..utils import (
 )
 
 
-def test_remove_staff_member_with_orders(staff_user, permission_manage_products, order):
+def test_remove_staff_member_with_orders(staff_user, permission_manage_Initiatives, order):
     # given
     order.user = staff_user
     order.save()
-    staff_user.user_permissions.add(permission_manage_products)
+    staff_user.user_permissions.add(permission_manage_Initiatives)
 
     # when
     remove_staff_member(staff_user)

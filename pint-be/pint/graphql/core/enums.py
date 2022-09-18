@@ -25,7 +25,7 @@ from ...csv import error_codes as csv_error_codes
 # from ...page import error_codes as page_error_codes
 # from ...payment import error_codes as payment_error_codes
 from ...plugins import error_codes as plugin_error_codes
-# from ...product import error_codes as product_error_codes
+# from ...Initiative import error_codes as Initiative_error_codes
 # from ...shipping import error_codes as shipping_error_codes
 # from ...site import error_codes as site_error_codes
 from ...thumbnail import ThumbnailFormat

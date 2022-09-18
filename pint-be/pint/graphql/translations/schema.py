@@ -5,7 +5,7 @@ from ...core.permissions import SitePermissions
 from ...discount.models import Sale, Voucher
 from ...menu.models import MenuItem
 from ...page.models import Page
-from ...product.models import Category, Collection, Product, ProductVariant
+from ...Initiative.models import Category, Collection, Initiative, InitiativeVariant
 from ...shipping.models import ShippingMethod
 from ..attribute.resolvers import resolve_attributes
 from ..core.connection import CountableConnection, create_connection_slice
@@ -13,25 +13,25 @@ from ..core.fields import ConnectionField, PermissionsField
 from ..core.utils import from_global_id_or_error
 from ..menu.resolvers import resolve_menu_items
 from ..page.resolvers import resolve_pages
-from ..product.resolvers import resolve_categories
+from ..Initiative.resolvers import resolve_categories
 from ..translations import types as translation_types
 from .resolvers import (
     resolve_attribute_values,
     resolve_collections,
-    resolve_product_variants,
-    resolve_products,
+    resolve_Initiative_variants,
+    resolve_Initiatives,
     resolve_sales,
     resolve_shipping_methods,
     resolve_vouchers,
 )
 
 TYPES_TRANSLATIONS_MAP = {
-    Product: translation_types.ProductTranslatableContent,
+    Initiative: translation_types.InitiativeTranslatableContent,
     Collection: translation_types.CollectionTranslatableContent,
     Category: translation_types.CategoryTranslatableContent,
     Attribute: translation_types.AttributeTranslatableContent,
     AttributeValue: translation_types.AttributeValueTranslatableContent,
-    ProductVariant: translation_types.ProductVariantTranslatableContent,
+    InitiativeVariant: translation_types.InitiativeVariantTranslatableContent,
     Page: translation_types.PageTranslatableContent,
     ShippingMethod: translation_types.ShippingMethodTranslatableContent,
     Sale: translation_types.SaleTranslatableContent,
@@ -65,10 +65,10 @@ class TranslatableKinds(graphene.Enum):
     COLLECTION = "Collection"
     MENU_ITEM = "MenuItem"
     PAGE = "Page"
-    PRODUCT = "Product"
+    Initiative = "Initiative"
     SALE = "Sale"
     SHIPPING_METHOD = "ShippingMethodType"
-    VARIANT = "ProductVariant"
+    VARIANT = "InitiativeVariant"
     VOUCHER = "Voucher"
 
 

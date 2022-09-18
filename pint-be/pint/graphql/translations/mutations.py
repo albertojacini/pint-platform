@@ -10,7 +10,7 @@ from ...core.tracing import traced_atomic_transaction
 # from ...discount import models as discount_models
 # from ...menu import models as menu_models
 # from ...page import models as page_models
-# from ...product import models as product_models
+# from ...Initiative import models as Initiative_models
 from ...initiative import models as initiative_models
 # from ...shipping import models as shipping_models
 # from ...site.models import SiteSettings
@@ -25,7 +25,7 @@ from ..core.utils import from_global_id_or_error
 # from ..discount.types import Sale, Voucher
 # from ..menu.types import MenuItem
 from ..initiative.types import Initiative
-# from ..product.types import Category, Collection, Product, ProductVariant
+# from ..Initiative.types import Category, Collection, Initiative, InitiativeVariant
 # from ..shipping.types import ShippingMethodType
 # from ..shop.types import Shop
 from . import types as translation_types
@@ -36,10 +36,10 @@ TRANSLATABLE_CONTENT_TO_MODEL = {
     ): initiative_models.Initiative._meta.object_name,
     # str(
     #     translation_types.CollectionTranslatableContent
-    # ): product_models.Collection._meta.object_name,
+    # ): Initiative_models.Collection._meta.object_name,
     # str(
     #     translation_types.CategoryTranslatableContent
-    # ): product_models.Category._meta.object_name,
+    # ): Initiative_models.Category._meta.object_name,
     # str(
     #     translation_types.AttributeTranslatableContent
     # ): attribute_models.Attribute._meta.object_name,
@@ -47,8 +47,8 @@ TRANSLATABLE_CONTENT_TO_MODEL = {
     #     translation_types.AttributeValueTranslatableContent
     # ): attribute_models.AttributeValue._meta.object_name,
     # str(
-    #     translation_types.ProductVariantTranslatableContent
-    # ): product_models.ProductVariant._meta.object_name,
+    #     translation_types.InitiativeVariantTranslatableContent
+    # ): Initiative_models.InitiativeVariant._meta.object_name,
     # # Page Translation mutation reverses model and TranslatableContent
     # page_models.Page._meta.object_name: str(translation_types.PageTranslatableContent),
     # str(
@@ -170,7 +170,7 @@ class TranslationInput(NameTranslationInput, SeoTranslationInput):
 #
 #     class Meta:
 #         description = "Creates/updates translations for a category."
-#         model = product_models.Category
+#         model = Initiative_models.Category
 #         object_type = Category
 #         error_type_class = TranslationError
 #         error_type_field = "translation_errors"
@@ -219,11 +219,11 @@ class InitiativeTranslate(BaseTranslateMutation):
         return cls(**{cls._meta.return_field_name: initiative})
 
 
-# class ProductTranslate(BaseTranslateMutation):
+# class InitiativeTranslate(BaseTranslateMutation):
 #     class Arguments:
 #         id = graphene.ID(
 #             required=True,
-#             description="Product ID or ProductTranslatableContent ID.",
+#             description="Initiative ID or ProductTranslatableContent ID.",
 #         )
 #         language_code = graphene.Argument(
 #             LanguageCodeEnum, required=True, description="Translation language code."
