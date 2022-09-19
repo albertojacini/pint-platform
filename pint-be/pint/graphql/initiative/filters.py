@@ -59,13 +59,13 @@ from ..utils import resolve_global_ids_to_primary_keys
 from ..utils.filters import filter_by_id, filter_range_field
 # from ..warehouse import types as warehouse_types
 from . import types as product_types
-from .enums import (
-    CollectionPublished,
-    ProductTypeConfigurable,
-    ProductTypeEnum,
-    ProductTypeKindEnum,
-    StockAvailability,
-)
+# from .enums import (
+#     CollectionPublished,
+#     ProductTypeConfigurable,
+#     ProductTypeEnum,
+#     ProductTypeKindEnum,
+#     StockAvailability,
+# )
 
 T_INITIATIVE_FILTER_QUERIES = Dict[int, Iterable[int]]
 # T_PRODUCT_FILTER_QUERIES = Dict[int, Iterable[int]]
@@ -586,12 +586,12 @@ def filter_search(qs, _, value):
 
 class InitiativeFilter(MetadataFilterBase):
     search = django_filters.CharFilter(method=filter_search)
-    ids = GlobalIDMultipleChoiceFilter(method=filter_by_id("Product"))
+    ids = GlobalIDMultipleChoiceFilter(method=filter_by_id("Initiative"))
 
     class Meta:
         model = Initiative
         fields = [
-            "is_published",
+            # "is_published",
             "search",
         ]
 
@@ -600,7 +600,7 @@ class InitiativeFilter(MetadataFilterBase):
             queryset,
             name,
             value,
-            channel_slug,
+            # channel_slug,
         )
 
 
@@ -770,7 +770,10 @@ class InitiativeFilter(MetadataFilterBase):
 #         name_slug_qs = Q(name__ilike=value) | Q(slug__ilike=value)
 #         return queryset.filter(name_slug_qs)
 #
-#
+class InitiativeFilterInput(ChannelFilterInputObjectType):
+    class Meta:
+        filterset_class = InitiativeFilter
+
 # class ProductFilterInput(ChannelFilterInputObjectType):
 #     class Meta:
 #         filterset_class = ProductFilter

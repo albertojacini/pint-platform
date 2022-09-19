@@ -22,8 +22,9 @@ from ....core.utils.validators import get_oembed_data
 # from ....order import events as order_events
 # from ....order import models as order_models
 # from ....order.tasks import recalculate_orders_task
-from ....product import ProductMediaTypes, models
-from ....initiative.error_codes import ProductErrorCode
+from ....initiative import InitiativeMediaTypes, models
+# from ....product import ProductMediaTypes, models
+from ....initiative.error_codes import InitiativeErrorCode
 # from ....product.error_codes import CollectionErrorCode, ProductErrorCode
 from ....initiative.search import update_initiative_search_vector
 # from ....product.search import update_product_search_vector

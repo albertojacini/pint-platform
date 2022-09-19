@@ -30,6 +30,7 @@ from ..enums import (
     PermissionEnum,
     PermissionGroupErrorCode,
     PluginErrorCode,
+    InitiativeErrorCode,
     # ProductErrorCode,
     # ShippingErrorCode,
     ShopErrorCode,
@@ -247,6 +248,19 @@ class PermissionGroupError(Error):
         required=False,
     )
 
+
+class InitiativeError(Error):
+    code = InitiativeErrorCode(description="The error code.", required=True)
+    attributes = NonNullList(
+        graphene.ID,
+        description="List of attributes IDs which causes the error.",
+        required=False,
+    )
+    values = NonNullList(
+        graphene.ID,
+        description="List of attribute values IDs which causes the error.",
+        required=False,
+    )
 
 # class ProductError(Error):
 #     code = ProductErrorCode(description="The error code.", required=True)

@@ -1,13 +1,13 @@
 import graphene
 
-from ...product import ProductMediaTypes, ProductTypeKind
+from ...initiative import InitiativeMediaTypes
 from ..core.enums import to_enum
 
-ProductTypeKindEnum = to_enum(ProductTypeKind)
-ProductMediaType = to_enum(ProductMediaTypes, type_name="ProductMediaType")
+# InitiativeTypeKindEnum = to_enum(InitiativeTypeKind)
+InitiativeMediaType = to_enum(InitiativeMediaTypes, type_name="InitiativeMediaType")
 
 
-class ProductAttributeType(graphene.Enum):
+class InitiativeAttributeType(graphene.Enum):
     PRODUCT = "PRODUCT"
     VARIANT = "VARIANT"
 
@@ -22,12 +22,12 @@ class CollectionPublished(graphene.Enum):
     HIDDEN = "hidden"
 
 
-class ProductTypeConfigurable(graphene.Enum):
+class InitiativeTypeConfigurable(graphene.Enum):
     CONFIGURABLE = "configurable"
     SIMPLE = "simple"
 
 
-class ProductTypeEnum(graphene.Enum):
+class InitiativeTypeEnum(graphene.Enum):
     DIGITAL = "digital"
     SHIPPABLE = "shippable"
 

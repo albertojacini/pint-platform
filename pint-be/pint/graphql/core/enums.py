@@ -17,6 +17,7 @@ from ...core.units import (
     WeightUnits,
 )
 from ...csv import error_codes as csv_error_codes
+from ...initiative import error_codes as initiative_error_codes
 # from ...discount import error_codes as discount_error_codes
 # from ...giftcard import error_codes as giftcard_error_codes
 # from ...invoice import error_codes as invoice_error_codes
@@ -140,6 +141,7 @@ MetadataErrorCode = graphene.Enum.from_enum(core_error_codes.MetadataErrorCode)
 PermissionGroupErrorCode = graphene.Enum.from_enum(
     account_error_codes.PermissionGroupErrorCode
 )
+InitiativeErrorCode = graphene.Enum.from_enum(initiative_error_codes.InitiativeErrorCode)
 # ProductErrorCode = graphene.Enum.from_enum(product_error_codes.ProductErrorCode)
 # CollectionErrorCode = graphene.Enum.from_enum(product_error_codes.CollectionErrorCode)
 ShopErrorCode = graphene.Enum.from_enum(core_error_codes.ShopErrorCode)
