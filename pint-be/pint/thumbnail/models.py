@@ -20,7 +20,7 @@ class Thumbnail(models.Model):
     format = models.CharField(
         max_length=32, null=True, blank=True, choices=ThumbnailFormat.CHOICES
     )
-    product_media = models.ForeignKey(
+    initiative_media = models.ForeignKey(
         InitiativeMedia,
         null=True,
         blank=True,

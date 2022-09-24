@@ -75,7 +75,7 @@ class Event(graphene.Interface):
         description="The user or application that triggered the event.",
     )
     recipient = graphene.Field(
-        "saleor.graphql.app.types.App",
+        "pint.graphql.app.types.App",
         description="The application receiving the webhook.",
     )
 
@@ -109,7 +109,7 @@ class Event(graphene.Interface):
 
 # class AddressBase(AbstractType):
 #     address = graphene.Field(
-#         "saleor.graphql.account.types.Address",
+#         "pint.graphql.account.types.Address",
 #         description="The address the event relates to.",
 #     )
 #
@@ -145,7 +145,7 @@ class Event(graphene.Interface):
 
 class AppBase(AbstractType):
     app = graphene.Field(
-        "saleor.graphql.app.types.App",
+        "pint.graphql.app.types.App",
         description="The application the event relates to.",
     )
 
@@ -185,7 +185,7 @@ class AppStatusChanged(ObjectType, AppBase):
 
 # class AttributeBase(AbstractType):
 #     attribute = graphene.Field(
-#         "saleor.graphql.attribute.types.Attribute",
+#         "pint.graphql.attribute.types.Attribute",
 #         description="The attribute the event relates to.",
 #     )
 #
@@ -221,7 +221,7 @@ class AppStatusChanged(ObjectType, AppBase):
 #
 # class AttributeValueBase(AbstractType):
 #     attribute_value = graphene.Field(
-#         "saleor.graphql.attribute.types.AttributeValue",
+#         "pint.graphql.attribute.types.AttributeValue",
 #         description="The attribute value the event relates to.",
 #     )
 #
@@ -263,7 +263,7 @@ class AppStatusChanged(ObjectType, AppBase):
 #
 # class CategoryBase(AbstractType):
 #     category = graphene.Field(
-#         "saleor.graphql.initiative.types.Category",
+#         "pint.graphql.initiative.types.Category",
 #         description="The category the event relates to.",
 #     )
 #
@@ -299,7 +299,7 @@ class AppStatusChanged(ObjectType, AppBase):
 #
 # class ChannelBase(AbstractType):
 #     channel = graphene.Field(
-#         "saleor.graphql.channel.types.Channel",
+#         "pint.graphql.channel.types.Channel",
 #         description="The channel the event relates to.",
 #     )
 #
@@ -345,7 +345,7 @@ class AppStatusChanged(ObjectType, AppBase):
 #
 # class OrderBase(AbstractType):
 #     order = graphene.Field(
-#         "saleor.graphql.order.types.Order",
+#         "pint.graphql.order.types.Order",
 #         description="The order the event relates to.",
 #     )
 #
@@ -431,7 +431,7 @@ class AppStatusChanged(ObjectType, AppBase):
 #
 # class GiftCardBase(AbstractType):
 #     gift_card = graphene.Field(
-#         "saleor.graphql.giftcard.types.GiftCard",
+#         "pint.graphql.giftcard.types.GiftCard",
 #         description="The gift card the event relates to.",
 #     )
 #
@@ -477,7 +477,7 @@ class AppStatusChanged(ObjectType, AppBase):
 
 # class MenuBase(AbstractType):
 #     menu = graphene.Field(
-#         "saleor.graphql.menu.types.Menu",
+#         "pint.graphql.menu.types.Menu",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -512,7 +512,7 @@ class AppStatusChanged(ObjectType, AppBase):
 #
 # class MenuItemBase(AbstractType):
 #     menu_item = graphene.Field(
-#         "saleor.graphql.menu.types.MenuItem",
+#         "pint.graphql.menu.types.MenuItem",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -551,14 +551,14 @@ class AppStatusChanged(ObjectType, AppBase):
 
 class InitiativeBase(AbstractType):
     initiative = graphene.Field(
-        "saleor.graphql.initiative.types.Initiative",
+        "pint.graphql.initiative.types.Initiative",
         channel=graphene.String(
             description="Slug of a channel for which the data should be returned."
         ),
         description="The initiative the event relates to.",
     )
     # category = graphene.Field(
-    #     "saleor.graphql.initiative.types.initiatives.Category",
+    #     "pint.graphql.initiative.types.initiatives.Category",
     #     description="The category of the initiative.",
     # )
 
@@ -601,14 +601,14 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 
 # class InitiativeBase(AbstractType):
 #     initiative = graphene.Field(
-#         "saleor.graphql.initiative.types.Initiative",
+#         "pint.graphql.initiative.types.Initiative",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
 #         description="The initiative the event relates to.",
 #     )
 #     category = graphene.Field(
-#         "saleor.graphql.initiative.types.initiatives.Category",
+#         "pint.graphql.initiative.types.initiatives.Category",
 #         description="The category of the initiative.",
 #     )
 #
@@ -651,7 +651,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class InitiativeVariantBase(AbstractType):
 #     initiative_variant = graphene.Field(
-#         "saleor.graphql.initiative.types.InitiativeVariant",
+#         "pint.graphql.initiative.types.InitiativeVariant",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -696,7 +696,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class InitiativeVariantOutOfStock(ObjectType, InitiativeVariantBase):
 #     warehouse = graphene.Field(
-#         "saleor.graphql.warehouse.types.Warehouse", description="Look up a warehouse."
+#         "pint.graphql.warehouse.types.Warehouse", description="Look up a warehouse."
 #     )
 #
 #     class Meta:
@@ -721,7 +721,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class InitiativeVariantBackInStock(ObjectType, InitiativeVariantBase):
 #     warehouse = graphene.Field(
-#         "saleor.graphql.warehouse.types.Warehouse", description="Look up a warehouse."
+#         "pint.graphql.warehouse.types.Warehouse", description="Look up a warehouse."
 #     )
 #
 #     class Meta:
@@ -746,7 +746,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class SaleBase(AbstractType):
 #     sale = graphene.Field(
-#         "saleor.graphql.discount.types.Sale",
+#         "pint.graphql.discount.types.Sale",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -781,7 +781,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class SaleToggle(ObjectType, SaleBase):
 #     sale = graphene.Field(
-#         "saleor.graphql.discount.types.Sale",
+#         "pint.graphql.discount.types.Sale",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -799,7 +799,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class InvoiceBase(AbstractType):
 #     invoice = graphene.Field(
-#         "saleor.graphql.invoice.types.Invoice",
+#         "pint.graphql.invoice.types.Invoice",
 #         description="The invoice the event relates to.",
 #     )
 #
@@ -833,11 +833,11 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class FulfillmentBase(AbstractType):
 #     fulfillment = graphene.Field(
-#         "saleor.graphql.order.types.Fulfillment",
+#         "pint.graphql.order.types.Fulfillment",
 #         description="The fulfillment the event relates to.",
 #     )
 #     order = graphene.Field(
-#         "saleor.graphql.order.types.Order",
+#         "pint.graphql.order.types.Order",
 #         description="The order the fulfillment belongs to.",
 #     )
 #
@@ -872,7 +872,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class UserBase(AbstractType):
 #     user = graphene.Field(
-#         "saleor.graphql.account.types.User",
+#         "pint.graphql.account.types.User",
 #         description="The user the event relates to.",
 #     )
 #
@@ -902,7 +902,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class CollectionBase(AbstractType):
 #     collection = graphene.Field(
-#         "saleor.graphql.initiative.types.initiatives.Collection",
+#         "pint.graphql.initiative.types.initiatives.Collection",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -941,7 +941,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class CheckoutBase(AbstractType):
 #     checkout = graphene.Field(
-#         "saleor.graphql.checkout.types.Checkout",
+#         "pint.graphql.checkout.types.Checkout",
 #         description="The checkout the event relates to.",
 #     )
 #
@@ -967,76 +967,76 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #         )
 
 
-class PageBase(AbstractType):
-    page = graphene.Field(
-        "saleor.graphql.page.types.Page", description="The page the event relates to."
-    )
-
-    @staticmethod
-    def resolve_page(root, _info):
-        _, page = root
-        return page
-
-
-class PageCreated(ObjectType, PageBase):
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when new page is created." + ADDED_IN_32 + PREVIEW_FEATURE
-        )
-
-
-class PageUpdated(ObjectType, PageBase):
-    class Meta:
-        interfaces = (Event,)
-        description = "Event sent when page is updated." + ADDED_IN_32 + PREVIEW_FEATURE
-
-
-class PageDeleted(ObjectType, PageBase):
-    class Meta:
-        interfaces = (Event,)
-        description = "Event sent when page is deleted." + ADDED_IN_32 + PREVIEW_FEATURE
-
-
-class PageTypeBase(AbstractType):
-    page_type = graphene.Field(
-        "saleor.graphql.page.types.PageType",
-        description="The page type the event relates to.",
-    )
-
-    @staticmethod
-    def resolve_page_type(root, _info):
-        _, page_type = root
-        return page_type
-
-
-class PageTypeCreated(ObjectType, PageTypeBase):
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when new page type is created." + ADDED_IN_35 + PREVIEW_FEATURE
-        )
-
-
-class PageTypeUpdated(ObjectType, PageTypeBase):
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when page type is updated." + ADDED_IN_35 + PREVIEW_FEATURE
-        )
-
-
-class PageTypeDeleted(ObjectType, PageTypeBase):
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when page type is deleted." + ADDED_IN_35 + PREVIEW_FEATURE
-        )
+# class PageBase(AbstractType):
+#     page = graphene.Field(
+#         "pint.graphql.page.types.Page", description="The page the event relates to."
+#     )
+#
+#     @staticmethod
+#     def resolve_page(root, _info):
+#         _, page = root
+#         return page
+#
+#
+# class PageCreated(ObjectType, PageBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when new page is created." + ADDED_IN_32 + PREVIEW_FEATURE
+#         )
+#
+#
+# class PageUpdated(ObjectType, PageBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = "Event sent when page is updated." + ADDED_IN_32 + PREVIEW_FEATURE
+#
+#
+# class PageDeleted(ObjectType, PageBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = "Event sent when page is deleted." + ADDED_IN_32 + PREVIEW_FEATURE
+#
+#
+# class PageTypeBase(AbstractType):
+#     page_type = graphene.Field(
+#         "pint.graphql.page.types.PageType",
+#         description="The page type the event relates to.",
+#     )
+#
+#     @staticmethod
+#     def resolve_page_type(root, _info):
+#         _, page_type = root
+#         return page_type
+#
+#
+# class PageTypeCreated(ObjectType, PageTypeBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when new page type is created." + ADDED_IN_35 + PREVIEW_FEATURE
+#         )
+#
+#
+# class PageTypeUpdated(ObjectType, PageTypeBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when page type is updated." + ADDED_IN_35 + PREVIEW_FEATURE
+#         )
+#
+#
+# class PageTypeDeleted(ObjectType, PageTypeBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when page type is deleted." + ADDED_IN_35 + PREVIEW_FEATURE
+#         )
 
 
 class PermissionGroupBase(AbstractType):
     permission_group = graphene.Field(
-        "saleor.graphql.account.types.Group",
+        "pint.graphql.account.types.Group",
         description="The permission group the event relates to.",
     )
 
@@ -1078,14 +1078,14 @@ class PermissionGroupDeleted(ObjectType, PermissionGroupBase):
 
 # class ShippingPriceBase(AbstractType):
 #     shipping_method = graphene.Field(
-#         "saleor.graphql.shipping.types.ShippingMethodType",
+#         "pint.graphql.shipping.types.ShippingMethodType",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
 #         description="The shipping method the event relates to.",
 #     )
 #     shipping_zone = graphene.Field(
-#         "saleor.graphql.shipping.types.ShippingZone",
+#         "pint.graphql.shipping.types.ShippingZone",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -1131,7 +1131,7 @@ class PermissionGroupDeleted(ObjectType, PermissionGroupBase):
 #
 # class ShippingZoneBase(AbstractType):
 #     shipping_zone = graphene.Field(
-#         "saleor.graphql.shipping.types.ShippingZone",
+#         "pint.graphql.shipping.types.ShippingZone",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -1287,7 +1287,7 @@ class TranslationUpdated(ObjectType, TranslationBase):
 
 # class VoucherBase(AbstractType):
 #     voucher = graphene.Field(
-#         "saleor.graphql.discount.types.Voucher",
+#         "pint.graphql.discount.types.Voucher",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -1326,7 +1326,7 @@ class TranslationUpdated(ObjectType, TranslationBase):
 #
 # class WarehouseBase(AbstractType):
 #     warehouse = graphene.Field(
-#         "saleor.graphql.warehouse.types.Warehouse",
+#         "pint.graphql.warehouse.types.Warehouse",
 #         description="The warehouse the event relates to.",
 #     )
 #
@@ -1338,7 +1338,7 @@ class TranslationUpdated(ObjectType, TranslationBase):
 #
 # class PaymentBase(AbstractType):
 #     payment = graphene.Field(
-#         "saleor.graphql.payment.types.Payment",
+#         "pint.graphql.payment.types.Payment",
 #         description="Look up a payment.",
 #     )
 #
@@ -1563,9 +1563,9 @@ WEBHOOK_TYPES_MAP = {
     # WebhookEventAsyncType.COLLECTION_DELETED: CollectionDeleted,
     # WebhookEventAsyncType.CHECKOUT_CREATED: CheckoutCreated,
     # WebhookEventAsyncType.CHECKOUT_UPDATED: CheckoutUpdated,
-    WebhookEventAsyncType.PAGE_CREATED: PageCreated,
-    WebhookEventAsyncType.PAGE_UPDATED: PageUpdated,
-    WebhookEventAsyncType.PAGE_DELETED: PageDeleted,
+    # WebhookEventAsyncType.PAGE_CREATED: PageCreated,
+    # WebhookEventAsyncType.PAGE_UPDATED: PageUpdated,
+    # WebhookEventAsyncType.PAGE_DELETED: PageDeleted,
     # WebhookEventAsyncType.PAGE_TYPE_CREATED: PageTypeCreated,
     # WebhookEventAsyncType.PAGE_TYPE_UPDATED: PageTypeUpdated,
     # WebhookEventAsyncType.PAGE_TYPE_DELETED: PageTypeDeleted,

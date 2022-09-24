@@ -446,6 +446,7 @@ class WebhookEventAsyncType:
 
 
 class WebhookEventSyncType:
+    EXAMPLE_SYNC_EVENT = "example_sync_event"
     # PAYMENT_LIST_GATEWAYS = "payment_list_gateways"
     # PAYMENT_AUTHORIZE = "payment_authorize"
     # PAYMENT_CAPTURE = "payment_capture"
@@ -462,6 +463,7 @@ class WebhookEventSyncType:
     # ORDER_FILTER_SHIPPING_METHODS = "order_filter_shipping_methods"
 
     DISPLAY_LABELS = {
+        EXAMPLE_SYNC_EVENT: "example_sync_event",
         # PAYMENT_AUTHORIZE: "Authorize payment",
         # PAYMENT_CAPTURE: "Capture payment",
         # PAYMENT_CONFIRM: "Confirm payment",
@@ -477,6 +479,7 @@ class WebhookEventSyncType:
     }
 
     CHOICES = [
+        (EXAMPLE_SYNC_EVENT, DISPLAY_LABELS[EXAMPLE_SYNC_EVENT]),
         # (PAYMENT_AUTHORIZE, DISPLAY_LABELS[PAYMENT_AUTHORIZE]),
         # (PAYMENT_CAPTURE, DISPLAY_LABELS[PAYMENT_CAPTURE]),
         # (PAYMENT_CONFIRM, DISPLAY_LABELS[PAYMENT_CONFIRM]),
@@ -500,6 +503,7 @@ class WebhookEventSyncType:
     ALL = [event[0] for event in CHOICES]
 
     PAYMENT_EVENTS = [
+        EXAMPLE_SYNC_EVENT,
         # PAYMENT_AUTHORIZE,
         # PAYMENT_CAPTURE,
         # PAYMENT_CONFIRM,
@@ -510,6 +514,7 @@ class WebhookEventSyncType:
     ]
 
     PERMISSIONS = {
+        EXAMPLE_SYNC_EVENT: AccountPermissions.MANAGE_USERS,
         # PAYMENT_AUTHORIZE: PaymentPermissions.HANDLE_PAYMENTS,
         # PAYMENT_CAPTURE: PaymentPermissions.HANDLE_PAYMENTS,
         # PAYMENT_CONFIRM: PaymentPermissions.HANDLE_PAYMENTS,

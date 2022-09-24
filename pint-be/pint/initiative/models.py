@@ -44,8 +44,8 @@ from ..core.models import ModelWithMetadata, PublishableModel, SortableModel
 from ..core.permissions import (
     # DiscountPermissions,
     # OrderPermissions,
-    # ProductPermissions,
-    # ProductTypePermissions,
+    # InitiativePermissions,
+    # InitiativeTypePermissions,
     has_one_of_permissions,
 )
 # from ..core.utils import build_absolute_uri
@@ -53,7 +53,7 @@ from ..core.permissions import (
 from ..core.utils.editorjs import clean_editor_js
 from ..core.utils.translations import Translation, TranslationProxy
 from ..seo.models import SeoModel, SeoModelTranslation
-# from . import ProductMediaTypes, ProductTypeKind
+# from . import InitiativeMediaTypes, InitiativeTypeKind
 from . import InitiativeMediaTypes
 
 # if TYPE_CHECKING:
@@ -66,11 +66,11 @@ from . import InitiativeMediaTypes
 #     from ..app.models import App
 
 ALL_INITIATIVES_PERMISSIONS = [
-    # List of permissions, where each of them allows viewing all products
+    # List of permissions, where each of them allows viewing all initiatives
     # (including unpublished).
     # OrderPermissions.MANAGE_ORDERS,
     # DiscountPermissions.MANAGE_DISCOUNTS,
-    # ProductPermissions.MANAGE_PRODUCTS,
+    # InitiativePermissions.MANAGE_PRODUCTS,
 ]
 class InitiativesQueryset(models.QuerySet):
     # def published(self, channel_slug: str):
@@ -83,7 +83,7 @@ class InitiativesQueryset(models.QuerySet):
     #         Exists(channels.filter(pk=OuterRef("channel_id"))),
     #         is_published=True,
     #     ).values("id")
-    #     return self.filter(Exists(channel_listings.filter(product_id=OuterRef("pk"))))
+    #     return self.filter(Exists(channel_listings.filter(initiative_id=OuterRef("pk"))))
 
     # def not_published(self, channel_slug: str):
     #     today = datetime.datetime.now(pytz.UTC)
@@ -97,11 +97,11 @@ class InitiativesQueryset(models.QuerySet):
         if has_one_of_permissions(requestor, ALL_INITIATIVES_PERMISSIONS):
             # if channel_slug:
             #     channels = Channel.objects.filter(slug=str(channel_slug)).values("id")
-            #     channel_listings = ProductChannelListing.objects.filter(
+            #     channel_listings = InitiativeChannelListing.objects.filter(
             #         Exists(channels.filter(pk=OuterRef("channel_id")))
             #     ).values("id")
             #     return self.filter(
-            #         Exists(channel_listings.filter(product_id=OuterRef("pk")))
+            #         Exists(channel_listings.filter(initiative_id=OuterRef("pk")))
             #     )
             return self.all()
         return self.published_with_variants(channel_slug)
@@ -113,8 +113,8 @@ class InitiativesQueryset(models.QuerySet):
 
     # def annotate_is_published(self, channel_slug: str):
     #     query = Subquery(
-    #         ProductChannelListing.objects.filter(
-    #             product_id=OuterRef("pk"), channel__slug=str(channel_slug)
+    #         InitiativeChannelListing.objects.filter(
+    #             initiative_id=OuterRef("pk"), channel__slug=str(channel_slug)
     #         ).values_list("is_published")[:1]
     #     )
     #     return self.annotate(
@@ -123,8 +123,8 @@ class InitiativesQueryset(models.QuerySet):
     #
     # def annotate_published_at(self, channel_slug: str):
     #     query = Subquery(
-    #         ProductChannelListing.objects.filter(
-    #             product_id=OuterRef("pk"), channel__slug=str(channel_slug)
+    #         InitiativeChannelListing.objects.filter(
+    #             initiative_id=OuterRef("pk"), channel__slug=str(channel_slug)
     #         ).values_list("published_at")[:1]
     #     )
     #     return self.annotate(
@@ -133,8 +133,8 @@ class InitiativesQueryset(models.QuerySet):
 
     # def annotate_visible_in_listings(self, channel_slug):
     #     query = Subquery(
-    #         ProductChannelListing.objects.filter(
-    #             product_id=OuterRef("pk"), channel__slug=str(channel_slug)
+    #         InitiativeChannelListing.objects.filter(
+    #             initiative_id=OuterRef("pk"), channel__slug=str(channel_slug)
     #         ).values_list("visible_in_listings")[:1]
     #     )
     #     return self.annotate(
@@ -144,13 +144,13 @@ class InitiativesQueryset(models.QuerySet):
     # def sort_by_attribute(
     #     self, attribute_pk: Union[int, str], descending: bool = False
     # ):
-    #     """Sort a query set by the values of the given product attribute.
+    #     """Sort a query set by the values of the given initiative attribute.
     #
     #     :param attribute_pk: The database ID (must be a numeric) of the attribute
     #                          to sort by.
     #     :param descending: The sorting direction.
     #     """
-    #     from ..attribute.models import AttributeProduct, AttributeValue
+    #     from ..attribute.models import AttributeInitiative, AttributeValue
     #
     #     qs: models.QuerySet = self
     #     # If the passed attribute ID is valid, execute the sorting
@@ -162,11 +162,11 @@ class InitiativesQueryset(models.QuerySet):
     #             concatenated_values=Value(None, output_field=models.CharField()),
     #         )
     #
-    #     # Retrieve all the products' attribute data IDs (assignments) and
-    #     # product types that have the given attribute associated to them
+    #     # Retrieve all the initiatives' attribute data IDs (assignments) and
+    #     # initiative types that have the given attribute associated to them
     #     associated_values = tuple(
-    #         AttributeProduct.objects.filter(attribute_id=attribute_pk).values_list(
-    #             "pk", "product_type_id"
+    #         AttributeInitiative.objects.filter(attribute_id=attribute_pk).values_list(
+    #             "pk", "initiative_type_id"
     #         )
     #     )
     #
@@ -179,13 +179,13 @@ class InitiativesQueryset(models.QuerySet):
     #         )
     #
     #     else:
-    #         attribute_associations, product_types_associated_to_attribute = zip(
+    #         attribute_associations, initiative_types_associated_to_attribute = zip(
     #             *associated_values
     #         )
     #
     #         qs = qs.annotate(
-    #             # Contains to retrieve the attribute data (singular) of each product
-    #             # Refer to `AttributeProduct`.
+    #             # Contains to retrieve the attribute data (singular) of each initiative
+    #             # Refer to `AttributeInitiative`.
     #             filtered_attribute=FilteredRelation(
     #                 relation_name="attributes",
     #                 condition=Q(attributes__assignment_id__in=attribute_associations),
@@ -194,11 +194,11 @@ class InitiativesQueryset(models.QuerySet):
     #             grouped_ids=Count("id"),
     #             # String aggregation of the attribute's values to efficiently sort them
     #             concatenated_values=Case(
-    #                 # If the product has no association data but has
-    #                 # the given attribute associated to its product type,
+    #                 # If the initiative has no association data but has
+    #                 # the given attribute associated to its initiative type,
     #                 # then consider the concatenated values as empty (non-null).
     #                 When(
-    #                     Q(product_type_id__in=product_types_associated_to_attribute)
+    #                     Q(initiative_type_id__in=initiative_types_associated_to_attribute)
     #                     & Q(filtered_attribute=None),
     #                     then=models.Value(""),
     #                 ),
@@ -215,20 +215,20 @@ class InitiativesQueryset(models.QuerySet):
     #                 output_field=models.CharField(),
     #             ),
     #             concatenated_values_order=Case(
-    #                 # Make the products having no such attribute be last in the sorting
+    #                 # Make the initiatives having no such attribute be last in the sorting
     #                 When(concatenated_values=None, then=2),
-    #                 # Put the products having an empty attribute value at the bottom of
-    #                 # the other products.
+    #                 # Put the initiatives having an empty attribute value at the bottom of
+    #                 # the other initiatives.
     #                 When(concatenated_values="", then=1),
-    #                 # Put the products having an attribute value to be always at the top
+    #                 # Put the initiatives having an attribute value to be always at the top
     #                 default=0,
     #                 output_field=models.IntegerField(),
     #             ),
     #         )
     #
     #     # Sort by concatenated_values_order then
-    #     # Sort each group of products (0, 1, 2, ...) per attribute values
-    #     # Sort each group of products by name,
+    #     # Sort each group of initiatives (0, 1, 2, ...) per attribute values
+    #     # Sort each group of initiatives by name,
     #     # if they have the same values or not values
     #     ordering = "-" if descending else ""
     #     return qs.order_by(
@@ -273,16 +273,16 @@ class Initiative(SeoModel, ModelWithMetadata):
         app_label = "initiative"
         ordering = ("slug",)
         # permissions = (
-        #     (ProductPermissions.MANAGE_PRODUCTS.codename, "Manage products."),
+        #     (InitiativePermissions.MANAGE_PRODUCTS.codename, "Manage initiatives."),
         # )
         # indexes = [
         #     GinIndex(
-        #         name="product_search_gin",
+        #         name="initiative_search_gin",
         #         fields=["search_document"],
         #         opclasses=["gin_trgm_ops"],
         #     ),
         #     GinIndex(
-        #         name="product_tsearch",
+        #         name="initiative_tsearch",
         #         fields=["search_vector"],
         #     ),
         # ]
@@ -293,29 +293,29 @@ class Initiative(SeoModel, ModelWithMetadata):
 
 
 class InitiativeTranslation(SeoModelTranslation):
-    product = models.ForeignKey(
+    initiative = models.ForeignKey(
         Initiative, related_name="translations", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=250, blank=True, null=True)
     description = SanitizedJSONField(blank=True, null=True, sanitizer=clean_editor_js)
 
     class Meta:
-        unique_together = (("language_code", "product"),)
+        unique_together = (("language_code", "initiative"),)
 
     def __str__(self) -> str:
         return self.name if self.name else str(self.pk)
 
     def __repr__(self) -> str:
         class_ = type(self)
-        return "%s(pk=%r, name=%r, product_pk=%r)" % (
+        return "%s(pk=%r, name=%r, initiative_pk=%r)" % (
             class_.__name__,
             self.pk,
             self.name,
-            self.product_id,
+            self.initiative_id,
         )
 
     def get_translated_object_id(self):
-        return "Initiative", self.product_id
+        return "Initiative", self.initiative_id
 
     def get_translated_keys(self):
         translated_keys = super().get_translated_keys()
@@ -329,7 +329,7 @@ class InitiativeTranslation(SeoModelTranslation):
 
 
 class InitiativeMedia(SortableModel):
-    product = models.ForeignKey(
+    initiative = models.ForeignKey(
         Initiative,
         related_name="media",
         on_delete=models.CASCADE,
@@ -337,7 +337,7 @@ class InitiativeMedia(SortableModel):
         null=True,
         blank=True,
     )
-    image = models.ImageField(upload_to="products", blank=True, null=True)
+    image = models.ImageField(upload_to="initiatives", blank=True, null=True)
     alt = models.CharField(max_length=128, blank=True)
     type = models.CharField(
         max_length=32,
@@ -351,10 +351,10 @@ class InitiativeMedia(SortableModel):
 
     class Meta:
         ordering = ("sort_order", "pk")
-        app_label = "product"
+        app_label = "initiative"
 
     def get_ordering_queryset(self):
-        return self.product.media.all()
+        return self.initiative.media.all()
 
     @transaction.atomic
     def delete(self, *args, **kwargs):

@@ -160,12 +160,12 @@ class CustomerEvent(ModelObjectType):
     app = graphene.Field(App, description="App that performed the action.")
     message = graphene.String(description="Content of the event.")
     count = graphene.Int(description="Number of objects concerned by the event.")
-    order = graphene.Field(
-        "pint.graphql.order.types.Order", description="The concerned order."
-    )
-    order_line = graphene.Field(
-        "pint.graphql.order.types.OrderLine", description="The concerned order line."
-    )
+    # order = graphene.Field(
+    #     "pint.graphql.order.types.Order", description="The concerned order."
+    # )
+    # order_line = graphene.Field(
+    #     "pint.graphql.order.types.OrderLine", description="The concerned order line."
+    # )
 
     class Meta:
         description = "History log of the customer."
@@ -305,13 +305,13 @@ class User(ModelObjectType):
         description="List of events associated with the user.",
         permissions=[AccountPermissions.MANAGE_USERS, AccountPermissions.MANAGE_STAFF],
     )
-    stored_payment_sources = NonNullList(
-        "pint.graphql.payment.types.PaymentSource",
-        description="List of stored payment sources.",
-        channel=graphene.String(
-            description="Slug of a channel for which the data should be returned."
-        ),
-    )
+    # stored_payment_sources = NonNullList(
+    #     "pint.graphql.payment.types.PaymentSource",
+    #     description="List of stored payment sources.",
+    #     channel=graphene.String(
+    #         description="Slug of a channel for which the data should be returned."
+    #     ),
+    # )
     language_code = graphene.Field(
         LanguageCodeEnum, description="User language code.", required=True
     )

@@ -165,7 +165,7 @@ class Webhook(ModelObjectType):
         description="List of asynchronous webhook events.",
         required=True,
     )
-    app = graphene.Field("saleor.graphql.app.types.App", required=True)
+    app = graphene.Field("pint.graphql.app.types.App", required=True)
     event_deliveries = FilterConnectionField(
         EventDeliveryCountableConnection,
         sort_by=EventDeliverySortingInput(description="Event delivery sorter."),

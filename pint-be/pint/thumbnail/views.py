@@ -6,7 +6,8 @@ from graphql.error import GraphQLError
 
 from ..account.models import User
 from ..graphql.core.utils import from_global_id_or_error
-from ..product.models import Category, Collection, ProductMedia
+from ..initiative.models import InitiativeMedia
+# from ..initiative.models import Category, Collection, InitiativeMedia
 from ..thumbnail.models import Thumbnail
 from . import ThumbnailFormat
 from .utils import ProcessedImage, get_thumbnail_size, prepare_thumbnail_file_name
@@ -15,9 +16,9 @@ ModelData = namedtuple("ModelData", ["model", "image_field", "thumbnail_field"])
 
 TYPE_TO_MODEL_DATA_MAPPING = {
     "User": ModelData(User, "avatar", "user"),
-    "Category": ModelData(Category, "background_image", "category"),
-    "Collection": ModelData(Collection, "background_image", "collection"),
-    "ProductMedia": ModelData(ProductMedia, "image", "product_media"),
+    # "Category": ModelData(Category, "background_image", "category"),
+    # "Collection": ModelData(Collection, "background_image", "collection"),
+    "InitiativeMedia": ModelData(InitiativeMedia, "image", "initiative_media"),
 }
 
 
