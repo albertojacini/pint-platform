@@ -32,27 +32,27 @@ from .mutations.initiatives import (
     InitiativeUpdate,
 )
 from .resolvers import (
-    resolve_categories,
-    resolve_category_by_id,
-    resolve_category_by_slug,
-    resolve_collection_by_id,
-    resolve_collection_by_slug,
-    resolve_collections,
-    resolve_digital_content_by_id,
-    resolve_digital_contents,
+    # resolve_categories,
+    # resolve_category_by_id,
+    # resolve_category_by_slug,
+    # resolve_collection_by_id,
+    # resolve_collection_by_slug,
+    # resolve_collections,
+    # resolve_digital_content_by_id,
+    # resolve_digital_contents,
     resolve_initiative_by_id,
     resolve_initiative_by_slug,
-    resolve_Initiative_type_by_id,
-    resolve_Initiative_types,
-    resolve_Initiative_variant_by_sku,
-    resolve_Initiative_variants,
+    # resolve_Initiative_type_by_id,
+    # resolve_Initiative_types,
+    # resolve_Initiative_variant_by_sku,
+    # resolve_Initiative_variants,
     resolve_initiatives,
-    resolve_report_Initiative_sales,
-    resolve_variant_by_id,
+    # resolve_report_Initiative_sales,
+    # resolve_variant_by_id,
 )
 from .sorters import (
-    CategorySortingInput,
-    CollectionSortingInput,
+    # CategorySortingInput,
+    # CollectionSortingInput,
     InitiativeOrder,
     InitiativeOrderField,
     InitiativeTypeSortingInput,
@@ -111,13 +111,13 @@ class InitiativeMutations(graphene.ObjectType):
 
     Initiative_create = InitiativeCreate.Field()
     Initiative_delete = InitiativeDelete.Field()
-    Initiative_bulk_delete = InitiativeBulkDelete.Field()
+    # Initiative_bulk_delete = InitiativeBulkDelete.Field()
     Initiative_update = InitiativeUpdate.Field()
     Initiative_translate = InitiativeTranslate.Field()
 
     Initiative_media_create = InitiativeMediaCreate.Field()
     Initiative_media_delete = InitiativeMediaDelete.Field()
-    Initiative_media_bulk_delete = InitiativeMediaBulkDelete.Field()
+    # Initiative_media_bulk_delete = InitiativeMediaBulkDelete.Field()
     Initiative_media_reorder = InitiativeMediaReorder.Field()
     Initiative_media_update = InitiativeMediaUpdate.Field()
 

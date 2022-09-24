@@ -24,15 +24,15 @@ from graphql import GraphQLError, ResolveInfo
 from graphql.execution import ExecutionResult
 from prices import Money, TaxedMoney
 
-from ..channel.models import Channel
-from ..checkout import base_calculations
+# from ..channel.models import Channel
+# from ..checkout import base_calculations
 from ..core.models import EventDelivery
-from ..core.payments import PaymentInterface
+# from ..core.payments import PaymentInterface
 from ..core.prices import quantize_price
 from ..core.taxes import TaxData, TaxType, zero_money, zero_taxed_money
-from ..discount import DiscountInfo
-from ..order import base_calculations as base_order_calculations
-from ..order.interface import OrderTaxedPricesData
+# from ..discount import DiscountInfo
+# from ..order import base_calculations as base_order_calculations
+# from ..order.interface import OrderTaxedPricesData
 from .base_plugin import ExcludedShippingMethod, ExternalAccessTokens
 from .models import PluginConfiguration
 
@@ -40,31 +40,31 @@ if TYPE_CHECKING:
     # flake8: noqa
     from ..account.models import Address, Group, User
     from ..app.models import App
-    from ..attribute.models import Attribute, AttributeValue
-    from ..checkout.fetch import CheckoutInfo, CheckoutLineInfo
-    from ..checkout.models import Checkout
+    # from ..attribute.models import Attribute, AttributeValue
+    # from ..checkout.fetch import CheckoutInfo, CheckoutLineInfo
+    # from ..checkout.models import Checkout
     from ..core.middleware import Requestor
-    from ..discount.models import Sale, Voucher
-    from ..giftcard.models import GiftCard
-    from ..invoice.models import Invoice
-    from ..menu.models import Menu, MenuItem
-    from ..order.models import Fulfillment, Order, OrderLine
-    from ..page.models import Page, PageType
-    from ..payment.interface import (
-        CustomerSource,
-        GatewayResponse,
-        InitializedPaymentResponse,
-        PaymentData,
-        PaymentGateway,
-        TokenConfig,
-        TransactionActionData,
-    )
-    from ..product.models import (
+    # from ..discount.models import Sale, Voucher
+    # from ..giftcard.models import GiftCard
+    # from ..invoice.models import Invoice
+    # from ..menu.models import Menu, MenuItem
+    # from ..order.models import Fulfillment, Order, OrderLine
+    # from ..page.models import Page, PageType
+    # from ..payment.interface import (
+    #     CustomerSource,
+    #     GatewayResponse,
+    #     InitializedPaymentResponse,
+    #     PaymentData,
+    #     PaymentGateway,
+    #     TokenConfig,
+    #     TransactionActionData,
+    # )
+    from ..initiative.models import (
         Category,
         Collection,
-        Product,
-        ProductType,
-        ProductVariant,
+        Initiative,
+        InitiativeType,
+        InitiativeVariant,
     )
     from ..shipping.interface import ShippingMethodData
     from ..shipping.models import ShippingMethod, ShippingZone
@@ -405,8 +405,8 @@ class PluginsManager(PaymentInterface):
         self,
         order: "Order",
         order_line: "OrderLine",
-        variant: "ProductVariant",
-        product: "Product",
+        variant: "InitiativeVariant",
+        initiative: "Initiative",
     ) -> OrderTaxedPricesData:
         default_value = base_order_calculations.base_order_line_total(order_line)
         line_total = self.__run_method_on_plugins(
@@ -415,7 +415,7 @@ class PluginsManager(PaymentInterface):
             order,
             order_line,
             variant,
-            product,
+            initiative,
             channel_slug=order.channel.slug,
         )
         currency = order_line.currency
@@ -456,8 +456,8 @@ class PluginsManager(PaymentInterface):
         self,
         order: "Order",
         order_line: "OrderLine",
-        variant: "ProductVariant",
-        product: "Product",
+        variant: "InitiativeVariant",
+        initiative: "Initiative",
     ) -> OrderTaxedPricesData:
         default_value = OrderTaxedPricesData(
             undiscounted_price=TaxedMoney(
@@ -476,7 +476,7 @@ class PluginsManager(PaymentInterface):
             order,
             order_line,
             variant,
-            product,
+            initiative,
             channel_slug=order.channel.slug,
         )
         line_unit.price_with_discounts = quantize_price(
@@ -511,8 +511,8 @@ class PluginsManager(PaymentInterface):
     def get_order_line_tax_rate(
         self,
         order: "Order",
-        product: "Product",
-        variant: "ProductVariant",
+        initiative: "Initiative",
+        variant: "InitiativeVariant",
         address: Optional["Address"],
         unit_price: TaxedMoney,
     ) -> Decimal:
@@ -521,7 +521,7 @@ class PluginsManager(PaymentInterface):
             "get_order_line_tax_rate",
             default_value,
             order,
-            product,
+            initiative,
             variant,
             address,
             channel_slug=order.channel.slug,
@@ -545,17 +545,17 @@ class PluginsManager(PaymentInterface):
             "get_taxes_for_order", order
         )
 
-    def apply_taxes_to_product(
-        self, product: "Product", price: Money, country: Country, channel_slug: str
+    def apply_taxes_to_initiative(
+        self, initiative: "Initiative", price: Money, country: Country, channel_slug: str
     ):
         default_value = quantize_price(
             TaxedMoney(net=price, gross=price), price.currency
         )
         return quantize_price(
             self.__run_method_on_plugins(
-                "apply_taxes_to_product",
+                "apply_taxes_to_initiative",
                 default_value,
-                product,
+                initiative,
                 price,
                 country,
                 channel_slug=channel_slug,
@@ -609,50 +609,50 @@ class PluginsManager(PaymentInterface):
             "collection_deleted", default_value, collection
         )
 
-    def product_created(self, product: "Product"):
+    def initiative_created(self, initiative: "Initiative"):
         default_value = None
-        return self.__run_method_on_plugins("product_created", default_value, product)
+        return self.__run_method_on_plugins("initiative_created", default_value, initiative)
 
-    def product_updated(self, product: "Product"):
+    def initiative_updated(self, initiative: "Initiative"):
         default_value = None
-        return self.__run_method_on_plugins("product_updated", default_value, product)
+        return self.__run_method_on_plugins("initiative_updated", default_value, initiative)
 
-    def product_deleted(self, product: "Product", variants: List[int]):
+    def initiative_deleted(self, initiative: "Initiative", variants: List[int]):
         default_value = None
         return self.__run_method_on_plugins(
-            "product_deleted", default_value, product, variants
+            "initiative_deleted", default_value, initiative, variants
         )
 
-    def product_variant_created(self, product_variant: "ProductVariant"):
+    def initiative_variant_created(self, initiative_variant: "InitiativeVariant"):
         default_value = None
         return self.__run_method_on_plugins(
-            "product_variant_created", default_value, product_variant
+            "initiative_variant_created", default_value, initiative_variant
         )
 
-    def product_variant_updated(self, product_variant: "ProductVariant"):
+    def initiative_variant_updated(self, initiative_variant: "InitiativeVariant"):
         default_value = None
         return self.__run_method_on_plugins(
-            "product_variant_updated", default_value, product_variant
+            "initiative_variant_updated", default_value, initiative_variant
         )
 
-    def product_variant_deleted(self, product_variant: "ProductVariant"):
+    def initiative_variant_deleted(self, initiative_variant: "InitiativeVariant"):
         default_value = None
         return self.__run_method_on_plugins(
-            "product_variant_deleted",
+            "initiative_variant_deleted",
             default_value,
-            product_variant,
+            initiative_variant,
         )
 
-    def product_variant_out_of_stock(self, stock: "Stock"):
+    def initiative_variant_out_of_stock(self, stock: "Stock"):
         default_value = None
         self.__run_method_on_plugins(
-            "product_variant_out_of_stock", default_value, stock
+            "initiative_variant_out_of_stock", default_value, stock
         )
 
-    def product_variant_back_in_stock(self, stock: "Stock"):
+    def initiative_variant_back_in_stock(self, stock: "Stock"):
         default_value = None
         self.__run_method_on_plugins(
-            "product_variant_back_in_stock", default_value, stock
+            "initiative_variant_back_in_stock", default_value, stock
         )
 
     def order_created(self, order: "Order"):
@@ -1356,7 +1356,7 @@ class PluginsManager(PaymentInterface):
     # FIXME these methods should be more generic
 
     def assign_tax_code_to_object_meta(
-        self, obj: Union["Product", "ProductType"], tax_code: Optional[str]
+        self, obj: Union["Initiative", "InitiativeType"], tax_code: Optional[str]
     ):
         default_value = None
         return self.__run_method_on_plugins(
@@ -1364,7 +1364,7 @@ class PluginsManager(PaymentInterface):
         )
 
     def get_tax_code_from_object_meta(
-        self, obj: Union["Product", "ProductType"]
+        self, obj: Union["Initiative", "InitiativeType"]
     ) -> TaxType:
         default_value = TaxType(code="", description="")
         return self.__run_method_on_plugins(
@@ -1372,7 +1372,7 @@ class PluginsManager(PaymentInterface):
         )
 
     def get_tax_rate_percentage_value(
-        self, obj: Union["Product", "ProductType"], country: Country
+        self, obj: Union["Initiative", "InitiativeType"], country: Country
     ) -> Decimal:
         default_value = Decimal("0").quantize(Decimal("1."))
         return self.__run_method_on_plugins(

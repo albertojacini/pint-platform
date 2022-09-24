@@ -13,10 +13,10 @@ from graphene.utils.str_converters import to_camel_case
 
 from .. import __version__
 from ..account.models import User
-from ..attribute.models import AttributeValueTranslation
-from ..checkout import base_calculations
-from ..checkout.fetch import CheckoutInfo, CheckoutLineInfo
-from ..checkout.models import Checkout
+# from ..attribute.models import AttributeValueTranslation
+# from ..checkout import base_calculations
+# from ..checkout.fetch import CheckoutInfo, CheckoutLineInfo
+# from ..checkout.models import Checkout
 from ..core.prices import quantize_price, quantize_price_fields
 from ..core.taxes import include_taxes_in_prices
 from ..core.utils import build_absolute_uri
@@ -26,31 +26,31 @@ from ..core.utils.anonymization import (
     generate_fake_user,
 )
 from ..core.utils.json_serializer import CustomJsonEncoder
-from ..discount import VoucherType
-from ..discount.utils import fetch_active_discounts
-from ..order import FulfillmentStatus, OrderStatus
-from ..order.models import Fulfillment, FulfillmentLine, Order, OrderLine
-from ..order.utils import get_order_country
-from ..page.models import Page
-from ..payment import ChargeStatus
+# from ..discount import VoucherType
+# from ..discount.utils import fetch_active_discounts
+# from ..order import FulfillmentStatus, OrderStatus
+# from ..order.models import Fulfillment, FulfillmentLine, Order, OrderLine
+# from ..order.utils import get_order_country
+# from ..page.models import Page
+# from ..payment import ChargeStatus
 from ..plugins.webhook.utils import from_payment_app_id
-from ..product import ProductMediaTypes
-from ..product.models import Collection, Product
-from ..shipping.interface import ShippingMethodData
-from ..warehouse.models import Stock, Warehouse
+# from ..initiative import InitiativeMediaTypes
+# from ..initiative.models import Collection, Initiative
+# from ..shipping.interface import ShippingMethodData
+# from ..warehouse.models import Stock, Warehouse
 from . import traced_payload_generator
 from .event_types import WebhookEventAsyncType
 from .payload_serializers import PayloadSerializer
 from .serializers import (
     serialize_checkout_lines,
     serialize_checkout_lines_for_tax_calculation,
-    serialize_product_or_variant_attributes,
+    serialize_initiative_or_variant_attributes,
 )
 from .utils import get_base_price
 
 if TYPE_CHECKING:
     # pylint: disable=unused-import
-    from ..product.models import ProductVariant
+    from ..initiative.models import InitiativeVariant
 
 
 if TYPE_CHECKING:
@@ -150,11 +150,11 @@ def prepare_order_lines_allocations_payload(line):
 @traced_payload_generator
 def generate_order_lines_payload(lines: Iterable[OrderLine]):
     line_fields = (
-        "product_name",
+        "initiative_name",
         "variant_name",
-        "translated_product_name",
+        "translated_initiative_name",
         "translated_variant_name",
-        "product_sku",
+        "initiative_sku",
         "quantity",
         "currency",
         "unit_price_net_amount",
@@ -192,7 +192,7 @@ def generate_order_lines_payload(lines: Iterable[OrderLine]):
         lines,
         fields=line_fields,
         extra_dict_data={
-            "product_variant_id": (lambda l: l.product_variant_id),
+            "initiative_variant_id": (lambda l: l.initiative_variant_id),
             "total_price_net_amount": (lambda l: l.total_price.net.amount),
             "total_price_gross_amount": (lambda l: l.total_price.gross.amount),
             "allocations": (lambda l: prepare_order_lines_allocations_payload(l)),
@@ -413,11 +413,11 @@ def generate_sale_payload(
             "collections_removed": _calculate_removed(
                 previous_catalogue, current_catalogue, "collections"
             ),
-            "products_added": _calculate_added(
-                previous_catalogue, current_catalogue, "products"
+            "initiatives_added": _calculate_added(
+                previous_catalogue, current_catalogue, "initiatives"
             ),
-            "products_removed": _calculate_removed(
-                previous_catalogue, current_catalogue, "products"
+            "initiatives_removed": _calculate_removed(
+                previous_catalogue, current_catalogue, "initiatives"
             ),
             "variants_added": _calculate_added(
                 previous_catalogue, current_catalogue, "variants"
@@ -620,7 +620,7 @@ def generate_collection_payload(
     return data
 
 
-PRODUCT_FIELDS = (
+INITIATIVE_FIELDS = (
     "name",
     "description",
     "currency",
@@ -634,7 +634,7 @@ PRODUCT_FIELDS = (
 )
 
 
-def serialize_product_channel_listing_payload(channel_listings):
+def serialize_initiative_channel_listing_payload(channel_listings):
     serializer = PayloadSerializer()
     fields = (
         "published_at",
@@ -657,67 +657,67 @@ def serialize_product_channel_listing_payload(channel_listings):
 
 
 @traced_payload_generator
-def generate_product_payload(
-    product: "Product", requestor: Optional["RequestorOrLazyObject"] = None
+def generate_initiative_payload(
+    initiative: "Initiative", requestor: Optional["RequestorOrLazyObject"] = None
 ):
     serializer = PayloadSerializer(
-        extra_model_fields={"ProductVariant": ("quantity", "quantity_allocated")}
+        extra_model_fields={"InitiativeVariant": ("quantity", "quantity_allocated")}
     )
-    product_payload = serializer.serialize(
-        [product],
-        fields=PRODUCT_FIELDS,
+    initiative_payload = serializer.serialize(
+        [initiative],
+        fields=INITIATIVE_FIELDS,
         additional_fields={
             "category": (lambda p: p.category, ("name", "slug")),
             "collections": (lambda p: p.collections.all(), ("name", "slug")),
         },
         extra_dict_data={
             "meta": generate_meta(requestor_data=generate_requestor(requestor)),
-            "attributes": serialize_product_or_variant_attributes(product),
+            "attributes": serialize_initiative_or_variant_attributes(initiative),
             "media": [
                 {
                     "alt": media_obj.alt,
                     "url": (
                         build_absolute_uri(media_obj.image.url)
-                        if media_obj.type == ProductMediaTypes.IMAGE
+                        if media_obj.type == InitiativeMediaTypes.IMAGE
                         else media_obj.external_url
                     ),
                 }
-                for media_obj in product.media.all()
+                for media_obj in initiative.media.all()
             ],
             "channel_listings": json.loads(
-                serialize_product_channel_listing_payload(
-                    product.channel_listings.all()  # type: ignore
+                serialize_initiative_channel_listing_payload(
+                    initiative.channel_listings.all()  # type: ignore
                 )
             ),
             "variants": lambda x: json.loads(
-                (generate_product_variant_payload(x, with_meta=False))
+                (generate_initiative_variant_payload(x, with_meta=False))
             ),
         },
     )
-    return product_payload
+    return initiative_payload
 
 
 @traced_payload_generator
-def generate_product_deleted_payload(
-    product: "Product", variants_id, requestor: Optional["RequestorOrLazyObject"] = None
+def generate_initiative_deleted_payload(
+    initiative: "Initiative", variants_id, requestor: Optional["RequestorOrLazyObject"] = None
 ):
     serializer = PayloadSerializer()
-    product_fields = PRODUCT_FIELDS
-    product_variant_ids = [
-        graphene.Node.to_global_id("ProductVariant", pk) for pk in variants_id
+    initiative_fields = INITIATIVE_FIELDS
+    initiative_variant_ids = [
+        graphene.Node.to_global_id("InitiativeVariant", pk) for pk in variants_id
     ]
-    product_payload = serializer.serialize(
-        [product],
-        fields=product_fields,
+    initiative_payload = serializer.serialize(
+        [initiative],
+        fields=initiative_fields,
         extra_dict_data={
             "meta": generate_meta(requestor_data=generate_requestor(requestor)),
-            "variants": list(product_variant_ids),
+            "variants": list(initiative_variant_ids),
         },
     )
-    return product_payload
+    return initiative_payload
 
 
-PRODUCT_VARIANT_FIELDS = (
+INITIATIVE_VARIANT_FIELDS = (
     "sku",
     "name",
     "track_inventory",
@@ -727,7 +727,7 @@ PRODUCT_VARIANT_FIELDS = (
 
 
 @traced_payload_generator
-def generate_product_variant_listings_payload(variant_channel_listings):
+def generate_initiative_variant_listings_payload(variant_channel_listings):
     serializer = PayloadSerializer()
     fields = (
         "currency",
@@ -743,54 +743,54 @@ def generate_product_variant_listings_payload(variant_channel_listings):
 
 
 @traced_payload_generator
-def generate_product_variant_media_payload(product_variant):
+def generate_initiative_variant_media_payload(initiative_variant):
     return [
         {
             "alt": media_obj.media.alt,
             "url": (
                 build_absolute_uri(media_obj.media.image.url)
-                if media_obj.media.type == ProductMediaTypes.IMAGE
+                if media_obj.media.type == InitiativeMediaTypes.IMAGE
                 else media_obj.media.external_url
             ),
         }
-        for media_obj in product_variant.variant_media.all()
+        for media_obj in initiative_variant.variant_media.all()
     ]
 
 
 @traced_payload_generator
-def generate_product_variant_with_stock_payload(
+def generate_initiative_variant_with_stock_payload(
     stocks: Iterable["Stock"], requestor: Optional["RequestorOrLazyObject"] = None
 ):
     serializer = PayloadSerializer()
     extra_dict_data = {
-        "product_id": lambda v: graphene.Node.to_global_id(
-            "Product", v.product_variant.product_id
+        "initiative_id": lambda v: graphene.Node.to_global_id(
+            "Initiative", v.initiative_variant.initiative_id
         ),
-        "product_variant_id": lambda v: graphene.Node.to_global_id(
-            "ProductVariant", v.product_variant_id
+        "initiative_variant_id": lambda v: graphene.Node.to_global_id(
+            "InitiativeVariant", v.initiative_variant_id
         ),
         "warehouse_id": lambda v: graphene.Node.to_global_id(
             "Warehouse", v.warehouse_id
         ),
-        "product_slug": lambda v: v.product_variant.product.slug,
+        "initiative_slug": lambda v: v.initiative_variant.initiative.slug,
         "meta": generate_meta(requestor_data=generate_requestor(requestor)),
     }
     return serializer.serialize(stocks, fields=[], extra_dict_data=extra_dict_data)
 
 
 @traced_payload_generator
-def generate_product_variant_payload(
-    product_variants: Iterable["ProductVariant"],
+def generate_initiative_variant_payload(
+    initiative_variants: Iterable["InitiativeVariant"],
     requestor: Optional["RequestorOrLazyObject"] = None,
     with_meta: bool = True,
 ):
     extra_dict_data = {
         "id": lambda v: v.get_global_id(),
-        "attributes": lambda v: serialize_product_or_variant_attributes(v),
-        "product_id": lambda v: graphene.Node.to_global_id("Product", v.product_id),
-        "media": lambda v: generate_product_variant_media_payload(v),
+        "attributes": lambda v: serialize_initiative_or_variant_attributes(v),
+        "initiative_id": lambda v: graphene.Node.to_global_id("Initiative", v.initiative_id),
+        "media": lambda v: generate_initiative_variant_media_payload(v),
         "channel_listings": lambda v: json.loads(
-            generate_product_variant_listings_payload(v.channel_listings.all())
+            generate_initiative_variant_listings_payload(v.channel_listings.all())
         ),
     }
 
@@ -801,41 +801,41 @@ def generate_product_variant_payload(
 
     serializer = PayloadSerializer()
     payload = serializer.serialize(
-        product_variants,
-        fields=PRODUCT_VARIANT_FIELDS,
+        initiative_variants,
+        fields=INITIATIVE_VARIANT_FIELDS,
         extra_dict_data=extra_dict_data,
     )
     return payload
 
 
 @traced_payload_generator
-def generate_product_variant_stocks_payload(product_variant: "ProductVariant"):
-    return product_variant.stocks.aggregate(Sum("quantity"))["quantity__sum"] or 0
+def generate_initiative_variant_stocks_payload(initiative_variant: "InitiativeVariant"):
+    return initiative_variant.stocks.aggregate(Sum("quantity"))["quantity__sum"] or 0
 
 
 @traced_payload_generator
 def generate_fulfillment_lines_payload(fulfillment: Fulfillment):
     serializer = PayloadSerializer()
     lines = FulfillmentLine.objects.prefetch_related(
-        "order_line__variant__product__product_type", "stock"
+        "order_line__variant__initiative__initiative_type", "stock"
     ).filter(fulfillment=fulfillment)
     line_fields = ("quantity",)
     return serializer.serialize(
         lines,
         fields=line_fields,
         extra_dict_data={
-            "product_name": lambda fl: fl.order_line.product_name,
+            "initiative_name": lambda fl: fl.order_line.initiative_name,
             "variant_name": lambda fl: fl.order_line.variant_name,
-            "product_sku": lambda fl: fl.order_line.product_sku,
-            "product_variant_id": lambda fl: fl.order_line.product_variant_id,
+            "initiative_sku": lambda fl: fl.order_line.initiative_sku,
+            "initiative_variant_id": lambda fl: fl.order_line.initiative_variant_id,
             "weight": (
                 lambda fl: fl.order_line.variant.get_weight().g
                 if fl.order_line.variant
                 else None
             ),
             "weight_unit": "gram",
-            "product_type": (
-                lambda fl: fl.order_line.variant.product.product_type.name
+            "initiative_type": (
+                lambda fl: fl.order_line.variant.initiative.initiative_type.name
                 if fl.order_line.variant
                 else None
             ),
@@ -1044,14 +1044,14 @@ def generate_sample_payload(event_name: str) -> Optional[dict]:
     if event_name in user_events:
         user = generate_fake_user()
         payload = generate_customer_payload(user)
-    elif event_name == WebhookEventAsyncType.PRODUCT_CREATED:
-        product = _get_sample_object(
-            Product.objects.prefetch_related("category", "collections", "variants")
+    elif event_name == WebhookEventAsyncType.INITIATIVE_CREATED:
+        initiative = _get_sample_object(
+            Initiative.objects.prefetch_related("category", "collections", "variants")
         )
-        payload = generate_product_payload(product) if product else None
+        payload = generate_initiative_payload(initiative) if initiative else None
     elif event_name in checkout_events:
         checkout = _get_sample_object(
-            Checkout.objects.prefetch_related("lines__variant__product")
+            Checkout.objects.prefetch_related("lines__variant__initiative")
         )
         if checkout:
             anonymized_checkout = anonymize_checkout(checkout)
@@ -1074,8 +1074,8 @@ def generate_sample_payload(event_name: str) -> Optional[dict]:
 
 def process_translation_context(context):
     additional_id_fields = [
-        ("product_id", "Product"),
-        ("product_variant_id", "ProductVariant"),
+        ("initiative_id", "Initiative"),
+        ("initiative_variant_id", "InitiativeVariant"),
         ("attribute_id", "Attribute"),
         ("page_id", "Page"),
         ("page_type_id", "PageType"),
@@ -1257,20 +1257,20 @@ def _generate_order_lines_payload_for_tax_calculation(lines: Iterable[OrderLine]
     serializer = PayloadSerializer()
     return serializer.serialize(
         lines,
-        fields=("product_name", "variant_name", "quantity"),
+        fields=("initiative_name", "variant_name", "quantity"),
         extra_dict_data={
-            "variant_id": (lambda l: l.product_variant_id),
-            "full_name": (lambda l: l.variant.display_product() if l.variant else None),
-            "product_metadata": (
-                lambda l: l.variant.product.metadata if l.variant else {}
+            "variant_id": (lambda l: l.initiative_variant_id),
+            "full_name": (lambda l: l.variant.display_initiative() if l.variant else None),
+            "initiative_metadata": (
+                lambda l: l.variant.initiative.metadata if l.variant else {}
             ),
-            "product_type_metadata": (
-                lambda l: l.variant.product.product_type.metadata if l.variant else {}
+            "initiative_type_metadata": (
+                lambda l: l.variant.initiative.initiative_type.metadata if l.variant else {}
             ),
             "charge_taxes": (
-                lambda l: l.variant.product.charge_taxes if l.variant else None
+                lambda l: l.variant.initiative.charge_taxes if l.variant else None
             ),
-            "sku": (lambda l: l.product_sku),
+            "sku": (lambda l: l.initiative_sku),
             "unit_amount": (
                 lambda l: quantize_price(l.base_unit_price_amount, l.currency)
             ),
