@@ -13,12 +13,12 @@ from ...core.prices import quantize_price
 # from ...order.utils import get_all_shipping_methods_for_order
 # from ...page.models import PageTranslation
 # from ...payment.interface import TransactionActionData
-# from ...product.models import (
-#     CategoryTranslation,
-#     CollectionTranslation,
-#     ProductTranslation,
-#     ProductVariantTranslation,
-# )
+from ...initiative.models import (
+    # CategoryTranslation,
+    # CollectionTranslation,
+    InitiativeTranslation,
+    # InitiativeVariantTranslation,
+)
 # from ...shipping.models import ShippingMethodTranslation
 from ...webhook.event_types import WebhookEventAsyncType, WebhookEventSyncType
 from ..account.types import User as UserType
@@ -39,20 +39,20 @@ from ..core.types import NonNullList
 # from ..shipping.dataloaders import ShippingMethodChannelListingByChannelSlugLoader
 # from ..shipping.types import ShippingMethod
 from ..translations import types as translation_types
-from .resolvers import resolve_shipping_methods_for_checkout
+# from .resolvers import resolve_shipping_methods_for_checkout
 
 TRANSLATIONS_TYPES_MAP = {
-    ProductTranslation: translation_types.ProductTranslation,
-    CollectionTranslation: translation_types.CollectionTranslation,
-    CategoryTranslation: translation_types.CategoryTranslation,
-    AttributeTranslation: translation_types.AttributeTranslation,
-    AttributeValueTranslation: translation_types.AttributeValueTranslation,
-    ProductVariantTranslation: translation_types.ProductVariantTranslation,
-    PageTranslation: translation_types.PageTranslation,
-    ShippingMethodTranslation: translation_types.ShippingMethodTranslation,
-    SaleTranslation: translation_types.SaleTranslation,
-    VoucherTranslation: translation_types.VoucherTranslation,
-    MenuItemTranslation: translation_types.MenuItemTranslation,
+    InitiativeTranslation: translation_types.InitiativeTranslation,
+    # CollectionTranslation: translation_types.CollectionTranslation,
+    # CategoryTranslation: translation_types.CategoryTranslation,
+    # AttributeTranslation: translation_types.AttributeTranslation,
+    # AttributeValueTranslation: translation_types.AttributeValueTranslation,
+    # InitiativeVariantTranslation: translation_types.InitiativeVariantTranslation,
+    # PageTranslation: translation_types.PageTranslation,
+    # ShippingMethodTranslation: translation_types.ShippingMethodTranslation,
+    # SaleTranslation: translation_types.SaleTranslation,
+    # VoucherTranslation: translation_types.VoucherTranslation,
+    # MenuItemTranslation: translation_types.MenuItemTranslation,
 }
 
 
@@ -263,7 +263,7 @@ class AppStatusChanged(ObjectType, AppBase):
 #
 # class CategoryBase(AbstractType):
 #     category = graphene.Field(
-#         "saleor.graphql.product.types.Category",
+#         "saleor.graphql.initiative.types.Category",
 #         description="The category the event relates to.",
 #     )
 #
@@ -475,78 +475,78 @@ class AppStatusChanged(ObjectType, AppBase):
 #         )
 
 
-class MenuBase(AbstractType):
-    menu = graphene.Field(
-        "saleor.graphql.menu.types.Menu",
-        channel=graphene.String(
-            description="Slug of a channel for which the data should be returned."
-        ),
-        description="The menu the event relates to.",
-    )
-
-    @staticmethod
-    def resolve_menu(root, info, channel=None):
-        _, menu = root
-        return ChannelContext(node=menu, channel_slug=channel)
-
-
-class MenuCreated(ObjectType, MenuBase):
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when new menu is created." + ADDED_IN_34 + PREVIEW_FEATURE
-        )
-
-
-class MenuUpdated(ObjectType, MenuBase):
-    class Meta:
-        interfaces = (Event,)
-        description = "Event sent when menu is updated." + ADDED_IN_34 + PREVIEW_FEATURE
-
-
-class MenuDeleted(ObjectType, MenuBase):
-    class Meta:
-        interfaces = (Event,)
-        description = "Event sent when menu is deleted." + ADDED_IN_34 + PREVIEW_FEATURE
-
-
-class MenuItemBase(AbstractType):
-    menu_item = graphene.Field(
-        "saleor.graphql.menu.types.MenuItem",
-        channel=graphene.String(
-            description="Slug of a channel for which the data should be returned."
-        ),
-        description="The menu item the event relates to.",
-    )
-
-    @staticmethod
-    def resolve_menu_item(root, info, channel=None):
-        _, menu_item = root
-        return ChannelContext(node=menu_item, channel_slug=channel)
-
-
-class MenuItemCreated(ObjectType, MenuItemBase):
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when new menu item is created." + ADDED_IN_34 + PREVIEW_FEATURE
-        )
-
-
-class MenuItemUpdated(ObjectType, MenuItemBase):
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when menu item is updated." + ADDED_IN_34 + PREVIEW_FEATURE
-        )
-
-
-class MenuItemDeleted(ObjectType, MenuItemBase):
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when menu item is deleted." + ADDED_IN_34 + PREVIEW_FEATURE
-        )
+# class MenuBase(AbstractType):
+#     menu = graphene.Field(
+#         "saleor.graphql.menu.types.Menu",
+#         channel=graphene.String(
+#             description="Slug of a channel for which the data should be returned."
+#         ),
+#         description="The menu the event relates to.",
+#     )
+#
+#     @staticmethod
+#     def resolve_menu(root, info, channel=None):
+#         _, menu = root
+#         return ChannelContext(node=menu, channel_slug=channel)
+#
+#
+# class MenuCreated(ObjectType, MenuBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when new menu is created." + ADDED_IN_34 + PREVIEW_FEATURE
+#         )
+#
+#
+# class MenuUpdated(ObjectType, MenuBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = "Event sent when menu is updated." + ADDED_IN_34 + PREVIEW_FEATURE
+#
+#
+# class MenuDeleted(ObjectType, MenuBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = "Event sent when menu is deleted." + ADDED_IN_34 + PREVIEW_FEATURE
+#
+#
+# class MenuItemBase(AbstractType):
+#     menu_item = graphene.Field(
+#         "saleor.graphql.menu.types.MenuItem",
+#         channel=graphene.String(
+#             description="Slug of a channel for which the data should be returned."
+#         ),
+#         description="The menu item the event relates to.",
+#     )
+#
+#     @staticmethod
+#     def resolve_menu_item(root, info, channel=None):
+#         _, menu_item = root
+#         return ChannelContext(node=menu_item, channel_slug=channel)
+#
+#
+# class MenuItemCreated(ObjectType, MenuItemBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when new menu item is created." + ADDED_IN_34 + PREVIEW_FEATURE
+#         )
+#
+#
+# class MenuItemUpdated(ObjectType, MenuItemBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when menu item is updated." + ADDED_IN_34 + PREVIEW_FEATURE
+#         )
+#
+#
+# class MenuItemDeleted(ObjectType, MenuItemBase):
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when menu item is deleted." + ADDED_IN_34 + PREVIEW_FEATURE
+#         )
 
 
 class InitiativeBase(AbstractType):
@@ -599,102 +599,102 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 
 
 
-# class ProductBase(AbstractType):
-#     product = graphene.Field(
-#         "saleor.graphql.product.types.Product",
+# class InitiativeBase(AbstractType):
+#     initiative = graphene.Field(
+#         "saleor.graphql.initiative.types.Initiative",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
-#         description="The product the event relates to.",
+#         description="The initiative the event relates to.",
 #     )
 #     category = graphene.Field(
-#         "saleor.graphql.product.types.products.Category",
-#         description="The category of the product.",
+#         "saleor.graphql.initiative.types.initiatives.Category",
+#         description="The category of the initiative.",
 #     )
 #
 #     @staticmethod
-#     def resolve_product(root, info, channel=None):
-#         _, product = root
-#         return ChannelContext(node=product, channel_slug=channel)
+#     def resolve_initiative(root, info, channel=None):
+#         _, initiative = root
+#         return ChannelContext(node=initiative, channel_slug=channel)
 #
 #     @staticmethod
 #     def resolve_category(root, _info):
-#         _, product = root
-#         return product.category
+#         _, initiative = root
+#         return initiative.category
 #
 #
-# class ProductCreated(ObjectType, ProductBase):
+# class InitiativeCreated(ObjectType, InitiativeBase):
 #     class Meta:
 #         interfaces = (Event,)
 #         description = (
-#             "Event sent when new product is created." + ADDED_IN_32 + PREVIEW_FEATURE
+#             "Event sent when new initiative is created." + ADDED_IN_32 + PREVIEW_FEATURE
 #         )
 #
 #
-# class ProductUpdated(ObjectType, ProductBase):
+# class InitiativeUpdated(ObjectType, InitiativeBase):
 #     class Meta:
 #         interfaces = (Event,)
 #         description = (
-#             "Event sent when product is updated." + ADDED_IN_32 + PREVIEW_FEATURE
+#             "Event sent when initiative is updated." + ADDED_IN_32 + PREVIEW_FEATURE
 #         )
 #
 #
-# class ProductDeleted(ObjectType, ProductBase):
+# class InitiativeDeleted(ObjectType, InitiativeBase):
 #     class Meta:
 #         interfaces = (Event,)
 #         description = (
-#             "Event sent when product is deleted." + ADDED_IN_32 + PREVIEW_FEATURE
+#             "Event sent when initiative is deleted." + ADDED_IN_32 + PREVIEW_FEATURE
 #         )
 #
 
 
 #
-# class ProductVariantBase(AbstractType):
-#     product_variant = graphene.Field(
-#         "saleor.graphql.product.types.ProductVariant",
+# class InitiativeVariantBase(AbstractType):
+#     initiative_variant = graphene.Field(
+#         "saleor.graphql.initiative.types.InitiativeVariant",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
-#         description="The product variant the event relates to.",
+#         description="The initiative variant the event relates to.",
 #     )
 #
 #     @staticmethod
-#     def resolve_product_variant(root, _info, channel=None):
+#     def resolve_initiative_variant(root, _info, channel=None):
 #         _, variant = root
 #         return ChannelContext(node=variant, channel_slug=channel)
 #
 #
-# class ProductVariantCreated(ObjectType, ProductVariantBase):
+# class InitiativeVariantCreated(ObjectType, InitiativeVariantBase):
 #     class Meta:
 #         interfaces = (Event,)
 #         description = (
-#             "Event sent when new product variant is created."
+#             "Event sent when new initiative variant is created."
 #             + ADDED_IN_32
 #             + PREVIEW_FEATURE
 #         )
 #
 #
-# class ProductVariantUpdated(ObjectType, ProductVariantBase):
+# class InitiativeVariantUpdated(ObjectType, InitiativeVariantBase):
 #     class Meta:
 #         interfaces = (Event,)
 #         description = (
-#             "Event sent when product variant is updated."
+#             "Event sent when initiative variant is updated."
 #             + ADDED_IN_32
 #             + PREVIEW_FEATURE
 #         )
 #
 #
-# class ProductVariantDeleted(ObjectType, ProductVariantBase):
+# class InitiativeVariantDeleted(ObjectType, InitiativeVariantBase):
 #     class Meta:
 #         interfaces = (Event,)
 #         description = (
-#             "Event sent when product variant is deleted."
+#             "Event sent when initiative variant is deleted."
 #             + ADDED_IN_32
 #             + PREVIEW_FEATURE
 #         )
 #
 #
-# class ProductVariantOutOfStock(ObjectType, ProductVariantBase):
+# class InitiativeVariantOutOfStock(ObjectType, InitiativeVariantBase):
 #     warehouse = graphene.Field(
 #         "saleor.graphql.warehouse.types.Warehouse", description="Look up a warehouse."
 #     )
@@ -702,15 +702,15 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #     class Meta:
 #         interfaces = (Event,)
 #         description = (
-#             "Event sent when product variant is out of stock."
+#             "Event sent when initiative variant is out of stock."
 #             + ADDED_IN_32
 #             + PREVIEW_FEATURE
 #         )
 #
 #     @staticmethod
-#     def resolve_product_variant(root, info, channel=None):
+#     def resolve_initiative_variant(root, info, channel=None):
 #         _, stock = root
-#         variant = stock.product_variant
+#         variant = stock.initiative_variant
 #         return ChannelContext(node=variant, channel_slug=channel)
 #
 #     @staticmethod
@@ -719,7 +719,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #         return stock.warehouse
 #
 #
-# class ProductVariantBackInStock(ObjectType, ProductVariantBase):
+# class InitiativeVariantBackInStock(ObjectType, InitiativeVariantBase):
 #     warehouse = graphene.Field(
 #         "saleor.graphql.warehouse.types.Warehouse", description="Look up a warehouse."
 #     )
@@ -727,15 +727,15 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #     class Meta:
 #         interfaces = (Event,)
 #         description = (
-#             "Event sent when product variant is back in stock."
+#             "Event sent when initiative variant is back in stock."
 #             + ADDED_IN_32
 #             + PREVIEW_FEATURE
 #         )
 #
 #     @staticmethod
-#     def resolve_product_variant(root, _info, channel=None):
+#     def resolve_initiative_variant(root, _info, channel=None):
 #         _, stock = root
-#         variant = stock.product_variant
+#         variant = stock.initiative_variant
 #         return ChannelContext(node=variant, channel_slug=channel)
 #
 #     @staticmethod
@@ -902,7 +902,7 @@ class InitiativeDeleted(ObjectType, InitiativeBase):
 #
 # class CollectionBase(AbstractType):
 #     collection = graphene.Field(
-#         "saleor.graphql.product.types.products.Collection",
+#         "saleor.graphql.initiative.types.initiatives.Collection",
 #         channel=graphene.String(
 #             description="Slug of a channel for which the data should be returned."
 #         ),
@@ -1194,53 +1194,53 @@ class PermissionGroupDeleted(ObjectType, PermissionGroupBase):
 #         )
 
 
-class TransactionAction(ObjectType, AbstractType):
-    action_type = graphene.Field(
-        TransactionActionEnum,
-        required=True,
-        description="Determines the action type.",
-    )
-    amount = PositiveDecimal(
-        description="Transaction request amount. Null when action type is VOID.",
-    )
-
-    @staticmethod
-    def resolve_amount(root: TransactionActionData, _info):
-        if root.action_value:
-            return quantize_price(root.action_value, root.transaction.currency)
-        return None
-
-
-class TransactionActionRequest(ObjectType):
-    transaction = graphene.Field(
-        TransactionItem,
-        description="Look up a transaction." + ADDED_IN_34 + PREVIEW_FEATURE,
-    )
-    action = graphene.Field(
-        TransactionAction,
-        required=True,
-        description="Requested action data." + ADDED_IN_34 + PREVIEW_FEATURE,
-    )
-
-    class Meta:
-        interfaces = (Event,)
-        description = (
-            "Event sent when transaction action is requested."
-            + ADDED_IN_34
-            + PREVIEW_FEATURE
-        )
-
-    @staticmethod
-    def resolve_transaction(root, _info):
-        _, transaction_action_data = root
-        transaction_action_data: TransactionActionData
-        return transaction_action_data.transaction
-
-    @staticmethod
-    def resolve_action(root, _info):
-        _, transaction_action_data = root
-        transaction_action_data: TransactionActionData
-        return transaction_action_data
+# class TransactionAction(ObjectType, AbstractType):
+#     action_type = graphene.Field(
+#         TransactionActionEnum,
+#         required=True,
+#         description="Determines the action type.",
+#     )
+#     amount = PositiveDecimal(
+#         description="Transaction request amount. Null when action type is VOID.",
+#     )
+#
+#     @staticmethod
+#     def resolve_amount(root: TransactionActionData, _info):
+#         if root.action_value:
+#             return quantize_price(root.action_value, root.transaction.currency)
+#         return None
+#
+#
+# class TransactionActionRequest(ObjectType):
+#     transaction = graphene.Field(
+#         TransactionItem,
+#         description="Look up a transaction." + ADDED_IN_34 + PREVIEW_FEATURE,
+#     )
+#     action = graphene.Field(
+#         TransactionAction,
+#         required=True,
+#         description="Requested action data." + ADDED_IN_34 + PREVIEW_FEATURE,
+#     )
+#
+#     class Meta:
+#         interfaces = (Event,)
+#         description = (
+#             "Event sent when transaction action is requested."
+#             + ADDED_IN_34
+#             + PREVIEW_FEATURE
+#         )
+#
+#     @staticmethod
+#     def resolve_transaction(root, _info):
+#         _, transaction_action_data = root
+#         transaction_action_data: TransactionActionData
+#         return transaction_action_data.transaction
+#
+#     @staticmethod
+#     def resolve_action(root, _info):
+#         _, transaction_action_data = root
+#         transaction_action_data: TransactionActionData
+#         return transaction_action_data
 
 
 class TranslationTypes(Union):
@@ -1483,17 +1483,17 @@ class TranslationUpdated(ObjectType, TranslationBase):
 #         description = (
 #             "Event sent when warehouse is deleted." + ADDED_IN_34 + PREVIEW_FEATURE
 #         )
-#
-#
-# class Subscription(ObjectType):
-#     event = graphene.Field(
-#         Event,
-#         description="Look up subscription event." + ADDED_IN_32 + PREVIEW_FEATURE,
-#     )
-#
-#     @staticmethod
-#     def resolve_event(root, info):
-#         return Observable.from_([root])
+
+
+class Subscription(ObjectType):
+    event = graphene.Field(
+        Event,
+        description="Look up subscription event." + ADDED_IN_32 + PREVIEW_FEATURE,
+    )
+
+    @staticmethod
+    def resolve_event(root, info):
+        return Observable.from_([root])
 
 
 WEBHOOK_TYPES_MAP = {
@@ -1521,12 +1521,12 @@ WEBHOOK_TYPES_MAP = {
     # WebhookEventAsyncType.GIFT_CARD_UPDATED: GiftCardUpdated,
     # WebhookEventAsyncType.GIFT_CARD_DELETED: GiftCardDeleted,
     # WebhookEventAsyncType.GIFT_CARD_STATUS_CHANGED: GiftCardStatusChanged,
-    WebhookEventAsyncType.MENU_CREATED: MenuCreated,
-    WebhookEventAsyncType.MENU_UPDATED: MenuUpdated,
-    WebhookEventAsyncType.MENU_DELETED: MenuDeleted,
-    WebhookEventAsyncType.MENU_ITEM_CREATED: MenuItemCreated,
-    WebhookEventAsyncType.MENU_ITEM_UPDATED: MenuItemUpdated,
-    WebhookEventAsyncType.MENU_ITEM_DELETED: MenuItemDeleted,
+    # WebhookEventAsyncType.MENU_CREATED: MenuCreated,
+    # WebhookEventAsyncType.MENU_UPDATED: MenuUpdated,
+    # WebhookEventAsyncType.MENU_DELETED: MenuDeleted,
+    # WebhookEventAsyncType.MENU_ITEM_CREATED: MenuItemCreated,
+    # WebhookEventAsyncType.MENU_ITEM_UPDATED: MenuItemUpdated,
+    # WebhookEventAsyncType.MENU_ITEM_DELETED: MenuItemDeleted,
     # WebhookEventAsyncType.ORDER_CREATED: OrderCreated,
     # WebhookEventAsyncType.ORDER_UPDATED: OrderUpdated,
     # WebhookEventAsyncType.ORDER_CONFIRMED: OrderConfirmed,
@@ -1539,14 +1539,14 @@ WEBHOOK_TYPES_MAP = {
     WebhookEventAsyncType.INITIATIVE_CREATED: InitiativeCreated,
     WebhookEventAsyncType.INITIATIVE_UPDATED: InitiativeUpdated,
     WebhookEventAsyncType.INITIATIVE_DELETED: InitiativeDeleted,
-    # WebhookEventAsyncType.PRODUCT_CREATED: ProductCreated,
-    # WebhookEventAsyncType.PRODUCT_UPDATED: ProductUpdated,
-    # WebhookEventAsyncType.PRODUCT_DELETED: ProductDeleted,
-    # WebhookEventAsyncType.PRODUCT_VARIANT_CREATED: ProductVariantCreated,
-    # WebhookEventAsyncType.PRODUCT_VARIANT_UPDATED: ProductVariantUpdated,
-    # WebhookEventAsyncType.PRODUCT_VARIANT_OUT_OF_STOCK: (ProductVariantOutOfStock),
-    # WebhookEventAsyncType.PRODUCT_VARIANT_BACK_IN_STOCK: (ProductVariantBackInStock),
-    # WebhookEventAsyncType.PRODUCT_VARIANT_DELETED: ProductVariantDeleted,
+    # WebhookEventAsyncType.INITIATIVE_CREATED: InitiativeCreated,
+    # WebhookEventAsyncType.INITIATIVE_UPDATED: InitiativeUpdated,
+    # WebhookEventAsyncType.INITIATIVE_DELETED: InitiativeDeleted,
+    # WebhookEventAsyncType.INITIATIVE_VARIANT_CREATED: InitiativeVariantCreated,
+    # WebhookEventAsyncType.INITIATIVE_VARIANT_UPDATED: InitiativeVariantUpdated,
+    # WebhookEventAsyncType.INITIATIVE_VARIANT_OUT_OF_STOCK: (InitiativeVariantOutOfStock),
+    # WebhookEventAsyncType.INITIATIVE_VARIANT_BACK_IN_STOCK: (InitiativeVariantBackInStock),
+    # WebhookEventAsyncType.INITIATIVE_VARIANT_DELETED: InitiativeVariantDeleted,
     # WebhookEventAsyncType.SALE_CREATED: SaleCreated,
     # WebhookEventAsyncType.SALE_UPDATED: SaleUpdated,
     # WebhookEventAsyncType.SALE_DELETED: SaleDeleted,
@@ -1581,7 +1581,7 @@ WEBHOOK_TYPES_MAP = {
     # WebhookEventAsyncType.STAFF_CREATED: StaffCreated,
     # WebhookEventAsyncType.STAFF_UPDATED: StaffUpdated,
     # WebhookEventAsyncType.STAFF_DELETED: StaffDeleted,
-    WebhookEventAsyncType.TRANSACTION_ACTION_REQUEST: TransactionActionRequest,
+    # WebhookEventAsyncType.TRANSACTION_ACTION_REQUEST: TransactionActionRequest,
     WebhookEventAsyncType.TRANSLATION_CREATED: TranslationCreated,
     WebhookEventAsyncType.TRANSLATION_UPDATED: TranslationUpdated,
     # WebhookEventAsyncType.VOUCHER_CREATED: VoucherCreated,

@@ -35,7 +35,7 @@ from .common import (
     # PaymentError,
     Permission,
     PermissionGroupError,
-    PluginError,
+    # PluginError,
     # PriceInput,
     # PriceRangeInput,
     # ProductChannelListingError,

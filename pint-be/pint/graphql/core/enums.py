@@ -25,7 +25,7 @@ from ...initiative import error_codes as initiative_error_codes
 # from ...order import error_codes as order_error_codes
 # from ...page import error_codes as page_error_codes
 # from ...payment import error_codes as payment_error_codes
-from ...plugins import error_codes as plugin_error_codes
+# from ...plugins import error_codes as plugin_error_codes
 # from ...Initiative import error_codes as Initiative_error_codes
 # from ...shipping import error_codes as shipping_error_codes
 # from ...site import error_codes as site_error_codes
@@ -113,7 +113,7 @@ ExternalNotificationTriggerErrorCode = graphene.Enum.from_enum(
 )
 ExportErrorCode = graphene.Enum.from_enum(csv_error_codes.ExportErrorCode)
 # DiscountErrorCode = graphene.Enum.from_enum(discount_error_codes.DiscountErrorCode)
-PluginErrorCode = graphene.Enum.from_enum(plugin_error_codes.PluginErrorCode)
+# PluginErrorCode = graphene.Enum.from_enum(plugin_error_codes.PluginErrorCode)
 # GiftCardErrorCode = graphene.Enum.from_enum(giftcard_error_codes.GiftCardErrorCode)
 # MenuErrorCode = graphene.Enum.from_enum(menu_error_codes.MenuErrorCode)
 # OrderSettingsErrorCode = graphene.Enum.from_enum(

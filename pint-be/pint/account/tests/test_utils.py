@@ -3,8 +3,8 @@ from unittest.mock import patch
 import pytest
 from django.test import override_settings
 
-from ...checkout import AddressType
-from ...plugins.manager import get_plugins_manager
+# from ...checkout import AddressType
+# from ...plugins.manager import get_plugins_manager
 from ..models import Address, User
 from ..utils import (
     is_user_address_limit_reached,

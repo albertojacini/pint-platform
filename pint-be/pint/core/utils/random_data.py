@@ -67,7 +67,7 @@ from ...core.weight import zero_weight
 # from ...page.models import Page, PageType
 # from ...payment import gateway
 # from ...payment.utils import create_payment
-from ...plugins.manager import get_plugins_manager
+# from ...plugins.manager import get_plugins_manager
 from ...initiative.models import (
     # Category,
     # Collection,

@@ -1,1 +1,0 @@
-SALEOR_STAFF_PERMISSION = "pint:staff"

@@ -130,8 +130,8 @@ class WebhookEventAsyncType:
 
     # TRANSACTION_ACTION_REQUEST = "transaction_action_request"
     #
-    # TRANSLATION_CREATED = "translation_created"
-    # TRANSLATION_UPDATED = "translation_updated"
+    TRANSLATION_CREATED = "translation_created"
+    TRANSLATION_UPDATED = "translation_updated"
     #
     # WAREHOUSE_CREATED = "warehouse_created"
     # WAREHOUSE_UPDATED = "warehouse_updated"

@@ -15,7 +15,7 @@ from graphql.error import GraphQLError
 from PIL import Image
 
 from ....core.utils import generate_unique_slug
-from ....plugins.webhook.utils import APP_ID_PREFIX
+# from ....plugins.webhook.utils import APP_ID_PREFIX
 
 if TYPE_CHECKING:
     # flake8: noqa
@@ -212,11 +212,11 @@ def from_global_id_or_error(
         type_, id_ = graphene.Node.from_global_id(global_id)
     except (binascii.Error, UnicodeDecodeError, ValueError):
         raise GraphQLError(f"Couldn't resolve id: {global_id}.")
-    if type_ == APP_ID_PREFIX:
-        id_ = global_id
-    else:
-        if not validate_if_int_or_uuid(id_):
-            raise GraphQLError(f"Error occurred during ID - {global_id} validation.")
+    # if type_ == APP_ID_PREFIX:
+    #     id_ = global_id
+    # else:
+    if not validate_if_int_or_uuid(id_):
+        raise GraphQLError(f"Error occurred during ID - {global_id} validation.")
 
     if only_type and str(type_) != str(only_type):
         if not raise_error:

@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from ...core.notify_events import NotifyEventType, UserNotifyEvent
 from ...core.utils.url import prepare_url
 from ...graphql.core.utils import to_global_id_or_none
-from ...plugins.manager import get_plugins_manager
+# from ...plugins.manager import get_plugins_manager
 from .. import notifications
 from ..notifications import get_default_user_payload
 

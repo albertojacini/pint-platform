@@ -29,7 +29,7 @@ from ..enums import (
     # PaymentErrorCode,
     PermissionEnum,
     PermissionGroupErrorCode,
-    PluginErrorCode,
+    # PluginErrorCode,
     InitiativeErrorCode,
     # ProductErrorCode,
     # ShippingErrorCode,
@@ -381,8 +381,8 @@ class InitiativeError(Error):
 #     )
 
 
-class PluginError(Error):
-    code = PluginErrorCode(description="The error code.", required=True)
+# class PluginError(Error):
+#     code = PluginErrorCode(description="The error code.", required=True)
 
 
 # class StockError(Error):

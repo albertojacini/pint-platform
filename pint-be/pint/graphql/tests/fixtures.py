@@ -12,7 +12,7 @@ from django.test.client import MULTIPART_CONTENT, Client
 
 from ...account.models import User
 from ...core.jwt import create_access_token
-from ...plugins.manager import get_plugins_manager
+# from ...plugins.manager import get_plugins_manager
 from ...tests.utils import flush_post_commit_hooks
 from ..utils import handled_errors_logger, unhandled_errors_logger
 from .utils import assert_no_permission

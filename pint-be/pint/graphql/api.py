@@ -26,6 +26,7 @@ from .initiative.schema import InitiativeMutations, InitiativeQueries
 # from .translations.schema import TranslationQueries
 # from .warehouse.schema import StockQueries, WarehouseMutations, WarehouseQueries
 # from .webhook.schema import WebhookMutations, WebhookQueries
+from .webhook.subscription_types import WEBHOOK_TYPES_MAP
 from .webhook.subscription_types import WEBHOOK_TYPES_MAP, Subscription
 
 API_PATH = SimpleLazyObject(lambda: reverse("api"))
