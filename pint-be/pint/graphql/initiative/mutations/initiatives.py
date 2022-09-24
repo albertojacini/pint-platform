@@ -23,22 +23,22 @@ from ....core.utils.validators import get_oembed_data
 # from ....order import models as order_models
 # from ....order.tasks import recalculate_orders_task
 from ....initiative import InitiativeMediaTypes, models
-# from ....product import ProductMediaTypes, models
+# from ....initiative import InitiativeMediaTypes, models
 from ....initiative.error_codes import InitiativeErrorCode
-# from ....product.error_codes import CollectionErrorCode, ProductErrorCode
+# from ....initiative.error_codes import CollectionErrorCode, InitiativeErrorCode
 from ....initiative.search import update_initiative_search_vector
-# from ....product.search import update_product_search_vector
-# from ....product.tasks import (
-#     update_product_discounted_price_task,
-#     update_products_discounted_prices_of_catalogues_task,
+# from ....initiative.search import update_initiative_search_vector
+# from ....initiative.tasks import (
+#     update_initiative_discounted_price_task,
+#     update_initiatives_discounted_prices_of_catalogues_task,
 # )
-# from ....product.utils import delete_categories, get_products_ids_without_variants
-from ....product.utils.variants import generate_and_set_variant_name
+# from ....initiative.utils import delete_categories, get_initiatives_ids_without_variants
+# from ....initiative.utils.variants import generate_and_set_variant_name
 from ....thumbnail import models as thumbnail_models
-from ....warehouse.management import deactivate_preorder_for_variant
-from ...attribute.types import AttributeValueInput
-from ...attribute.utils import AttributeAssignmentMixin, AttrValuesInput
-from ...channel import ChannelContext
+# from ....warehouse.management import deactivate_preorder_for_variant
+# from ...attribute.types import AttributeValueInput
+# from ...attribute.utils import AttributeAssignmentMixin, AttrValuesInput
+# from ...channel import ChannelContext
 from ...core.descriptions import (
     ADDED_IN_31,
     DEPRECATED_IN_3X_INPUT,
@@ -46,11 +46,11 @@ from ...core.descriptions import (
     RICH_CONTENT,
 )
 from ...core.fields import JSONString
-from ...core.inputs import ReorderInput
+# from ...core.inputs import ReorderInput
 from ...core.mutations import BaseMutation, ModelDeleteMutation, ModelMutation
 from ...core.scalars import WeightScalar
 from ...core.types import NonNullList, InitiativeError, SeoInput, Upload
-# from ...core.types import CollectionError, NonNullList, ProductError, SeoInput, Upload
+# from ...core.types import CollectionError, NonNullList, InitiativeError, SeoInput, Upload
 from ...core.utils import (
     add_hash_to_file_name,
     clean_seo_fields,
@@ -64,13 +64,14 @@ from ...core.utils import (
 from ...core.utils.reordering import perform_reordering
 # from ...warehouse.types import Warehouse
 from ..types import Initiative
-# from ..types import Category, Collection, Product, ProductMedia, ProductVariant
+from ..types import Initiative, InitiativeMedia
+# from ..types import Category, Collection, Initiative, InitiativeMedia, InitiativeVariant
 from ..utils import (
-    clean_variant_sku,
-    create_stocks,
-    get_draft_order_lines_data_for_variants,
-    get_used_attribute_values_for_variant,
-    get_used_variants_attribute_values,
+    # clean_variant_sku,
+    # create_stocks,
+    # get_draft_order_lines_data_for_variants,
+    # get_used_attribute_values_for_variant,
+    # get_used_variants_attribute_values,
     update_ordered_media,
 )
 
@@ -81,36 +82,37 @@ from ..utils import (
 #     slug = graphene.String(description="Category slug.")
 #     seo = SeoInput(description="Search engine optimization fields.")
 #     background_image = Upload(description="Background image file.")
-#     background_image_alt = graphene.String(description="Alt text for a product media.")
+#     background_image_alt = graphene.String(description="Alt text for a initiative media.")
 
 
 
 class InitiativeInput(graphene.InputObjectType):
-    attributes = NonNullList(AttributeValueInput, description="List of attributes.")
-    category = graphene.ID(description="ID of the product's category.", name="category")
-    charge_taxes = graphene.Boolean(
-        description="Determine if taxes are being charged for the product."
-    )
-    collections = NonNullList(
-        graphene.ID,
-        description="List of IDs of collections that the product belongs to.",
-        name="collections",
-    )
+    # attributes = NonNullList(AttributeValueInput, description="List of attributes.")
+    # category = graphene.ID(description="ID of the initiative's category.", name="category")
+    # charge_taxes = graphene.Boolean(
+    #     description="Determine if taxes are being charged for the initiative."
+    # )
+    # collections = NonNullList(
+    #     graphene.ID,
+    #     description="List of IDs of collections that the initiative belongs to.",
+    #     name="collections",
+    # )
     description = JSONString(description="Initiative description." + RICH_CONTENT)
     name = graphene.String(description="Initiative name.")
     slug = graphene.String(description="Initiative slug.")
-    tax_code = graphene.String(description="Tax rate for enabled tax gateway.")
+    # tax_code = graphene.String(description="Tax rate for enabled tax gateway.")
     seo = SeoInput(description="Search engine optimization fields.")
-    weight = WeightScalar(description="Weight of the Initiative.", required=False)
-    rating = graphene.Float(description="Defines the product rating value.")
+    # weight = WeightScalar(description="Weight of the Initiative.", required=False)
+    # rating = graphene.Float(description="Defines the initiative rating value.")
 
 
 class InitiativeCreateInput(InitiativeInput):
-    product_type = graphene.ID(
-        description="ID of the type that product belongs to.",
-        name="productType",
-        required=True,
-    )
+    # initiative_type = graphene.ID(
+    #     description="ID of the type that initiative belongs to.",
+    #     name="initiativeType",
+    #     required=True,
+    # )
+    pass
 
 
 # T_INPUT_MAP = List[Tuple[attribute_models.Attribute, AttrValuesInput]]
@@ -119,24 +121,24 @@ class InitiativeCreateInput(InitiativeInput):
 class InitiativeCreate(ModelMutation):
     class Arguments:
         input = InitiativeCreateInput(
-            required=True, description="Fields required to create a product."
+            required=True, description="Fields required to create a initiative."
         )
 
     class Meta:
-        description = "Creates a new product."
+        description = "Creates a new initiative."
         model = models.Initiative
         object_type = Initiative
-        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        permissions = (InitiativePermissions.MANAGE_INITIATIVES,)
         error_type_class = InitiativeError
-        error_type_field = "product_errors"
+        error_type_field = "initiative_errors"
 
-    @classmethod
-    def clean_attributes(
-        cls, attributes: dict, product_type: models.InitiativeType
-    ) -> T_INPUT_MAP:
-        attributes_qs = product_type.product_attributes
-        attributes = AttributeAssignmentMixin.clean_input(attributes, attributes_qs)
-        return attributes
+    # @classmethod
+    # def clean_attributes(
+    #     cls, attributes: dict, initiative_type: models.InitiativeType
+    # ) -> T_INPUT_MAP:
+    #     attributes_qs = initiative_type.initiative_attributes
+    #     attributes = AttributeAssignmentMixin.clean_input(attributes, attributes_qs)
+    #     return attributes
 
     @classmethod
     def clean_input(cls, info, instance, data):
@@ -164,8 +166,8 @@ class InitiativeCreate(ModelMutation):
         # the value's PK.
 
         attributes = cleaned_input.get("attributes")
-        product_type = (
-            instance.product_type if instance.pk else cleaned_input.get("product_type")
+        initiative_type = (
+            instance.initiative_type if instance.pk else cleaned_input.get("initiative_type")
         )  # type: models.InitiativeType
 
         try:
@@ -181,10 +183,10 @@ class InitiativeCreate(ModelMutation):
                 instance, cleaned_input["tax_code"]
             )
 
-        if attributes and product_type:
+        if attributes and initiative_type:
             try:
                 cleaned_input["attributes"] = cls.clean_attributes(
-                    attributes, product_type
+                    attributes, initiative_type
                 )
             except ValidationError as exc:
                 raise ValidationError({"attributes": exc})
@@ -203,8 +205,8 @@ class InitiativeCreate(ModelMutation):
             # Prefetches needed by AttributeAssignmentMixin and
             # associate_attribute_values_to_instance
             qs = cls.Meta.model.objects.prefetch_related(
-                "product_type__product_attributes__values",
-                "product_type__attributeproduct",
+                "initiative_type__initiative_attributes__values",
+                "initiative_type__attributeinitiative",
             )
             return cls.get_node_or_error(info, object_id, only_type="Initiative", qs=qs)
 
@@ -214,9 +216,9 @@ class InitiativeCreate(ModelMutation):
     @traced_atomic_transaction()
     def save(cls, info, instance, cleaned_input):
         instance.save()
-        attributes = cleaned_input.get("attributes")
-        if attributes:
-            AttributeAssignmentMixin.save(instance, attributes)
+        # attributes = cleaned_input.get("attributes")
+        # if attributes:
+        #     AttributeAssignmentMixin.save(instance, attributes)
 
     @classmethod
     def _save_m2m(cls, info, instance, cleaned_data):
@@ -226,79 +228,79 @@ class InitiativeCreate(ModelMutation):
 
     @classmethod
     def post_save_action(cls, info, instance, _cleaned_input):
-        product = models.Initiative.objects.prefetched_for_webhook().get(pk=instance.pk)
-        update_product_search_vector(instance)
-        info.context.plugins.product_created(product)
+        initiative = models.Initiative.objects.prefetched_for_webhook().get(pk=instance.pk)
+        update_initiative_search_vector(instance)
+        info.context.plugins.initiative_created(initiative)
 
     @classmethod
     def perform_mutation(cls, _root, info, **data):
         response = super().perform_mutation(_root, info, **data)
-        product = getattr(response, cls._meta.return_field_name)
+        initiative = getattr(response, cls._meta.return_field_name)
 
-        # Wrap product instance with ChannelContext in response
-        setattr(
-            response,
-            cls._meta.return_field_name,
-            ChannelContext(node=product, channel_slug=None),
-        )
+        # # Wrap initiative instance with ChannelContext in response
+        # setattr(
+        #     response,
+        #     cls._meta.return_field_name,
+        #     ChannelContext(node=initiative, channel_slug=None),
+        # )
         return response
 
 
 class InitiativeUpdate(InitiativeCreate):
     class Arguments:
-        id = graphene.ID(required=True, description="ID of a product to update.")
+        id = graphene.ID(required=True, description="ID of a initiative to update.")
         input = InitiativeInput(
-            required=True, description="Fields required to update a product."
+            required=True, description="Fields required to update a initiative."
         )
 
     class Meta:
-        description = "Updates an existing product."
+        description = "Updates an existing initiative."
         model = models.Initiative
         object_type = Initiative
-        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        permissions = (InitiativePermissions.MANAGE_INITIATIVES,)
         error_type_class = InitiativeError
-        error_type_field = "product_errors"
+        error_type_field = "initiative_errors"
 
-    @classmethod
-    def clean_attributes(
-        cls, attributes: dict, product_type: models.InitiativeType
-    ) -> T_INPUT_MAP:
-        attributes_qs = product_type.product_attributes
-        attributes = AttributeAssignmentMixin.clean_input(
-            attributes, attributes_qs, creation=False
-        )
-        return attributes
+    # @classmethod
+    # def clean_attributes(
+    #     cls, attributes: dict, initiative_type: models.InitiativeType
+    # ) -> T_INPUT_MAP:
+    #     attributes_qs = initiative_type.initiative_attributes
+    #     attributes = AttributeAssignmentMixin.clean_input(
+    #         attributes, attributes_qs, creation=False
+    #     )
+    #     return attributes
 
     @classmethod
     @traced_atomic_transaction()
     def save(cls, info, instance, cleaned_input):
         instance.save()
-        attributes = cleaned_input.get("attributes")
-        if attributes:
-            AttributeAssignmentMixin.save(instance, attributes)
+        # attributes = cleaned_input.get("attributes")
+        # if attributes:
+        #     AttributeAssignmentMixin.save(instance, attributes)
 
     @classmethod
     def post_save_action(cls, info, instance, _cleaned_input):
-        product = models.Initiative.objects.prefetched_for_webhook().get(pk=instance.pk)
-        update_product_search_vector(instance)
-        info.context.plugins.product_updated(product)
+        initiative = models.Initiative.objects.prefetched_for_webhook().get(pk=instance.pk)
+        update_initiative_search_vector(instance)
+        info.context.plugins.initiative_updated(initiative)
 
 
 class InitiativeDelete(ModelDeleteMutation):
     class Arguments:
-        id = graphene.ID(required=True, description="ID of a product to delete.")
+        id = graphene.ID(required=True, description="ID of a initiative to delete.")
 
     class Meta:
-        description = "Deletes a product."
+        description = "Deletes a initiative."
         model = models.Initiative
         object_type = Initiative
-        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        permissions = (InitiativePermissions.MANAGE_INITIATIVES,)
         error_type_class = InitiativeError
-        error_type_field = "product_errors"
+        error_type_field = "initiative_errors"
 
     @classmethod
     def success_response(cls, instance):
-        instance = ChannelContext(node=instance, channel_slug=None)
+        # instance = ChannelContext(node=instance, channel_slug=None)
         return super().success_response(instance)
 
     @classmethod
@@ -306,51 +308,51 @@ class InitiativeDelete(ModelDeleteMutation):
     def perform_mutation(cls, _root, info, **data):
         node_id = data.get("id")
 
-        instance = cls.get_node_or_error(info, node_id, only_type=Initiative)
-        variants_id = list(instance.variants.all().values_list("id", flat=True))
+        # instance = cls.get_node_or_error(info, node_id, only_type=Initiative)
+        # variants_id = list(instance.variants.all().values_list("id", flat=True))
 
-        cls.delete_assigned_attribute_values(instance)
+        # cls.delete_assigned_attribute_values(instance)
 
-        draft_order_lines_data = get_draft_order_lines_data_for_variants(variants_id)
+        # draft_order_lines_data = get_draft_order_lines_data_for_variants(variants_id)
 
         response = super().perform_mutation(_root, info, **data)
 
-        # delete order lines for deleted variant
-        order_models.OrderLine.objects.filter(
-            pk__in=draft_order_lines_data.line_pks
-        ).delete()
-
-        # run order event for deleted lines
-        for order, order_lines in draft_order_lines_data.order_to_lines_mapping.items():
-            order_events.order_line_product_removed_event(
-                order, info.context.user, info.context.app, order_lines
-            )
-
-        order_pks = draft_order_lines_data.order_pks
-        if order_pks:
-            recalculate_orders_task.delay(list(order_pks))
-        transaction.on_commit(
-            lambda: info.context.plugins.product_deleted(instance, variants_id)
-        )
+        # # delete order lines for deleted variant
+        # order_models.OrderLine.objects.filter(
+        #     pk__in=draft_order_lines_data.line_pks
+        # ).delete()
+        #
+        # # run order event for deleted lines
+        # for order, order_lines in draft_order_lines_data.order_to_lines_mapping.items():
+        #     order_events.order_line_initiative_removed_event(
+        #         order, info.context.user, info.context.app, order_lines
+        #     )
+        #
+        # order_pks = draft_order_lines_data.order_pks
+        # if order_pks:
+        #     recalculate_orders_task.delay(list(order_pks))
+        # transaction.on_commit(
+        #     lambda: info.context.plugins.initiative_deleted(instance, variants_id)
+        # )
 
         return response
 
-    @staticmethod
-    def delete_assigned_attribute_values(instance):
-        attribute_models.AttributeValue.objects.filter(
-            productassignments__product_id=instance.id,
-            attribute__input_type__in=AttributeInputType.TYPES_WITH_UNIQUE_VALUES,
-        ).delete()
+    # @staticmethod
+    # def delete_assigned_attribute_values(instance):
+    #     attribute_models.AttributeValue.objects.filter(
+    #         initiativeassignments__initiative_id=instance.id,
+    #         attribute__input_type__in=AttributeInputType.TYPES_WITH_UNIQUE_VALUES,
+    #     ).delete()
 
 
 
 class InitiativeMediaCreateInput(graphene.InputObjectType):
-    alt = graphene.String(description="Alt text for a product media.")
+    alt = graphene.String(description="Alt text for a initiative media.")
     image = Upload(
         required=False, description="Represents an image file in a multipart request."
     )
-    product = graphene.ID(
-        required=True, description="ID of an product.", name="product"
+    initiative = graphene.ID(
+        required=True, description="ID of an initiative.", name="initiative"
     )
     media_url = graphene.String(
         required=False, description="Represents an URL to an external media."
@@ -358,24 +360,24 @@ class InitiativeMediaCreateInput(graphene.InputObjectType):
 
 
 class InitiativeMediaCreate(BaseMutation):
-    product = graphene.Field(Initiative)
+    initiative = graphene.Field(Initiative)
     media = graphene.Field(InitiativeMedia)
 
     class Arguments:
         input = InitiativeMediaCreateInput(
-            required=True, description="Fields required to create a product media."
+            required=True, description="Fields required to create a initiative media."
         )
 
     class Meta:
         description = (
-            "Create a media object (image or video URL) associated with product. "
+            "Create a media object (image or video URL) associated with initiative. "
             "For image, this mutation must be sent as a `multipart` request. "
             "More detailed specs of the upload format can be found here: "
             "https://github.com/jaydenseric/graphql-multipart-request-spec"
         )
-        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        permissions = (InitiativePermissions.MANAGE_INITIATIVES,)
         error_type_class = InitiativeError
-        error_type_field = "product_errors"
+        error_type_field = "initiative_errors"
 
     @classmethod
     def validate_input(cls, data):
@@ -405,10 +407,10 @@ class InitiativeMediaCreate(BaseMutation):
     def perform_mutation(cls, _root, info, **data):
         data = data.get("input")
         cls.validate_input(data)
-        product = cls.get_node_or_error(
+        initiative = cls.get_node_or_error(
             info,
-            data["product"],
-            field="product",
+            data["initiative"],
+            field="initiative",
             only_type=Initiative,
             qs=models.Initiative.objects.prefetched_for_webhook(),
         )
@@ -420,7 +422,7 @@ class InitiativeMediaCreate(BaseMutation):
             image_data = info.context.FILES.get(image)
             validate_image_file(image_data, "image", InitiativeErrorCode)
             add_hash_to_file_name(image_data)
-            media = product.media.create(
+            media = initiative.media.create(
                 image=image_data, alt=alt, type=InitiativeMediaTypes.IMAGE
             )
         if media_url:
@@ -432,92 +434,92 @@ class InitiativeMediaCreate(BaseMutation):
                 filename = get_filename_from_url(media_url)
                 image_data = requests.get(media_url, stream=True)
                 image_file = File(image_data.raw, filename)
-                media = product.media.create(
+                media = initiative.media.create(
                     image=image_file,
                     alt=alt,
                     type=InitiativeMediaTypes.IMAGE,
                 )
             else:
                 oembed_data, media_type = get_oembed_data(media_url, "media_url")
-                media = product.media.create(
+                media = initiative.media.create(
                     external_url=oembed_data["url"],
                     alt=oembed_data.get("title", alt),
                     type=media_type,
                     oembed_data=oembed_data,
                 )
 
-        info.context.plugins.product_updated(product)
-        product = ChannelContext(node=product, channel_slug=None)
-        return InitiativeMediaCreate(product=product, media=media)
+        info.context.plugins.initiative_updated(initiative)
+        # initiative = ChannelContext(node=initiative, channel_slug=None)
+        return InitiativeMediaCreate(initiative=initiative, media=media)
 
 
 class InitiativeMediaUpdateInput(graphene.InputObjectType):
-    alt = graphene.String(description="Alt text for a product media.")
+    alt = graphene.String(description="Alt text for a initiative media.")
 
 
 class InitiativeMediaUpdate(BaseMutation):
-    product = graphene.Field(Initiative)
+    initiative = graphene.Field(Initiative)
     media = graphene.Field(InitiativeMedia)
 
     class Arguments:
-        id = graphene.ID(required=True, description="ID of a product media to update.")
+        id = graphene.ID(required=True, description="ID of a initiative media to update.")
         input = InitiativeMediaUpdateInput(
-            required=True, description="Fields required to update a product media."
+            required=True, description="Fields required to update a initiative media."
         )
 
     class Meta:
-        description = "Updates a product media."
-        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        description = "Updates a initiative media."
+        permissions = (InitiativePermissions.MANAGE_INITIATIVES,)
         error_type_class = InitiativeError
-        error_type_field = "product_errors"
+        error_type_field = "initiative_errors"
 
     @classmethod
     def perform_mutation(cls, _root, info, **data):
         media = cls.get_node_or_error(info, data.get("id"), only_type=InitiativeMedia)
-        product = models.Initiative.objects.prefetched_for_webhook().get(
-            pk=media.product_id
+        initiative = models.Initiative.objects.prefetched_for_webhook().get(
+            pk=media.initiative_id
         )
         alt = data.get("input").get("alt")
         if alt is not None:
             media.alt = alt
             media.save(update_fields=["alt"])
-        info.context.plugins.product_updated(product)
-        product = ChannelContext(node=product, channel_slug=None)
-        return InitiativeMediaUpdate(product=product, media=media)
+        info.context.plugins.initiative_updated(initiative)
+        # initiative = ChannelContext(node=initiative, channel_slug=None)
+        return InitiativeMediaUpdate(initiative=initiative, media=media)
 
 
 class InitiativeMediaReorder(BaseMutation):
-    product = graphene.Field(Initiative)
+    initiative = graphene.Field(Initiative)
     media = NonNullList(InitiativeMedia)
 
     class Arguments:
-        product_id = graphene.ID(
+        initiative_id = graphene.ID(
             required=True,
-            description="ID of product that media order will be altered.",
+            description="ID of initiative that media order will be altered.",
         )
         media_ids = NonNullList(
             graphene.ID,
             required=True,
-            description="IDs of a product media in the desired order.",
+            description="IDs of a initiative media in the desired order.",
         )
 
     class Meta:
-        description = "Changes ordering of the product media."
-        permissions = (InitiativePermissions.MANAGE_PRODUCTS,)
+        description = "Changes ordering of the initiative media."
+        permissions = (InitiativePermissions.MANAGE_INITIATIVES,)
         error_type_class = InitiativeError
-        error_type_field = "product_errors"
+        error_type_field = "initiative_errors"
 
     @classmethod
-    def perform_mutation(cls, _root, info, product_id, media_ids):
-        product = cls.get_node_or_error(
+    def perform_mutation(cls, _root, info, initiative_id, media_ids):
+        initiative = cls.get_node_or_error(
             info,
-            product_id,
-            field="product_id",
+            initiative_id,
+            field="initiative_id",
             only_type=Initiative,
             qs=models.Initiative.objects.prefetched_for_webhook(),
         )
 
-        if len(media_ids) != product.media.count():
+        if len(media_ids) != initiative.media.count():
             raise ValidationError(
                 {
                     "order": ValidationError(
@@ -532,12 +534,12 @@ class InitiativeMediaReorder(BaseMutation):
             media = cls.get_node_or_error(
                 info, media_id, field="order", only_type=InitiativeMedia
             )
-            if media and media.product != product:
+            if media and media.initiative != initiative:
                 raise ValidationError(
                     {
                         "order": ValidationError(
-                            "Media %(media_id)s does not belong to this product.",
-                            code=InitiativeErrorCode.NOT_PRODUCTS_IMAGE,
+                            "Media %(media_id)s does not belong to this initiative.",
+                            code=InitiativeErrorCode.NOT_INITIATIVES_IMAGE,
                             params={"media_id": media_id},
                         )
                     }
@@ -546,6 +548,6 @@ class InitiativeMediaReorder(BaseMutation):
 
         update_ordered_media(ordered_media)
 
-        info.context.plugins.product_updated(product)
-        product = ChannelContext(node=product, channel_slug=None)
-        return InitiativeMediaReorder(product=product, media=ordered_media)
+        info.context.plugins.initiative_updated(initiative)
+        # initiative = ChannelContext(node=initiative, channel_slug=None)
+        return InitiativeMediaReorder(initiative=initiative, media=ordered_media)

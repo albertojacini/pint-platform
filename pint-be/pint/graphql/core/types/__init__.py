@@ -41,7 +41,7 @@ from .common import (
     # ProductChannelListingError,
     InitiativeError,
     # ProductError,
-    InitiativeWithoutVariantError,
+    # InitiativeWithoutVariantError,
     # ProductWithoutVariantError,
     SeoInput,
     # ShippingError,

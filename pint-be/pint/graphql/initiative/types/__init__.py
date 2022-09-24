@@ -4,6 +4,20 @@
 #     DigitalContentCountableConnection,
 #     DigitalContentUrl,
 # )
+from .initiatives import (
+    # Category,
+    # CategoryCountableConnection,
+    # Collection,
+    # CollectionCountableConnection,
+    # Product,
+    # ProductCountableConnection,
+    InitiativeMedia,
+    # ProductMedia,
+    # ProductType,
+    # ProductTypeCountableConnection,
+    # ProductVariant,
+    # ProductVariantCountableConnection,
+)
 # from .products import (
 #     Category,
 #     CategoryCountableConnection,
@@ -11,6 +25,7 @@
 #     CollectionCountableConnection,
 #     Product,
 #     ProductCountableConnection,
+#     ProductMedia,
 #     ProductMedia,
 #     ProductType,
 #     ProductTypeCountableConnection,
