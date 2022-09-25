@@ -154,7 +154,7 @@ context_processors = [
     "django.template.context_processors.debug",
     "django.template.context_processors.media",
     "django.template.context_processors.static",
-    "pint.site.context_processors.site",
+    # "pint.site.context_processors.site",
 ]
 
 loaders = [
@@ -201,10 +201,10 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.common.CommonMiddleware",
     "pint.core.middleware.request_time",
-    "pint.core.middleware.discounts",
+    # "pint.core.middleware.discounts",
     "pint.core.middleware.google_analytics",
     "pint.core.middleware.site",
-    "pint.core.middleware.plugins",
+    # "pint.core.middleware.plugins",
     "pint.core.middleware.jwt_refresh_token_middleware",
 ]
 
