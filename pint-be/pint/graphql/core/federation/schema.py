@@ -34,8 +34,6 @@ class _Entity(graphene.Union):
     """_Entity union as defined by Federation spec."""
 
     class Meta:
-        logger.warning("federated_entities.values()++++++++++++++++++++++++++")
-        logger.warning(federated_entities.values())
         types = tuple(federated_entities.values())
 
 
