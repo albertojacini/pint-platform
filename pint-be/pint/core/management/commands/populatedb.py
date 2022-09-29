@@ -8,24 +8,25 @@ from django.db import connection
 
 from ....account.utils import create_superuser
 from ...utils.random_data import (
-    add_address_to_admin,
-    create_channels,
-    create_checkout_with_custom_prices,
-    create_checkout_with_preorders,
-    create_checkout_with_same_variant_in_multiple_lines,
-    create_gift_cards,
-    create_menus,
-    create_orders,
-    create_page_type,
-    create_pages,
+    # add_address_to_admin,
+    # create_channels,
+    # create_checkout_with_custom_prices,
+    # create_checkout_with_preorders,
+    # create_checkout_with_same_variant_in_multiple_lines,
+    # create_gift_cards,
+    # create_menus,
+    # create_orders,
+    # create_page_type,
+    # create_pages,
     create_permission_groups,
-    create_product_sales,
-    create_products_by_schema,
-    create_shipping_zones,
+    create_initiatives,
+    # create_product_sales,
+    # create_products_by_schema,
+    # create_shipping_zones,
     create_staffs,
     create_users,
-    create_vouchers,
-    create_warehouses,
+    # create_vouchers,
+    # create_warehouses,
 )
 
 
@@ -87,36 +88,36 @@ class Command(BaseCommand):
             "DummyCreditCardGatewayPlugin",
         ]
         create_images = not options["withoutimages"]
-        for msg in create_channels():
-            self.stdout.write(msg)
-        for msg in create_shipping_zones():
-            self.stdout.write(msg)
-        create_warehouses()
-        self.stdout.write("Created warehouses")
-        for msg in create_page_type():
-            self.stdout.write(msg)
-        for msg in create_pages():
-            self.stdout.write(msg)
-        create_products_by_schema(self.placeholders_dir, create_images)
-        self.stdout.write("Created products")
-        for msg in create_product_sales(2):
-            self.stdout.write(msg)
-        for msg in create_vouchers():
-            self.stdout.write(msg)
+        # for msg in create_channels():
+        #     self.stdout.write(msg)
+        # for msg in create_shipping_zones():
+        #     self.stdout.write(msg)
+        # for msg in create_page_type():
+        #     self.stdout.write(msg)
+        # for msg in create_pages():
+        #     self.stdout.write(msg)
+        # create_products_by_schema(self.placeholders_dir, create_images)
+        # self.stdout.write("Created products")
+        create_initiatives(self.placeholders_dir, 20)
+        self.stdout.write("Created initiatives")
+        # for msg in create_product_sales(2):
+        #     self.stdout.write(msg)
+        # for msg in create_vouchers():
+        #     self.stdout.write(msg)
         for msg in create_users(user_password, 20):
             self.stdout.write(msg)
-        for msg in create_orders(20):
-            self.stdout.write(msg)
-        for msg in create_gift_cards():
-            self.stdout.write(msg)
-        for msg in create_menus():
-            self.stdout.write(msg)
-        for msg in create_checkout_with_preorders():
-            self.stdout.write(msg)
-        for msg in create_checkout_with_custom_prices():
-            self.stdout.write(msg)
-        for msg in create_checkout_with_same_variant_in_multiple_lines():
-            self.stdout.write(msg)
+        # for msg in create_orders(20):
+        #     self.stdout.write(msg)
+        # for msg in create_gift_cards():
+        #     self.stdout.write(msg)
+        # for msg in create_menus():
+        #     self.stdout.write(msg)
+        # for msg in create_checkout_with_preorders():
+        #     self.stdout.write(msg)
+        # for msg in create_checkout_with_custom_prices():
+        #     self.stdout.write(msg)
+        # for msg in create_checkout_with_same_variant_in_multiple_lines():
+        #     self.stdout.write(msg)
 
         if options["createsuperuser"]:
             credentials = {
@@ -125,7 +126,7 @@ class Command(BaseCommand):
             }
             msg = create_superuser(credentials)
             self.stdout.write(msg)
-            add_address_to_admin(credentials["email"])
+            # add_address_to_admin(credentials["email"])
         if not options["skipsequencereset"]:
             self.sequence_reset()
 

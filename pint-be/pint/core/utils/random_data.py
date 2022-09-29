@@ -23,7 +23,8 @@ from faker.providers import BaseProvider
 from measurement.measures import Weight
 from prices import Money, TaxedMoney
 
-from ...account.models import Address, User
+from ...account.models import User
+# from ...account.models import Address, User
 from ...account.search import (
     generate_address_search_document_value,
     generate_user_fields_search_document_value,
@@ -105,51 +106,7 @@ DUMMY_STAFF_PASSWORD = "password"
 DEFAULT_CURRENCY = os.environ.get("DEFAULT_CURRENCY", "USD")
 
 IMAGES_MAPPING = {
-    126: ["pint-headless-omnichannel-book.png"],
-    127: [
-        "pint-white-plimsolls-1.png",
-        "pint-white-plimsolls-2.png",
-        "pint-white-plimsolls-3.png",
-        "pint-white-plimsolls-4.png",
-    ],
-    128: [
-        "pint-blue-plimsolls-1.png",
-        "pint-blue-plimsolls-2.png",
-        "pint-blue-plimsolls-3.png",
-        "pint-blue-plimsolls-4.png",
-    ],
-    129: ["pint-dash-force-1.png", "pint-dash-force-2.png"],
-    130: ["pint-pauls-blanace-420-1.png", "pint-pauls-blanace-420-2.png"],
-    131: ["pint-grey-hoodie.png"],
-    132: ["pint-blue-hoodie.png"],
-    133: ["pint-white-hoodie.png"],
-    134: ["pint-ascii-shirt-front.png", "pint-ascii-shirt-back.png"],
-    135: ["pint-team-tee-front.png", "pint-team-tee-front.png"],
-    136: ["pint-polo-shirt-front.png", "pint-polo-shirt-back.png"],
-    137: ["pint-blue-polygon-tee-front.png", "pint-blue-polygon-tee-back.png"],
-    138: ["pint-dark-polygon-tee-front.png", "pint-dark-polygon-tee-back.png"],
-    141: ["pint-beanie-1.png", "pint-beanie-2.png"],
-    143: ["pint-neck-warmer.png"],
-    144: ["pint-sunnies.png"],
-    145: ["pint-battle-tested-book.png"],
-    146: ["pint-enterprise-cloud-book.png"],
-    147: ["pint-own-your-stack-and-data-book.png"],
-    150: ["pint-mighty-mug.png"],
-    151: ["pint-cushion-blue.png"],
-    152: ["pint-apple-drink.png"],
-    153: ["pint-bean-drink.png"],
-    154: ["pint-banana-drink.png"],
-    155: ["pint-carrot-drink.png"],
-    156: ["pint-sunnies-dark.png"],
-    157: [
-        "pint-monospace-white-tee-front.png",
-        "pint-monospace-white-tee-back.png",
-    ],
-    160: ["pint-gift-100.png"],
-    161: ["pint-white-cubes-tee-front.png", "pint-white-cubes-tee-back.png"],
-    162: ["pint-white-parrot-cushion.png"],
-    163: ["pint-gift-500.png"],
-    164: ["pint-gift-50.png"],
+    1: ["riapriamo-i-navigli.png"],
 }
 
 CATEGORY_IMAGES = {
@@ -176,11 +133,11 @@ def get_sample_data():
     return types
 
 
-def get_weight(weight):
-    if not weight:
-        return zero_weight()
-    value, unit = weight.split(":")
-    return Weight(**{unit: value})
+# def get_weight(weight):
+#     if not weight:
+#         return zero_weight()
+#     value, unit = weight.split(":")
+#     return Weight(**{unit: value})
 
 
 # def create_initiative_types(initiative_type_data):
@@ -252,9 +209,23 @@ def get_weight(weight):
 #         defaults = dict(value["fields"])
 #         defaults["attribute_id"] = defaults.pop("attribute")
 #         AttributeValue.objects.update_or_create(pk=pk, defaults=defaults)
+#
+#
+def create_initiatives(placeholder_dir, create_images):
+    types = get_sample_data()
 
-
-def create_initiatives(initiatives_data, placeholder_dir, create_images):
+    # create_initiative_types(initiative_type_data=types["initiative.initiativetype"])
+    # create_categories(
+    #     categories_data=types["initiative.category"], placeholder_dir=placeholder_dir
+    # )
+    # create_attributes(attributes_data=types["attribute.attribute"])
+    # create_attributes_values(values_data=types["attribute.attributevalue"])
+    #     create_initiatives(
+    #         initiatives_data=types["initiative.initiative"],
+    #         placeholder_dir=placeholder_dir,
+    #         create_images=create_images,
+    #     )
+    initiatives_data = types["initiative.initiative"]
     for initiative in initiatives_data:
         pk = initiative["pk"]
         # We are skipping initiatives without images
@@ -262,9 +233,9 @@ def create_initiatives(initiatives_data, placeholder_dir, create_images):
             continue
 
         defaults = dict(initiative["fields"])
-        defaults["weight"] = get_weight(defaults["weight"])
-        defaults["category_id"] = defaults.pop("category")
-        defaults["initiative_type_id"] = defaults.pop("initiative_type")
+        # defaults["weight"] = get_weight(defaults["weight"])
+        # defaults["category_id"] = defaults.pop("category")
+        # defaults["initiative_type_id"] = defaults.pop("initiative_type")
         if default_variant := defaults.pop("default_variant", None):
             defaults["default_variant_id"] = default_variant
 
@@ -416,65 +387,65 @@ def create_initiatives(initiatives_data, placeholder_dir, create_images):
 #         defaults[field] = Money(defaults[amount_field], DEFAULT_CURRENCY)
 
 
-def create_initiatives_by_schema(placeholder_dir, create_images):
-    types = get_sample_data()
-
-    # create_initiative_types(initiative_type_data=types["initiative.initiativetype"])
-    # create_categories(
-    #     categories_data=types["initiative.category"], placeholder_dir=placeholder_dir
-    # )
-    # create_attributes(attributes_data=types["attribute.attribute"])
-    # create_attributes_values(values_data=types["attribute.attributevalue"])
-
-    create_initiatives(
-        initiatives_data=types["initiative.initiative"],
-        placeholder_dir=placeholder_dir,
-        create_images=create_images,
-    )
-    # create_initiative_channel_listings(
-    #     initiative_channel_listings_data=types["initiative.initiativechannellisting"],
-    # )
-    # create_initiative_variants(
-    #     variants_data=types["initiative.initiativevariant"], create_images=create_images
-    # )
-    # create_initiative_variant_channel_listings(
-    #     initiative_variant_channel_listings_data=types[
-    #         "initiative.initiativevariantchannellisting"
-    #     ],
-    # )
-    # assign_attributes_to_initiative_types(
-    #     AttributeInitiative, attributes=types["attribute.attributeinitiative"]
-    # )
-    # assign_attributes_to_initiative_types(
-    #     AttributeVariant, attributes=types["attribute.attributevariant"]
-    # )
-    # assign_attributes_to_page_types(
-    #     AttributePage, attributes=types["attribute.attributepage"]
-    # )
-    # assign_attributes_to_initiatives(
-    #     initiative_attributes=types["attribute.assignedinitiativeattribute"]
-    # )
-    # assign_attribute_values_to_initiatives(
-    #     types["attribute.assignedinitiativeattributevalue"]
-    # )
-    # assign_attributes_to_variants(
-    #     variant_attributes=types["attribute.assignedvariantattribute"]
-    # )
-    # assign_attribute_values_to_variants(
-    #     types["attribute.assignedvariantattributevalue"]
-    # )
-    # assign_attributes_to_pages(page_attributes=types["attribute.assignedpageattribute"])
-    # create_collections(
-    #     data=types["initiative.collection"], placeholder_dir=placeholder_dir
-    # )
-    # create_collection_channel_listings(
-    #     collection_channel_listings_data=types["initiative.collectionchannellisting"],
-    # )
-    # assign_initiatives_to_collections(associations=types["initiative.collectioninitiative"])
-
-    all_initiatives_qs = Initiative.objects.all()
-    # update_initiatives_search_vector(all_initiatives_qs)
-    # update_initiatives_discounted_prices(all_initiatives_qs)
+# def create_initiatives_by_schema(placeholder_dir, create_images):
+#     types = get_sample_data()
+#
+#     # create_initiative_types(initiative_type_data=types["initiative.initiativetype"])
+#     # create_categories(
+#     #     categories_data=types["initiative.category"], placeholder_dir=placeholder_dir
+#     # )
+#     # create_attributes(attributes_data=types["attribute.attribute"])
+#     # create_attributes_values(values_data=types["attribute.attributevalue"])
+#
+#     create_initiatives(
+#         initiatives_data=types["initiative.initiative"],
+#         placeholder_dir=placeholder_dir,
+#         create_images=create_images,
+#     )
+#     # create_initiative_channel_listings(
+#     #     initiative_channel_listings_data=types["initiative.initiativechannellisting"],
+#     # )
+#     # create_initiative_variants(
+#     #     variants_data=types["initiative.initiativevariant"], create_images=create_images
+#     # )
+#     # create_initiative_variant_channel_listings(
+#     #     initiative_variant_channel_listings_data=types[
+#     #         "initiative.initiativevariantchannellisting"
+#     #     ],
+#     # )
+#     # assign_attributes_to_initiative_types(
+#     #     AttributeInitiative, attributes=types["attribute.attributeinitiative"]
+#     # )
+#     # assign_attributes_to_initiative_types(
+#     #     AttributeVariant, attributes=types["attribute.attributevariant"]
+#     # )
+#     # assign_attributes_to_page_types(
+#     #     AttributePage, attributes=types["attribute.attributepage"]
+#     # )
+#     # assign_attributes_to_initiatives(
+#     #     initiative_attributes=types["attribute.assignedinitiativeattribute"]
+#     # )
+#     # assign_attribute_values_to_initiatives(
+#     #     types["attribute.assignedinitiativeattributevalue"]
+#     # )
+#     # assign_attributes_to_variants(
+#     #     variant_attributes=types["attribute.assignedvariantattribute"]
+#     # )
+#     # assign_attribute_values_to_variants(
+#     #     types["attribute.assignedvariantattributevalue"]
+#     # )
+#     # assign_attributes_to_pages(page_attributes=types["attribute.assignedpageattribute"])
+#     # create_collections(
+#     #     data=types["initiative.collection"], placeholder_dir=placeholder_dir
+#     # )
+#     # create_collection_channel_listings(
+#     #     collection_channel_listings_data=types["initiative.collectionchannellisting"],
+#     # )
+#     # assign_initiatives_to_collections(associations=types["initiative.collectioninitiative"])
+#
+#     all_initiatives_qs = Initiative.objects.all()
+#     # update_initiatives_search_vector(all_initiatives_qs)
+#     # update_initiatives_discounted_prices(all_initiatives_qs)
 
 
 class PintProvider(BaseProvider):
@@ -507,46 +478,48 @@ def create_initiative_image(initiative, placeholder_dir, image_name):
     return initiative_image
 
 
-# def create_address(save=True, **kwargs):
-#     address = Address(
-#         first_name=fake.first_name(),
-#         last_name=fake.last_name(),
-#         street_address_1=fake.street_address(),
-#         city=fake.city(),
-#         country=settings.DEFAULT_COUNTRY,
-#         **kwargs,
-#     )
-#
-#     if address.country == "US":
-#         state = fake.state_abbr()
-#         address.country_area = state
-#         address.postal_code = fake.postalcode_in_state(state)
-#     else:
-#         address.postal_code = fake.postalcode()
-#
-#     if save:
-#         address.save()
-#     return address
+def create_address(save=True, **kwargs):
+    address = Address(
+        first_name=fake.first_name(),
+        last_name=fake.last_name(),
+        street_address_1=fake.street_address(),
+        city=fake.city(),
+        country=settings.DEFAULT_COUNTRY,
+        **kwargs,
+    )
+
+    if address.country == "US":
+        state = fake.state_abbr()
+        address.country_area = state
+        address.postal_code = fake.postalcode_in_state(state)
+    else:
+        address.postal_code = fake.postalcode()
+
+    if save:
+        address.save()
+    return address
 
 
 def create_fake_user(user_password, save=True):
     # address = create_address(save=save)
-    # email = get_email(address.first_name, address.last_name)
+    first_name = fake.first_name()
+    last_name = fake.last_name()
+    email = get_email(first_name, last_name)
 
     # Skip the email if it already exists
-    # try:
-    #     return User.objects.get(email=email)
-    # except User.DoesNotExist:
-    #     pass
+    try:
+        return User.objects.get(email=email)
+    except User.DoesNotExist:
+        pass
 
     _, max_user_id = connection.ops.integer_field_range(
         User.id.field.get_internal_type()
     )
     user = User(
         id=fake.random_int(min=1, max=max_user_id),
-        # first_name=address.first_name,
-        # last_name=address.last_name,
-        # email=email,
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
         # default_billing_address=address,
         # default_shipping_address=address,
         is_active=True,
@@ -923,15 +896,14 @@ def create_group(name, permissions, users):
 
 def _create_staff_user(staff_password, email=None, superuser=False):
     # address = create_address()
-    # first_name = address.first_name
-    # last_name = address.last_name
-    # if not email:
-    #     email = get_email(first_name, last_name)
+    first_name = fake.first_name()
+    last_name = fake.last_name()
+    if not email:
+        email = get_email(first_name, last_name)
 
     staff_user = User.objects.filter(email=email).first()
     if staff_user:
         return staff_user
-
     staff_user = User.objects.create_user(
         # first_name=first_name,
         # last_name=last_name,

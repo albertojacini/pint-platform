@@ -1,0 +1,19 @@
+[
+  {
+    "model": "initiative.initiative",
+    "pk": 1,
+    "fields": {
+      "title": "Riapriamo i navigli",
+      "slug": "riapriamo-i-navigli"
+    }
+  },
+  {
+    "model": "initiative.initiativemedia",
+    "pk": 1,
+    "fields": {
+      "sort_order": 1,
+      "initiative": 1,
+      "alt": ""
+    }
+  }
+]
