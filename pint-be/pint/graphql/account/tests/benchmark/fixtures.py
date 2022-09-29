@@ -7,8 +7,8 @@ from prices import Money, TaxedMoney
 
 from .....account import CustomerEvents
 from .....account.models import CustomerEvent, User
-from .....giftcard.models import GiftCard
-from .....order.models import Order
+# from .....giftcard.models import GiftCard
+# from .....order.models import Order
 
 ORDER_COUNT_IN_BENCHMARKS = 10
 GIFT_CARDS_PER_USER = 5
@@ -24,17 +24,17 @@ def _prepare_events_for_user(user):
     return events
 
 
-def _prepare_gift_cards_for_user(user):
-    gift_cards = [
-        GiftCard(
-            created_by=user,
-            initial_balance_amount=random.randint(10, 20),
-            current_balance_amount=random.randint(10, 20),
-            code=str(uuid.uuid4())[:16],
-        )
-        for i in range(GIFT_CARDS_PER_USER)
-    ]
-    return gift_cards
+# def _prepare_gift_cards_for_user(user):
+#     gift_cards = [
+#         GiftCard(
+#             created_by=user,
+#             initial_balance_amount=random.randint(10, 20),
+#             current_balance_amount=random.randint(10, 20),
+#             code=str(uuid.uuid4())[:16],
+#         )
+#         for i in range(GIFT_CARDS_PER_USER)
+#     ]
+#     return gift_cards
 
 
 def _create_permission_groups(user):

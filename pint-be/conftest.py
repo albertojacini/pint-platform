@@ -10,15 +10,15 @@ from django.test.testcases import TransactionTestCase
 
 pytest_plugins = [
     "pint.tests.fixtures",
-    "pint.plugins.tests.fixtures",
+    # "pint.plugins.tests.fixtures",
     "pint.graphql.tests.fixtures",
-    "pint.graphql.channel.tests.fixtures",
-    "pint.graphql.channel.tests.benchmark.fixtures",
+    # "pint.graphql.channel.tests.fixtures",
+    # "pint.graphql.channel.tests.benchmark.fixtures",
     "pint.graphql.account.tests.benchmark.fixtures",
-    "pint.graphql.order.tests.benchmark.fixtures",
-    "pint.graphql.giftcard.tests.benchmark.fixtures",
+    # "pint.graphql.order.tests.benchmark.fixtures",
+    # "pint.graphql.giftcard.tests.benchmark.fixtures",
     "pint.graphql.webhook.tests.benchmark.fixtures",
-    "pint.plugins.webhook.tests.subscription_webhooks.fixtures",
+    # "pint.plugins.webhook.tests.subscription_webhooks.fixtures",
 ]
 
 if os.environ.get("PYTEST_DB_URL"):
