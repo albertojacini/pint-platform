@@ -10,8 +10,8 @@ from graphene import relay
 # from ....attribute import models as attribute_models
 from ....core.permissions import (
     AuthorizationFilters,
-    OrderPermissions,
     InitiativePermissions,
+    OrderPermissions,
     has_one_of_permissions,
 )
 from ....core.tracing import traced_resolver
@@ -19,6 +19,7 @@ from ....core.utils import get_currency_for_country
 from ....core.weight import convert_weight_to_default_weight_unit
 from ....initiative import models
 from ....initiative.models import ALL_INITIATIVES_PERMISSIONS
+
 # from ....initiative.utils import calculate_revenue_for_variant
 # from ....initiative.utils.availability import (
 #     get_initiative_availability,
@@ -26,9 +27,11 @@ from ....initiative.models import ALL_INITIATIVES_PERMISSIONS
 # )
 # from ....initiative.utils.variants import get_variant_selection_attributes
 from ....thumbnail.utils import get_image_or_proxy_url, get_thumbnail_size
+
 # from ....warehouse.reservations import is_reservation_enabled
 from ...account import types as account_types
 from ...account.enums import CountryCodeEnum
+
 # from ...attribute.filters import AttributeFilterInput
 # from ...attribute.resolvers import resolve_attributes
 # from ...attribute.types import (
@@ -61,19 +64,19 @@ from ...core.fields import (
     JSONString,
     PermissionsField,
 )
-from ...core.types import (
+from ...core.types import (  # TaxType,; Weight,
     Image,
     ModelObjectType,
     NonNullList,
     TaxedMoney,
     TaxedMoneyRange,
-    # TaxType,
     ThumbnailField,
-    # Weight,
 )
 from ...core.utils import from_global_id_or_error
+
 # from ...discount.dataloaders import DiscountsByDateTimeLoader
 from ...meta.types import ObjectWithMetadata
+
 # from ...order.dataloaders import (
 #     OrderByIdLoader,
 #     OrderLinesByVariantIdAndChannelIdLoader,
@@ -83,52 +86,32 @@ from ...meta.types import ObjectWithMetadata
 #     InitiativeVariantsByInitiativeIdAndChannel,
 # )
 from ...translations.fields import TranslationField
-from ...translations.types import (
-    # CategoryTranslation,
-    # CollectionTranslation,
+from ...translations.types import (  # CategoryTranslation,; CollectionTranslation,; InitiativeVariantTranslation,
     InitiativeTranslation,
-    # InitiativeVariantTranslation,
 )
 from ...utils import get_user_or_app_from_context
 from ...utils.filters import reporting_period_to_date
+
 # from ...warehouse.dataloaders import (
 #     AvailableQuantityByInitiativeVariantIdCountryCodeAndChannelSlugLoader,
 #     PreorderQuantityReservedByVariantChannelListingIdLoader,
 #     StocksWithAvailableQuantityByInitiativeVariantIdCountryCodeAndChannelLoader,
 # )
 # from ...warehouse.types import Stock
-from ..dataloaders import (
-    # CategoryByIdLoader,
-    # CategoryChildrenByCategoryIdLoader,
-    # CollectionChannelListingByCollectionIdAndChannelSlugLoader,
-    # CollectionChannelListingByCollectionIdLoader,
-    # CollectionsByInitiativeIdLoader,
+from ..dataloaders import (  # CategoryByIdLoader,; CategoryChildrenByCategoryIdLoader,; CollectionChannelListingByCollectionIdAndChannelSlugLoader,; CollectionChannelListingByCollectionIdLoader,; CollectionsByInitiativeIdLoader,; ImagesByInitiativeVariantIdLoader,; MediaByInitiativeVariantIdLoader,; InitiativeAttributesByInitiativeTypeIdLoader,; InitiativeChannelListingByInitiativeIdAndChannelSlugLoader,; InitiativeChannelListingByInitiativeIdLoader,; InitiativeTypeByIdLoader,; InitiativeVariantByIdLoader,; InitiativeVariantsByInitiativeIdLoader,; SelectedAttributesByInitiativeIdLoader,; SelectedAttributesByInitiativeVariantIdLoader,; ThumbnailByCategoryIdSizeAndFormatLoader,; ThumbnailByCollectionIdSizeAndFormatLoader,; VariantAttributesByInitiativeTypeIdLoader,; VariantChannelListingByVariantIdAndChannelSlugLoader,; VariantChannelListingByVariantIdLoader,; VariantsChannelListingByInitiativeIdAndChannelSlugLoader,
     ImagesByInitiativeIdLoader,
-    # ImagesByInitiativeVariantIdLoader,
-    MediaByInitiativeIdLoader,
-    # MediaByInitiativeVariantIdLoader,
-    # InitiativeAttributesByInitiativeTypeIdLoader,
     InitiativeByIdLoader,
-    # InitiativeChannelListingByInitiativeIdAndChannelSlugLoader,
-    # InitiativeChannelListingByInitiativeIdLoader,
-    # InitiativeTypeByIdLoader,
-    # InitiativeVariantByIdLoader,
-    # InitiativeVariantsByInitiativeIdLoader,
-    # SelectedAttributesByInitiativeIdLoader,
-    # SelectedAttributesByInitiativeVariantIdLoader,
-    # ThumbnailByCategoryIdSizeAndFormatLoader,
-    # ThumbnailByCollectionIdSizeAndFormatLoader,
+    MediaByInitiativeIdLoader,
     ThumbnailByInitiativeMediaIdSizeAndFormatLoader,
-    # VariantAttributesByInitiativeTypeIdLoader,
-    # VariantChannelListingByVariantIdAndChannelSlugLoader,
-    # VariantChannelListingByVariantIdLoader,
-    # VariantsChannelListingByInitiativeIdAndChannelSlugLoader,
 )
 from ..enums import InitiativeMediaType
+
 # from ..enums import InitiativeMediaType, InitiativeTypeKindEnum, VariantAttributeScope
 from ..filters import InitiativeFilterInput
+
 # from ..resolvers import resolve_initiative_variants, resolve_initiatives
 from ..sorters import InitiativeOrder
+
 # from .channels import (
 #     CollectionChannelListing,
 #     InitiativeChannelListing,
@@ -751,8 +734,10 @@ class Initiative(ModelObjectType):
     id = graphene.GlobalID(required=True)
     seo_title = graphene.String()
     seo_description = graphene.String()
-    name = graphene.String(required=True)
-    description = JSONString(description="Description of the initiative." + RICH_CONTENT)
+    title = graphene.String(required=True)
+    description = JSONString(
+        description="Description of the initiative." + RICH_CONTENT
+    )
     # initiative_type = graphene.Field(lambda: InitiativeType, required=True)
     slug = graphene.String(required=True)
     # category = graphene.Field(lambda: Category)

@@ -19,13 +19,16 @@ from ....core.tracing import traced_atomic_transaction
 from ....core.utils.date_time import convert_to_utc_date_time
 from ....core.utils.editorjs import clean_editor_js
 from ....core.utils.validators import get_oembed_data
+
 # from ....order import events as order_events
 # from ....order import models as order_models
 # from ....order.tasks import recalculate_orders_task
 from ....initiative import InitiativeMediaTypes, models
 from ....initiative.error_codes import InitiativeErrorCode
+
 # from ....initiative.error_codes import CollectionErrorCode, InitiativeErrorCode
 from ....initiative.search import update_initiative_search_vector
+
 # from ....initiative.tasks import (
 #     update_initiative_discounted_price_task,
 #     update_initiatives_discounted_prices_of_catalogues_task,
@@ -33,6 +36,7 @@ from ....initiative.search import update_initiative_search_vector
 # from ....initiative.utils import delete_categories, get_initiatives_ids_without_variants
 # from ....initiative.utils.variants import generate_and_set_variant_name
 from ....thumbnail import models as thumbnail_models
+
 # from ....warehouse.management import deactivate_preorder_for_variant
 # from ...attribute.types import AttributeValueInput
 # from ...attribute.utils import AttributeAssignmentMixin, AttrValuesInput
@@ -47,7 +51,8 @@ from ...core.fields import JSONString
 from ...core.inputs import ReorderInput
 from ...core.mutations import BaseMutation, ModelDeleteMutation, ModelMutation
 from ...core.scalars import WeightScalar
-from ...core.types import NonNullList, InitiativeError, SeoInput, Upload
+from ...core.types import InitiativeError, NonNullList, SeoInput, Upload
+
 # from ...core.types import CollectionError, NonNullList, InitiativeError, SeoInput, Upload
 from ...core.utils import (
     add_hash_to_file_name,
@@ -60,18 +65,14 @@ from ...core.utils import (
     validate_slug_and_generate_if_needed,
 )
 from ...core.utils.reordering import perform_reordering
+
 # from ...warehouse.types import Warehouse
 from ..types import Initiative, InitiativeMedia
+
 # from ..types import Category, Collection, Initiative, InitiativeMedia, InitiativeVariant
-from ..utils import (
-    # clean_variant_sku,
-    # create_stocks,
-    # get_draft_order_lines_data_for_variants,
-    # get_used_attribute_values_for_variant,
-    # get_used_variants_attribute_values,
+from ..utils import (  # clean_variant_sku,; create_stocks,; get_draft_order_lines_data_for_variants,; get_used_attribute_values_for_variant,; get_used_variants_attribute_values,
     update_ordered_media,
 )
-
 
 # class CategoryInput(graphene.InputObjectType):
 #     description = JSONString(description="Category description." + RICH_CONTENT)
@@ -525,22 +526,23 @@ class MoveInitiativeInput(graphene.InputObjectType):
 
 class InitiativeInput(graphene.InputObjectType):
     # attributes = NonNullList(AttributeValueInput, description="List of attributes.")
-    category = graphene.ID(description="ID of the initiative's category.", name="category")
-    charge_taxes = graphene.Boolean(
-        description="Determine if taxes are being charged for the initiative."
-    )
-    collections = NonNullList(
-        graphene.ID,
-        description="List of IDs of collections that the initiative belongs to.",
-        name="collections",
-    )
+    # category = graphene.ID(description="ID of the initiative's category.", name="category")
+    # charge_taxes = graphene.Boolean(
+    #     description="Determine if taxes are being charged for the initiative."
+    # )
+    # collections = NonNullList(
+    #     graphene.ID,
+    #     description="List of IDs of collections that the initiative belongs to.",
+    #     name="collections",
+    # )
     description = JSONString(description="Initiative description." + RICH_CONTENT)
-    name = graphene.String(description="Initiative name.")
+    title = graphene.String(description="Initiative title.")
+    # name = graphene.String(description="Initiative name.")
     slug = graphene.String(description="Initiative slug.")
-    tax_code = graphene.String(description="Tax rate for enabled tax gateway.")
+    # tax_code = graphene.String(description="Tax rate for enabled tax gateway.")
     seo = SeoInput(description="Search engine optimization fields.")
-    weight = WeightScalar(description="Weight of the Initiative.", required=False)
-    rating = graphene.Float(description="Defines the initiative rating value.")
+    # weight = WeightScalar(description="Weight of the Initiative.", required=False)
+    # rating = graphene.Float(description="Defines the initiative rating value.")
 
 
 # class StockInput(graphene.InputObjectType):
@@ -673,7 +675,9 @@ class InitiativeCreate(ModelMutation):
 
     @classmethod
     def post_save_action(cls, info, instance, _cleaned_input):
-        initiative = models.Initiative.objects.prefetched_for_webhook().get(pk=instance.pk)
+        initiative = models.Initiative.objects.prefetched_for_webhook().get(
+            pk=instance.pk
+        )
         update_initiative_search_vector(instance)
         info.context.plugins.initiative_created(initiative)
 
@@ -726,7 +730,9 @@ class InitiativeUpdate(InitiativeCreate):
 
     @classmethod
     def post_save_action(cls, info, instance, _cleaned_input):
-        initiative = models.Initiative.objects.prefetched_for_webhook().get(pk=instance.pk)
+        initiative = models.Initiative.objects.prefetched_for_webhook().get(
+            pk=instance.pk
+        )
         update_initiative_search_vector(instance)
         info.context.plugins.initiative_updated(initiative)
 
@@ -1354,7 +1360,9 @@ class InitiativeMediaUpdate(BaseMutation):
     media = graphene.Field(InitiativeMedia)
 
     class Arguments:
-        id = graphene.ID(required=True, description="ID of a initiative media to update.")
+        id = graphene.ID(
+            required=True, description="ID of a initiative media to update."
+        )
         input = InitiativeMediaUpdateInput(
             required=True, description="Fields required to update a initiative media."
         )
@@ -1571,7 +1579,9 @@ class InitiativeMediaDelete(BaseMutation):
     media = graphene.Field(InitiativeMedia)
 
     class Arguments:
-        id = graphene.ID(required=True, description="ID of a initiative media to delete.")
+        id = graphene.ID(
+            required=True, description="ID of a initiative media to delete."
+        )
 
     class Meta:
         description = "Deletes a initiative media."
@@ -1582,7 +1592,9 @@ class InitiativeMediaDelete(BaseMutation):
 
     @classmethod
     def perform_mutation(cls, _root, info, **data):
-        media_obj = cls.get_node_or_error(info, data.get("id"), only_type=InitiativeMedia)
+        media_obj = cls.get_node_or_error(
+            info, data.get("id"), only_type=InitiativeMedia
+        )
         media_id = media_obj.id
         media_obj.delete()
         media_obj.id = media_id

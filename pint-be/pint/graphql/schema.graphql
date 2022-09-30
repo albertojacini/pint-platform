@@ -215,7 +215,7 @@ type Initiative implements Node & ObjectWithMetadata {
   metafields(keys: [String!]): Metadata
   seoTitle: String
   seoDescription: String
-  name: String!
+  title: String!
 
   """
   Description of the initiative.
@@ -2973,15 +2973,6 @@ enum InitiativeErrorCode {
 }
 
 input InitiativeCreateInput {
-  """ID of the initiative's category."""
-  category: ID
-
-  """Determine if taxes are being charged for the initiative."""
-  chargeTaxes: Boolean
-
-  """List of IDs of collections that the initiative belongs to."""
-  collections: [ID!]
-
   """
   Initiative description.
   
@@ -2989,23 +2980,14 @@ input InitiativeCreateInput {
   """
   description: JSONString
 
-  """Initiative name."""
-  name: String
+  """Initiative title."""
+  title: String
 
   """Initiative slug."""
   slug: String
 
-  """Tax rate for enabled tax gateway."""
-  taxCode: String
-
   """Search engine optimization fields."""
   seo: SeoInput
-
-  """Weight of the Initiative."""
-  weight: WeightScalar
-
-  """Defines the initiative rating value."""
-  rating: Float
 
   """ID of the type that initiative belongs to."""
   initiativeType: ID!
@@ -3018,8 +3000,6 @@ input SeoInput {
   """SEO description."""
   description: String
 }
-
-scalar WeightScalar
 
 """
 Deletes a initiative. 
@@ -3044,15 +3024,6 @@ type InitiativeUpdate {
 }
 
 input InitiativeInput {
-  """ID of the initiative's category."""
-  category: ID
-
-  """Determine if taxes are being charged for the initiative."""
-  chargeTaxes: Boolean
-
-  """List of IDs of collections that the initiative belongs to."""
-  collections: [ID!]
-
   """
   Initiative description.
   
@@ -3060,23 +3031,14 @@ input InitiativeInput {
   """
   description: JSONString
 
-  """Initiative name."""
-  name: String
+  """Initiative title."""
+  title: String
 
   """Initiative slug."""
   slug: String
 
-  """Tax rate for enabled tax gateway."""
-  taxCode: String
-
   """Search engine optimization fields."""
   seo: SeoInput
-
-  """Weight of the Initiative."""
-  weight: WeightScalar
-
-  """Defines the initiative rating value."""
-  rating: Float
 }
 
 """

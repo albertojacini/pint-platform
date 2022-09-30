@@ -460,7 +460,6 @@ def test_generate_event_delivery_attempt_payload_with_subscription_query(
     )
     webhook.subscription_query = query
 
-    payload = generate_event_delivery_attempt_payload(event_attempt, None, 1024)
-
+    payload = generate_event_delivery_attempt_payload(event_attempt, None, 2048)
     assert payload["webhook"]["subscription_query"].text == query
     assert payload["event_delivery"]["payload"]["body"].text == pretty_json(MASK)
