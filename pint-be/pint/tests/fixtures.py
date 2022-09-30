@@ -142,7 +142,7 @@ from ..initiative.models import (
 from ..webhook.event_types import WebhookEventAsyncType, WebhookEventSyncType
 from ..webhook.models import Webhook, WebhookEvent
 from ..webhook.observability import WebhookData
-from .utils import dummy_editorjs
+# from .utils import dummy_editorjs
 
 
 class CaptureQueriesContext(BaseCaptureQueriesContext):
@@ -796,35 +796,36 @@ def assert_max_num_queries(capture_queries):
 
 
 @pytest.fixture
-def customer_user(address):  # pylint: disable=W0613
-    default_address = address.get_copy()
+def customer_user(db):  # pylint: disable=W0613
+# def customer_user(address):  # pylint: disable=W0613
+#     default_address = address.get_copy()
     user = User.objects.create_user(
         "test@example.com",
         "password",
-        default_billing_address=default_address,
-        default_shipping_address=default_address,
+        # default_billing_address=default_address,
+        # default_shipping_address=default_address,
         first_name="Leslie",
         last_name="Wade",
         metadata={"key": "value"},
         private_metadata={"secret_key": "secret_value"},
     )
-    user.addresses.add(default_address)
+    # user.addresses.add(default_address)
     user._password = "password"
     return user
 
 
 @pytest.fixture
-def customer_user2(address):
-    default_address = address.get_copy()
+def customer_user2(db):
+    # default_address = address.get_copy()
     user = User.objects.create_user(
         "test2@example.com",
         "password",
-        default_billing_address=default_address,
-        default_shipping_address=default_address,
+        # default_billing_address=default_address,
+        # default_shipping_address=default_address,
         first_name="Jane",
         last_name="Doe",
     )
-    user.addresses.add(default_address)
+    # user.addresses.add(default_address)
     user._password = "password"
     return user
 

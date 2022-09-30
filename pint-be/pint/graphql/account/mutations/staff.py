@@ -10,10 +10,10 @@ from ....account import models, utils
 from ....account.error_codes import AccountErrorCode
 from ....account.notifications import send_set_password_notification
 from ....account.search import USER_SEARCH_FIELDS, prepare_user_search_document_value
-from ....account.utils import (
-    remove_staff_member,
-    remove_the_oldest_user_address_if_address_limit_is_reached,
-)
+# from ....account.utils import (
+#     remove_staff_member,
+#     remove_the_oldest_user_address_if_address_limit_is_reached,
+# )
 # from ....checkout import AddressType
 from ....core.exceptions import PermissionDenied
 from ....core.permissions import AccountPermissions, AuthorizationFilters
@@ -504,7 +504,8 @@ class StaffDelete(StaffDeleteMixin, UserDelete):
         cls.clean_instance(info, instance)
 
         db_id = instance.id
-        remove_staff_member(instance)
+        # remove_staff_member(instance)
+        instance.delete()
         # After the instance is deleted, set its ID to the original database's
         # ID so that the success response contains ID of the deleted object.
         instance.id = db_id
