@@ -30,6 +30,7 @@ from prices import Money, TaxedMoney, fixed_discount
 from ..account.models import Address, StaffNotificationRecipient, User
 from ..app.models import App, AppExtension, AppInstallation
 from ..app.types import AppExtensionMount, AppType
+
 # from ..attribute import AttributeEntityType, AttributeInputType, AttributeType
 # from ..attribute.models import (
 #     Attribute,
@@ -43,6 +44,7 @@ from ..app.types import AppExtensionMount, AppType
 # from ..checkout.utils import add_variant_to_checkout, add_voucher_to_checkout
 from ..core import EventDeliveryStatus, JobStatus
 from ..core.models import EventDelivery, EventDeliveryAttempt, EventPayload
+
 # from ..core.payments import PaymentInterface
 from ..core.postgres import FlatConcatSearchVector
 from ..core.taxes import zero_money
@@ -50,6 +52,50 @@ from ..core.units import MeasurementUnits
 from ..core.utils.editorjs import clean_editor_js
 from ..csv.events import ExportEvents
 from ..csv.models import ExportEvent, ExportFile
+from ..initiative.models import Initiative, InitiativeMedia
+
+# from ..product.models import (
+#     Category,
+#     CategoryTranslation,
+#     Collection,
+#     CollectionChannelListing,
+#     CollectionTranslation,
+#     DigitalContent,
+#     DigitalContentUrl,
+#     Product,
+#     ProductChannelListing,
+#     ProductMedia,
+#     ProductTranslation,
+#     ProductType,
+#     ProductVariant,
+#     ProductVariantChannelListing,
+#     ProductVariantTranslation,
+#     VariantMedia,
+# )
+# from ..product.search import prepare_product_search_vector_value
+# from ..product.tests.utils import create_image
+# from ..shipping.models import (
+#     ShippingMethod,
+#     ShippingMethodChannelListing,
+#     ShippingMethodTranslation,
+#     ShippingMethodType,
+#     ShippingZone,
+# )
+# from ..shipping.utils import convert_to_shipping_method_data
+# from ..site.models import SiteSettings
+# from ..warehouse import WarehouseClickAndCollectOption
+# from ..warehouse.models import (
+#     Allocation,
+#     PreorderAllocation,
+#     PreorderReservation,
+#     Reservation,
+#     Stock,
+#     Warehouse,
+# )
+from ..webhook.event_types import WebhookEventAsyncType, WebhookEventSyncType
+from ..webhook.models import Webhook, WebhookEvent
+from ..webhook.observability import WebhookData
+
 # from ..discount import DiscountInfo, DiscountValueType, VoucherType
 # from ..discount.models import (
 #     NotApplicable,
@@ -96,52 +142,7 @@ from ..csv.models import ExportEvent, ExportFile
 # from ..plugins.webhook.utils import to_payment_app_id
 # from ..product import ProductMediaTypes, ProductTypeKind
 
-from ..initiative.models import (
-    Initiative,
-    InitiativeMedia,
-)
 
-# from ..product.models import (
-#     Category,
-#     CategoryTranslation,
-#     Collection,
-#     CollectionChannelListing,
-#     CollectionTranslation,
-#     DigitalContent,
-#     DigitalContentUrl,
-#     Product,
-#     ProductChannelListing,
-#     ProductMedia,
-#     ProductTranslation,
-#     ProductType,
-#     ProductVariant,
-#     ProductVariantChannelListing,
-#     ProductVariantTranslation,
-#     VariantMedia,
-# )
-# from ..product.search import prepare_product_search_vector_value
-# from ..product.tests.utils import create_image
-# from ..shipping.models import (
-#     ShippingMethod,
-#     ShippingMethodChannelListing,
-#     ShippingMethodTranslation,
-#     ShippingMethodType,
-#     ShippingZone,
-# )
-# from ..shipping.utils import convert_to_shipping_method_data
-# from ..site.models import SiteSettings
-# from ..warehouse import WarehouseClickAndCollectOption
-# from ..warehouse.models import (
-#     Allocation,
-#     PreorderAllocation,
-#     PreorderReservation,
-#     Reservation,
-#     Stock,
-#     Warehouse,
-# )
-from ..webhook.event_types import WebhookEventAsyncType, WebhookEventSyncType
-from ..webhook.models import Webhook, WebhookEvent
-from ..webhook.observability import WebhookData
 # from .utils import dummy_editorjs
 
 
@@ -797,8 +798,8 @@ def assert_max_num_queries(capture_queries):
 
 @pytest.fixture
 def customer_user(db):  # pylint: disable=W0613
-# def customer_user(address):  # pylint: disable=W0613
-#     default_address = address.get_copy()
+    # def customer_user(address):  # pylint: disable=W0613
+    #     default_address = address.get_copy()
     user = User.objects.create_user(
         "test@example.com",
         "password",
@@ -2010,6 +2011,7 @@ def permission_manage_observability():
 #     )
 #     return product_type
 
+
 @pytest.fixture
 def initiative():
     initiative = Initiative.objects.create(
@@ -2017,6 +2019,7 @@ def initiative():
         slug="test-initiative-11",
     )
     return initiative
+
 
 # @pytest.fixture
 # def product(product_type, category, warehouse, channel_USD):
@@ -2841,6 +2844,7 @@ def initiative():
 #     product.channel_listings.all().update(is_published=False)
 #     return product
 
+
 def initiative_list():
     initiatives = list(
         Initiative.objects.bulk_create(
@@ -2864,6 +2868,7 @@ def initiative_list():
     Initiative.objects.bulk_update(initiative, ["search_vector"])
 
     return initiative
+
 
 # @pytest.fixture
 # def product_list(product_type, category, warehouse, channel_USD, channel_PLN):
@@ -3164,6 +3169,7 @@ def initiative_list():
 def initiative_with_image(initiative, image, media_root):
     InitiativeMedia.objects.create(initiative=initiative, image=image)
     return initiative
+
 
 # @pytest.fixture
 # def product_with_image(product, image, media_root):
@@ -5636,7 +5642,7 @@ def webhook(app):
     webhook = Webhook.objects.create(
         name="Simple webhook", app=app, target_url="http://www.example.com/test"
     )
-    webhook.events.create(event_type=WebhookEventAsyncType.ORDER_CREATED)
+    webhook.events.create(event_type=WebhookEventAsyncType.INITIATIVE_CREATED)
     return webhook
 
 
@@ -6172,19 +6178,19 @@ def app_manifest_webhook():
 
 
 @pytest.fixture
-def event_payload():
+def event_payload(db):
     """Return event payload."""
     return EventPayload.objects.create(payload='{"payload_key": "payload_value"}')
 
 
-# @pytest.fixture
-# def event_delivery(event_payload, webhook, app):
-#     """Return event delivery object"""
-#     return EventDelivery.objects.create(
-#         event_type=WebhookEventAsyncType.ANY,
-#         payload=event_payload,
-#         webhook=webhook,
-#     )
+@pytest.fixture
+def event_delivery(event_payload, webhook, app):
+    """Return event delivery object"""
+    return EventDelivery.objects.create(
+        event_type=WebhookEventAsyncType.ANY,
+        payload=event_payload,
+        webhook=webhook,
+    )
 
 
 @pytest.fixture

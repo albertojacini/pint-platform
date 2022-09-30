@@ -448,13 +448,16 @@ def test_generate_event_delivery_attempt_payload_with_non_empty_headers(
 
 
 @patch(
-    "pint.webhook.observability.payloads.SENSITIVE_GQL_FIELDS", {"Product": {"name"}}
+    "pint.webhook.observability.payloads.SENSITIVE_GQL_FIELDS",
+    {"Initiative": {"title"}},
 )
 def test_generate_event_delivery_attempt_payload_with_subscription_query(
     webhook,
     event_attempt,
 ):
-    query = "subscription { event { ...on ProductUpdated { product { name } } } }"
+    query = (
+        "subscription { event { ...on InitiativeUpdated { initiative { title } } } }"
+    )
     webhook.subscription_query = query
 
     payload = generate_event_delivery_attempt_payload(event_attempt, None, 1024)
