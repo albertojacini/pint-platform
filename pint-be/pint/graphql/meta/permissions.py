@@ -65,7 +65,7 @@ def private_user_permissions(_info, user_pk: int) -> List[BasePermissionEnum]:
 
 
 def initiative_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
-    return [InitiativePermissions.MANAGE_PRODUCTS]
+    return [InitiativePermissions.MANAGE_INITIATIVES]
 
 
 # def product_type_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:

@@ -44,7 +44,7 @@ from ..core.models import ModelWithMetadata, PublishableModel, SortableModel
 from ..core.permissions import (
     # DiscountPermissions,
     # OrderPermissions,
-    # InitiativePermissions,
+    InitiativePermissions,
     # InitiativeTypePermissions,
     has_one_of_permissions,
 )
@@ -70,7 +70,7 @@ ALL_INITIATIVES_PERMISSIONS = [
     # (including unpublished).
     # OrderPermissions.MANAGE_ORDERS,
     # DiscountPermissions.MANAGE_DISCOUNTS,
-    # InitiativePermissions.MANAGE_PRODUCTS,
+    InitiativePermissions.MANAGE_INITIATIVES,
 ]
 class InitiativesQueryset(models.QuerySet):
     # def published(self, channel_slug: str):
@@ -272,9 +272,9 @@ class Initiative(SeoModel, ModelWithMetadata):
     class Meta:
         app_label = "initiative"
         ordering = ("slug",)
-        # permissions = (
-        #     (InitiativePermissions.MANAGE_PRODUCTS.codename, "Manage initiatives."),
-        # )
+        permissions = (
+            (InitiativePermissions.MANAGE_INITIATIVES.codename, "Manage initiatives."),
+        )
         # indexes = [
         #     GinIndex(
         #         name="initiative_search_gin",

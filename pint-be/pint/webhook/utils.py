@@ -28,11 +28,31 @@ def get_webhooks_for_event(
 
     if webhooks is None:
         webhooks = Webhook.objects.all()
+
+    print("permissions+++++++++++++")
+    print(permissions)
+    print("webhooks++++++++++")
+    print([vars(w) for w in webhooks])
+    print("event_type+++++++++++")
+    print(event_type)
+
+    all_apps = App.objects.all()
+    for a in all_apps:
+        print("vars(a)+++++++++++++++++")
+        print(vars(a))
+
+
     apps = App.objects.filter(is_active=True, **permissions)
     event_types = [event_type]
     if event_type in WebhookEventAsyncType.ALL:
         event_types.append(WebhookEventAsyncType.ANY)
+    print("apps++++++++")
+    print(apps)
+    print("event_types++++++++")
+    print(event_types)
     webhook_events = WebhookEvent.objects.filter(event_type__in=event_types)
+    print("webhook_events++++++++++++")
+    print(webhook_events)
     return (
         webhooks.filter(
             Q(is_active=True, app__in=apps)

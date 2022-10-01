@@ -10,11 +10,11 @@ from ..core.prices import quantize_price
 # from ..discount import DiscountInfo
 from ..initiative.models import Initiative
 
-if TYPE_CHECKING:
-    # # pylint: disable=unused-import
-    # from ..checkout.fetch import CheckoutInfo, CheckoutLineInfo
-    # from ..checkout.models import Checkout
-    from ..initiative.models import InitiativeVariant
+# if TYPE_CHECKING:
+#     # pylint: disable=unused-import
+#     from ..checkout.fetch import CheckoutInfo, CheckoutLineInfo
+#     from ..checkout.models import Checkout
+#     from ..initiative.models import InitiativeVariant
 
 
 # def serialize_checkout_lines(
