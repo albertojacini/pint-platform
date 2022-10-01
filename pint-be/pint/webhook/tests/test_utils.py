@@ -114,21 +114,21 @@ def test_get_webhook_for_event_no_duplicates(async_app_factory, async_type):
 #     webhooks = get_webhooks_for_event(sync_type)
 #
 #     assert set(webhooks) == {sync_webhook}
-#
-#
-# @pytest.mark.parametrize(
-#     "error,event_type",
-#     [
-#         (
-#             ApiCallTruncationError,
-#             ObservabilityEventTypes.API_CALL,
-#         ),
-#         (
-#             EventDeliveryAttemptTruncationError,
-#             ObservabilityEventTypes.EVENT_DELIVERY_ATTEMPT,
-#         ),
-#     ],
-# )
+
+
+@pytest.mark.parametrize(
+    "error,event_type",
+    [
+        (
+            ApiCallTruncationError,
+            ObservabilityEventTypes.API_CALL,
+        ),
+        (
+            EventDeliveryAttemptTruncationError,
+            ObservabilityEventTypes.EVENT_DELIVERY_ATTEMPT,
+        ),
+    ],
+)
 def test_truncation_error_extra_fields(
     error: Type[TruncationError], event_type: ObservabilityEventTypes
 ):
