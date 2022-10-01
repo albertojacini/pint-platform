@@ -25,10 +25,10 @@ def async_type():
 
 
 @pytest.fixture
-def sync_webhook(db, permission_manage_payments, sync_type):
+def sync_webhook(db, permission_manage_initiatives, sync_type):
     app = App.objects.create(name="Sync App", is_active=True)
     app.tokens.create(name="Default")
-    app.permissions.add(permission_manage_payments)
+    app.permissions.add(permission_manage_initiatives)
     webhook = Webhook.objects.create(name="sync-webhook", app=app)
     webhook.events.create(event_type=sync_type, webhook=webhook)
     return webhook
@@ -106,10 +106,10 @@ def test_get_webhook_for_event_no_duplicates(async_app_factory, async_type):
 
 
 def test_get_webhook_for_event_not_returning_any_webhook_for_sync_event_types(
-    sync_webhook, async_app_factory, sync_type, permission_manage_payments
+    sync_webhook, async_app_factory, sync_type, permission_manage_initiatives
 ):
     any_app, _ = async_app_factory(any_webhook=True)
-    any_app.permissions.add(permission_manage_payments)
+    any_app.permissions.add(permission_manage_initiatives)
 
     webhooks = get_webhooks_for_event(sync_type)
 

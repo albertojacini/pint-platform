@@ -72,7 +72,7 @@ class PageTypePermissions(BasePermissionEnum):
 
 
 class InitiativePermissions(BasePermissionEnum):
-    MANAGE_INITIATIVES = "product.manage_products"
+    MANAGE_INITIATIVES = "initiative.manage_initiatives"
 
 
 # class ShippingPermissions(BasePermissionEnum):

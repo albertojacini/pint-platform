@@ -4696,10 +4696,15 @@ def permission_manage_staff():
 
 
 @pytest.fixture
-def permission_manage_products():
-    return Permission.objects.get(codename="manage_products")
+def permission_manage_initiatives():
+    return Permission.objects.get(codename="manage_initiatives")
 
 
+# @pytest.fixture
+# def permission_manage_products():
+#     return Permission.objects.get(codename="manage_products")
+#
+#
 # @pytest.fixture
 # def permission_manage_product_types_and_attributes():
 #     return Permission.objects.get(codename="manage_product_types_and_attributes")
