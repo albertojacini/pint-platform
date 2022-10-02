@@ -10,16 +10,17 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 
 from ....account.models import User
-from ....attribute.models import Attribute
-from ....checkout.models import Checkout
-from ....discount.models import Sale, Voucher
-from ....giftcard.models import GiftCard
-from ....order.models import Order
-from ....page.models import Page, PageType
-from ....payment.models import Payment, Transaction
-from ....product.models import Category, Collection, Product, ProductType
-from ....shipping.models import ShippingMethod, ShippingZone
-from ....warehouse.models import Warehouse
+# from ....attribute.models import Attribute
+# from ....checkout.models import Checkout
+# from ....discount.models import Sale, Voucher
+# from ....giftcard.models import GiftCard
+# from ....order.models import Order
+# from ....page.models import Page, PageType
+# from ....payment.models import Payment, Transaction
+from ....initiative.models import Initiative
+# from ....product.models import Category, Collection, Product, ProductType
+# from ....shipping.models import ShippingMethod, ShippingZone
+# from ....warehouse.models import Warehouse
 from ....webhook.models import Webhook
 
 
@@ -43,56 +44,59 @@ class Command(BaseCommand):
         if not settings.DEBUG and not force:
             raise CommandError("Cannot clear the database in DEBUG=False mode.")
 
-        Checkout.objects.all().delete()
-        self.stdout.write("Removed checkouts")
+        # Checkout.objects.all().delete()
+        # self.stdout.write("Removed checkouts")
 
-        Transaction.objects.all().delete()
-        self.stdout.write("Removed transactions")
+        # Transaction.objects.all().delete()
+        # self.stdout.write("Removed transactions")
+        #
+        # Payment.objects.all().delete()
+        # self.stdout.write("Removed payments")
+        #
+        # Order.objects.all().delete()
+        # self.stdout.write("Removed orders")
 
-        Payment.objects.all().delete()
-        self.stdout.write("Removed payments")
+        Initiative.objects.all().delete()
+        self.stdout.write("Removed initiatives")
 
-        Order.objects.all().delete()
-        self.stdout.write("Removed orders")
-
-        Product.objects.all().delete()
-        self.stdout.write("Removed products")
-
-        ProductType.objects.all().delete()
-        self.stdout.write("Removed product types")
-
-        Attribute.objects.all().delete()
-        self.stdout.write("Removed attributes")
-
-        Category.objects.all().delete()
-        self.stdout.write("Removed categories")
-
-        Collection.objects.all().delete()
-        self.stdout.write("Removed collections")
-
-        Sale.objects.all().delete()
-        self.stdout.write("Removed sales")
-
-        ShippingMethod.objects.all().delete()
-        self.stdout.write("Removed shipping methods")
-
-        ShippingZone.objects.all().delete()
-        self.stdout.write("Removed shipping zones")
-
-        Voucher.objects.all().delete()
-        self.stdout.write("Removed vouchers")
-
-        GiftCard.objects.all().delete()
-        self.stdout.write("Removed gift cards")
-
-        self.stdout.write("Removed warehouses")
-        Warehouse.objects.all().delete()
-
-        Page.objects.all().delete()
-        self.stdout.write("Removed pages")
-
-        PageType.objects.all().delete()
-        self.stdout.write("Removed page types")
+        # Product.objects.all().delete()
+        # self.stdout.write("Removed products")
+        #
+        # ProductType.objects.all().delete()
+        # self.stdout.write("Removed product types")
+        #
+        # Attribute.objects.all().delete()
+        # self.stdout.write("Removed attributes")
+        #
+        # Category.objects.all().delete()
+        # self.stdout.write("Removed categories")
+        #
+        # Collection.objects.all().delete()
+        # self.stdout.write("Removed collections")
+        #
+        # Sale.objects.all().delete()
+        # self.stdout.write("Removed sales")
+        #
+        # ShippingMethod.objects.all().delete()
+        # self.stdout.write("Removed shipping methods")
+        #
+        # ShippingZone.objects.all().delete()
+        # self.stdout.write("Removed shipping zones")
+        #
+        # Voucher.objects.all().delete()
+        # self.stdout.write("Removed vouchers")
+        #
+        # GiftCard.objects.all().delete()
+        # self.stdout.write("Removed gift cards")
+        #
+        # self.stdout.write("Removed warehouses")
+        # Warehouse.objects.all().delete()
+        #
+        # Page.objects.all().delete()
+        # self.stdout.write("Removed pages")
+        #
+        # PageType.objects.all().delete()
+        # self.stdout.write("Removed page types")
 
         Webhook.objects.all().delete()
         self.stdout.write("Removed webhooks")
