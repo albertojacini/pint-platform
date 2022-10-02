@@ -2013,7 +2013,7 @@ def permission_manage_observability():
 
 
 @pytest.fixture
-def initiative():
+def initiative(db):
     initiative = Initiative.objects.create(
         title="Test initiative",
         slug="test-initiative-11",
