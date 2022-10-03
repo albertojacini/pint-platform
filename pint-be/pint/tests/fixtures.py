@@ -5490,7 +5490,7 @@ def app_with_token(db):
 
 
 @pytest.fixture
-def app_with_extensions(app_with_token, permission_manage_products):
+def app_with_extensions(app_with_token, permission_manage_initiatives):
     first_app_extension = AppExtension(
         app=app_with_token,
         label="Create product with App",
@@ -5508,7 +5508,7 @@ def app_with_extensions(app_with_token, permission_manage_products):
             ),
         ]
     )
-    first_app_extension.permissions.add(permission_manage_products)
+    first_app_extension.permissions.add(permission_manage_initiatives)
     return app_with_token, extensions
 
 

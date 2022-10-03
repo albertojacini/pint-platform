@@ -80,38 +80,38 @@ def test_jwt_refresh_token_middleware_samesite_none(rf, customer_user, settings)
     assert cookie["samesite"] == "None"
 
 
-def test_plugins_middleware_loads_requestor_in_plugin(rf, customer_user, settings):
-    settings.MIDDLEWARE = [
-        "pint.core.middleware.plugins",
-    ]
-    settings.PLUGINS = ["pint.plugins.tests.sample_plugins.ActivePlugin"]
-    request = rf.request()
-    request.user = customer_user
-    request.app = None
+# def test_plugins_middleware_loads_requestor_in_plugin(rf, customer_user, settings):
+#     settings.MIDDLEWARE = [
+#         "pint.core.middleware.plugins",
+#     ]
+#     settings.PLUGINS = ["pint.plugins.tests.sample_plugins.ActivePlugin"]
+#     request = rf.request()
+#     request.user = customer_user
+#     request.app = None
+#
+#     handler = BaseHandler()
+#     handler.load_middleware()
+#     handler.get_response(request)
+#     plugin = request.plugins.all_plugins.pop()
+#
+#     assert isinstance(plugin.requestor, type(customer_user))
+#     assert plugin.requestor.id == customer_user.id
 
-    handler = BaseHandler()
-    handler.load_middleware()
-    handler.get_response(request)
-    plugin = request.plugins.all_plugins.pop()
 
-    assert isinstance(plugin.requestor, type(customer_user))
-    assert plugin.requestor.id == customer_user.id
-
-
-def test_plugins_middleware_requestor_in_plugin_when_no_app_and_user_in_req_is_none(
-    rf, settings
-):
-    settings.MIDDLEWARE = [
-        "pint.core.middleware.plugins",
-    ]
-    settings.PLUGINS = ["pint.plugins.tests.sample_plugins.ActivePlugin"]
-    request = rf.request()
-    request.user = None
-    request.app = None
-
-    handler = BaseHandler()
-    handler.load_middleware()
-    handler.get_response(request)
-    plugin = request.plugins.all_plugins.pop()
-
-    assert not plugin.requestor
+# def test_plugins_middleware_requestor_in_plugin_when_no_app_and_user_in_req_is_none(
+#     rf, settings
+# ):
+#     settings.MIDDLEWARE = [
+#         "pint.core.middleware.plugins",
+#     ]
+#     settings.PLUGINS = ["pint.plugins.tests.sample_plugins.ActivePlugin"]
+#     request = rf.request()
+#     request.user = None
+#     request.app = None
+#
+#     handler = BaseHandler()
+#     handler.load_middleware()
+#     handler.get_response(request)
+#     plugin = request.plugins.all_plugins.pop()
+#
+#     assert not plugin.requestor

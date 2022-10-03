@@ -260,8 +260,8 @@ class Initiative(SeoModel, ModelWithMetadata):
     slug = models.SlugField(max_length=255, unique=True, allow_unicode=True)
     # description = SanitizedJSONField(blank=True, null=True, sanitizer=clean_editor_js)
     # description_plaintext = TextField(blank=True)
-    # search_document = models.TextField(blank=True, default="")
-    # search_vector = SearchVectorField(blank=True, null=True)
+    search_document = models.TextField(blank=True, default="")
+    search_vector = SearchVectorField(blank=True, null=True)
     # search_index_dirty = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
