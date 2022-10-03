@@ -1,9 +1,9 @@
 import requests
-from django.conf import settings
+# from django.conf import settings
 from django.contrib.sites.models import Site
 
 from ..core.permissions import get_permission_names
-from ..plugins.manager import PluginsManager
+# from ..plugins.manager import PluginsManager
 from ..webhook.models import Webhook, WebhookEvent
 from .manifest_validations import clean_manifest_data
 from .models import App, AppExtension, AppInstallation
@@ -90,5 +90,5 @@ def install_app(app_installation: AppInstallation, activate: bool = False):
     except requests.RequestException as e:
         app.delete()
         raise e
-    PluginsManager(plugins=settings.PLUGINS).app_installed(app)
+    # PluginsManager(plugins=settings.PLUGINS).app_installed(app)
     return app, token

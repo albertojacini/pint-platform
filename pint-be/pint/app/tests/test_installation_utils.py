@@ -16,90 +16,92 @@ from ..types import AppExtensionMount, AppExtensionTarget
 
 
 def test_install_app_created_app(
-    app_manifest, app_installation, monkeypatch, permission_manage_products
+    db, app_manifest, app_installation, monkeypatch, permission_manage_initiatives
 ):
     # given
-    app_manifest["permissions"] = ["MANAGE_PRODUCTS"]
+    app_manifest["permissions"] = ["MANAGE_INITIATIVES"]
     mocked_get_response = Mock()
     mocked_get_response.json.return_value = app_manifest
 
     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
     monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
-    app_installation.permissions.set([permission_manage_products])
+    app_installation.permissions.set([permission_manage_initiatives])
 
     # when
     app, _ = install_app(app_installation, activate=True)
 
     # then
     assert App.objects.get().id == app.id
-    assert list(app.permissions.all()) == [permission_manage_products]
+    assert list(app.permissions.all()) == [permission_manage_initiatives]
 
 
-@freeze_time("2022-05-12 12:00:00")
-@patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
-@patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
-def test_install_app_created_app_trigger_webhook(
-    mocked_webhook_trigger,
-    mocked_get_webhooks_for_event,
-    any_webhook,
-    app_manifest,
-    app_installation,
-    monkeypatch,
-    permission_manage_products,
-    settings,
-):
-    # given
-    mocked_get_webhooks_for_event.return_value = [any_webhook]
-    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
-
-    app_manifest["permissions"] = ["MANAGE_PRODUCTS"]
-    mocked_get_response = Mock()
-    mocked_get_response.json.return_value = app_manifest
-
-    monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
-    monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
-
-    app_installation.permissions.set([permission_manage_products])
-
-    # when
-    app, _ = install_app(app_installation, activate=True)
-
-    # then
-    mocked_webhook_trigger.assert_called_once_with(
-        json.dumps(
-            {
-                "id": graphene.Node.to_global_id("App", app.id),
-                "is_active": app.is_active,
-                "name": app.name,
-                "meta": generate_meta(requestor_data=generate_requestor()),
-            },
-            cls=CustomJsonEncoder,
-        ),
-        WebhookEventAsyncType.APP_INSTALLED,
-        [any_webhook],
-        app,
-        None,
-    )
+# @freeze_time("2022-05-12 12:00:00")
+# @patch("pint.plugins.webhook.plugin.get_webhooks_for_event")
+# @patch("pint.plugins.webhook.plugin.trigger_webhooks_async")
+# def test_install_app_created_app_trigger_webhook(
+#     mocked_webhook_trigger,
+#     mocked_get_webhooks_for_event,
+#     any_webhook,
+#     app_manifest,
+#     app_installation,
+#     monkeypatch,
+#     permission_manage_products,
+#     settings,
+# ):
+#     # given
+#     mocked_get_webhooks_for_event.return_value = [any_webhook]
+#     settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
+#
+#     app_manifest["permissions"] = ["MANAGE_PRODUCTS"]
+#     mocked_get_response = Mock()
+#     mocked_get_response.json.return_value = app_manifest
+#
+#     monkeypatch.setattr(requests, "get", Mock(return_value=mocked_get_response))
+#     monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
+#
+#     app_installation.permissions.set([permission_manage_products])
+#
+#     # when
+#     app, _ = install_app(app_installation, activate=True)
+#
+#     # then
+#     mocked_webhook_trigger.assert_called_once_with(
+#         json.dumps(
+#             {
+#                 "id": graphene.Node.to_global_id("App", app.id),
+#                 "is_active": app.is_active,
+#                 "name": app.name,
+#                 "meta": generate_meta(requestor_data=generate_requestor()),
+#             },
+#             cls=CustomJsonEncoder,
+#         ),
+#         WebhookEventAsyncType.APP_INSTALLED,
+#         [any_webhook],
+#         app,
+#         None,
+#     )
 
 
 def test_install_app_with_extension(
+    db,
     app_manifest,
     app_installation,
     monkeypatch,
-    permission_manage_products,
-    permission_manage_orders,
+    permission_manage_initiatives,
+    # permission_manage_orders,
 ):
     # given
     label = "Create product with app"
     url = "http://127.0.0.1:8080/app-extension"
-    app_manifest["permissions"] = ["MANAGE_PRODUCTS", "MANAGE_ORDERS"]
+    app_manifest["permissions"] = ["MANAGE_INITIATIVES"]
+    # app_manifest["permissions"] = ["MANAGE_INITIATIVES", "MANAGE_ORDERS"]
     app_manifest["extensions"] = [
         {
             "label": label,
             "url": url,
-            "mount": "PRODUCT_OVERVIEW_CREATE",
-            "permissions": ["MANAGE_PRODUCTS"],
+            "mount": "INITIATIVE_OVERVIEW_CREATE",
+            "permissions": ["MANAGE_INITIATIVES"],
         }
     ]
     mocked_get_response = Mock()
@@ -109,7 +111,8 @@ def test_install_app_with_extension(
     monkeypatch.setattr("pint.app.installation_utils.send_app_token", Mock())
 
     app_installation.permissions.set(
-        [permission_manage_products, permission_manage_orders]
+        [permission_manage_initiatives]
+        # [permission_manage_initiatives, permission_manage_orders]
     )
 
     # when
@@ -121,25 +124,25 @@ def test_install_app_with_extension(
 
     assert app_extension.label == label
     assert app_extension.url == url
-    assert app_extension.mount == AppExtensionMount.PRODUCT_OVERVIEW_CREATE
+    assert app_extension.mount == AppExtensionMount.INITIATIVE_OVERVIEW_CREATE
     assert app_extension.target == AppExtensionTarget.POPUP
-    assert list(app_extension.permissions.all()) == [permission_manage_products]
+    assert list(app_extension.permissions.all()) == [permission_manage_initiatives]
 
 
 @pytest.mark.parametrize(
     "app_permissions, extension_permissions",
     [
-        ([], ["MANAGE_PRODUCTS"]),
-        (["MANAGE_PRODUCTS"], ["MANAGE_PRODUCTS", "MANAGE_APPS"]),
+        ([], ["MANAGE_INITIATIVES"]),
+        (["MANAGE_INITIATIVES"], ["MANAGE_INITIATIVES", "MANAGE_APPS"]),
     ],
 )
 def test_install_app_extension_permission_out_of_scope(
-    app_permissions, extension_permissions, app_manifest, app_installation, monkeypatch
+    db, app_permissions, extension_permissions, app_manifest, app_installation, monkeypatch
 ):
     # given
     label = "Create product with app"
     url = "http://127.0.0.1:8080/app-extension"
-    view = "PRODUCT"
+    view = "INITIATIVE"
     type = "OVERVIEW"
     target = "CREATE"
     app_manifest["permissions"] = app_permissions
@@ -178,15 +181,15 @@ def test_install_app_extension_incorrect_url(
     url, app_manifest, app_installation, monkeypatch
 ):
     # given
-    app_manifest["permissions"] = ["MANAGE_PRODUCTS"]
+    app_manifest["permissions"] = ["MANAGE_INITIATIVES"]
     app_manifest["extensions"] = [
         {
             "url": url,
             "label": "Create product with app",
-            "view": "PRODUCT",
+            "view": "INITIATIVE",
             "type": "OVERVIEW",
             "target": "CREATE",
-            "permissions": ["MANAGE_PRODUCTS"],
+            "permissions": ["MANAGE_INITIATIVES"],
         }
     ]
     mocked_get_response = Mock()
@@ -206,10 +209,10 @@ def test_install_app_extension_ivalid_permission(
     # given
     label = "Create product with app"
     url = "http://127.0.0.1:8080/app-extension"
-    view = "PRODUCT"
+    view = "INITIATIVE"
     type = "OVERVIEW"
     target = "CREATE"
-    app_manifest["permissions"] = ["MANAGE_PRODUCTS"]
+    app_manifest["permissions"] = ["MANAGE_INITIATIVES"]
     app_manifest["extensions"] = [
         {
             "label": label,
@@ -245,7 +248,7 @@ def test_install_app_extension_incorrect_values(
     # given
     label = "Create product with app"
     url = "http://127.0.0.1:8080/app-extension"
-    view = "PRODUCT"
+    view = "INITIATIVE"
     type = "OVERVIEW"
     target = "CREATE"
     app_manifest["permissions"] = []
@@ -256,7 +259,7 @@ def test_install_app_extension_incorrect_values(
             "view": view,
             "type": type,
             "target": target,
-            "permissions": ["MANAGE_PRODUCTS"],
+            "permissions": ["MANAGE_INITIATIVES"],
         }
     ]
     app_manifest["extensions"][0][incorrect_field] = "wrong-value"
