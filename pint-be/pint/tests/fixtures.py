@@ -6135,7 +6135,7 @@ def app_manifest():
         "homepageUrl": "http://172.17.0.1:5000/homepageUrl",
         "supportUrl": "http://172.17.0.1:5000/supportUrl",
         "id": "pint-complex-sample",
-        "permissions": ["MANAGE_PRODUCTS", "MANAGE_USERS"],
+        "permissions": ["MANAGE_INITIATIVES", "MANAGE_USERS"],
         "appUrl": "",
         "configurationUrl": "http://127.0.0.1:5000/configuration/",
         "tokenTargetUrl": "http://127.0.0.1:5000/configuration/install",
@@ -6147,31 +6147,19 @@ def app_manifest_webhook():
     return {
         "name": "webhook",
         "asyncEvents": [
-            "ORDER_CREATED",
-            "ORDER_FULLY_PAID",
+            "INITIATIVE_CREATED",
             "CUSTOMER_CREATED",
-            "FULFILLMENT_CREATED",
         ],
         "query": """
             subscription {
                 event {
-                    ... on OrderCreated {
-                        order {
-                            id
-                        }
-                    }
-                    ... on OrderFullyPaid {
-                        order {
+                    ... on InitiativeCreated {
+                        initiative {
                             id
                         }
                     }
                     ... on CustomerCreated {
                         user {
-                            id
-                        }
-                    }
-                    ... on FulfillmentCreated {
-                        fulfillment {
                             id
                         }
                     }

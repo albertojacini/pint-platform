@@ -207,6 +207,12 @@ def clean_webhooks(manifest_data, errors):
 
         webhook["events"] = []
         for e_type in webhook.get("asyncEvents", []):
+
+            print("e_type+++++++++++++++++++")
+            print(e_type)
+            print("async_types+++++++++++++++++++++++")
+            print(async_types)
+
             try:
                 webhook["events"].append(async_types[e_type])
             except KeyError:

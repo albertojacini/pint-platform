@@ -178,7 +178,7 @@ def test_install_app_extension_permission_out_of_scope(
     ],
 )
 def test_install_app_extension_incorrect_url(
-    url, app_manifest, app_installation, monkeypatch
+    db, url, app_manifest, app_installation, monkeypatch
 ):
     # given
     app_manifest["permissions"] = ["MANAGE_INITIATIVES"]
@@ -204,7 +204,7 @@ def test_install_app_extension_incorrect_url(
 
 
 def test_install_app_extension_ivalid_permission(
-    app_manifest, app_installation, monkeypatch
+    db, app_manifest, app_installation, monkeypatch
 ):
     # given
     label = "Create product with app"
@@ -243,7 +243,7 @@ def test_install_app_extension_ivalid_permission(
     ],
 )
 def test_install_app_extension_incorrect_values(
-    incorrect_field, app_manifest, app_installation, monkeypatch
+    db, incorrect_field, app_manifest, app_installation, monkeypatch
 ):
     # given
     label = "Create product with app"
@@ -275,7 +275,7 @@ def test_install_app_extension_incorrect_values(
 
 
 def test_install_app_with_webhook(
-    app_manifest, app_manifest_webhook, app_installation, monkeypatch
+    db, app_manifest, app_manifest_webhook, app_installation, monkeypatch
 ):
     # given
     app_manifest["webhooks"] = [app_manifest_webhook]
@@ -302,7 +302,7 @@ def test_install_app_with_webhook(
 
 
 def test_install_app_webhook_incorrect_url(
-    app_manifest, app_manifest_webhook, app_installation, monkeypatch
+    db, app_manifest, app_manifest_webhook, app_installation, monkeypatch
 ):
     # given
     app_manifest_webhook["targetUrl"] = "ftp://user:pass@app.example/deep/cover"
@@ -322,7 +322,7 @@ def test_install_app_webhook_incorrect_url(
 
 
 def test_install_app_webhook_incorrect_query(
-    app_manifest, app_manifest_webhook, app_installation, monkeypatch
+    db, app_manifest, app_manifest_webhook, app_installation, monkeypatch
 ):
     # given
     app_manifest_webhook[
