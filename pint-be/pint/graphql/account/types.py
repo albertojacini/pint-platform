@@ -13,7 +13,7 @@ from ...core.permissions import (
     AccountPermissions,
     AppPermission,
     AuthorizationFilters,
-    OrderPermissions,
+    # OrderPermissions,
 )
 from ...core.tracing import traced_resolver
 # from ...order import OrderStatus
@@ -24,11 +24,11 @@ from ..app.types import App
 # from ..checkout.dataloaders import CheckoutByUserAndChannelLoader, CheckoutByUserLoader
 # from ..checkout.types import Checkout
 from ..core.connection import CountableConnection, create_connection_slice
-from ..core.descriptions import DEPRECATED_IN_3X_FIELD
+# from ..core.descriptions import DEPRECATED_IN_3X_FIELD
 from ..core.enums import LanguageCodeEnum
 from ..core.federation import federated_entity, resolve_federation_references
 from ..core.fields import ConnectionField, PermissionsField
-from ..core.scalars import UUID
+# from ..core.scalars import UUID
 from ..core.types import (
     # CountryDisplay,
     Image,
@@ -463,13 +463,13 @@ class User(ModelObjectType):
             .then(_resolve_avatar)
         )
 
-    @staticmethod
-    def resolve_stored_payment_sources(root: models.User, info, channel=None):
-        from .resolvers import resolve_payment_sources
-
-        if root == info.context.user:
-            return resolve_payment_sources(info, root, channel_slug=channel)
-        raise PermissionDenied(permissions=[AuthorizationFilters.OWNER])
+    # @staticmethod
+    # def resolve_stored_payment_sources(root: models.User, info, channel=None):
+    #     from .resolvers import resolve_payment_sources
+    #
+    #     if root == info.context.user:
+    #         return resolve_payment_sources(info, root, channel_slug=channel)
+    #     raise PermissionDenied(permissions=[AuthorizationFilters.OWNER])
 
     @staticmethod
     def resolve_language_code(root, _info):

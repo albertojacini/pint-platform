@@ -10,7 +10,7 @@ from ...core.exceptions import PermissionDenied
 from ...core.permissions import (
     AccountPermissions,
     AuthorizationFilters,
-    OrderPermissions,
+    # OrderPermissions,
     has_one_of_permissions,
 )
 from ...core.tracing import traced_resolver
@@ -71,14 +71,15 @@ def resolve_user(info, id=None, email=None):
         if requester.has_perm(AccountPermissions.MANAGE_STAFF):
             return models.User.objects.staff().filter(**filter_kwargs).first()
         if has_one_of_permissions(
-            requester, [AccountPermissions.MANAGE_USERS, OrderPermissions.MANAGE_ORDERS]
+            requester, [AccountPermissions.MANAGE_USERS]
+            # requester, [AccountPermissions.MANAGE_USERS, OrderPermissions.MANAGE_ORDERS]
         ):
             return models.User.objects.customers().filter(**filter_kwargs).first()
     return PermissionDenied(
         permissions=[
             AccountPermissions.MANAGE_STAFF,
             AccountPermissions.MANAGE_USERS,
-            OrderPermissions.MANAGE_ORDERS,
+            # OrderPermissions.MANAGE_ORDERS,
         ]
     )
 

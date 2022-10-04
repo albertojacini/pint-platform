@@ -8,26 +8,26 @@
     "supportUrl": "https://example.com/support",
     "id": "sample-app",
     "permissions": [
-        "MANAGE_PRODUCTS",
-        "MANAGE_ORDERS"
+        "MANAGE_INITIATIVES",
+        "MANAGE_USERS"
     ],
     "appUrl": "https://example.com/app",
     "extensions": [
       {
         "label": "Create with Sample app",
-        "mount": "PRODUCT_OVERVIEW_CREATE",
+        "mount": "INITIATIVE_OVERVIEW_CREATE",
         "target": "POPUP",
         "permissions": [
-            "MANAGE_PRODUCTS"
+            "MANAGE_INITIATIVES"
         ],
         "url": "https://example.com/extension/"
       },
       {
         "label": "Create with App and redirect",
-        "mount": "PRODUCT_OVERVIEW_MORE_ACTIONS",
+        "mount": "INITIATIVE_OVERVIEW_MORE_ACTIONS",
         "target": "APP_PAGE",
         "permissions": [
-            "MANAGE_PRODUCTS"
+            "MANAGE_INITIATIVES"
         ],
         "url": "/extension/redirect"
       }

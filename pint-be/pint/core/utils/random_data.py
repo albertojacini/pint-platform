@@ -49,9 +49,9 @@ from ...account.utils import store_user_address
 # from ...checkout.utils import add_variant_to_checkout
 from ...core.permissions import (
     AccountPermissions,
-    CheckoutPermissions,
-    GiftcardPermissions,
-    OrderPermissions,
+    # CheckoutPermissions,
+    # GiftcardPermissions,
+    # OrderPermissions,
     get_permissions,
 )
 from ...core.weight import zero_weight
@@ -857,7 +857,8 @@ def create_permission_groups(staff_password):
     staff_users = create_staff_users(staff_password)
     customer_support_codenames = [
         perm.codename
-        for enum in [CheckoutPermissions, OrderPermissions, GiftcardPermissions]
+        for enum in []
+        # for enum in [CheckoutPermissions, OrderPermissions, GiftcardPermissions]
         for perm in enum
     ]
     customer_support_codenames.append(AccountPermissions.MANAGE_USERS.codename)

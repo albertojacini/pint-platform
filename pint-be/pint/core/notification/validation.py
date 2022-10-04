@@ -2,12 +2,13 @@ from django.core.exceptions import ValidationError
 
 from ...account.models import User
 from ...account.notifications import get_user_custom_payload
-from ...core.permissions import AccountPermissions, OrderPermissions
-from ...graphql.channel.utils import validate_channel
+from ...core.permissions import AccountPermissions
+# from ...core.permissions import AccountPermissions, OrderPermissions
+# from ...graphql.channel.utils import validate_channel
 from ...graphql.core.enums import ExternalNotificationTriggerErrorCode
 from ...graphql.utils import resolve_global_ids_to_primary_keys
-from ...order.models import Order
-from ...order.notifications import get_custom_order_payload
+# from ...order.models import Order
+# from ...order.notifications import get_custom_order_payload
 
 PAYLOAD_MAPPING_FOR_CUSTOM_NOTIFICATION = {
     "User": (
@@ -15,11 +16,11 @@ PAYLOAD_MAPPING_FOR_CUSTOM_NOTIFICATION = {
         get_user_custom_payload,
         AccountPermissions.MANAGE_USERS,
     ),
-    "Order": (
-        Order,
-        get_custom_order_payload,
-        OrderPermissions.MANAGE_ORDERS,
-    ),
+    # "Order": (
+    #     Order,
+    #     get_custom_order_payload,
+    #     OrderPermissions.MANAGE_ORDERS,
+    # ),
 }
 
 
@@ -50,17 +51,17 @@ def validate_and_get_external_event_type(data_input):
     )
 
 
-def validate_and_get_channel(data_input, error_class):
-    if channel_slug := data_input.get("channel"):
-        return validate_channel(channel_slug, error_class).slug
-    raise ValidationError(
-        {
-            "channel": ValidationError(
-                "The obligatory param 'channel' is empty.",
-                code=ExternalNotificationTriggerErrorCode.REQUIRED.value,
-            )
-        }
-    )
+# def validate_and_get_channel(data_input, error_class):
+#     if channel_slug := data_input.get("channel"):
+#         return validate_channel(channel_slug, error_class).slug
+#     raise ValidationError(
+#         {
+#             "channel": ValidationError(
+#                 "The obligatory param 'channel' is empty.",
+#                 code=ExternalNotificationTriggerErrorCode.REQUIRED.value,
+#             )
+#         }
+#     )
 
 
 def validate_and_get_payload_params(model_type):

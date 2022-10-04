@@ -21,46 +21,46 @@ class AppPermission(BasePermissionEnum):
     MANAGE_OBSERVABILITY = "app.manage_observability"
 
 
-class ChannelPermissions(BasePermissionEnum):
-    MANAGE_CHANNELS = "channel.manage_channels"
+# class ChannelPermissions(BasePermissionEnum):
+#     MANAGE_CHANNELS = "channel.manage_channels"
+#
+#
+# class DiscountPermissions(BasePermissionEnum):
+#     MANAGE_DISCOUNTS = "discount.manage_discounts"
+#
+#
+# class PluginsPermissions(BasePermissionEnum):
+#     MANAGE_PLUGINS = "plugins.manage_plugins"
+#
+#
+# class GiftcardPermissions(BasePermissionEnum):
+#     MANAGE_GIFT_CARD = "giftcard.manage_gift_card"
+#
+#
+# class MenuPermissions(BasePermissionEnum):
+#     MANAGE_MENUS = "menu.manage_menus"
+#
+#
+# class CheckoutPermissions(BasePermissionEnum):
+#     MANAGE_CHECKOUTS = "checkout.manage_checkouts"
+#     HANDLE_CHECKOUTS = "checkout.handle_checkouts"
+#     HANDLE_TAXES = "checkout.handle_taxes"
 
 
-class DiscountPermissions(BasePermissionEnum):
-    MANAGE_DISCOUNTS = "discount.manage_discounts"
-
-
-class PluginsPermissions(BasePermissionEnum):
-    MANAGE_PLUGINS = "plugins.manage_plugins"
-
-
-class GiftcardPermissions(BasePermissionEnum):
-    MANAGE_GIFT_CARD = "giftcard.manage_gift_card"
-
-
-class MenuPermissions(BasePermissionEnum):
-    MANAGE_MENUS = "menu.manage_menus"
-
-
-class CheckoutPermissions(BasePermissionEnum):
-    MANAGE_CHECKOUTS = "checkout.manage_checkouts"
-    HANDLE_CHECKOUTS = "checkout.handle_checkouts"
-    HANDLE_TAXES = "checkout.handle_taxes"
-
-
-class OrderPermissions(BasePermissionEnum):
-    MANAGE_ORDERS = "order.manage_orders"
-
-
-class PaymentPermissions(BasePermissionEnum):
-    HANDLE_PAYMENTS = "payment.handle_payments"
-
-
-class PagePermissions(BasePermissionEnum):
-    MANAGE_PAGES = "page.manage_pages"
-
-
-class PageTypePermissions(BasePermissionEnum):
-    MANAGE_PAGE_TYPES_AND_ATTRIBUTES = "page.manage_page_types_and_attributes"
+# class OrderPermissions(BasePermissionEnum):
+#     MANAGE_ORDERS = "order.manage_orders"
+#
+#
+# class PaymentPermissions(BasePermissionEnum):
+#     HANDLE_PAYMENTS = "payment.handle_payments"
+#
+#
+# class PagePermissions(BasePermissionEnum):
+#     MANAGE_PAGES = "page.manage_pages"
+#
+#
+# class PageTypePermissions(BasePermissionEnum):
+#     MANAGE_PAGE_TYPES_AND_ATTRIBUTES = "page.manage_page_types_and_attributes"
 
 
 # class ProductPermissions(BasePermissionEnum):
@@ -79,9 +79,9 @@ class InitiativePermissions(BasePermissionEnum):
 #     MANAGE_SHIPPING = "shipping.manage_shipping"
 
 
-class SitePermissions(BasePermissionEnum):
-    MANAGE_SETTINGS = "site.manage_settings"
-    MANAGE_TRANSLATIONS = "site.manage_translations"
+# class SitePermissions(BasePermissionEnum):
+#     MANAGE_SETTINGS = "site.manage_settings"
+#     MANAGE_TRANSLATIONS = "site.manage_translations"
 
 
 PERMISSIONS_ENUMS = [
@@ -91,10 +91,10 @@ PERMISSIONS_ENUMS = [
     # DiscountPermissions,
     # PluginsPermissions,
     # GiftcardPermissions,
-    MenuPermissions,
+    # MenuPermissions,
     # OrderPermissions,
-    PagePermissions,
-    PageTypePermissions,
+    # PagePermissions,
+    # PageTypePermissions,
     # PaymentPermissions,
     InitiativePermissions,
     # ProductPermissions,

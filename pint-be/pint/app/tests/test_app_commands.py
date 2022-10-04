@@ -95,9 +95,9 @@ def test_creates_app_object():
 def test_app_has_all_required_permissions():
     name = "SA name"
     expected_permission = get_permissions(
-        ["account.manage_users", "order.manage_orders"]
+        ["account.manage_users", "order.manage_initiatives"]
     )
-    call_command("create_app", name, permission=["MANAGE_USERS", "MANAGE_ORDERS"])
+    call_command("create_app", name, permission=["MANAGE_USERS", "MANAGE_INITIATIVES"])
 
     apps = App.objects.filter(name=name)
     assert len(apps) == 1
@@ -105,7 +105,7 @@ def test_app_has_all_required_permissions():
     assert set(app.permissions.all()) == set(expected_permission)
 
 
-def test_sends_data_to_target_url(monkeypatch):
+def test_sends_data_to_target_url(db, monkeypatch):
     mocked_response = Mock()
     mocked_response.status_code = 200
     mocked_post = Mock(return_value=mocked_response)

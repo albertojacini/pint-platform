@@ -12,14 +12,14 @@ from ...core.permissions import (
     AccountPermissions,
     AppPermission,
     BasePermissionEnum,
-    CheckoutPermissions,
-    DiscountPermissions,
-    GiftcardPermissions,
-    MenuPermissions,
-    OrderPermissions,
-    PagePermissions,
-    PageTypePermissions,
-    PaymentPermissions,
+    # CheckoutPermissions,
+    # DiscountPermissions,
+    # GiftcardPermissions,
+    # MenuPermissions,
+    # OrderPermissions,
+    # PagePermissions,
+    # PageTypePermissions,
+    # PaymentPermissions,
     InitiativePermissions,
     # ProductTypePermissions,
     # ShippingPermissions,
@@ -80,8 +80,8 @@ def initiative_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
 #     return [OrderPermissions.MANAGE_ORDERS]
 
 
-def menu_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
-    return [MenuPermissions.MANAGE_MENUS]
+# def menu_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
+#     return [MenuPermissions.MANAGE_MENUS]
 
 
 def app_permissions(info, object_pk: str) -> List[BasePermissionEnum]:
@@ -102,16 +102,16 @@ def private_app_permssions(info, object_pk: str) -> List[BasePermissionEnum]:
     return [AppPermission.MANAGE_APPS]
 
 
-def checkout_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
-    return [CheckoutPermissions.MANAGE_CHECKOUTS]
-
-
-def page_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
-    return [PagePermissions.MANAGE_PAGES]
-
-
-def page_type_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
-    return [PageTypePermissions.MANAGE_PAGE_TYPES_AND_ATTRIBUTES]
+# def checkout_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
+#     return [CheckoutPermissions.MANAGE_CHECKOUTS]
+#
+#
+# def page_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
+#     return [PagePermissions.MANAGE_PAGES]
+#
+#
+# def page_type_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
+#     return [PageTypePermissions.MANAGE_PAGE_TYPES_AND_ATTRIBUTES]
 
 
 # def attribute_permissions(_info, attribute_pk: int):
@@ -122,12 +122,12 @@ def page_type_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
 #         return product_type_permissions(_info, attribute_pk)
 
 
-def shipping_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
-    return [ShippingPermissions.MANAGE_SHIPPING]
-
-
-def discount_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
-    return [DiscountPermissions.MANAGE_DISCOUNTS]
+# def shipping_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
+#     return [ShippingPermissions.MANAGE_SHIPPING]
+#
+#
+# def discount_permissions(_info, _object_pk: Any) -> List[BasePermissionEnum]:
+#     return [DiscountPermissions.MANAGE_DISCOUNTS]
 
 
 # def public_payment_permissions(info, payment_pk: int) -> List[BasePermissionEnum]:
@@ -160,22 +160,22 @@ PUBLIC_META_PERMISSION_MAP = {
     # "Fulfillment": order_permissions,
     # "GiftCard": gift_card_permissions,
     # "Invoice": invoice_permissions,
-    "Menu": menu_permissions,
-    "MenuItem": menu_permissions,
-    "Order": no_permissions,
-    "OrderLine": no_permissions,
-    "Page": page_permissions,
-    "PageType": page_type_permissions,
+    # "Menu": menu_permissions,
+    # "MenuItem": menu_permissions,
+    # "Order": no_permissions,
+    # "OrderLine": no_permissions,
+    # "Page": page_permissions,
+    # "PageType": page_type_permissions,
     # "Payment": public_payment_permissions,
     # "TransactionItem": private_payment_permissions,
     # "Product": product_permissions,
     # "ProductType": product_type_permissions,
     # "ProductVariant": product_permissions,
-    "Sale": discount_permissions,
-    "ShippingMethodType": shipping_permissions,
-    "ShippingZone": shipping_permissions,
+    # "Sale": discount_permissions,
+    # "ShippingMethodType": shipping_permissions,
+    # "ShippingZone": shipping_permissions,
     "User": public_user_permissions,
-    "Voucher": discount_permissions,
+    # "Voucher": discount_permissions,
     # "Warehouse": product_permissions,
 }
 
@@ -184,30 +184,30 @@ PRIVATE_META_PERMISSION_MAP = {
     "App": private_app_permssions,
     # "Attribute": attribute_permissions,
     # "Category": product_permissions,
-    "Checkout": checkout_permissions,
-    "CheckoutLine": checkout_permissions,
+    # "Checkout": checkout_permissions,
+    # "CheckoutLine": checkout_permissions,
     # "Collection": product_permissions,
     # "DigitalContent": product_permissions,
     # "Fulfillment": order_permissions,
     # "GiftCard": gift_card_permissions,
     # "Invoice": invoice_permissions,
-    "Menu": menu_permissions,
-    "MenuItem": menu_permissions,
+    # "Menu": menu_permissions,
+    # "MenuItem": menu_permissions,
     # "Order": order_permissions,
     # "OrderLine": order_permissions,
-    "Page": page_permissions,
-    "PageType": page_type_permissions,
+    # "Page": page_permissions,
+    # "PageType": page_type_permissions,
     # "Payment": private_payment_permissions,
     # "TransactionItem": private_payment_permissions,
     "Initiative": initiative_permissions,
     # "Product": product_permissions,
     # "ProductType": product_type_permissions,
     # "ProductVariant": product_permissions,
-    "Sale": discount_permissions,
-    "ShippingMethod": shipping_permissions,
-    "ShippingMethodType": shipping_permissions,
-    "ShippingZone": shipping_permissions,
+    # "Sale": discount_permissions,
+    # "ShippingMethod": shipping_permissions,
+    # "ShippingMethodType": shipping_permissions,
+    # "ShippingZone": shipping_permissions,
     "User": private_user_permissions,
-    "Voucher": discount_permissions,
+    # "Voucher": discount_permissions,
     # "Warehouse": product_permissions,
 }

@@ -1,6 +1,7 @@
 import graphene
 
-from ...core.permissions import AccountPermissions, OrderPermissions
+from ...core.permissions import AccountPermissions
+# from ...core.permissions import AccountPermissions, OrderPermissions
 from ..core.connection import create_connection_slice, filter_connection_queryset
 from ..core.fields import FilterConnectionField, PermissionsField
 from ..core.types import FilterInputObjectType
@@ -121,7 +122,8 @@ class AccountQueries(graphene.ObjectType):
         filter=CustomerFilterInput(description="Filtering options for customers."),
         sort_by=UserSortingInput(description="Sort customers."),
         description="List of the shop's customers.",
-        permissions=[OrderPermissions.MANAGE_ORDERS, AccountPermissions.MANAGE_USERS],
+        permissions=[AccountPermissions.MANAGE_USERS],
+        # permissions=[OrderPermissions.MANAGE_ORDERS, AccountPermissions.MANAGE_USERS],
     )
     permission_groups = FilterConnectionField(
         GroupCountableConnection,
@@ -157,7 +159,7 @@ class AccountQueries(graphene.ObjectType):
         permissions=[
             AccountPermissions.MANAGE_STAFF,
             AccountPermissions.MANAGE_USERS,
-            OrderPermissions.MANAGE_ORDERS,
+            # OrderPermissions.MANAGE_ORDERS,
         ],
         description="Look up a user by ID or email address.",
     )

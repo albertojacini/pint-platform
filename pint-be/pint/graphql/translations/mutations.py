@@ -5,7 +5,7 @@ from django.db.models import Model
 from graphql import GraphQLError
 
 # from ...attribute import models as attribute_models
-from ...core.permissions import SitePermissions
+# from ...core.permissions import SitePermissions
 from ...core.tracing import traced_atomic_transaction
 # from ...discount import models as discount_models
 # from ...menu import models as menu_models
@@ -194,7 +194,8 @@ class InitiativeTranslate(BaseTranslateMutation):
         object_type = Initiative
         error_type_class = TranslationError
         error_type_field = "translation_errors"
-        permissions = (SitePermissions.MANAGE_TRANSLATIONS,)
+        permissions = ()
+        # permissions = (SitePermissions.MANAGE_TRANSLATIONS,)
 
     @classmethod
     @traced_atomic_transaction()
