@@ -10,7 +10,7 @@ from ..models import App, AppInstallation
 
 
 @pytest.mark.vcr
-def test_creates_app_from_manifest():
+def test_creates_app_from_manifest(db):
     manifest_url = "http://otherapp:3000/manifest"
     call_command("install_app", manifest_url)
 
@@ -22,7 +22,7 @@ def test_creates_app_from_manifest():
 
 
 @pytest.mark.vcr
-def test_creates_app_from_manifest_activate_app():
+def test_creates_app_from_manifest_activate_app(db):
     manifest_url = "http://otherapp:3000/manifest"
     call_command("install_app", manifest_url, activate=True)
 
@@ -34,9 +34,9 @@ def test_creates_app_from_manifest_activate_app():
 
 
 @pytest.mark.vcr
-def test_creates_app_from_manifest_app_has_all_required_permissions():
+def test_creates_app_from_manifest_app_has_all_required_permissions(db):
     manifest_url = "http://localhost:3000/manifest"
-    permission_list = ["account.manage_users", "order.manage_orders"]
+    permission_list = ["account.manage_users"]
     expected_permission = get_permissions(permission_list)
     call_command("install_app", manifest_url)
 
@@ -45,7 +45,7 @@ def test_creates_app_from_manifest_app_has_all_required_permissions():
 
 
 @pytest.mark.vcr
-def test_creates_app_from_manifest_sends_token(monkeypatch):
+def test_creates_app_from_manifest_sends_token(db, monkeypatch):
     mocked_response = Mock()
     mocked_response.status_code = 200
     mocked_post = Mock(return_value=mocked_response)
@@ -60,8 +60,8 @@ def test_creates_app_from_manifest_sends_token(monkeypatch):
         headers={
             "Content-Type": "application/json",
             # X- headers will be deprecated in Saleor 4.0, proper headers are without X-
-            "x-pint-domain": "mirumee.com",
-            "pint-domain": "mirumee.com",
+            "x-pint-domain": "example.com",
+            "pint-domain": "example.com",
         },
         json={"auth_token": ANY},
         timeout=ANY,
@@ -69,7 +69,7 @@ def test_creates_app_from_manifest_sends_token(monkeypatch):
 
 
 @pytest.mark.vcr
-def test_creates_app_from_manifest_installation_failed():
+def test_creates_app_from_manifest_installation_failed(db):
     manifest_url = "http://localhost:3000/manifest-wrong"
 
     with pytest.raises(Exception):
@@ -79,9 +79,9 @@ def test_creates_app_from_manifest_installation_failed():
     assert app_job.status == JobStatus.FAILED
 
 
-def test_creates_app_object():
+def test_creates_app_object(db):
     name = "Single App"
-    permissions = ["MANAGE_USERS", "MANAGE_ORDERS"]
+    permissions = ["MANAGE_USERS"]
     call_command("create_app", name, permission=permissions)
 
     apps = App.objects.filter(name=name)
@@ -92,7 +92,7 @@ def test_creates_app_object():
     assert len(tokens) == 1
 
 
-def test_app_has_all_required_permissions():
+def test_app_has_all_required_permissions(db):
     name = "SA name"
     expected_permission = get_permissions(
         ["account.manage_users", "order.manage_initiatives"]
@@ -122,8 +122,8 @@ def test_sends_data_to_target_url(db, monkeypatch):
         target_url,
         headers={
             # X- headers will be deprecated in Saleor 4.0, proper headers are without X-
-            "x-pint-domain": "mirumee.com",
-            "pint-domain": "mirumee.com",
+            "x-pint-domain": "example.com",
+            "pint-domain": "example.com",
         },
         json={"auth_token": ANY},
         timeout=ANY,

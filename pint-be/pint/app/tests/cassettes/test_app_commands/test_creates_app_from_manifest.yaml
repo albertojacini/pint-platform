@@ -20,8 +20,7 @@ interactions:
         ,\n  \"supportUrl\": \"http://localhost:8888/support\",\n  \"configurationUrl\"\
         : \"htpp://localhost:8888/configuration\",\n  \"appUrl\": \"http://localhost:8888/app\"\
         ,\n  \"tokenTargetUrl\": \"http://otherapp:3000/register\",\n  \"id\": \"\
-        app2\",\n  \"permissions\": [\n    \"MANAGE_USERS\",\n    \"MANAGE_ORDERS\"\
-        \n  ]\n}"
+        app2\",\n  \"permissions\": [\n    \"MANAGE_USERS\"\n  ]\n}"
     headers:
       Access-Control-Allow-Credentials:
       - 'true'
@@ -71,8 +70,7 @@ interactions:
         ,\n  \"supportUrl\": \"http://localhost:8888/support\",\n  \"configurationUrl\"\
         : \"htpp://localhost:8888/configuration\",\n  \"appUrl\": \"http://localhost:8888/app\"\
         ,\n  \"tokenTargetUrl\": \"http://otherapp:3000/register\",\n  \"id\": \"\
-        app2\",\n  \"permissions\": [\n    \"MANAGE_USERS\",\n    \"MANAGE_ORDERS\"\
-        \n  ]\n}"
+        app2\",\n  \"permissions\": [\n    \"MANAGE_USERS\"\n    \n  ]\n}"
     headers:
       Access-Control-Allow-Credentials:
       - 'true'

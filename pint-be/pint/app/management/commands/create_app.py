@@ -40,6 +40,8 @@ class Command(BaseCommand):
 
     def send_app_data(self, target_url, data: Dict[str, Any]):
         domain = Site.objects.get_current().domain
+        print("domain++++++++++++++++++")
+        print(domain)
         headers = {
             # X- headers will be deprecated in Saleor 4.0, proper headers are without X-
             "x-pint-domain": domain,

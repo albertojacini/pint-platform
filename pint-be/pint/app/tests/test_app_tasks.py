@@ -9,7 +9,7 @@ from ..tasks import install_app_task
 
 
 @pytest.mark.vcr
-def test_install_app_task(app_installation):
+def test_install_app_task(db, app_installation):
     install_app_task(app_installation.id, activate=False)
     assert not AppInstallation.objects.all().exists()
     app = App.objects.filter(name=app_installation.app_name).first()
@@ -65,7 +65,7 @@ def test_install_app_task_wrong_response_code(monkeypatch):
     )
 
 
-def test_install_app_task_undefined_error(monkeypatch, app_installation):
+def test_install_app_task_undefined_error(db, monkeypatch, app_installation):
     mock_install_app = Mock(side_effect=Exception("Unknow"))
 
     monkeypatch.setattr("pint.app.tasks.install_app", mock_install_app)
