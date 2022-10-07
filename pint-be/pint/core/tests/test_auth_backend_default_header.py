@@ -172,19 +172,24 @@ def test_user_doesnt_have_permissions_from_token(prefix, staff_user, app, rf):
 @pytest.mark.parametrize(
     "user_permissions, app_permissions, expected_limited_permissions",
     [
-        (
-            ["manage_apps", "manage_checkouts"],
-            ["manage_checkouts"],
-            ["MANAGE_CHECKOUTS"],
-        ),
-        ([], ["manage_checkouts"], []),
+        # (
+        #     ["manage_apps", "manage_checkouts"],
+        #     ["manage_checkouts"],
+        #     ["MANAGE_CHECKOUTS"],
+        # ),
+        # ([], ["manage_checkouts"], []),
         ([], [], []),
-        (["manage_apps"], ["manage_checkouts"], []),
-        (["manage_checkouts"], [], []),
+        # (["manage_apps"], ["manage_checkouts"], []),
+        # (["manage_checkouts"], [], []),
+        # (
+        #     ["manage_orders", "manage_checkouts", "manage_apps"],
+        #     ["manage_checkouts", "manage_apps"],
+        #     ["MANAGE_CHECKOUTS", "MANAGE_APPS"],
+        # ),
         (
-            ["manage_orders", "manage_checkouts", "manage_apps"],
-            ["manage_checkouts", "manage_apps"],
-            ["MANAGE_CHECKOUTS", "MANAGE_APPS"],
+                ["manage_apps"],
+                ["manage_apps"],
+                ["MANAGE_APPS"],
         ),
     ],
 )
