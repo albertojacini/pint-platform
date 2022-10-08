@@ -535,7 +535,7 @@ class InitiativeInput(graphene.InputObjectType):
     #     description="List of IDs of collections that the initiative belongs to.",
     #     name="collections",
     # )
-    description = JSONString(description="Initiative description." + RICH_CONTENT)
+    # description = JSONString(description="Initiative description." + RICH_CONTENT)
     title = graphene.String(description="Initiative title.")
     # name = graphene.String(description="Initiative name.")
     slug = graphene.String(description="Initiative slug.")
@@ -555,11 +555,12 @@ class InitiativeInput(graphene.InputObjectType):
 
 
 class InitiativeCreateInput(InitiativeInput):
-    initiative_type = graphene.ID(
-        description="ID of the type that initiative belongs to.",
-        name="initiativeType",
-        required=True,
-    )
+    pass
+    # initiative_type = graphene.ID(
+    #     description="ID of the type that initiative belongs to.",
+    #     name="initiativeType",
+    #     required=True,
+    # )
 
 
 # T_INPUT_MAP = List[Tuple[attribute_models.Attribute, AttrValuesInput]]

@@ -3,7 +3,7 @@ from django.utils.functional import SimpleLazyObject
 
 # from ..graphql.notifications.schema import ExternalNotificationMutations
 from .account.schema import AccountMutations, AccountQueries
-# from .app.schema import AppMutations, AppQueries
+from .app.schema import AppMutations, AppQueries
 # from .attribute.schema import AttributeMutations, AttributeQueries
 # from .channel.schema import ChannelMutations, ChannelQueries
 # from .checkout.schema import CheckoutMutations, CheckoutQueries
@@ -23,10 +23,9 @@ from .core.federation.schema import build_federated_schema
 from .initiative.schema import InitiativeMutations, InitiativeQueries
 # from .shipping.schema import ShippingMutations, ShippingQueries
 # from .shop.schema import ShopMutations, ShopQueries
-# from .translations.schema import TranslationQueries
+from .translations.schema import TranslationQueries
 # from .warehouse.schema import StockQueries, WarehouseMutations, WarehouseQueries
-# from .webhook.schema import WebhookMutations, WebhookQueries
-from .webhook.subscription_types import WEBHOOK_TYPES_MAP
+from .webhook.schema import WebhookMutations, WebhookQueries
 from .webhook.subscription_types import WEBHOOK_TYPES_MAP, Subscription
 
 API_PATH = SimpleLazyObject(lambda: reverse("api"))
@@ -34,7 +33,7 @@ API_PATH = SimpleLazyObject(lambda: reverse("api"))
 
 class Query(
     AccountQueries,
-    # AppQueries,
+    AppQueries,
     # AttributeQueries,
     # ChannelQueries,
     # CheckoutQueries,
@@ -51,16 +50,16 @@ class Query(
     # ShippingQueries,
     # ShopQueries,
     # StockQueries,
-    # TranslationQueries,
+    TranslationQueries,
     # WarehouseQueries,
-    # WebhookQueries,
+    WebhookQueries,
 ):
     pass
 
 
 class Mutation(
     AccountMutations,
-    # AppMutations,
+    AppMutations,
     # AttributeMutations,
     # ChannelMutations,
     # CheckoutMutations,
@@ -80,7 +79,7 @@ class Mutation(
     # ShippingMutations,
     # ShopMutations,
     # WarehouseMutations,
-    # WebhookMutations,
+    WebhookMutations,
 ):
     pass
 

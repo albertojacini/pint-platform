@@ -14,7 +14,7 @@ from ....core.permissions import (
     # OrderPermissions,
     has_one_of_permissions,
 )
-# from ....core.tracing import traced_resolver
+from ....core.tracing import traced_resolver
 # from ....core.utils import get_currency_for_country
 # from ....core.weight import convert_weight_to_default_weight_unit
 from ....initiative import models
@@ -759,7 +759,7 @@ class Initiative(ModelObjectType):
     #         f"{DEPRECATED_IN_3X_FIELD} Use the `description` field instead."
     #     ),
     # )
-    # thumbnail = ThumbnailField()
+    thumbnail = ThumbnailField()
     # pricing = graphene.Field(
     #     InitiativePricingInfo,
     #     address=destination_address_argument,
@@ -785,19 +785,19 @@ class Initiative(ModelObjectType):
     #     description="List of availability in channels for the initiative.",
     #     permissions=[InitiativePermissions.MANAGE_INITIATIVES],
     # )
-    # media_by_id = graphene.Field(
-    #     lambda: InitiativeMedia,
-    #     id=graphene.Argument(graphene.ID, description="ID of a initiative media."),
-    #     description="Get a single initiative media by ID.",
-    # )
-    # image_by_id = graphene.Field(
-    #     lambda: InitiativeImage,
-    #     id=graphene.Argument(graphene.ID, description="ID of a initiative image."),
-    #     description="Get a single initiative image by ID.",
-    #     deprecation_reason=(
-    #         f"{DEPRECATED_IN_3X_FIELD} Use the `mediaById` field instead."
-    #     ),
-    # )
+    media_by_id = graphene.Field(
+        lambda: InitiativeMedia,
+        id=graphene.Argument(graphene.ID, description="ID of a initiative media."),
+        description="Get a single initiative media by ID.",
+    )
+    image_by_id = graphene.Field(
+        lambda: InitiativeImage,
+        id=graphene.Argument(graphene.ID, description="ID of a initiative image."),
+        description="Get a single initiative image by ID.",
+        deprecation_reason=(
+            f"{DEPRECATED_IN_3X_FIELD} Use the `mediaById` field instead."
+        ),
+    )
     # variants = NonNullList(
     #     InitiativeVariant,
     #     description=(
@@ -806,15 +806,15 @@ class Initiative(ModelObjectType):
     #         f"{', '.join([p.name for p in ALL_INITIATIVES_PERMISSIONS])}."
     #     ),
     # )
-    # media = NonNullList(
-    #     lambda: InitiativeMedia,
-    #     description="List of media for the initiative.",
-    # )
-    # images = NonNullList(
-    #     lambda: InitiativeImage,
-    #     description="List of images for the initiative.",
-    #     deprecation_reason=f"{DEPRECATED_IN_3X_FIELD} Use the `media` field instead.",
-    # )
+    media = NonNullList(
+        lambda: InitiativeMedia,
+        description="List of media for the initiative.",
+    )
+    images = NonNullList(
+        lambda: InitiativeImage,
+        description="List of images for the initiative.",
+        deprecation_reason=f"{DEPRECATED_IN_3X_FIELD} Use the `media` field instead.",
+    )
     # collections = NonNullList(
     #     lambda: Collection,
     #     description=(
@@ -823,11 +823,11 @@ class Initiative(ModelObjectType):
     #         f"{', '.join([p.name for p in ALL_INITIATIVES_PERMISSIONS])}."
     #     ),
     # )
-    # translation = TranslationField(
-    #     InitiativeTranslation,
-    #     type_name="initiative",
-    #     resolver=ChannelContextType.resolve_translation,
-    # )
+    translation = TranslationField(
+        InitiativeTranslation,
+        type_name="initiative",
+        # resolver=ChannelContextType.resolve_translation,
+    )
     # available_for_purchase = graphene.Date(
     #     description="Date when initiative is available for purchase.",
     #     deprecation_reason=(
@@ -849,10 +849,11 @@ class Initiative(ModelObjectType):
         interfaces = [relay.Node, ObjectWithMetadata]
         model = models.Initiative
 
-    # @staticmethod
-    # def resolve_created(root: ChannelContext[models.Initiative], _info):
-    #     created_at = root.node.created_at
-    #     return created_at
+
+    @staticmethod
+    def resolve_created(root: models.Initiative, _info):
+        created_at = root.node.created_at
+        return created_at
     #
     # @staticmethod
     # def resolve_channel(root: ChannelContext[models.Initiative], _info):
@@ -890,45 +891,45 @@ class Initiative(ModelObjectType):
     #     tax_data = info.context.plugins.get_tax_code_from_object_meta(root.node)
     #     return TaxType(tax_code=tax_data.code, description=tax_data.description)
     #
-    # @staticmethod
-    # @traced_resolver
-    # def resolve_thumbnail(
-    #     root: ChannelContext[models.Initiative], info, *, size=256, format=None
-    # ):
-    #     format = format.lower() if format else None
-    #     size = get_thumbnail_size(size)
-    #
-    #     def return_first_thumbnail(initiative_media):
-    #         if not initiative_media:
-    #             return None
-    #
-    #         image = initiative_media[0]
-    #         oembed_data = image.oembed_data
-    #
-    #         if oembed_data.get("thumbnail_url"):
-    #             return Image(alt=oembed_data["title"], url=oembed_data["thumbnail_url"])
-    #
-    #         def _resolve_url(thumbnail):
-    #             url = get_image_or_proxy_url(
-    #                 thumbnail, image.id, "InitiativeMedia", size, format
-    #             )
-    #             return Image(alt=image.alt, url=info.context.build_absolute_uri(url))
-    #
-    #         return (
-    #             ThumbnailByInitiativeMediaIdSizeAndFormatLoader(info.context)
-    #             .load((image.id, size, format))
-    #             .then(_resolve_url)
-    #         )
-    #
-    #     return (
-    #         MediaByInitiativeIdLoader(info.context)
-    #         .load(root.node.id)
-    #         .then(return_first_thumbnail)
-    #     )
-    #
-    # @staticmethod
-    # def resolve_url(_root, _info):
-    #     return ""
+    @staticmethod
+    @traced_resolver
+    def resolve_thumbnail(
+        root: models.Initiative, info, *, size=256, format=None
+    ):
+        format = format.lower() if format else None
+        size = get_thumbnail_size(size)
+
+        def return_first_thumbnail(initiative_media):
+            if not initiative_media:
+                return None
+
+            image = initiative_media[0]
+            oembed_data = image.oembed_data
+
+            if oembed_data.get("thumbnail_url"):
+                return Image(alt=oembed_data["title"], url=oembed_data["thumbnail_url"])
+
+            def _resolve_url(thumbnail):
+                url = get_image_or_proxy_url(
+                    thumbnail, image.id, "InitiativeMedia", size, format
+                )
+                return Image(alt=image.alt, url=info.context.build_absolute_uri(url))
+
+            return (
+                ThumbnailByInitiativeMediaIdSizeAndFormatLoader(info.context)
+                .load((image.id, size, format))
+                .then(_resolve_url)
+            )
+
+        return (
+            MediaByInitiativeIdLoader(info.context)
+            .load(root.node.id)
+            .then(return_first_thumbnail)
+        )
+
+    @staticmethod
+    def resolve_url(_root, _info):
+        return ""
     #
     # @staticmethod
     # def resolve_pricing(root: ChannelContext[models.Initiative], info, *, address=None):

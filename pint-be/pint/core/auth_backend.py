@@ -48,8 +48,8 @@ class JSONWebTokenBackend(ModelBackend):
         return getattr(user_obj, perm_cache_name)
 
 
-class PluginBackend(JSONWebTokenBackend):
-    def authenticate(self, request=None, **kwargs):
-        if request is None:
-            return None
-        return request.plugins.authenticate_user(request)
+# class PluginBackend(JSONWebTokenBackend):
+#     def authenticate(self, request=None, **kwargs):
+#         if request is None:
+#             return None
+#         return request.plugins.authenticate_user(request)

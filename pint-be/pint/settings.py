@@ -496,7 +496,7 @@ PLACEHOLDER_IMAGES = {
 
 AUTHENTICATION_BACKENDS = [
     "pint.core.auth_backend.JSONWebTokenBackend",
-    "pint.core.auth_backend.PluginBackend",
+    # "pint.core.auth_backend.PluginBackend",
 ]
 
 # Expired checkouts settings - defines after what time checkouts will be deleted

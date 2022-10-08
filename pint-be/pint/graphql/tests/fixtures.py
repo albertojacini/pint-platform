@@ -91,7 +91,6 @@ class ApiClient(Client):
         if data:
             data = json.dumps(data, cls=DjangoJSONEncoder)
         kwargs["content_type"] = "application/json"
-
         if permissions:
             if check_no_permissions:
                 with mock.patch("pint.graphql.utils.handled_errors_logger"):
