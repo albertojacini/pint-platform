@@ -930,7 +930,7 @@ class Initiative(ModelObjectType):
 
         return (
             MediaByInitiativeIdLoader(info.context)
-            .load(root.node.id)
+            .load(root.id)
             .then(return_first_thumbnail)
         )
 
@@ -1074,17 +1074,17 @@ class Initiative(ModelObjectType):
     # @staticmethod
     # def resolve_attributes(root: ChannelContext[models.Initiative], info):
     #     return SelectedAttributesByInitiativeIdLoader(info.context).load(root.node.id)
-    #
-    # @staticmethod
-    # def resolve_media_by_id(root: ChannelContext[models.Initiative], _info, *, id):
-    #     _type, pk = from_global_id_or_error(id, InitiativeMedia)
-    #     return root.node.media.filter(pk=pk).first()
-    #
-    # @staticmethod
-    # def resolve_image_by_id(root: ChannelContext[models.Initiative], _info, *, id):
-    #     _type, pk = from_global_id_or_error(id, InitiativeImage)
-    #     return root.node.media.filter(pk=pk).first()
-    #
+
+    @staticmethod
+    def resolve_media_by_id(root: models.Initiative, _info, *, id):
+        _type, pk = from_global_id_or_error(id, InitiativeMedia)
+        return root.node.media.filter(pk=pk).first()
+
+    @staticmethod
+    def resolve_image_by_id(root: models.Initiative, _info, *, id):
+        _type, pk = from_global_id_or_error(id, InitiativeImage)
+        return root.node.media.filter(pk=pk).first()
+
     # @staticmethod
     # def resolve_media(root: ChannelContext[models.Initiative], info):
     #     return MediaByInitiativeIdLoader(info.context).load(root.node.id)
@@ -1259,6 +1259,13 @@ class Initiative(ModelObjectType):
     #             )
     #
     #     return [initiatives.get(root_id) for root_id in roots_ids]
+    @staticmethod
+    def resolve_media(root: models.Initiative, info):
+        return MediaByInitiativeIdLoader(info.context).load(root.id)
+
+    @staticmethod
+    def resolve_images(root: models.Initiative, info):
+        return ImagesByInitiativeIdLoader(info.context).load(root.id)
 
 
 class InitiativeCountableConnection(CountableConnection):

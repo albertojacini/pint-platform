@@ -330,9 +330,9 @@ class InitiativeMedia(SortableModel):
         Initiative,
         related_name="media",
         on_delete=models.CASCADE,
-        # DEPRECATED
-        null=True,
-        blank=True,
+        # # DEPRECATED
+        # null=True,
+        # blank=True,
     )
     image = models.ImageField(upload_to="initiatives", blank=True, null=True)
     alt = models.CharField(max_length=128, blank=True)

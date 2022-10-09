@@ -32,8 +32,8 @@ from django.core.files import File
 # from ....order import OrderEvents, OrderStatus
 # from ....order.models import OrderEvent, OrderLine
 # from ....plugins.manager import PluginsManager, get_plugins_manager
-# from ....product import ProductMediaTypes, ProductTypeKind
-# from ....product.error_codes import ProductErrorCode
+# from ....initiative import InitiativeMediaTypes, InitiativeTypeKind
+# from ....initiative.error_codes import InitiativeErrorCode
 # from ....initiative.models import (
 #     Initiative,
 # )
@@ -46,7 +46,8 @@ from ....tests.utils import dummy_editorjs, flush_post_commit_hooks
 from ....thumbnail.models import Thumbnail
 # from ....warehouse.models import Allocation, Stock, Warehouse
 # from ....webhook.event_types import WebhookEventAsyncType
-# from ....webhook.payloads import generate_product_deleted_payload
+# from ....webhook.payloads import generate_initiative_deleted_payload
+from ...core.enums import ThumbnailFormatEnum
 # from ...core.enums import AttributeErrorCode, ReportingPeriod, ThumbnailFormatEnum
 from ...tests.utils import (
     # assert_no_permission,
@@ -54,7 +55,7 @@ from ...tests.utils import (
     get_graphql_content_from_response,
     # get_multipart_request_body,
 )
-# from ..bulk_mutations.products import ProductVariantStocksUpdate
+# from ..bulk_mutations.initiatives import InitiativeVariantStocksUpdate
 # from ..enums import VariantAttributeScope
 # from ..utils import create_stocks
 
@@ -63,7 +64,7 @@ from ...tests.utils import (
 def query_initiatives_with_filter():
     query = """
         query ($filter: InitiativeFilterInput!) {
-          products(first:5, filter: $filter) {
+          initiatives(first:5, filter: $filter) {
             edges{
               node{
                 id
@@ -122,176 +123,173 @@ def test_initiative_query_by_id_as_staff_user(
     assert initiative_data["title"] == initiative.title
 
 
-def test_initiative_query_description(
-    staff_api_client, permission_manage_products, product, channel_USD
-):
-    query = """
-        query ($id: ID, $slug: String, $channel:String){
-            product(
-                id: $id,
-                slug: $slug,
-                channel: $channel
-            ) {
-                id
-                name
-                description
-                descriptionJson
-            }
-        }
-        """
-    description = dummy_editorjs("Test description.", json_format=True)
-    product.description = dummy_editorjs("Test description.")
-    product.save()
-    variables = {
-        "id": graphene.Node.to_global_id("Product", product.pk),
-        "channel": channel_USD.slug,
-    }
-
-    response = staff_api_client.post_graphql(
-        query,
-        variables=variables,
-        permissions=(permission_manage_products,),
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-    assert product_data is not None
-    assert product_data["description"] == description
-    assert product_data["descriptionJson"] == description
-
-
-def test_product_query_with_no_description(
-    staff_api_client, permission_manage_products, product, channel_USD
-):
-    query = """
-        query ($id: ID, $slug: String, $channel:String){
-            product(
-                id: $id,
-                slug: $slug,
-                channel: $channel
-            ) {
-                id
-                name
-                description
-                descriptionJson
-            }
-        }
-        """
-    variables = {
-        "id": graphene.Node.to_global_id("Product", product.pk),
-        "channel": channel_USD.slug,
-    }
-
-    response = staff_api_client.post_graphql(
-        query,
-        variables=variables,
-        permissions=(permission_manage_products,),
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-    assert product_data is not None
-    assert product_data["description"] is None
-    assert product_data["descriptionJson"] == "{}"
-
-
-# def test_product_query_by_id_not_available_as_staff_user(
-#     staff_api_client, permission_manage_products, product, channel_USD
+# def test_initiative_query_description(
+#     staff_api_client, permission_manage_initiatives, initiative, channel_USD
 # ):
+#     query = """
+#         query ($id: ID, $slug: String){
+#             initiative(
+#                 id: $id,
+#                 slug: $slug,
+#                 channel: $channel
+#             ) {
+#                 id
+#                 name
+#                 description
+#                 descriptionJson
+#             }
+#         }
+#         """
+#     description = dummy_editorjs("Test description.", json_format=True)
+#     initiative.description = dummy_editorjs("Test description.")
+#     initiative.save()
 #     variables = {
-#         "id": graphene.Node.to_global_id("Product", product.pk),
+#         "id": graphene.Node.to_global_id("Initiative", initiative.pk),
 #         "channel": channel_USD.slug,
 #     }
-#     ProductChannelListing.objects.filter(product=product, channel=channel_USD).update(
+#
+#     response = staff_api_client.post_graphql(
+#         query,
+#         variables=variables,
+#         permissions=(permission_manage_initiatives,),
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#     initiative_data = content["data"]["initiative"]
+#     assert initiative_data is not None
+#     assert initiative_data["description"] == description
+#     assert initiative_data["descriptionJson"] == description
+
+
+# def test_initiative_query_with_no_description(
+#     staff_api_client, permission_manage_initiatives, initiative, channel_USD
+# ):
+#     query = """
+#         query ($id: ID, $slug: String, $channel:String){
+#             initiative(
+#                 id: $id,
+#                 slug: $slug,
+#                 channel: $channel
+#             ) {
+#                 id
+#                 name
+#                 description
+#                 descriptionJson
+#             }
+#         }
+#         """
+#     variables = {
+#         "id": graphene.Node.to_global_id("Initiative", initiative.pk),
+#         "channel": channel_USD.slug,
+#     }
+#
+#     response = staff_api_client.post_graphql(
+#         query,
+#         variables=variables,
+#         permissions=(permission_manage_initiatives,),
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#     initiative_data = content["data"]["initiative"]
+#     assert initiative_data is not None
+#     assert initiative_data["description"] is None
+#     assert initiative_data["descriptionJson"] == "{}"
+
+
+# def test_initiative_query_by_id_not_available_as_staff_user(
+#     staff_api_client, permission_manage_initiatives, initiative, channel_USD
+# ):
+#     variables = {
+#         "id": graphene.Node.to_global_id("Initiative", initiative.pk),
+#         "channel": channel_USD.slug,
+#     }
+#     InitiativeChannelListing.objects.filter(initiative=initiative, channel=channel_USD).update(
 #         is_published=False
 #     )
 #
 #     response = staff_api_client.post_graphql(
-#         QUERY_PRODUCT,
+#         QUERY_INITIATIVE,
 #         variables=variables,
-#         permissions=(permission_manage_products,),
+#         permissions=(permission_manage_initiatives,),
 #         check_no_permissions=False,
 #     )
 #     content = get_graphql_content(response)
-#     product_data = content["data"]["product"]
-#     assert product_data is not None
-#     assert product_data["name"] == product.name
+#     initiative_data = content["data"]["initiative"]
+#     assert initiative_data is not None
+#     assert initiative_data["name"] == initiative.name
 #
 #
-# def test_product_query_by_id_not_existing_in_channel_as_staff_user(
-#     staff_api_client, permission_manage_products, product, channel_USD
+# def test_initiative_query_by_id_not_existing_in_channel_as_staff_user(
+#     staff_api_client, permission_manage_initiatives, initiative, channel_USD
 # ):
 #     variables = {
-#         "id": graphene.Node.to_global_id("Product", product.pk),
+#         "id": graphene.Node.to_global_id("Initiative", initiative.pk),
 #         "channel": channel_USD.slug,
 #     }
-#     ProductChannelListing.objects.filter(product=product, channel=channel_USD).delete()
+#     InitiativeChannelListing.objects.filter(initiative=initiative, channel=channel_USD).delete()
 #
 #     response = staff_api_client.post_graphql(
-#         QUERY_PRODUCT,
+#         QUERY_INITIATIVE,
 #         variables=variables,
-#         permissions=(permission_manage_products,),
+#         permissions=(permission_manage_initiatives,),
 #         check_no_permissions=False,
 #     )
 #     content = get_graphql_content(response)
-#     product_data = content["data"]["product"]
-#     assert product_data is None
+#     initiative_data = content["data"]["initiative"]
+#     assert initiative_data is None
 #
 #
-# def test_product_query_by_id_as_staff_user_without_channel_slug(
-#     staff_api_client, permission_manage_products, product, channel_USD
+# def test_initiative_query_by_id_as_staff_user_without_channel_slug(
+#     staff_api_client, permission_manage_initiatives, initiative, channel_USD
 # ):
 #     variables = {
-#         "id": graphene.Node.to_global_id("Product", product.pk),
+#         "id": graphene.Node.to_global_id("Initiative", initiative.pk),
 #     }
-#     ProductChannelListing.objects.filter(product=product, channel=channel_USD).delete()
+#     InitiativeChannelListing.objects.filter(initiative=initiative, channel=channel_USD).delete()
 #
 #     response = staff_api_client.post_graphql(
-#         QUERY_PRODUCT,
+#         QUERY_INITIATIVE,
 #         variables=variables,
-#         permissions=(permission_manage_products,),
+#         permissions=(permission_manage_initiatives,),
 #         check_no_permissions=False,
 #     )
 #     content = get_graphql_content(response)
-#     product_data = content["data"]["product"]
-#     assert product_data is not None
-#     assert product_data["name"] == product.name
+#     initiative_data = content["data"]["initiative"]
+#     assert initiative_data is not None
+#     assert initiative_data["name"] == initiative.name
 
 
-def test_product_query_by_id_available_as_app(
-    app_api_client, permission_manage_products, product, channel_USD
+def test_initiative_query_by_id_available_as_app(
+    app_api_client, permission_manage_initiatives, initiative
 ):
     variables = {
-        "id": graphene.Node.to_global_id("Product", product.pk),
-        "channel": channel_USD.slug,
+        "id": graphene.Node.to_global_id("Initiative", initiative.pk),
     }
 
     response = app_api_client.post_graphql(
-        QUERY_PRODUCT,
+        QUERY_INITIATIVE,
         variables=variables,
-        permissions=(permission_manage_products,),
+        permissions=(permission_manage_initiatives,),
         check_no_permissions=False,
     )
     content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-    assert product_data is not None
-    assert product_data["name"] == product.name
+    initiative_data = content["data"]["initiative"]
+    assert initiative_data is not None
+    assert initiative_data["title"] == initiative.title
 
 
 @pytest.mark.parametrize("id", ["'", "abc"])
-def test_product_query_by_invalid_id(
-    id, staff_api_client, permission_manage_products, product, channel_USD
+def test_initiative_query_by_invalid_id(
+    id, staff_api_client, permission_manage_initiatives, initiative
 ):
     variables = {
         "id": id,
-        "channel": channel_USD.slug,
     }
-    ProductChannelListing.objects.filter(product=product, channel=channel_USD).delete()
 
     response = staff_api_client.post_graphql(
-        QUERY_PRODUCT,
+        QUERY_INITIATIVE,
         variables=variables,
-        permissions=(permission_manage_products,),
+        permissions=(permission_manage_initiatives,),
         check_no_permissions=False,
     )
     content = get_graphql_content_from_response(response)
@@ -299,227 +297,208 @@ def test_product_query_by_invalid_id(
     assert content["errors"][0]["message"] == (f"Couldn't resolve id: {id}.")
 
 
-QUERY_PRODUCT_BY_ID = """
-    query ($id: ID, $channel: String){
-        product(id: $id, channel: $channel) {
+QUERY_INITIATIVE_BY_ID = """
+    query ($id: ID){
+        initiative(id: $id) {
             id
-            variants {
-                id
-            }
         }
     }
 """
 
 
 def test_initiative_query_by_id_as_user(
-    user_api_client, permission_manage_products, product, channel_USD
+    user_api_client, permission_manage_initiatives, initiative
 ):
-    query = QUERY_PRODUCT_BY_ID
+    query = QUERY_INITIATIVE_BY_ID
     variables = {
-        "id": graphene.Node.to_global_id("Product", product.pk),
-        "channel": channel_USD.slug,
+        "id": graphene.Node.to_global_id("Initiative", initiative.pk),
     }
 
     response = user_api_client.post_graphql(
         query,
         variables=variables,
-        permissions=(permission_manage_products,),
+        permissions=(permission_manage_initiatives,),
         check_no_permissions=False,
     )
     content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-    assert product_data is not None
-    expected_variants = [
-        {
-            "id": graphene.Node.to_global_id(
-                "ProductVariant", product.variants.first().pk
-            )
-        }
-    ]
-    assert product_data["variants"] == expected_variants
+    initiative_data = content["data"]["initiative"]
+    assert initiative_data is not None
 
 
-def test_product_query_invalid_id(user_api_client, product, channel_USD):
-    product_id = "'"
+def test_initiative_query_invalid_id(user_api_client, initiative):
+    initiative_id = "'"
     variables = {
-        "id": product_id,
-        "channel": channel_USD.slug,
+        "id": initiative_id,
     }
-    response = user_api_client.post_graphql(QUERY_PRODUCT_BY_ID, variables)
+    response = user_api_client.post_graphql(QUERY_INITIATIVE_BY_ID, variables)
     content = get_graphql_content_from_response(response)
     assert len(content["errors"]) == 1
-    assert content["errors"][0]["message"] == f"Couldn't resolve id: {product_id}."
-    assert content["data"]["product"] is None
+    assert content["errors"][0]["message"] == f"Couldn't resolve id: {initiative_id}."
+    assert content["data"]["initiative"] is None
 
 
-def test_product_query_object_with_given_id_does_not_exist(
-    user_api_client, product, channel_USD
+def test_initiative_query_object_with_given_id_does_not_exist(
+    user_api_client, initiative
 ):
-    product_id = graphene.Node.to_global_id("Product", -1)
+    initiative_id = graphene.Node.to_global_id("Initiative", -1)
     variables = {
-        "id": product_id,
-        "channel": channel_USD.slug,
+        "id": initiative_id,
     }
-    response = user_api_client.post_graphql(QUERY_PRODUCT_BY_ID, variables)
+    response = user_api_client.post_graphql(QUERY_INITIATIVE_BY_ID, variables)
     content = get_graphql_content(response)
-    assert content["data"]["product"] is None
+    assert content["data"]["initiative"] is None
 
 
-def test_product_query_with_invalid_object_type(user_api_client, product, channel_USD):
-    product_id = graphene.Node.to_global_id("Collection", product.pk)
+def test_initiative_query_with_invalid_object_type(user_api_client, initiative):
+    initiative_id = graphene.Node.to_global_id("User", initiative.pk)
     variables = {
-        "id": product_id,
-        "channel": channel_USD.slug,
+        "id": initiative_id,
     }
-    response = user_api_client.post_graphql(QUERY_PRODUCT_BY_ID, variables)
+    response = user_api_client.post_graphql(QUERY_INITIATIVE_BY_ID, variables)
     content = get_graphql_content(response)
-    assert content["data"]["product"] is None
+    assert content["data"]["initiative"] is None
 
 
-def test_product_query_by_id_not_available_as_app(
-    app_api_client, permission_manage_products, product, channel_USD
+def test_initiative_query_by_id_not_available_as_app(
+    app_api_client, permission_manage_initiatives, initiative
 ):
     variables = {
-        "id": graphene.Node.to_global_id("Product", product.pk),
-        "channel": channel_USD.slug,
+        "id": graphene.Node.to_global_id("Initiative", initiative.pk),
     }
-    ProductChannelListing.objects.filter(product=product, channel=channel_USD).update(
-        is_published=False
-    )
 
     response = app_api_client.post_graphql(
-        QUERY_PRODUCT,
+        QUERY_INITIATIVE,
         variables=variables,
-        permissions=(permission_manage_products,),
+        permissions=(permission_manage_initiatives,),
         check_no_permissions=False,
     )
     content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-    assert product_data is not None
-    assert product_data["name"] == product.name
+    initiative_data = content["data"]["initiative"]
+    assert initiative_data is not None
+    assert initiative_data["title"] == initiative.title
 
 
-def test_product_query_by_id_not_existing_in_channel_as_app(
-    app_api_client, permission_manage_products, product, channel_USD
-):
-    variables = {
-        "id": graphene.Node.to_global_id("Product", product.pk),
-        "channel": channel_USD.slug,
-    }
-    ProductChannelListing.objects.filter(product=product, channel=channel_USD).delete()
+# def test_initiative_query_by_id_not_existing_in_channel_as_app(
+#     app_api_client, permission_manage_initiatives, initiative, channel_USD
+# ):
+#     variables = {
+#         "id": graphene.Node.to_global_id("Initiative", initiative.pk),
+#         "channel": channel_USD.slug,
+#     }
+#     InitiativeChannelListing.objects.filter(initiative=initiative, channel=channel_USD).delete()
+#
+#     response = app_api_client.post_graphql(
+#         QUERY_INITIATIVE,
+#         variables=variables,
+#         permissions=(permission_manage_initiatives,),
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#     initiative_data = content["data"]["initiative"]
+#     assert initiative_data is None
+#
+#
+# def test_initiative_query_by_id_as_app_without_channel_slug(
+#     app_api_client, permission_manage_initiatives, initiative, channel_USD
+# ):
+#     variables = {
+#         "id": graphene.Node.to_global_id("Initiative", initiative.pk),
+#     }
+#     InitiativeChannelListing.objects.filter(initiative=initiative, channel=channel_USD).delete()
+#
+#     response = app_api_client.post_graphql(
+#         QUERY_INITIATIVE,
+#         variables=variables,
+#         permissions=(permission_manage_initiatives,),
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#     initiative_data = content["data"]["initiative"]
+#     assert initiative_data is not None
+#     assert initiative_data["name"] == initiative.name
+#
+#
+# def test_initiative_variants_without_sku_query_by_staff(
+#     staff_api_client, initiative, channel_USD
+# ):
+#     initiative.variants.update(sku=None)
+#     initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
+#
+#     variables = {
+#         "id": initiative_id,
+#         "channel": channel_USD.slug,
+#     }
+#
+#     response = staff_api_client.post_graphql(
+#         QUERY_INITIATIVE_BY_ID,
+#         variables=variables,
+#     )
+#     content = get_graphql_content(response)
+#     initiative_data = content["data"]["initiative"]
+#
+#     assert initiative_data is not None
+#     assert initiative_data["id"] == initiative_id
+#
+#     variant = initiative.variants.first()
+#     variant_id = graphene.Node.to_global_id("InitiativeVariant", variant.pk)
+#     assert initiative_data["variants"] == [{"id": variant_id}]
+#
+#
+# def test_initiative_only_with_variants_without_sku_query_by_customer(
+#     user_api_client, initiative, channel_USD
+# ):
+#     initiative.variants.update(sku=None)
+#     initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
+#
+#     variables = {
+#         "id": initiative_id,
+#         "channel": channel_USD.slug,
+#     }
+#
+#     response = user_api_client.post_graphql(
+#         QUERY_INITIATIVE_BY_ID,
+#         variables=variables,
+#     )
+#     content = get_graphql_content(response)
+#     initiative_data = content["data"]["initiative"]
+#
+#     assert initiative_data is not None
+#     assert initiative_data["id"] == initiative_id
+#
+#     variant = initiative.variants.first()
+#     variant_id = graphene.Node.to_global_id("InitiativeVariant", variant.pk)
+#     assert initiative_data["variants"] == [{"id": variant_id}]
+#
+#
+# def test_initiative_only_with_variants_without_sku_query_by_anonymous(
+#     api_client, initiative, channel_USD
+# ):
+#     initiative.variants.update(sku=None)
+#     initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
+#
+#     variables = {
+#         "id": initiative_id,
+#         "channel": channel_USD.slug,
+#     }
+#
+#     response = api_client.post_graphql(
+#         QUERY_INITIATIVE_BY_ID,
+#         variables=variables,
+#     )
+#     content = get_graphql_content(response)
+#     initiative_data = content["data"]["initiative"]
+#
+#     assert initiative_data is not None
+#     assert initiative_data["id"] == initiative_id
+#
+#     variant = initiative.variants.first()
+#     variant_id = graphene.Node.to_global_id("InitiativeVariant", variant.pk)
+#     assert initiative_data["variants"] == [{"id": variant_id}]
 
-    response = app_api_client.post_graphql(
-        QUERY_PRODUCT,
-        variables=variables,
-        permissions=(permission_manage_products,),
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-    assert product_data is None
 
-
-def test_product_query_by_id_as_app_without_channel_slug(
-    app_api_client, permission_manage_products, product, channel_USD
-):
-    variables = {
-        "id": graphene.Node.to_global_id("Product", product.pk),
-    }
-    ProductChannelListing.objects.filter(product=product, channel=channel_USD).delete()
-
-    response = app_api_client.post_graphql(
-        QUERY_PRODUCT,
-        variables=variables,
-        permissions=(permission_manage_products,),
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-    assert product_data is not None
-    assert product_data["name"] == product.name
-
-
-def test_product_variants_without_sku_query_by_staff(
-    staff_api_client, product, channel_USD
-):
-    product.variants.update(sku=None)
-    product_id = graphene.Node.to_global_id("Product", product.pk)
-
-    variables = {
-        "id": product_id,
-        "channel": channel_USD.slug,
-    }
-
-    response = staff_api_client.post_graphql(
-        QUERY_PRODUCT_BY_ID,
-        variables=variables,
-    )
-    content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-
-    assert product_data is not None
-    assert product_data["id"] == product_id
-
-    variant = product.variants.first()
-    variant_id = graphene.Node.to_global_id("ProductVariant", variant.pk)
-    assert product_data["variants"] == [{"id": variant_id}]
-
-
-def test_product_only_with_variants_without_sku_query_by_customer(
-    user_api_client, product, channel_USD
-):
-    product.variants.update(sku=None)
-    product_id = graphene.Node.to_global_id("Product", product.pk)
-
-    variables = {
-        "id": product_id,
-        "channel": channel_USD.slug,
-    }
-
-    response = user_api_client.post_graphql(
-        QUERY_PRODUCT_BY_ID,
-        variables=variables,
-    )
-    content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-
-    assert product_data is not None
-    assert product_data["id"] == product_id
-
-    variant = product.variants.first()
-    variant_id = graphene.Node.to_global_id("ProductVariant", variant.pk)
-    assert product_data["variants"] == [{"id": variant_id}]
-
-
-def test_product_only_with_variants_without_sku_query_by_anonymous(
-    api_client, product, channel_USD
-):
-    product.variants.update(sku=None)
-    product_id = graphene.Node.to_global_id("Product", product.pk)
-
-    variables = {
-        "id": product_id,
-        "channel": channel_USD.slug,
-    }
-
-    response = api_client.post_graphql(
-        QUERY_PRODUCT_BY_ID,
-        variables=variables,
-    )
-    content = get_graphql_content(response)
-    product_data = content["data"]["product"]
-
-    assert product_data is not None
-    assert product_data["id"] == product_id
-
-    variant = product.variants.first()
-    variant_id = graphene.Node.to_global_id("ProductVariant", variant.pk)
-    assert product_data["variants"] == [{"id": variant_id}]
-
-
-QUERY_PRODUCT_BY_ID_WITH_MEDIA = """
-    query ($id: ID, $channel: String, $size: Int, $format: ThumbnailFormatEnum){
-        product(id: $id, channel: $channel) {
+QUERY_INITIATIVE_BY_ID_WITH_MEDIA = """
+    query ($id: ID, $size: Int, $format: ThumbnailFormatEnum){
+        initiative(id: $id) {
             media {
                 id
             }
@@ -527,162 +506,136 @@ QUERY_PRODUCT_BY_ID_WITH_MEDIA = """
                 url
                 alt
             }
-            variants {
-                id
-                name
-                media {
-                    id
-                }
-            }
         }
     }
 """
 
 
-def test_query_product_thumbnail_with_size_and_format_proxy_url_returned(
-    staff_api_client, product_with_image, channel_USD
+def test_query_initiative_thumbnail_with_size_and_format_proxy_url_returned(
+    staff_api_client, initiative_with_image
 ):
     # given
     format = ThumbnailFormatEnum.WEBP.name
 
-    id = graphene.Node.to_global_id("Product", product_with_image.pk)
+    id = graphene.Node.to_global_id("Initiative", initiative_with_image.pk)
     variables = {
         "id": id,
         "size": 120,
         "format": format,
-        "channel": channel_USD.slug,
     }
 
     # when
-    response = staff_api_client.post_graphql(QUERY_PRODUCT_BY_ID_WITH_MEDIA, variables)
+    response = staff_api_client.post_graphql(QUERY_INITIATIVE_BY_ID_WITH_MEDIA, variables)
 
     # then
     content = get_graphql_content(response)
-    data = content["data"]["product"]
-    product_media_id = graphene.Node.to_global_id(
-        "ProductMedia", product_with_image.media.first().pk
+    data = content["data"]["initiative"]
+    initiative_media_id = graphene.Node.to_global_id(
+        "InitiativeMedia", initiative_with_image.media.first().pk
     )
     expected_url = (
         f"http://{TEST_SERVER_DOMAIN}"
-        f"/thumbnail/{product_media_id}/128/{format.lower()}/"
+        f"/thumbnail/{initiative_media_id}/128/{format.lower()}/"
     )
     assert data["thumbnail"]["url"] == expected_url
 
 
-def test_query_product_thumbnail_with_size_and_proxy_url_returned(
-    staff_api_client, product_with_image, channel_USD
+def test_query_initiative_thumbnail_with_size_and_proxy_url_returned(
+    staff_api_client, initiative_with_image
 ):
     # given
-    id = graphene.Node.to_global_id("Product", product_with_image.pk)
+    id = graphene.Node.to_global_id("Initiative", initiative_with_image.pk)
     variables = {
         "id": id,
         "size": 120,
-        "channel": channel_USD.slug,
     }
 
     # when
-    response = staff_api_client.post_graphql(QUERY_PRODUCT_BY_ID_WITH_MEDIA, variables)
+    response = staff_api_client.post_graphql(QUERY_INITIATIVE_BY_ID_WITH_MEDIA, variables)
 
     # then
     content = get_graphql_content(response)
-    data = content["data"]["product"]
-    product_media_id = graphene.Node.to_global_id(
-        "ProductMedia", product_with_image.media.first().pk
+    data = content["data"]["initiative"]
+    initiative_media_id = graphene.Node.to_global_id(
+        "InitiativeMedia", initiative_with_image.media.first().pk
     )
     assert (
         data["thumbnail"]["url"]
-        == f"http://{TEST_SERVER_DOMAIN}/thumbnail/{product_media_id}/128/"
+        == f"http://{TEST_SERVER_DOMAIN}/thumbnail/{initiative_media_id}/128/"
     )
 
 
-def test_query_product_thumbnail_with_size_and_thumbnail_url_returned(
-    staff_api_client, product_with_image, channel_USD
+def test_query_initiative_thumbnail_with_size_and_thumbnail_url_returned(
+    staff_api_client, initiative_with_image
 ):
     # given
-    product_media = product_with_image.media.first()
+    initiative_media = initiative_with_image.media.first()
 
     thumbnail_mock = MagicMock(spec=File)
     thumbnail_mock.name = "thumbnail_image.jpg"
     Thumbnail.objects.create(
-        product_media=product_media, size=128, image=thumbnail_mock
+        initiative_media=initiative_media, size=128, image=thumbnail_mock
     )
 
-    id = graphene.Node.to_global_id("Product", product_with_image.pk)
+    id = graphene.Node.to_global_id("Initiative", initiative_with_image.pk)
     variables = {
         "id": id,
         "size": 120,
-        "channel": channel_USD.slug,
     }
 
     # when
-    response = staff_api_client.post_graphql(QUERY_PRODUCT_BY_ID_WITH_MEDIA, variables)
+    response = staff_api_client.post_graphql(QUERY_INITIATIVE_BY_ID_WITH_MEDIA, variables)
 
     # then
     content = get_graphql_content(response)
-    data = content["data"]["product"]
+    data = content["data"]["initiative"]
     assert (
         data["thumbnail"]["url"]
         == f"http://{TEST_SERVER_DOMAIN}/media/thumbnails/{thumbnail_mock.name}"
     )
 
 
-def test_query_product_thumbnail_only_format_provided_default_size_is_used(
-    staff_api_client, product_with_image, channel_USD
+def test_query_initiative_thumbnail_only_format_provided_default_size_is_used(
+    staff_api_client, initiative_with_image
 ):
     # given
     format = ThumbnailFormatEnum.WEBP.name
 
-    id = graphene.Node.to_global_id("Product", product_with_image.pk)
+    id = graphene.Node.to_global_id("Initiative", initiative_with_image.pk)
     variables = {
         "id": id,
         "format": format,
-        "channel": channel_USD.slug,
     }
 
     # when
-    response = staff_api_client.post_graphql(QUERY_PRODUCT_BY_ID_WITH_MEDIA, variables)
+    response = staff_api_client.post_graphql(QUERY_INITIATIVE_BY_ID_WITH_MEDIA, variables)
 
     # then
     content = get_graphql_content(response)
-    data = content["data"]["product"]
-    product_media_id = graphene.Node.to_global_id(
-        "ProductMedia", product_with_image.media.first().pk
+    data = content["data"]["initiative"]
+    initiative_media_id = graphene.Node.to_global_id(
+        "InitiativeMedia", initiative_with_image.media.first().pk
     )
     expected_url = (
         f"http://{TEST_SERVER_DOMAIN}"
-        f"/thumbnail/{product_media_id}/256/{format.lower()}/"
+        f"/thumbnail/{initiative_media_id}/256/{format.lower()}/"
     )
     assert data["thumbnail"]["url"] == expected_url
 
 
-def test_query_product_thumbnail_no_product_media(
-    staff_api_client, product, channel_USD
+def test_query_initiative_thumbnail_no_initiative_media(
+    staff_api_client, initiative
 ):
     # given
-    id = graphene.Node.to_global_id("Product", product.pk)
+    id = graphene.Node.to_global_id("Initiative", initiative.pk)
     variables = {
         "id": id,
-        "channel": channel_USD.slug,
     }
 
     # when
-    response = staff_api_client.post_graphql(QUERY_PRODUCT_BY_ID_WITH_MEDIA, variables)
+    response = staff_api_client.post_graphql(QUERY_INITIATIVE_BY_ID_WITH_MEDIA, variables)
 
     # then
     content = get_graphql_content(response)
-    data = content["data"]["product"]
+    data = content["data"]["initiative"]
     assert not data["thumbnail"]
-
-
-QUERY_COLLECTION_FROM_PRODUCT = """
-    query ($id: ID, $channel:String){
-        product(
-            id: $id,
-            channel: $channel
-        ) {
-            collections {
-                name
-            }
-        }
-    }
-    """
