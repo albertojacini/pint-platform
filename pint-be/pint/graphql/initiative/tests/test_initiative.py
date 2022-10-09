@@ -110,24 +110,16 @@ def test_initiative_query_by_id_as_staff_user(
     variables = {
         "id": graphene.Node.to_global_id("Initiative", initiative.pk),
     }
-    print("variables+++++++++++")
-    print(variables)
-    print("initiative++++++++++++++")
-    print(initiative)
     response = staff_api_client.post_graphql(
         QUERY_INITIATIVE,
         variables=variables,
         permissions=(permission_manage_initiatives,),
         check_no_permissions=False,
     )
-    print("response++++++++++++++++++")
-    print(json.loads(response.content.decode("utf8")))
     content = get_graphql_content(response)
-    print('content["data"]+++++++++++++++++++++++++++++')
-    print(content["data"])
     initiative_data = content["data"]["initiative"]
     assert initiative_data is not None
-    assert initiative_data["name"] == initiative.name
+    assert initiative_data["title"] == initiative.title
 
 
 def test_initiative_query_description(

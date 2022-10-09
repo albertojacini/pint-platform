@@ -8,6 +8,8 @@ from .initiatives import (
     Initiative,
     InitiativeCountableConnection,
     InitiativeMedia,
+    PoliticalEntity,
+    PoliticalEntityCountableConnection,
 )
 # from .products import (
 #     Category,

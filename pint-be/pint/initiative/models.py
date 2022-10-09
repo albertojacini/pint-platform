@@ -12,6 +12,7 @@ from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.db.models import JSONField  # type: ignore
 from django.db.models import (
+    Model,
     BooleanField,
     Case,
     Count,
@@ -73,17 +74,19 @@ ALL_INITIATIVES_PERMISSIONS = [
     InitiativePermissions.MANAGE_INITIATIVES,
 ]
 class InitiativesQueryset(models.QuerySet):
-    # def published(self, channel_slug: str):
-    #     today = datetime.datetime.now(pytz.UTC)
-    #     channels = Channel.objects.filter(
-    #         slug=str(channel_slug), is_active=True
-    #     ).values("id")
-    #     channel_listings = Initiative.objects.filter(
-    #         Q(published_at__lte=today) | Q(published_at__isnull=True),
-    #         Exists(channels.filter(pk=OuterRef("channel_id"))),
-    #         is_published=True,
-    #     ).values("id")
-    #     return self.filter(Exists(channel_listings.filter(initiative_id=OuterRef("pk"))))
+    def published(self):
+        # today = datetime.datetime.now(pytz.UTC)
+        # channels = Channel.objects.filter(
+        #     slug=str(channel_slug), is_active=True
+        # ).values("id")
+        # channel_listings = Initiative.objects.filter(
+        #     Q(published_at__lte=today) | Q(published_at__isnull=True),
+        #     Exists(channels.filter(pk=OuterRef("channel_id"))),
+        #     is_published=True,
+        # ).values("id")
+        # return self.filter(Exists(channel_listings.filter(initiative_id=OuterRef("pk"))))
+
+        return Initiative.objects.all()
 
     # def not_published(self, channel_slug: str):
     #     today = datetime.datetime.now(pytz.UTC)
@@ -93,18 +96,8 @@ class InitiativesQueryset(models.QuerySet):
     #         | Q(is_published__isnull=True)
     #     )
 
-    def visible_to_user(self, requestor: Union["User", "App"], channel_slug: str):
-        if has_one_of_permissions(requestor, ALL_INITIATIVES_PERMISSIONS):
-            # if channel_slug:
-            #     channels = Channel.objects.filter(slug=str(channel_slug)).values("id")
-            #     channel_listings = InitiativeChannelListing.objects.filter(
-            #         Exists(channels.filter(pk=OuterRef("channel_id")))
-            #     ).values("id")
-            #     return self.filter(
-            #         Exists(channel_listings.filter(initiative_id=OuterRef("pk")))
-            #     )
-            return self.all()
-        return self.published_with_variants(channel_slug)
+    def visible_to_user(self, requestor: Union["User", "App"]):
+        return self.published()
 
     # def annotate_publication_info(self, channel_slug: str):
     #     return self.annotate_is_published(channel_slug).annotate_published_at(
@@ -253,6 +246,10 @@ class InitiativesQueryset(models.QuerySet):
             return self.prefetch_related(*common_fields)
         # return self.prefetch_related("collections", "category", *common_fields)
         return self.prefetch_related(*common_fields)
+
+
+class PoliticalEntity(Model):
+    name = models.CharField(max_length=255)
 
 
 class Initiative(SeoModel, ModelWithMetadata):

@@ -60,21 +60,21 @@ from ..utils.filters import filter_by_period
 #     return models.DigitalContent.objects.all()
 
 
-def resolve_initiative_by_id(info, id, channel_slug, requestor):
+def resolve_initiative_by_id(info, id, requestor):
     database_connection_name = get_database_connection_name(info.context)
     return (
         models.Initiative.objects.using(database_connection_name)
-        .visible_to_user(requestor, channel_slug=channel_slug)
+        .visible_to_user(requestor)
         .filter(id=id)
         .first()
     )
 
 
-def resolve_initiative_by_slug(info, initiative_slug, channel_slug, requestor):
+def resolve_initiative_by_slug(info, initiative_slug, requestor):
     database_connection_name = get_database_connection_name(info.context)
     return (
         models.Initiative.objects.using(database_connection_name)
-        .visible_to_user(requestor, channel_slug=channel_slug)
+        .visible_to_user(requestor)
         .filter(slug=initiative_slug)
         .first()
     )

@@ -4,6 +4,7 @@
 from typing import List
 
 import graphene
+import graphene_django
 # from django_countries.fields import Country
 from graphene import relay
 
@@ -728,6 +729,12 @@ from ..sorters import InitiativeOrder
 #         node = InitiativeVariant
 
 
+class PoliticalEntity(graphene_django.DjangoObjectType):
+    class Meta:
+        model = models.PoliticalEntity
+        fields = ("id", "name")
+
+
 # @federated_entity("id channel")
 # class Initiative(ChannelContextTypeWithMetadata, ModelObjectType):
 class Initiative(ModelObjectType):
@@ -1257,6 +1264,11 @@ class Initiative(ModelObjectType):
 class InitiativeCountableConnection(CountableConnection):
     class Meta:
         node = Initiative
+
+
+class PoliticalEntityCountableConnection(CountableConnection):
+    class Meta:
+        node = PoliticalEntity
 
 
 # @federated_entity("id")
