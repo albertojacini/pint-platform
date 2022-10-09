@@ -710,11 +710,11 @@ class BaseBulkMutation(BaseMutation):
         if not cls.check_permissions(info.context):
             raise PermissionDenied(permissions=cls._meta.permissions)
 
-        result = info.context.plugins.perform_mutation(
-            mutation_cls=cls, root=root, info=info, data=data
-        )
-        if result is not None:
-            return result
+        # result = info.context.plugins.perform_mutation(
+        #     mutation_cls=cls, root=root, info=info, data=data
+        # )
+        # if result is not None:
+        #     return result
 
         count, errors = cls.perform_mutation(root, info, **data)
         if errors:
