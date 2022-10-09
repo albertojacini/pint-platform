@@ -22,6 +22,10 @@ from ..utils import get_user_or_app_from_context
 from .filters import (
     InitiativeFilterInput,
 )
+from .bulk_mutations.initiatives import (
+    InitiativeBulkDelete,
+    InitiativeMediaBulkDelete,
+)
 from .mutations.initiatives import (
     InitiativeCreate,
     InitiativeDelete,
@@ -161,15 +165,15 @@ class InitiativeQueries(graphene.ObjectType):
 
 class InitiativeMutations(graphene.ObjectType):
 
-    Initiative_create = InitiativeCreate.Field()
-    Initiative_delete = InitiativeDelete.Field()
-    # Initiative_bulk_delete = InitiativeBulkDelete.Field()
-    Initiative_update = InitiativeUpdate.Field()
-    Initiative_translate = InitiativeTranslate.Field()
+    initiative_create = InitiativeCreate.Field()
+    initiative_delete = InitiativeDelete.Field()
+    initiative_bulk_delete = InitiativeBulkDelete.Field()
+    initiative_update = InitiativeUpdate.Field()
+    initiative_translate = InitiativeTranslate.Field()
 
-    Initiative_media_create = InitiativeMediaCreate.Field()
-    Initiative_media_delete = InitiativeMediaDelete.Field()
-    # Initiative_media_bulk_delete = InitiativeMediaBulkDelete.Field()
-    Initiative_media_reorder = InitiativeMediaReorder.Field()
-    Initiative_media_update = InitiativeMediaUpdate.Field()
+    initiative_media_create = InitiativeMediaCreate.Field()
+    initiative_media_delete = InitiativeMediaDelete.Field()
+    initiative_media_bulk_delete = InitiativeMediaBulkDelete.Field()
+    initiative_media_reorder = InitiativeMediaReorder.Field()
+    initiative_media_update = InitiativeMediaUpdate.Field()
 

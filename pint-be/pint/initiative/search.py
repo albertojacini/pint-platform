@@ -66,7 +66,7 @@ def prepare_initiative_search_vector_value(
     if not already_prefetched:
         prefetch_related_objects([initiative], *PRODUCT_FIELDS_TO_PREFETCH)
     search_vectors = [
-        NoValidationSearchVector(Value(initiative.name), config="simple", weight="A"),
+        NoValidationSearchVector(Value(initiative.title), config="simple", weight="A"),
         NoValidationSearchVector(
             Value(initiative.description_plaintext), config="simple", weight="C"
         ),

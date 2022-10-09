@@ -8,15 +8,15 @@ from graphene import Node
 # from .....core.taxes import TaxType
 # from .....plugins.manager import PluginsManager
 from .....initiative.models import InitiativeMedia, InitiativeTranslation
-# from .....product.models import ProductMedia, ProductTranslation
+# from .....initiative.models import InitiativeMedia, InitiativeTranslation
 from ....tests.utils import get_graphql_content
 
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-def test_product_details(product_with_image, api_client, count_queries, channel_USD):
+def test_initiative_details(initiative_with_image, api_client, count_queries, channel_USD):
     query = """
-        fragment BasicProductFields on Product {
+        fragment BasicInitiativeFields on Initiative {
           id
           name
           thumbnail {
@@ -28,7 +28,7 @@ def test_product_details(product_with_image, api_client, count_queries, channel_
           }
         }
 
-        fragment ProductVariantFields on ProductVariant {
+        fragment InitiativeVariantFields on InitiativeVariant {
           id
           sku
           name
@@ -82,17 +82,17 @@ def test_product_details(product_with_image, api_client, count_queries, channel_
           }
         }
 
-        query ProductDetails($id: ID!, $channel: String) {
-          product(id: $id, channel: $channel) {
-            ...BasicProductFields
+        query InitiativeDetails($id: ID!, $channel: String) {
+          initiative(id: $id, channel: $channel) {
+            ...BasicInitiativeFields
             description
             category {
               id
               name
-              products(first: 4, channel: $channel) {
+              initiatives(first: 4, channel: $channel) {
                 edges {
                   node {
-                    ...BasicProductFields
+                    ...BasicInitiativeFields
                     category {
                       id
                       name
@@ -152,7 +152,7 @@ def test_product_details(product_with_image, api_client, count_queries, channel_
               id
             }
             variants {
-              ...ProductVariantFields
+              ...InitiativeVariantFields
             }
             seoDescription
             seoTitle
@@ -160,13 +160,13 @@ def test_product_details(product_with_image, api_client, count_queries, channel_
           }
         }
     """
-    product = product_with_image
-    variant = product_with_image.variants.first()
-    media = product_with_image.get_first_image()
+    initiative = initiative_with_image
+    variant = initiative_with_image.variants.first()
+    media = initiative_with_image.get_first_image()
     media.variant_media.create(variant=variant)
 
     variables = {
-        "id": Node.to_global_id("Product", product.pk),
+        "id": Node.to_global_id("Initiative", initiative.pk),
         "channel": channel_USD.slug,
     }
     get_graphql_content(api_client.post_graphql(query, variables))
@@ -174,12 +174,12 @@ def test_product_details(product_with_image, api_client, count_queries, channel_
 
 # @pytest.mark.django_db
 # @pytest.mark.count_queries(autouse=False)
-# def test_retrieve_product_attributes(
-#     product_list, api_client, count_queries, channel_USD
+# def test_retrieve_initiative_attributes(
+#     initiative_list, api_client, count_queries, channel_USD
 # ):
 #     query = """
-#         query($sortBy: ProductOrder, $channel: String) {
-#           products(first: 10, sortBy: $sortBy, channel: $channel) {
+#         query($sortBy: InitiativeOrder, $channel: String) {
+#           initiatives(first: 10, sortBy: $sortBy, channel: $channel) {
 #             edges {
 #               node {
 #                 id
@@ -200,10 +200,10 @@ def test_product_details(product_with_image, api_client, count_queries, channel_
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-def test_retrieve_product_images(product_list, api_client, count_queries, channel_USD):
+def test_retrieve_initiative_images(initiative_list, api_client, count_queries, channel_USD):
     query = """
-        query($sortBy: ProductOrder, $channel: String) {
-          products(first: 10, sortBy: $sortBy, channel: $channel) {
+        query($sortBy: InitiativeOrder, $channel: String) {
+          initiatives(first: 10, sortBy: $sortBy, channel: $channel) {
             edges {
               node {
                 id
@@ -222,10 +222,10 @@ def test_retrieve_product_images(product_list, api_client, count_queries, channe
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-def test_retrieve_product_media(product_list, api_client, count_queries, channel_USD):
+def test_retrieve_initiative_media(initiative_list, api_client, count_queries, channel_USD):
     query = """
-        query($sortBy: ProductOrder, $channel: String) {
-          products(first: 10, sortBy: $sortBy, channel: $channel) {
+        query($sortBy: InitiativeOrder, $channel: String) {
+          initiatives(first: 10, sortBy: $sortBy, channel: $channel) {
             edges {
               node {
                 id
@@ -245,15 +245,15 @@ def test_retrieve_product_media(product_list, api_client, count_queries, channel
 # @pytest.mark.django_db
 # @pytest.mark.count_queries(autouse=False)
 # def test_retrieve_channel_listings(
-#     product_list_with_many_channels,
+#     initiative_list_with_many_channels,
 #     staff_api_client,
 #     count_queries,
-#     permission_manage_products,
+#     permission_manage_initiatives,
 #     channel_USD,
 # ):
 #     query = """
 #         query($channel: String) {
-#           products(first: 10, channel: $channel) {
+#           initiatives(first: 10, channel: $channel) {
 #             edges {
 #               node {
 #                 id
@@ -313,7 +313,7 @@ def test_retrieve_product_media(product_list, api_client, count_queries, channel
 #         staff_api_client.post_graphql(
 #             query,
 #             variables,
-#             permissions=(permission_manage_products,),
+#             permissions=(permission_manage_initiatives,),
 #             check_no_permissions=False,
 #         )
 #     )
@@ -321,21 +321,21 @@ def test_retrieve_product_media(product_list, api_client, count_queries, channel
 #
 # @pytest.mark.django_db
 # @pytest.mark.count_queries(autouse=False)
-# def test_retrive_products_with_product_types_and_attributes(
-#     product_list,
+# def test_retrive_initiatives_with_initiative_types_and_attributes(
+#     initiative_list,
 #     api_client,
 #     count_queries,
 #     channel_USD,
 # ):
 #     query = """
 #         query($channel: String) {
-#           products(first: 10, channel: $channel) {
+#           initiatives(first: 10, channel: $channel) {
 #             edges {
 #               node {
 #                 id
-#                   productType {
+#                   initiativeType {
 #                     name
-#                   productAttributes {
+#                   initiativeAttributes {
 #                     name
 #                   }
 #                   variantAttributes {
@@ -351,51 +351,19 @@ def test_retrieve_product_media(product_list, api_client, count_queries, channel
 #     get_graphql_content(api_client.post_graphql(query, variables))
 
 
-def test_product_create(
-    settings,
+def test_initiative_create(
     staff_api_client,
-    product_type,
-    category,
-    size_attribute,
-    description_json,
-    permission_manage_products,
-    monkeypatch,
+    # description_json,
+    permission_manage_initiatives,
     count_queries,
 ):
     query = """
-        mutation createProduct($input: ProductCreateInput!) {
-            productCreate(input: $input) {
-                product {
-                    id
-                    category {
-                        name
-                    }
-                    description
-                    chargeTaxes
-                    taxType {
-                        taxCode
-                        description
-                    }
-                    name
-                    slug
-                    rating
-                    productType {
-                        name
-                    }
-                    attributes {
-                        attribute {
-                            slug
-                        }
-                    values {
-                        slug
-                        name
-                        reference
-                        file {
-                            url
-                            contentType
-                        }
-                    }
-                }
+    mutation createInitiative($input: InitiativeCreateInput!) {
+        initiativeCreate(input: $input) {
+            initiative {
+                id
+                title
+                slug
             }
             errors {
                 field
@@ -405,74 +373,44 @@ def test_product_create(
             }
         }
     }
-"""
-    settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
-    description_json = json.dumps(description_json)
+    """
+    # description_json = json.dumps(description_json)
 
-    product_type_id = graphene.Node.to_global_id("ProductType", product_type.pk)
-    category_id = graphene.Node.to_global_id("Category", category.pk)
-    product_name = "test name"
-    product_slug = "product-test-slug"
-    product_charge_taxes = True
-    product_tax_rate = "STANDARD"
+    initiative_title = "test name"
+    initiative_slug = "initiative-test-slug"
 
-    # Mock tax interface with fake response from tax gateway
-    monkeypatch.setattr(
-        PluginsManager,
-        "get_tax_code_from_object_meta",
-        lambda self, x: TaxType(description="", code=product_tax_rate),
-    )
-
-    # Default attribute defined in product_type fixture
-    color_attr = product_type.product_attributes.get(name="Color")
-    color_value_slug = color_attr.values.first().slug
-    color_attr_id = graphene.Node.to_global_id("Attribute", color_attr.id)
-
-    # Add second attribute
-    product_type.product_attributes.add(size_attribute)
-    size_attr_id = graphene.Node.to_global_id("Attribute", size_attribute.id)
-    non_existent_attr_value = "The cake is a lie"
-
-    # test creating root product
+    # test creating root initiative
     variables = {
         "input": {
-            "productType": product_type_id,
-            "category": category_id,
-            "name": product_name,
-            "slug": product_slug,
-            "description": description_json,
-            "chargeTaxes": product_charge_taxes,
-            "taxCode": product_tax_rate,
-            "attributes": [
-                {"id": color_attr_id, "values": [color_value_slug]},
-                {"id": size_attr_id, "values": [non_existent_attr_value]},
-            ],
+            "title": initiative_title,
+            "slug": initiative_slug,
+            # "description": description_json,
         }
     }
 
     response = staff_api_client.post_graphql(
-        query, variables, permissions=[permission_manage_products]
+        query, variables, permissions=[permission_manage_initiatives]
     )
     content = get_graphql_content(response)
-    assert not content["data"]["productCreate"]["errors"]
+    assert not content["data"]["initiativeCreate"]["errors"]
 
 
-def test_update_product(
+def test_update_initiative(
     settings,
     staff_api_client,
     category,
     non_default_category,
     collection_list,
-    product_with_variant_with_two_attributes,
+    initiative_with_variant_with_two_attributes,
     other_description_json,
-    permission_manage_products,
+    permission_manage_initiatives,
     monkeypatch,
     count_queries,
 ):
     query = """
-    mutation updateProduct($productId: ID!, $input: ProductInput!) {
-        productUpdate(id: $productId, input: $input) {
-                product {
+    mutation updateInitiative($initiativeId: ID!, $input: InitiativeInput!) {
+        initiativeUpdate(id: $initiativeId, input: $input) {
+                initiative {
                     category {
                         name
                     }
@@ -488,7 +426,7 @@ def test_update_product(
                     }
                     name
                     slug
-                    productType {
+                    initiativeType {
                         name
                     }
                     attributes {
@@ -516,49 +454,49 @@ def test_update_product(
             }
         }
     """
-    product = product_with_variant_with_two_attributes
+    initiative = initiative_with_variant_with_two_attributes
     for collection in collection_list:
-        collection.products.add(product)
+        collection.initiatives.add(initiative)
     other_description_json = json.dumps(other_description_json)
     settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
-    product_id = graphene.Node.to_global_id("Product", product.pk)
+    initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
     category_id = graphene.Node.to_global_id("Category", non_default_category.pk)
-    product_name = "updated name"
-    product_slug = "updated-product"
-    product_charge_taxes = True
-    product_tax_rate = "STANDARD"
+    initiative_name = "updated name"
+    initiative_slug = "updated-initiative"
+    initiative_charge_taxes = True
+    initiative_tax_rate = "STANDARD"
 
     # Mock tax interface with fake response from tax gateway
     monkeypatch.setattr(
         PluginsManager,
         "get_tax_code_from_object_meta",
-        lambda self, x: TaxType(description="", code=product_tax_rate),
+        lambda self, x: TaxType(description="", code=initiative_tax_rate),
     )
 
     variables = {
-        "productId": product_id,
+        "initiativeId": initiative_id,
         "input": {
             "category": category_id,
-            "name": product_name,
-            "slug": product_slug,
+            "name": initiative_name,
+            "slug": initiative_slug,
             "description": other_description_json,
-            "chargeTaxes": product_charge_taxes,
-            "taxCode": product_tax_rate,
+            "chargeTaxes": initiative_charge_taxes,
+            "taxCode": initiative_tax_rate,
         },
     }
 
     response = staff_api_client.post_graphql(
-        query, variables, permissions=[permission_manage_products]
+        query, variables, permissions=[permission_manage_initiatives]
     )
     content = get_graphql_content(response)
-    data = content["data"]["productUpdate"]
+    data = content["data"]["initiativeUpdate"]
     assert not data["errors"]
 
 
-QUERY_PRODUCTS_WITH_FILTER = """
-    query ($channel: String, $filter: ProductFilterInput){
-        products(
+QUERY_INITIATIVES_WITH_FILTER = """
+    query ($channel: String, $filter: InitiativeFilterInput){
+        initiatives(
             channel: $channel,
             filter: $filter,
             first: 20,
@@ -575,11 +513,11 @@ QUERY_PRODUCTS_WITH_FILTER = """
 
 # @pytest.mark.django_db
 # @pytest.mark.count_queries(autouse=False)
-# def test_filter_products_by_attributes(
-#     api_client, product_list, channel_USD, count_queries
+# def test_filter_initiatives_by_attributes(
+#     api_client, initiative_list, channel_USD, count_queries
 # ):
-#     product = product_list[0]
-#     attr_assignment = product.attributes.first()
+#     initiative = initiative_list[0]
+#     attr_assignment = initiative.attributes.first()
 #     attr = attr_assignment.attribute
 #     variables = {
 #         "channel": channel_USD.slug,
@@ -589,18 +527,18 @@ QUERY_PRODUCTS_WITH_FILTER = """
 #             ]
 #         },
 #     }
-#     get_graphql_content(api_client.post_graphql(QUERY_PRODUCTS_WITH_FILTER, variables))
+#     get_graphql_content(api_client.post_graphql(QUERY_INITIATIVES_WITH_FILTER, variables))
 
 
 # @pytest.mark.django_db
 # @pytest.mark.count_queries(autouse=False)
-# def test_filter_products_by_numeric_attributes(
-#     api_client, product_list, numeric_attribute, channel_USD, count_queries
+# def test_filter_initiatives_by_numeric_attributes(
+#     api_client, initiative_list, numeric_attribute, channel_USD, count_queries
 # ):
-#     product = product_list[0]
-#     product.product_type.product_attributes.add(numeric_attribute)
+#     initiative = initiative_list[0]
+#     initiative.initiative_type.initiative_attributes.add(numeric_attribute)
 #     associate_attribute_values_to_instance(
-#         product, numeric_attribute, *numeric_attribute.values.all()
+#         initiative, numeric_attribute, *numeric_attribute.values.all()
 #     )
 #     variables = {
 #         "channel": channel_USD.slug,
@@ -616,18 +554,18 @@ QUERY_PRODUCTS_WITH_FILTER = """
 #             ]
 #         },
 #     }
-#     get_graphql_content(api_client.post_graphql(QUERY_PRODUCTS_WITH_FILTER, variables))
+#     get_graphql_content(api_client.post_graphql(QUERY_INITIATIVES_WITH_FILTER, variables))
 #
 #
 # @pytest.mark.django_db
 # @pytest.mark.count_queries(autouse=False)
-# def test_filter_products_by_boolean_attributes(
-#     api_client, product_list, boolean_attribute, channel_USD, count_queries
+# def test_filter_initiatives_by_boolean_attributes(
+#     api_client, initiative_list, boolean_attribute, channel_USD, count_queries
 # ):
-#     product = product_list[0]
-#     product.product_type.product_attributes.add(boolean_attribute)
+#     initiative = initiative_list[0]
+#     initiative.initiative_type.initiative_attributes.add(boolean_attribute)
 #     associate_attribute_values_to_instance(
-#         product, boolean_attribute, *boolean_attribute.values.all()
+#         initiative, boolean_attribute, *boolean_attribute.values.all()
 #     )
 #     variables = {
 #         "channel": channel_USD.slug,
@@ -640,32 +578,32 @@ QUERY_PRODUCTS_WITH_FILTER = """
 #             ]
 #         },
 #     }
-#     get_graphql_content(api_client.post_graphql(QUERY_PRODUCTS_WITH_FILTER, variables))
+#     get_graphql_content(api_client.post_graphql(QUERY_INITIATIVES_WITH_FILTER, variables))
 #
 #
 # @pytest.mark.django_db
 # @pytest.mark.count_queries(autouse=False)
-# def test_filter_products_by_gift_card(
+# def test_filter_initiatives_by_gift_card(
 #     staff_api_client,
-#     product_list,
+#     initiative_list,
 #     boolean_attribute,
 #     channel_USD,
 #     count_queries,
-#     shippable_gift_card_product,
+#     shippable_gift_card_initiative,
 # ):
 #     variables = {"channel": channel_USD.slug, "filter": {"giftCard": True}}
 #
 #     get_graphql_content(
-#         staff_api_client.post_graphql(QUERY_PRODUCTS_WITH_FILTER, variables)
+#         staff_api_client.post_graphql(QUERY_INITIATIVES_WITH_FILTER, variables)
 #     )
 
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-def test_product_translations(api_client, product_list, channel_USD, count_queries):
+def test_initiative_translations(api_client, initiative_list, channel_USD, count_queries):
     query = """
       query($channel: String) {
-        products(channel: $channel, first: 20) {
+        initiatives(channel: $channel, first: 20) {
           edges {
             node {
               name
@@ -678,9 +616,9 @@ def test_product_translations(api_client, product_list, channel_USD, count_queri
       }
     """
     translations = []
-    for product in product_list:
-        translations.append(ProductTranslation(product=product, language_code="en"))
-    ProductTranslation.objects.bulk_create(translations)
+    for initiative in initiative_list:
+        translations.append(InitiativeTranslation(initiative=initiative, language_code="en"))
+    InitiativeTranslation.objects.bulk_create(translations)
 
     variables = {"channel": channel_USD.slug}
     get_graphql_content(api_client.post_graphql(query, variables))
@@ -688,19 +626,19 @@ def test_product_translations(api_client, product_list, channel_USD, count_queri
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-def test_products_for_federation_query_count(
+def test_initiatives_for_federation_query_count(
     api_client,
-    product,
-    shippable_gift_card_product,
+    initiative,
+    shippable_gift_card_initiative,
     channel_USD,
     django_assert_num_queries,
     count_queries,
 ):
     query = """
-      query GetProductInFederation($representations: [_Any]) {
+      query GetInitiativeInFederation($representations: [_Any]) {
         _entities(representations: $representations) {
           __typename
-          ... on Product {
+          ... on Initiative {
             id
             name
           }
@@ -711,8 +649,8 @@ def test_products_for_federation_query_count(
     variables = {
         "representations": [
             {
-                "__typename": "Product",
-                "id": graphene.Node.to_global_id("Product", product.pk),
+                "__typename": "Initiative",
+                "id": graphene.Node.to_global_id("Initiative", initiative.pk),
                 "channel": channel_USD.slug,
             },
         ],
@@ -726,14 +664,14 @@ def test_products_for_federation_query_count(
     variables = {
         "representations": [
             {
-                "__typename": "Product",
-                "id": graphene.Node.to_global_id("Product", product.pk),
+                "__typename": "Initiative",
+                "id": graphene.Node.to_global_id("Initiative", initiative.pk),
                 "channel": channel_USD.slug,
             },
             {
-                "__typename": "Product",
+                "__typename": "Initiative",
                 "id": graphene.Node.to_global_id(
-                    "Product", shippable_gift_card_product.pk
+                    "Initiative", shippable_gift_card_initiative.pk
                 ),
                 "channel": channel_USD.slug,
             },
@@ -748,27 +686,27 @@ def test_products_for_federation_query_count(
 
 @pytest.mark.django_db
 @pytest.mark.count_queries(autouse=False)
-def test_products_media_for_federation_query_count(
+def test_initiatives_media_for_federation_query_count(
     api_client,
-    product,
+    initiative,
     image,
     media_root,
     django_assert_num_queries,
     count_queries,
 ):
-    medias = ProductMedia.objects.bulk_create(
+    medias = InitiativeMedia.objects.bulk_create(
         [
-            ProductMedia(product=product, image=image),
-            ProductMedia(product=product, image=image),
-            ProductMedia(product=product, image=image),
+            InitiativeMedia(initiative=initiative, image=image),
+            InitiativeMedia(initiative=initiative, image=image),
+            InitiativeMedia(initiative=initiative, image=image),
         ]
     )
 
     query = """
-      query GetProductMediaInFederation($representations: [_Any]) {
+      query GetInitiativeMediaInFederation($representations: [_Any]) {
         _entities(representations: $representations) {
           __typename
-          ... on ProductMedia {
+          ... on InitiativeMedia {
             id
             url
           }
@@ -779,8 +717,8 @@ def test_products_media_for_federation_query_count(
     variables = {
         "representations": [
             {
-                "__typename": "ProductMedia",
-                "id": graphene.Node.to_global_id("ProductMedia", medias[0].pk),
+                "__typename": "InitiativeMedia",
+                "id": graphene.Node.to_global_id("InitiativeMedia", medias[0].pk),
             },
         ],
     }
@@ -793,8 +731,8 @@ def test_products_media_for_federation_query_count(
     variables = {
         "representations": [
             {
-                "__typename": "ProductMedia",
-                "id": graphene.Node.to_global_id("ProductMedia", media.pk),
+                "__typename": "InitiativeMedia",
+                "id": graphene.Node.to_global_id("InitiativeMedia", media.pk),
             }
             for media in medias
         ],
@@ -808,18 +746,18 @@ def test_products_media_for_federation_query_count(
 
 # @pytest.mark.django_db
 # @pytest.mark.count_queries(autouse=False)
-# def test_products_types_for_federation_query_count(
+# def test_initiatives_types_for_federation_query_count(
 #     api_client,
-#     product_type,
-#     product_type_without_variant,
+#     initiative_type,
+#     initiative_type_without_variant,
 #     django_assert_num_queries,
 #     count_queries,
 # ):
 #     query = """
-#       query GetProductTypeInFederation($representations: [_Any]) {
+#       query GetInitiativeTypeInFederation($representations: [_Any]) {
 #         _entities(representations: $representations) {
 #           __typename
-#           ... on ProductType {
+#           ... on InitiativeType {
 #             id
 #             name
 #           }
@@ -830,8 +768,8 @@ def test_products_media_for_federation_query_count(
 #     variables = {
 #         "representations": [
 #             {
-#                 "__typename": "ProductType",
-#                 "id": graphene.Node.to_global_id("ProductType", product_type.pk),
+#                 "__typename": "InitiativeType",
+#                 "id": graphene.Node.to_global_id("InitiativeType", initiative_type.pk),
 #             },
 #         ],
 #     }
@@ -844,13 +782,13 @@ def test_products_media_for_federation_query_count(
 #     variables = {
 #         "representations": [
 #             {
-#                 "__typename": "ProductType",
-#                 "id": graphene.Node.to_global_id("ProductType", product_type.pk),
+#                 "__typename": "InitiativeType",
+#                 "id": graphene.Node.to_global_id("InitiativeType", initiative_type.pk),
 #             },
 #             {
-#                 "__typename": "ProductType",
+#                 "__typename": "InitiativeType",
 #                 "id": graphene.Node.to_global_id(
-#                     "ProductType", product_type_without_variant.pk
+#                     "InitiativeType", initiative_type_without_variant.pk
 #                 ),
 #             },
 #         ],

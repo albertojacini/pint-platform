@@ -676,11 +676,11 @@ class InitiativeCreate(ModelMutation):
 
     @classmethod
     def post_save_action(cls, info, instance, _cleaned_input):
-        initiative = models.Initiative.objects.prefetched_for_webhook().get(
-            pk=instance.pk
-        )
+        # initiative = models.Initiative.objects.prefetched_for_webhook().get(
+        #     pk=instance.pk
+        # )
         update_initiative_search_vector(instance)
-        info.context.plugins.initiative_created(initiative)
+        # info.context.plugins.initiative_created(initiative)
 
     @classmethod
     def perform_mutation(cls, _root, info, **data):

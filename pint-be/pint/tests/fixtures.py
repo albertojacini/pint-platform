@@ -72,7 +72,7 @@ from ..initiative.models import Initiative, InitiativeMedia
 #     ProductVariantTranslation,
 #     VariantMedia,
 # )
-# from ..product.search import prepare_product_search_vector_value
+from ..initiative.search import prepare_initiative_search_vector_value
 # from ..product.tests.utils import create_image
 # from ..shipping.models import (
 #     ShippingMethod,
@@ -2844,8 +2844,8 @@ def initiative(db):
 #     product.channel_listings.all().update(is_published=False)
 #     return product
 
-
-def initiative_list():
+@pytest.fixture
+def initiative_list(db):
     initiatives = list(
         Initiative.objects.bulk_create(
             [
@@ -2865,9 +2865,14 @@ def initiative_list():
         )
     )
 
-    Initiative.objects.bulk_update(initiative, ["search_vector"])
+    for initiative in initiatives:
+        initiative.search_vector = FlatConcatSearchVector(
+            *prepare_initiative_search_vector_value(initiative)
+        )
 
-    return initiative
+    Initiative.objects.bulk_update(initiatives, ["search_vector"])
+
+    return initiatives
 
 
 # @pytest.fixture
