@@ -27,16 +27,17 @@ from ....account.search import (
     generate_user_fields_search_document_value,
     prepare_user_search_document_value,
 )
-from ....checkout import AddressType
+# from ....checkout import AddressType
 from ....core.jwt import create_token
 from ....core.notify_events import NotifyEventType
-from ....core.permissions import AccountPermissions, OrderPermissions
+from ....core.permissions import AccountPermissions
+# from ....core.permissions import AccountPermissions, OrderPermissions
 from ....core.tokens import account_delete_token_generator
 from ....core.utils.json_serializer import CustomJsonEncoder
 from ....core.utils.url import prepare_url
-from ....order import OrderStatus
-from ....order.models import FulfillmentStatus, Order
-from ....product.tests.utils import create_image
+# from ....order import OrderStatus
+# from ....order.models import FulfillmentStatus, Order
+# from ....product.tests.utils import create_image
 from ....tests.consts import TEST_SERVER_DOMAIN
 from ....thumbnail.models import Thumbnail
 from ....webhook.event_types import WebhookEventAsyncType
@@ -128,57 +129,57 @@ FULL_USER_QUERY = """
             lastName
             isStaff
             isActive
-            addresses {
-                id
-                isDefaultShippingAddress
-                isDefaultBillingAddress
-            }
-            checkoutIds
-            orders(first: 10) {
-                totalCount
-                edges {
-                    node {
-                        id
-                    }
-                }
-            }
+            # addresses {
+            #     id
+            #     isDefaultShippingAddress
+            #     isDefaultBillingAddress
+            # }
+            # checkoutIds
+            # orders(first: 10) {
+            #     totalCount
+            #     edges {
+            #         node {
+            #             id
+            #         }
+            #     }
+            # }
             languageCode
             dateJoined
             lastLogin
-            defaultShippingAddress {
-                firstName
-                lastName
-                companyName
-                streetAddress1
-                streetAddress2
-                city
-                cityArea
-                postalCode
-                countryArea
-                phone
-                country {
-                    code
-                }
-                isDefaultShippingAddress
-                isDefaultBillingAddress
-            }
-            defaultBillingAddress {
-                firstName
-                lastName
-                companyName
-                streetAddress1
-                streetAddress2
-                city
-                cityArea
-                postalCode
-                countryArea
-                phone
-                country {
-                    code
-                }
-                isDefaultShippingAddress
-                isDefaultBillingAddress
-            }
+            # defaultShippingAddress {
+            #     firstName
+            #     lastName
+            #     companyName
+            #     streetAddress1
+            #     streetAddress2
+            #     city
+            #     cityArea
+            #     postalCode
+            #     countryArea
+            #     phone
+            #     country {
+            #         code
+            #     }
+            #     isDefaultShippingAddress
+            #     isDefaultBillingAddress
+            # }
+            # defaultBillingAddress {
+            #     firstName
+            #     lastName
+            #     companyName
+            #     streetAddress1
+            #     streetAddress2
+            #     city
+            #     cityArea
+            #     postalCode
+            #     countryArea
+            #     phone
+            #     country {
+            #         code
+            #     }
+            #     isDefaultShippingAddress
+            #     isDefaultBillingAddress
+            # }
             avatar {
                 url
             }
@@ -197,13 +198,13 @@ FULL_USER_QUERY = """
             editableGroups {
                 name
             }
-            giftCards(first: 10) {
-                edges {
-                    node {
-                        id
-                    }
-                }
-            }
+            # giftCards(first: 10) {
+            #     edges {
+            #         node {
+            #             id
+            #         }
+            #     }
+            # }
         }
     }
 """
@@ -212,27 +213,27 @@ FULL_USER_QUERY = """
 def test_query_customer_user(
     staff_api_client,
     customer_user,
-    gift_card_used,
-    gift_card_expiry_date,
-    address,
+    # gift_card_used,
+    # gift_card_expiry_date,
+    # address,
     permission_manage_users,
-    permission_manage_orders,
+    # permission_manage_orders,
     media_root,
     settings,
-    checkout,
+    # checkout,
 ):
     user = customer_user
-    user.default_shipping_address.country = "US"
-    user.default_shipping_address.save()
-    user.addresses.add(address.get_copy())
+    # user.default_shipping_address.country = "US"
+    # user.default_shipping_address.save()
+    # user.addresses.add(address.get_copy())
 
     avatar_mock = MagicMock(spec=File)
     avatar_mock.name = "image.jpg"
     user.avatar = avatar_mock
     user.save()
 
-    checkout.user = user
-    checkout.save()
+    # checkout.user = user
+    # checkout.save()
 
     Group.objects.create(name="empty group")
 
@@ -240,7 +241,8 @@ def test_query_customer_user(
     ID = graphene.Node.to_global_id("User", customer_user.id)
     variables = {"id": ID}
     staff_api_client.user.user_permissions.add(
-        permission_manage_users, permission_manage_orders
+        permission_manage_users
+        # permission_manage_users, permission_manage_orders
     )
     response = staff_api_client.post_graphql(query, variables)
     content = get_graphql_content(response)
@@ -250,154 +252,154 @@ def test_query_customer_user(
     assert data["lastName"] == user.last_name
     assert data["isStaff"] == user.is_staff
     assert data["isActive"] == user.is_active
-    assert data["orders"]["totalCount"] == user.orders.count()
+    # assert data["orders"]["totalCount"] == user.orders.count()
     assert data["avatar"]["url"]
     assert data["languageCode"] == settings.LANGUAGE_CODE.upper()
     assert len(data["editableGroups"]) == 0
 
-    assert len(data["addresses"]) == user.addresses.count()
-    for address in data["addresses"]:
-        if address["isDefaultShippingAddress"]:
-            address_id = graphene.Node.to_global_id(
-                "Address", user.default_shipping_address.id
-            )
-            assert address["id"] == address_id
-        if address["isDefaultBillingAddress"]:
-            address_id = graphene.Node.to_global_id(
-                "Address", user.default_billing_address.id
-            )
-            assert address["id"] == address_id
+    # assert len(data["addresses"]) == user.addresses.count()
+    # for address in data["addresses"]:
+    #     if address["isDefaultShippingAddress"]:
+    #         address_id = graphene.Node.to_global_id(
+    #             "Address", user.default_shipping_address.id
+    #         )
+    #         assert address["id"] == address_id
+    #     if address["isDefaultBillingAddress"]:
+    #         address_id = graphene.Node.to_global_id(
+    #             "Address", user.default_billing_address.id
+    #         )
+    #         assert address["id"] == address_id
 
-    address = data["defaultShippingAddress"]
-    user_address = user.default_shipping_address
-    assert address["firstName"] == user_address.first_name
-    assert address["lastName"] == user_address.last_name
-    assert address["companyName"] == user_address.company_name
-    assert address["streetAddress1"] == user_address.street_address_1
-    assert address["streetAddress2"] == user_address.street_address_2
-    assert address["city"] == user_address.city
-    assert address["cityArea"] == user_address.city_area
-    assert address["postalCode"] == user_address.postal_code
-    assert address["country"]["code"] == user_address.country.code
-    assert address["countryArea"] == user_address.country_area
-    assert address["phone"] == user_address.phone.as_e164
-    assert address["isDefaultShippingAddress"] is None
-    assert address["isDefaultBillingAddress"] is None
+    # address = data["defaultShippingAddress"]
+    # user_address = user.default_shipping_address
+    # assert address["firstName"] == user_address.first_name
+    # assert address["lastName"] == user_address.last_name
+    # assert address["companyName"] == user_address.company_name
+    # assert address["streetAddress1"] == user_address.street_address_1
+    # assert address["streetAddress2"] == user_address.street_address_2
+    # assert address["city"] == user_address.city
+    # assert address["cityArea"] == user_address.city_area
+    # assert address["postalCode"] == user_address.postal_code
+    # assert address["country"]["code"] == user_address.country.code
+    # assert address["countryArea"] == user_address.country_area
+    # assert address["phone"] == user_address.phone.as_e164
+    # assert address["isDefaultShippingAddress"] is None
+    # assert address["isDefaultBillingAddress"] is None
 
-    address = data["defaultBillingAddress"]
-    user_address = user.default_billing_address
-    assert address["firstName"] == user_address.first_name
-    assert address["lastName"] == user_address.last_name
-    assert address["companyName"] == user_address.company_name
-    assert address["streetAddress1"] == user_address.street_address_1
-    assert address["streetAddress2"] == user_address.street_address_2
-    assert address["city"] == user_address.city
-    assert address["cityArea"] == user_address.city_area
-    assert address["postalCode"] == user_address.postal_code
-    assert address["country"]["code"] == user_address.country.code
-    assert address["countryArea"] == user_address.country_area
-    assert address["phone"] == user_address.phone.as_e164
-    assert address["isDefaultShippingAddress"] is None
-    assert address["isDefaultBillingAddress"] is None
-    assert len(data["giftCards"]) == 1
-    assert data["giftCards"]["edges"][0]["node"]["id"] == graphene.Node.to_global_id(
-        "GiftCard", gift_card_used.pk
-    )
-
-    assert data["checkoutIds"] == [to_global_id_or_none(checkout)]
-
-
-def test_query_customer_user_with_orders(
-    staff_api_client,
-    customer_user,
-    order_list,
-    permission_manage_users,
-    permission_manage_orders,
-):
-    # given
-    query = FULL_USER_QUERY
-    order_unfulfilled = order_list[0]
-    order_unfulfilled.user = customer_user
-
-    order_unconfirmed = order_list[1]
-    order_unconfirmed.status = OrderStatus.UNCONFIRMED
-    order_unconfirmed.user = customer_user
-
-    order_draft = order_list[2]
-    order_draft.status = OrderStatus.DRAFT
-    order_draft.user = customer_user
-
-    Order.objects.bulk_update(
-        [order_unconfirmed, order_draft, order_unfulfilled], ["user", "status"]
-    )
-
-    id = graphene.Node.to_global_id("User", customer_user.id)
-    variables = {"id": id}
-
-    # when
-    response = staff_api_client.post_graphql(
-        query,
-        variables,
-        permissions=[permission_manage_users, permission_manage_orders],
-    )
-
-    # then
-    content = get_graphql_content(response)
-    user = content["data"]["user"]
-    assert {order["node"]["id"] for order in user["orders"]["edges"]} == {
-        graphene.Node.to_global_id("Order", order.pk) for order in order_list
-    }
+    # address = data["defaultBillingAddress"]
+    # user_address = user.default_billing_address
+    # assert address["firstName"] == user_address.first_name
+    # assert address["lastName"] == user_address.last_name
+    # assert address["companyName"] == user_address.company_name
+    # assert address["streetAddress1"] == user_address.street_address_1
+    # assert address["streetAddress2"] == user_address.street_address_2
+    # assert address["city"] == user_address.city
+    # assert address["cityArea"] == user_address.city_area
+    # assert address["postalCode"] == user_address.postal_code
+    # assert address["country"]["code"] == user_address.country.code
+    # assert address["countryArea"] == user_address.country_area
+    # assert address["phone"] == user_address.phone.as_e164
+    # assert address["isDefaultShippingAddress"] is None
+    # assert address["isDefaultBillingAddress"] is None
+    # assert len(data["giftCards"]) == 1
+    # assert data["giftCards"]["edges"][0]["node"]["id"] == graphene.Node.to_global_id(
+    #     "GiftCard", gift_card_used.pk
+    # )
+    #
+    # assert data["checkoutIds"] == [to_global_id_or_none(checkout)]
 
 
-def test_query_customer_user_with_orders_no_manage_orders_perm(
-    staff_api_client,
-    customer_user,
-    order_list,
-    permission_manage_users,
-):
-    # given
-    query = FULL_USER_QUERY
-    order_unfulfilled = order_list[0]
-    order_unfulfilled.user = customer_user
+# def test_query_customer_user_with_orders(
+#     staff_api_client,
+#     customer_user,
+#     order_list,
+#     permission_manage_users,
+#     permission_manage_orders,
+# ):
+#     # given
+#     query = FULL_USER_QUERY
+#     order_unfulfilled = order_list[0]
+#     order_unfulfilled.user = customer_user
+#
+#     order_unconfirmed = order_list[1]
+#     order_unconfirmed.status = OrderStatus.UNCONFIRMED
+#     order_unconfirmed.user = customer_user
+#
+#     order_draft = order_list[2]
+#     order_draft.status = OrderStatus.DRAFT
+#     order_draft.user = customer_user
+#
+#     Order.objects.bulk_update(
+#         [order_unconfirmed, order_draft, order_unfulfilled], ["user", "status"]
+#     )
+#
+#     id = graphene.Node.to_global_id("User", customer_user.id)
+#     variables = {"id": id}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         query,
+#         variables,
+#         permissions=[permission_manage_users, permission_manage_orders],
+#     )
+#
+#     # then
+#     content = get_graphql_content(response)
+#     user = content["data"]["user"]
+#     assert {order["node"]["id"] for order in user["orders"]["edges"]} == {
+#         graphene.Node.to_global_id("Order", order.pk) for order in order_list
+#     }
 
-    order_unconfirmed = order_list[1]
-    order_unconfirmed.status = OrderStatus.UNCONFIRMED
-    order_unconfirmed.user = customer_user
 
-    order_draft = order_list[2]
-    order_draft.status = OrderStatus.DRAFT
-    order_draft.user = customer_user
-
-    Order.objects.bulk_update(
-        [order_unconfirmed, order_draft, order_unfulfilled], ["user", "status"]
-    )
-
-    id = graphene.Node.to_global_id("User", customer_user.id)
-    variables = {"id": id}
-
-    # when
-    response = staff_api_client.post_graphql(
-        query, variables, permissions=[permission_manage_users]
-    )
-
-    # then
-    assert_no_permission(response)
+# def test_query_customer_user_with_orders_no_manage_orders_perm(
+#     staff_api_client,
+#     customer_user,
+#     order_list,
+#     permission_manage_users,
+# ):
+#     # given
+#     query = FULL_USER_QUERY
+#     order_unfulfilled = order_list[0]
+#     order_unfulfilled.user = customer_user
+#
+#     order_unconfirmed = order_list[1]
+#     order_unconfirmed.status = OrderStatus.UNCONFIRMED
+#     order_unconfirmed.user = customer_user
+#
+#     order_draft = order_list[2]
+#     order_draft.status = OrderStatus.DRAFT
+#     order_draft.user = customer_user
+#
+#     Order.objects.bulk_update(
+#         [order_unconfirmed, order_draft, order_unfulfilled], ["user", "status"]
+#     )
+#
+#     id = graphene.Node.to_global_id("User", customer_user.id)
+#     variables = {"id": id}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         query, variables, permissions=[permission_manage_users]
+#     )
+#
+#     # then
+#     assert_no_permission(response)
 
 
 def test_query_customer_user_app(
     app_api_client,
     customer_user,
-    address,
+    # address,
     permission_manage_users,
     permission_manage_staff,
-    permission_manage_orders,
+    # permission_manage_orders,
     media_root,
     app,
 ):
     user = customer_user
-    user.default_shipping_address.country = "US"
-    user.default_shipping_address.save()
-    user.addresses.add(address.get_copy())
+    # user.default_shipping_address.country = "US"
+    # user.default_shipping_address.save()
+    # user.addresses.add(address.get_copy())
 
     avatar_mock = MagicMock(spec=File)
     avatar_mock.name = "image.jpg"
@@ -1037,9 +1039,9 @@ ME_QUERY = """
         me {
             id
             email
-            checkout {
-                token
-            }
+            # checkout {
+            #     token
+            # }
             userPermissions {
                 code
                 name
@@ -1102,199 +1104,199 @@ def test_me_query_customer_can_not_see_note(
     assert data["note"] == staff_api_client.user.note
 
 
-def test_me_query_checkout(user_api_client, checkout):
-    user = user_api_client.user
-    checkout.user = user
-    checkout.save()
-
-    response = user_api_client.post_graphql(ME_QUERY)
-    content = get_graphql_content(response)
-    data = content["data"]["me"]
-    assert data["checkout"]["token"] == str(checkout.token)
-
-
-def test_me_query_checkout_with_inactive_channel(user_api_client, checkout):
-    user = user_api_client.user
-    channel = checkout.channel
-    channel.is_active = False
-    channel.save()
-    checkout.user = user
-    checkout.save()
-
-    response = user_api_client.post_graphql(ME_QUERY)
-    content = get_graphql_content(response)
-    data = content["data"]["me"]
-    assert not data["checkout"]
+# def test_me_query_checkout(user_api_client, checkout):
+#     user = user_api_client.user
+#     checkout.user = user
+#     checkout.save()
+#
+#     response = user_api_client.post_graphql(ME_QUERY)
+#     content = get_graphql_content(response)
+#     data = content["data"]["me"]
+#     assert data["checkout"]["token"] == str(checkout.token)
 
 
-QUERY_ME_CHECKOUT_TOKENS = """
-query getCheckoutTokens($channel: String) {
-  me {
-    checkoutTokens(channel: $channel)
-  }
-}
-"""
+# def test_me_query_checkout_with_inactive_channel(user_api_client, checkout):
+#     user = user_api_client.user
+#     channel = checkout.channel
+#     channel.is_active = False
+#     channel.save()
+#     checkout.user = user
+#     checkout.save()
+#
+#     response = user_api_client.post_graphql(ME_QUERY)
+#     content = get_graphql_content(response)
+#     data = content["data"]["me"]
+#     assert not data["checkout"]
+#
+#
+# QUERY_ME_CHECKOUT_TOKENS = """
+# query getCheckoutTokens($channel: String) {
+#   me {
+#     checkoutTokens(channel: $channel)
+#   }
+# }
+# """
+#
+#
+# def test_me_checkout_tokens_without_channel_param(
+#     user_api_client, checkouts_assigned_to_customer
+# ):
+#     # given
+#     checkouts = checkouts_assigned_to_customer
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_ME_CHECKOUT_TOKENS)
+#
+#     # then
+#     content = get_graphql_content(response)
+#     data = content["data"]["me"]
+#     assert len(data["checkoutTokens"]) == len(checkouts)
+#     for checkout in checkouts:
+#         assert str(checkout.token) in data["checkoutTokens"]
+#
+#
+# def test_me_checkout_tokens_without_channel_param_inactive_channel(
+#     user_api_client, channel_PLN, checkouts_assigned_to_customer
+# ):
+#     # given
+#     channel_PLN.is_active = False
+#     channel_PLN.save()
+#     checkouts = checkouts_assigned_to_customer
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_ME_CHECKOUT_TOKENS)
+#
+#     # then
+#     content = get_graphql_content(response)
+#     data = content["data"]["me"]
+#     assert str(checkouts[0].token) in data["checkoutTokens"]
+#     assert not str(checkouts[1].token) in data["checkoutTokens"]
+#
+#
+# def test_me_checkout_tokens_with_channel(
+#     user_api_client, channel_USD, checkouts_assigned_to_customer
+# ):
+#     # given
+#     checkouts = checkouts_assigned_to_customer
+#
+#     # when
+#     response = user_api_client.post_graphql(
+#         QUERY_ME_CHECKOUT_TOKENS, {"channel": channel_USD.slug}
+#     )
+#
+#     # then
+#     content = get_graphql_content(response)
+#     data = content["data"]["me"]
+#     assert str(checkouts[0].token) in data["checkoutTokens"]
+#     assert not str(checkouts[1].token) in data["checkoutTokens"]
+#
+#
+# def test_me_checkout_tokens_with_inactive_channel(
+#     user_api_client, channel_USD, checkouts_assigned_to_customer
+# ):
+#     # given
+#     channel_USD.is_active = False
+#     channel_USD.save()
+#
+#     # when
+#     response = user_api_client.post_graphql(
+#         QUERY_ME_CHECKOUT_TOKENS, {"channel": channel_USD.slug}
+#     )
+#
+#     # then
+#     content = get_graphql_content(response)
+#     data = content["data"]["me"]
+#     assert not data["checkoutTokens"]
+#
+#
+# def test_me_checkout_tokens_with_not_existing_channel(
+#     user_api_client, checkouts_assigned_to_customer
+# ):
+#     # given
+#
+#     # when
+#     response = user_api_client.post_graphql(
+#         QUERY_ME_CHECKOUT_TOKENS, {"channel": "Not-existing"}
+#     )
+#
+#     # then
+#     content = get_graphql_content(response)
+#     data = content["data"]["me"]
+#     assert not data["checkoutTokens"]
 
 
-def test_me_checkout_tokens_without_channel_param(
-    user_api_client, checkouts_assigned_to_customer
-):
-    # given
-    checkouts = checkouts_assigned_to_customer
-
-    # when
-    response = user_api_client.post_graphql(QUERY_ME_CHECKOUT_TOKENS)
-
-    # then
-    content = get_graphql_content(response)
-    data = content["data"]["me"]
-    assert len(data["checkoutTokens"]) == len(checkouts)
-    for checkout in checkouts:
-        assert str(checkout.token) in data["checkoutTokens"]
-
-
-def test_me_checkout_tokens_without_channel_param_inactive_channel(
-    user_api_client, channel_PLN, checkouts_assigned_to_customer
-):
-    # given
-    channel_PLN.is_active = False
-    channel_PLN.save()
-    checkouts = checkouts_assigned_to_customer
-
-    # when
-    response = user_api_client.post_graphql(QUERY_ME_CHECKOUT_TOKENS)
-
-    # then
-    content = get_graphql_content(response)
-    data = content["data"]["me"]
-    assert str(checkouts[0].token) in data["checkoutTokens"]
-    assert not str(checkouts[1].token) in data["checkoutTokens"]
-
-
-def test_me_checkout_tokens_with_channel(
-    user_api_client, channel_USD, checkouts_assigned_to_customer
-):
-    # given
-    checkouts = checkouts_assigned_to_customer
-
-    # when
-    response = user_api_client.post_graphql(
-        QUERY_ME_CHECKOUT_TOKENS, {"channel": channel_USD.slug}
-    )
-
-    # then
-    content = get_graphql_content(response)
-    data = content["data"]["me"]
-    assert str(checkouts[0].token) in data["checkoutTokens"]
-    assert not str(checkouts[1].token) in data["checkoutTokens"]
-
-
-def test_me_checkout_tokens_with_inactive_channel(
-    user_api_client, channel_USD, checkouts_assigned_to_customer
-):
-    # given
-    channel_USD.is_active = False
-    channel_USD.save()
-
-    # when
-    response = user_api_client.post_graphql(
-        QUERY_ME_CHECKOUT_TOKENS, {"channel": channel_USD.slug}
-    )
-
-    # then
-    content = get_graphql_content(response)
-    data = content["data"]["me"]
-    assert not data["checkoutTokens"]
-
-
-def test_me_checkout_tokens_with_not_existing_channel(
-    user_api_client, checkouts_assigned_to_customer
-):
-    # given
-
-    # when
-    response = user_api_client.post_graphql(
-        QUERY_ME_CHECKOUT_TOKENS, {"channel": "Not-existing"}
-    )
-
-    # then
-    content = get_graphql_content(response)
-    data = content["data"]["me"]
-    assert not data["checkoutTokens"]
-
-
-def test_me_with_cancelled_fulfillments(
-    user_api_client, fulfilled_order_with_cancelled_fulfillment
-):
-    query = """
-    query Me {
-        me {
-            orders (first: 1) {
-                edges {
-                    node {
-                        id
-                        fulfillments {
-                            status
-                        }
-                    }
-                }
-            }
-        }
-    }
-    """
-    response = user_api_client.post_graphql(query)
-    content = get_graphql_content(response)
-    order_id = graphene.Node.to_global_id(
-        "Order", fulfilled_order_with_cancelled_fulfillment.id
-    )
-    data = content["data"]["me"]
-    order = data["orders"]["edges"][0]["node"]
-    assert order["id"] == order_id
-    fulfillments = order["fulfillments"]
-    assert len(fulfillments) == 1
-    assert fulfillments[0]["status"] == FulfillmentStatus.FULFILLED.upper()
-
-
-def test_user_with_cancelled_fulfillments(
-    staff_api_client,
-    customer_user,
-    permission_manage_users,
-    permission_manage_orders,
-    fulfilled_order_with_cancelled_fulfillment,
-):
-    query = """
-    query User($id: ID!) {
-        user(id: $id) {
-            orders (first: 1) {
-                edges {
-                    node {
-                        id
-                        fulfillments {
-                            status
-                        }
-                    }
-                }
-            }
-        }
-    }
-    """
-    user_id = graphene.Node.to_global_id("User", customer_user.id)
-    variables = {"id": user_id}
-    staff_api_client.user.user_permissions.add(
-        permission_manage_users, permission_manage_orders
-    )
-    response = staff_api_client.post_graphql(query, variables)
-    content = get_graphql_content(response)
-    order_id = graphene.Node.to_global_id(
-        "Order", fulfilled_order_with_cancelled_fulfillment.id
-    )
-    data = content["data"]["user"]
-    order = data["orders"]["edges"][0]["node"]
-    assert order["id"] == order_id
-    fulfillments = order["fulfillments"]
-    assert len(fulfillments) == 2
-    assert fulfillments[0]["status"] == FulfillmentStatus.FULFILLED.upper()
-    assert fulfillments[1]["status"] == FulfillmentStatus.CANCELED.upper()
+# def test_me_with_cancelled_fulfillments(
+#     user_api_client, fulfilled_order_with_cancelled_fulfillment
+# ):
+#     query = """
+#     query Me {
+#         me {
+#             orders (first: 1) {
+#                 edges {
+#                     node {
+#                         id
+#                         fulfillments {
+#                             status
+#                         }
+#                     }
+#                 }
+#             }
+#         }
+#     }
+#     """
+#     response = user_api_client.post_graphql(query)
+#     content = get_graphql_content(response)
+#     order_id = graphene.Node.to_global_id(
+#         "Order", fulfilled_order_with_cancelled_fulfillment.id
+#     )
+#     data = content["data"]["me"]
+#     order = data["orders"]["edges"][0]["node"]
+#     assert order["id"] == order_id
+#     fulfillments = order["fulfillments"]
+#     assert len(fulfillments) == 1
+#     assert fulfillments[0]["status"] == FulfillmentStatus.FULFILLED.upper()
+#
+#
+# def test_user_with_cancelled_fulfillments(
+#     staff_api_client,
+#     customer_user,
+#     permission_manage_users,
+#     permission_manage_orders,
+#     fulfilled_order_with_cancelled_fulfillment,
+# ):
+#     query = """
+#     query User($id: ID!) {
+#         user(id: $id) {
+#             orders (first: 1) {
+#                 edges {
+#                     node {
+#                         id
+#                         fulfillments {
+#                             status
+#                         }
+#                     }
+#                 }
+#             }
+#         }
+#     }
+#     """
+#     user_id = graphene.Node.to_global_id("User", customer_user.id)
+#     variables = {"id": user_id}
+#     staff_api_client.user.user_permissions.add(
+#         permission_manage_users, permission_manage_orders
+#     )
+#     response = staff_api_client.post_graphql(query, variables)
+#     content = get_graphql_content(response)
+#     order_id = graphene.Node.to_global_id(
+#         "Order", fulfilled_order_with_cancelled_fulfillment.id
+#     )
+#     data = content["data"]["user"]
+#     order = data["orders"]["edges"][0]["node"]
+#     assert order["id"] == order_id
+#     fulfillments = order["fulfillments"]
+#     assert len(fulfillments) == 2
+#     assert fulfillments[0]["status"] == FulfillmentStatus.FULFILLED.upper()
+#     assert fulfillments[1]["status"] == FulfillmentStatus.CANCELED.upper()
 
 
 ACCOUNT_REGISTER_MUTATION = """
