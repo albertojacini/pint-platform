@@ -150,12 +150,13 @@ class UserManager(BaseUserManager):
             email, password, is_staff=True, is_superuser=True, **extra_fields
         )
 
-    # def customers(self):
-    #     orders = Order.objects.values("user_id")
-    #     return self.get_queryset().filter(
-    #         Q(is_staff=False)
-    #         | (Q(is_staff=True) & (Exists(orders.filter(user_id=OuterRef("pk")))))
-    #     )
+    def customers(self):
+        # orders = Order.objects.values("user_id")
+        return self.get_queryset().filter(
+            is_staff=False
+            # Q(is_staff=False)
+            # | (Q(is_staff=True) & (Exists(orders.filter(user_id=OuterRef("pk")))))
+        )
 
     def staff(self):
         return self.get_queryset().filter(is_staff=True)

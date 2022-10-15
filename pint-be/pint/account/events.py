@@ -92,15 +92,16 @@ def customer_email_changed_event(
 #     )
 
 
-# def customer_downloaded_a_digital_link_event(
-#     *, user: User, order_line: OrderLine
-# ) -> CustomerEvent:
-#     return CustomerEvent.objects.create(
-#         user=user,
-#         order=order_line.order,
-#         type=CustomerEvents.DIGITAL_LINK_DOWNLOADED,
-#         parameters={"order_line_pk": order_line.pk},
-#     )
+def customer_downloaded_a_digital_link_event(
+    *, user: User
+    # *, user: User, order_line: OrderLine
+) -> CustomerEvent:
+    return CustomerEvent.objects.create(
+        user=user,
+        # order=order_line.order,
+        type=CustomerEvents.DIGITAL_LINK_DOWNLOADED,
+        # parameters={"order_line_pk": order_line.pk},
+    )
 
 
 def customer_deleted_event(
@@ -111,7 +112,7 @@ def customer_deleted_event(
     return CustomerEvent.objects.create(
         user=staff_user,
         app=app,
-        order=None,
+        # order=None,
         type=CustomerEvents.CUSTOMER_DELETED,
         parameters={"count": deleted_count},
     )
@@ -125,7 +126,7 @@ def assigned_email_to_a_customer_event(
     return CustomerEvent.objects.create(
         user=staff_user,
         app=app,
-        order=None,
+        # order=None,
         type=CustomerEvents.EMAIL_ASSIGNED,
         parameters={"message": new_email},
     )
@@ -139,7 +140,7 @@ def assigned_name_to_a_customer_event(
     return CustomerEvent.objects.create(
         user=staff_user,
         app=app,
-        order=None,
+        # order=None,
         type=CustomerEvents.NAME_ASSIGNED,
         parameters={"message": new_name},
     )

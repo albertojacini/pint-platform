@@ -1,3 +1,14 @@
+# Pint
+Commands:
+Build graphql schema
+```
+python pint-be/manage.py get_graphql_schema > pint-be/pint/graphql/schema.graphql
+```
+
+
+
+
+
 # pint-platform
 All Saleor services started from a single repository
 

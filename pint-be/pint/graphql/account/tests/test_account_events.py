@@ -20,12 +20,6 @@ query customerEvents($customerId: ID!) {
       }
       message
       count
-      order {
-        id
-      }
-      orderLine {
-        id
-      }
     }
   }
 }
@@ -87,8 +81,8 @@ def test_account_event_customer_account_was_created(
         "app": None,
         "count": None,
         "message": None,
-        "order": None,
-        "orderLine": None,
+        # "order": None,
+        # "orderLine": None,
         "type": account_events.CustomerEvents.ACCOUNT_CREATED.upper(),
     }
 
@@ -113,8 +107,8 @@ def test_account_event_customer_account_was_activated(
         "app": None,
         "count": None,
         "message": None,
-        "order": None,
-        "orderLine": None,
+        # "order": None,
+        # "orderLine": None,
         "type": account_events.CustomerEvents.ACCOUNT_ACTIVATED.upper(),
     }
 
@@ -137,8 +131,8 @@ def test_account_event_customer_account_was_deactivated(
         "app": None,
         "count": None,
         "message": None,
-        "order": None,
-        "orderLine": None,
+        # "order": None,
+        # "orderLine": None,
         "type": account_events.CustomerEvents.ACCOUNT_ACTIVATED.upper(),
     }
 
@@ -161,8 +155,8 @@ def test_account_event_sent_password_reset_email_to_customer_event(
         "app": None,
         "count": None,
         "message": None,
-        "order": None,
-        "orderLine": None,
+        # "order": None,
+        # "orderLine": None,
         "type": account_events.CustomerEvents.PASSWORD_RESET_LINK_SENT.upper(),
     }
 
@@ -185,8 +179,8 @@ def test_account_event_customer_reset_password_from_link_event(
         "app": None,
         "count": None,
         "message": None,
-        "order": None,
-        "orderLine": None,
+        # "order": None,
+        # "orderLine": None,
         "type": account_events.CustomerEvents.PASSWORD_RESET.upper(),
     }
 
@@ -199,76 +193,77 @@ def test_account_event_customer_reset_password_from_link_event(
     assert expected_data == received_data
 
 
-def test_account_event_customer_placed_order_event_resolves_properly(
-    staff_api_client,
-    customer_user,
-    order_line,
-    permission_manage_users,
-    permission_manage_apps,
-):
-    order = order_line.order
-    event = account_events.customer_placed_order_event(user=customer_user, order=order)
-    expected_data = {
-        "id": _model_to_node_id(event),
-        "user": {"id": _model_to_node_id(customer_user)},
-        "app": None,
-        "count": None,
-        "message": None,
-        "order": {"id": _model_to_node_id(order)},
-        "orderLine": None,
-        "type": account_events.CustomerEvents.PLACED_ORDER.upper(),
-    }
+# def test_account_event_customer_placed_order_event_resolves_properly(
+#     staff_api_client,
+#     customer_user,
+#     order_line,
+#     permission_manage_users,
+#     permission_manage_apps,
+# ):
+#     order = order_line.order
+#     event = account_events.customer_placed_order_event(user=customer_user, order=order)
+#     expected_data = {
+#         "id": _model_to_node_id(event),
+#         "user": {"id": _model_to_node_id(customer_user)},
+#         "app": None,
+#         "count": None,
+#         "message": None,
+#         "order": {"id": _model_to_node_id(order)},
+#         "orderLine": None,
+#         "type": account_events.CustomerEvents.PLACED_ORDER.upper(),
+#     }
+#
+#     received_data = _get_event_from_graphql(
+#         staff_api_client,
+#         customer_user,
+#         (permission_manage_users, permission_manage_apps),
+#     )
+#
+#     assert expected_data == received_data
 
-    received_data = _get_event_from_graphql(
-        staff_api_client,
-        customer_user,
-        (permission_manage_users, permission_manage_apps),
-    )
 
-    assert expected_data == received_data
-
-
-def test_account_event_customer_added_to_note_order_event_resolves_properly(
-    staff_api_client,
-    customer_user,
-    order_line,
-    permission_manage_users,
-    permission_manage_apps,
-):
-    order = order_line.order
-    event = account_events.customer_added_to_note_order_event(
-        user=customer_user, order=order, message="418 - I'm a teapot."
-    )
-    expected_data = {
-        "id": _model_to_node_id(event),
-        "user": {"id": _model_to_node_id(customer_user)},
-        "app": None,
-        "count": None,
-        "message": "418 - I'm a teapot.",
-        "order": {"id": _model_to_node_id(order)},
-        "orderLine": None,
-        "type": account_events.CustomerEvents.NOTE_ADDED_TO_ORDER.upper(),
-    }
-
-    received_data = _get_event_from_graphql(
-        staff_api_client,
-        customer_user,
-        (permission_manage_users, permission_manage_apps),
-    )
-
-    assert expected_data == received_data
+# def test_account_event_customer_added_to_note_order_event_resolves_properly(
+#     staff_api_client,
+#     customer_user,
+#     order_line,
+#     permission_manage_users,
+#     permission_manage_apps,
+# ):
+#     order = order_line.order
+#     event = account_events.customer_added_to_note_order_event(
+#         user=customer_user, order=order, message="418 - I'm a teapot."
+#     )
+#     expected_data = {
+#         "id": _model_to_node_id(event),
+#         "user": {"id": _model_to_node_id(customer_user)},
+#         "app": None,
+#         "count": None,
+#         "message": "418 - I'm a teapot.",
+#         "order": {"id": _model_to_node_id(order)},
+#         "orderLine": None,
+#         "type": account_events.CustomerEvents.NOTE_ADDED_TO_ORDER.upper(),
+#     }
+#
+#     received_data = _get_event_from_graphql(
+#         staff_api_client,
+#         customer_user,
+#         (permission_manage_users, permission_manage_apps),
+#     )
+#
+#     assert expected_data == received_data
 
 
 def test_account_event_customer_downloaded_a_digital_link_event_resolves_properly(
     staff_api_client,
     customer_user,
-    order_line,
+    # order_line,
     permission_manage_users,
     permission_manage_apps,
 ):
-    order = order_line.order
+    # order = order_line.order
     event = account_events.customer_downloaded_a_digital_link_event(
-        user=customer_user, order_line=order_line
+        user=customer_user
+        # user=customer_user, order_line=order_line
     )
     expected_data = {
         "id": _model_to_node_id(event),
@@ -276,8 +271,8 @@ def test_account_event_customer_downloaded_a_digital_link_event_resolves_properl
         "app": None,
         "count": None,
         "message": None,
-        "order": {"id": _model_to_node_id(order)},
-        "orderLine": {"id": _model_to_node_id(order_line)},
+        # "order": {"id": _model_to_node_id(order)},
+        # "orderLine": {"id": _model_to_node_id(order_line)},
         "type": account_events.CustomerEvents.DIGITAL_LINK_DOWNLOADED.upper(),
     }
 
@@ -302,8 +297,8 @@ def test_account_event_customer_deleted_event_resolves_properly(
         "app": None,
         "count": 123,
         "message": None,
-        "order": None,
-        "orderLine": None,
+        # "order": None,
+        # "orderLine": None,
         "type": account_events.CustomerEvents.CUSTOMER_DELETED.upper(),
     }
 
@@ -314,46 +309,46 @@ def test_account_event_customer_deleted_event_resolves_properly(
     assert expected_data == received_data
 
 
-def test_account_invalid_or_deleted_order_line_return_null(
-    staff_api_client, permission_manage_users, customer_user, order_line
-):
-    """Ensure getting an order line does return null if it is no longer existing,
-    despite the fact it *shouldn't* happen in production."""
-
-    # Prepare test
-    staff_api_client.user.user_permissions.add(permission_manage_users)
-
-    # Create the event
-    account_events.customer_downloaded_a_digital_link_event(
-        user=customer_user, order_line=order_line
-    )
-
-    # Delete the line
-    order_line.delete()
-
-    # Retrieve it
-    received_customer_events = get_graphql_content(
-        staff_api_client.post_graphql(
-            """
-            query customerEvents($customerId: ID!) {
-              user(id: $customerId) {
-                id
-                events {
-                  orderLine {
-                    id
-                  }
-                }
-              }
-            }
-            """,
-            variables={
-                "customerId": graphene.Node.to_global_id("User", customer_user.id)
-            },
-        )
-    )["data"]["user"]["events"]
-
-    # Ensure the data is valid
-    assert received_customer_events == [{"orderLine": None}]
+# def test_account_invalid_or_deleted_order_line_return_null(
+#     staff_api_client, permission_manage_users, customer_user, order_line
+# ):
+#     """Ensure getting an order line does return null if it is no longer existing,
+#     despite the fact it *shouldn't* happen in production."""
+#
+#     # Prepare test
+#     staff_api_client.user.user_permissions.add(permission_manage_users)
+#
+#     # Create the event
+#     account_events.customer_downloaded_a_digital_link_event(
+#         user=customer_user, order_line=order_line
+#     )
+#
+#     # Delete the line
+#     order_line.delete()
+#
+#     # Retrieve it
+#     received_customer_events = get_graphql_content(
+#         staff_api_client.post_graphql(
+#             """
+#             query customerEvents($customerId: ID!) {
+#               user(id: $customerId) {
+#                 id
+#                 events {
+#                   orderLine {
+#                     id
+#                   }
+#                 }
+#               }
+#             }
+#             """,
+#             variables={
+#                 "customerId": graphene.Node.to_global_id("User", customer_user.id)
+#             },
+#         )
+#     )["data"]["user"]["events"]
+#
+#     # Ensure the data is valid
+#     assert received_customer_events == [{"orderLine": None}]
 
 
 def test_event_staff_user_assigned_new_name_to_customer_event_resolves_properly(
@@ -368,8 +363,8 @@ def test_event_staff_user_assigned_new_name_to_customer_event_resolves_properly(
         "app": None,
         "count": None,
         "message": "Hello World!",
-        "order": None,
-        "orderLine": None,
+        # "order": None,
+        # "orderLine": None,
         "type": account_events.CustomerEvents.NAME_ASSIGNED.upper(),
     }
 
@@ -392,8 +387,8 @@ def test_account_event_staff_user_assigned_email_to_customer_event_resolves_prop
         "app": None,
         "count": None,
         "message": "hello@example.com",
-        "order": None,
-        "orderLine": None,
+        # "order": None,
+        # "orderLine": None,
         "type": account_events.CustomerEvents.EMAIL_ASSIGNED.upper(),
     }
 

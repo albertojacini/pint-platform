@@ -735,8 +735,7 @@ class PoliticalEntity(graphene_django.DjangoObjectType):
         fields = ("id", "name")
 
 
-# @federated_entity("id channel")
-# class Initiative(ChannelContextTypeWithMetadata, ModelObjectType):
+@federated_entity("id")
 class Initiative(ModelObjectType):
     id = graphene.GlobalID(required=True)
     seo_title = graphene.String()

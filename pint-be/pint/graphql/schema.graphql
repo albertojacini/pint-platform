@@ -1,3 +1,9 @@
+++++++++++++++++++++++++++ADD FEDERATED ENTITY: App
+++++++++++++++++++++++++++ADD FEDERATED ENTITY: User
+++++++++++++++++++++++++++ADD FEDERATED ENTITY: User
+++++++++++++++++++++++++++ADD FEDERATED ENTITY: Group
+++++++++++++++++++++++++++ADD FEDERATED ENTITY: Initiative
+++++++++++++++++++++++++++ADD FEDERATED ENTITY: InitiativeMedia
 schema {
   query: Query
   mutation: Mutation
@@ -6,7 +12,70 @@ schema {
 
 type Query {
   """
-  Look up a initiative by ID. Requires one of the following permissions to include the unpublished items: .
+  Look up a webhook by ID. Requires one of the following permissions: MANAGE_APPS, OWNER.
+  """
+  webhook(
+    """ID of the webhook."""
+    id: ID!
+  ): Webhook
+
+  """
+  List of all available webhook events.
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  webhookEvents: [WebhookEvent!] @deprecated(reason: "This field will be removed in Saleor 4.0. Use `WebhookEventTypeAsyncEnum` and `WebhookEventTypeSyncEnum` to get available event types.")
+
+  """
+  Retrieve a sample payload for a given webhook event based on real data. It can be useful for some integrations where sample payload is required.
+  """
+  webhookSamplePayload(
+    """Name of the requested event type."""
+    eventType: WebhookSampleEventTypeEnum!
+  ): JSONString
+
+  """Returns a list of all translatable items of a given kind."""
+  translations(
+    """Kind of objects to retrieve."""
+    kind: TranslatableKinds!
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Return the first n elements from the list."""
+    first: Int
+
+    """Return the last n elements from the list."""
+    last: Int
+  ): TranslatableItemConnection
+
+  """Lookup a translatable item by ID."""
+  translation(
+    """ID of the object to retrieve."""
+    id: ID!
+
+    """Kind of the object to retrieve."""
+    kind: TranslatableKinds!
+  ): TranslatableItem
+  politicalEntities(
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Return the first n elements from the list."""
+    first: Int
+
+    """Return the last n elements from the list."""
+    last: Int
+  ): PoliticalEntityCountableConnection
+
+  """
+  Look up a initiative by ID. Requires one of the following permissions to include the unpublished items: MANAGE_INITIATIVES.
   """
   initiative(
     """ID of the initiative."""
@@ -14,13 +83,10 @@ type Query {
 
     """Slug of the initiative."""
     slug: String
-
-    """Slug of a channel for which the data should be returned."""
-    channel: String
   ): Initiative
 
   """
-  List of the shop's initiatives. Requires one of the following permissions to include the unpublished items: .
+  List of the shop's initiatives. Requires one of the following permissions to include the unpublished items: MANAGE_INITIATIVES.
   """
   initiatives(
     """Filtering options for initiatives."""
@@ -28,9 +94,6 @@ type Query {
 
     """Sort initiatives."""
     sortBy: InitiativeOrder
-
-    """Slug of a channel for which the data should be returned."""
-    channel: String
 
     """Return the elements in the list that come before the specified cursor."""
     before: String
@@ -44,6 +107,88 @@ type Query {
     """Return the last n elements from the list."""
     last: Int
   ): InitiativeCountableConnection
+
+  """
+  List of all apps installations
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appsInstallations: [AppInstallation!]!
+
+  """
+  List of the apps.
+  
+  Requires one of the following permissions: AUTHENTICATED_STAFF_USER, MANAGE_APPS.
+  """
+  apps(
+    """Filtering options for apps."""
+    filter: AppFilterInput
+
+    """Sort apps."""
+    sortBy: AppSortingInput
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Return the first n elements from the list."""
+    first: Int
+
+    """Return the last n elements from the list."""
+    last: Int
+  ): AppCountableConnection
+
+  """
+  Look up an app by ID. If ID is not provided, return the currently authenticated app.
+  
+  Requires one of the following permissions: AUTHENTICATED_STAFF_USER AUTHENTICATED_APP. The authenticated app has access to its resources. Fetching different apps requires MANAGE_APPS permission.
+  """
+  app(
+    """ID of the app."""
+    id: ID
+  ): App
+
+  """
+  List of all extensions.
+  
+  Added in Saleor 3.1.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  
+  Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
+  """
+  appExtensions(
+    """Filtering options for apps extensions."""
+    filter: AppExtensionFilterInput
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Return the first n elements from the list."""
+    first: Int
+
+    """Return the last n elements from the list."""
+    last: Int
+  ): AppExtensionCountableConnection
+
+  """
+  Look up an app extension by ID.
+  
+  Added in Saleor 3.1.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  
+  Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
+  """
+  appExtension(
+    """ID of the app extension."""
+    id: ID!
+  ): AppExtension
 
   """Returns address validation rules."""
   addressValidationRules(
@@ -63,7 +208,7 @@ type Query {
   """
   List of the shop's customers.
   
-  Requires one of the following permissions: MANAGE_ORDERS, MANAGE_USERS.
+  Requires one of the following permissions: MANAGE_USERS.
   """
   customers(
     """Filtering options for customers."""
@@ -151,7 +296,7 @@ type Query {
   """
   Look up a user by ID or email address.
   
-  Requires one of the following permissions: MANAGE_STAFF, MANAGE_USERS, MANAGE_ORDERS.
+  Requires one of the following permissions: MANAGE_STAFF, MANAGE_USERS.
   """
   user(
     """ID of the user."""
@@ -162,971 +307,6 @@ type Query {
   ): User
   _entities(representations: [_Any]): [_Entity]
   _service: _Service
-}
-
-"""Represents an individual item for sale in the storefront."""
-type Initiative implements Node & ObjectWithMetadata {
-  id: ID!
-
-  """List of private metadata items. Requires staff permissions to access."""
-  privateMetadata: [MetadataItem!]!
-
-  """
-  A single key from private metadata. Requires staff permissions to access.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafield(key: String!): String
-
-  """
-  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafields(keys: [String!]): Metadata
-
-  """List of public metadata items. Can be accessed without permissions."""
-  metadata: [MetadataItem!]!
-
-  """
-  A single key from public metadata.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafield(key: String!): String
-
-  """
-  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafields(keys: [String!]): Metadata
-  seoTitle: String
-  seoDescription: String
-  title: String!
-
-  """
-  Description of the initiative.
-  
-  Rich text format. For reference see https://editorjs.io/
-  """
-  description: JSONString
-  slug: String!
-  created: DateTime!
-  updatedAt: DateTime!
-}
-
-"""An object with an ID"""
-interface Node {
-  """The ID of the object."""
-  id: ID!
-}
-
-interface ObjectWithMetadata {
-  """List of private metadata items. Requires staff permissions to access."""
-  privateMetadata: [MetadataItem!]!
-
-  """
-  A single key from private metadata. Requires staff permissions to access.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafield(key: String!): String
-
-  """
-  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafields(keys: [String!]): Metadata
-
-  """List of public metadata items. Can be accessed without permissions."""
-  metadata: [MetadataItem!]!
-
-  """
-  A single key from public metadata.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafield(key: String!): String
-
-  """
-  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafields(keys: [String!]): Metadata
-}
-
-type MetadataItem {
-  """Key of a metadata item."""
-  key: String!
-
-  """Value of a metadata item."""
-  value: String!
-}
-
-"""
-Metadata is a map of key-value pairs, both keys and values are `String`.
-
-Example:
-```
-{
-    "key1": "value1",
-    "key2": "value2"
-}
-```
-"""
-scalar Metadata
-
-scalar JSONString
-
-"""
-The `DateTime` scalar type represents a DateTime
-value as specified by
-[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-"""
-scalar DateTime
-
-type InitiativeCountableConnection {
-  """Pagination data for this connection."""
-  pageInfo: PageInfo!
-  edges: [InitiativeCountableEdge!]!
-
-  """A total count of items in the collection."""
-  totalCount: Int
-}
-
-"""
-The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
-"""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: String
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: String
-}
-
-type InitiativeCountableEdge {
-  """The item at the end of the edge."""
-  node: Initiative!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-input InitiativeFilterInput {
-  search: String
-  metadata: [MetadataFilter!]
-  ids: [ID!]
-
-  """
-  Specifies the channel by which the data should be filtered. 
-  
-  DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
-  """
-  channel: String
-}
-
-input MetadataFilter {
-  """Key of a metadata item."""
-  key: String!
-
-  """Value of a metadata item."""
-  value: String
-}
-
-input InitiativeOrder {
-  """Specifies the direction in which to sort products."""
-  direction: OrderDirection!
-
-  """
-  Specifies the channel in which to sort the data.
-  
-  DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
-  """
-  channel: String
-
-  """
-  Sort initiative by the selected attribute's values.
-  Note: this doesn't take translations into account yet.
-  """
-  attributeId: ID
-
-  """Sort initiatives by the selected field."""
-  field: InitiativeOrderField
-}
-
-enum OrderDirection {
-  """Specifies an ascending sort order."""
-  ASC
-
-  """Specifies a descending sort order."""
-  DESC
-}
-
-enum InitiativeOrderField {
-  """Sort initiatives by name."""
-  NAME
-
-  """
-  Sort initiatives by rank. Note: This option is available only with the `search` filter.
-  """
-  RANK
-
-  """
-  Sort initiatives by price.
-  
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  PRICE
-
-  """
-  Sort initiatives by a minimal price of a initiative's variant.
-  
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  MINIMAL_PRICE
-
-  """Sort initiatives by update date."""
-  LAST_MODIFIED
-
-  """Sort initiatives by update date."""
-  DATE
-
-  """Sort initiatives by type."""
-  TYPE
-
-  """
-  Sort initiatives by publication status.
-  
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  PUBLISHED
-
-  """
-  Sort initiatives by publication date.
-  
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  PUBLICATION_DATE
-
-  """
-  Sort initiatives by publication date.
-  
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  PUBLISHED_AT
-
-  """Sort initiatives by update date."""
-  LAST_MODIFIED_AT
-
-  """
-  Sort initiatives by collection. Note: This option is available only for the `Collection.initiatives` query.
-  
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  COLLECTION
-
-  """Sort initiatives by rating."""
-  RATING
-}
-
-type AddressValidationData {
-  countryCode: String!
-  countryName: String!
-  addressFormat: String!
-  addressLatinFormat: String!
-  allowedFields: [String!]!
-  requiredFields: [String!]!
-  upperFields: [String!]!
-  countryAreaType: String!
-  countryAreaChoices: [ChoiceValue!]!
-  cityType: String!
-  cityChoices: [ChoiceValue!]!
-  cityAreaType: String!
-  cityAreaChoices: [ChoiceValue!]!
-  postalCodeType: String!
-  postalCodeMatchers: [String!]!
-  postalCodeExamples: [String!]!
-  postalCodePrefix: String!
-}
-
-type ChoiceValue {
-  raw: String
-  verbose: String
-}
-
-"""An enumeration."""
-enum CountryCode {
-  AF
-  AX
-  AL
-  DZ
-  AS
-  AD
-  AO
-  AI
-  AQ
-  AG
-  AR
-  AM
-  AW
-  AU
-  AT
-  AZ
-  BS
-  BH
-  BD
-  BB
-  BY
-  BE
-  BZ
-  BJ
-  BM
-  BT
-  BO
-  BQ
-  BA
-  BW
-  BV
-  BR
-  IO
-  BN
-  BG
-  BF
-  BI
-  CV
-  KH
-  CM
-  CA
-  KY
-  CF
-  TD
-  CL
-  CN
-  CX
-  CC
-  CO
-  KM
-  CG
-  CD
-  CK
-  CR
-  CI
-  HR
-  CU
-  CW
-  CY
-  CZ
-  DK
-  DJ
-  DM
-  DO
-  EC
-  EG
-  SV
-  GQ
-  ER
-  EE
-  SZ
-  ET
-  EU
-  FK
-  FO
-  FJ
-  FI
-  FR
-  GF
-  PF
-  TF
-  GA
-  GM
-  GE
-  DE
-  GH
-  GI
-  GR
-  GL
-  GD
-  GP
-  GU
-  GT
-  GG
-  GN
-  GW
-  GY
-  HT
-  HM
-  VA
-  HN
-  HK
-  HU
-  IS
-  IN
-  ID
-  IR
-  IQ
-  IE
-  IM
-  IL
-  IT
-  JM
-  JP
-  JE
-  JO
-  KZ
-  KE
-  KI
-  KW
-  KG
-  LA
-  LV
-  LB
-  LS
-  LR
-  LY
-  LI
-  LT
-  LU
-  MO
-  MG
-  MW
-  MY
-  MV
-  ML
-  MT
-  MH
-  MQ
-  MR
-  MU
-  YT
-  MX
-  FM
-  MD
-  MC
-  MN
-  ME
-  MS
-  MA
-  MZ
-  MM
-  NA
-  NR
-  NP
-  NL
-  NC
-  NZ
-  NI
-  NE
-  NG
-  NU
-  NF
-  KP
-  MK
-  MP
-  NO
-  OM
-  PK
-  PW
-  PS
-  PA
-  PG
-  PY
-  PE
-  PH
-  PN
-  PL
-  PT
-  PR
-  QA
-  RE
-  RO
-  RU
-  RW
-  BL
-  SH
-  KN
-  LC
-  MF
-  PM
-  VC
-  WS
-  SM
-  ST
-  SA
-  SN
-  RS
-  SC
-  SL
-  SG
-  SX
-  SK
-  SI
-  SB
-  SO
-  ZA
-  GS
-  KR
-  SS
-  ES
-  LK
-  SD
-  SR
-  SJ
-  SE
-  CH
-  SY
-  TW
-  TJ
-  TZ
-  TH
-  TL
-  TG
-  TK
-  TO
-  TT
-  TN
-  TR
-  TM
-  TC
-  TV
-  UG
-  UA
-  AE
-  GB
-  UM
-  US
-  UY
-  UZ
-  VU
-  VE
-  VN
-  VG
-  VI
-  WF
-  EH
-  YE
-  ZM
-  ZW
-}
-
-type UserCountableConnection {
-  """Pagination data for this connection."""
-  pageInfo: PageInfo!
-  edges: [UserCountableEdge!]!
-
-  """A total count of items in the collection."""
-  totalCount: Int
-}
-
-type UserCountableEdge {
-  """The item at the end of the edge."""
-  node: User!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-"""Represents user data."""
-type User implements Node & ObjectWithMetadata {
-  id: ID!
-
-  """List of private metadata items. Requires staff permissions to access."""
-  privateMetadata: [MetadataItem!]!
-
-  """
-  A single key from private metadata. Requires staff permissions to access.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafield(key: String!): String
-
-  """
-  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafields(keys: [String!]): Metadata
-
-  """List of public metadata items. Can be accessed without permissions."""
-  metadata: [MetadataItem!]!
-
-  """
-  A single key from public metadata.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafield(key: String!): String
-
-  """
-  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafields(keys: [String!]): Metadata
-  email: String!
-  firstName: String!
-  lastName: String!
-  isStaff: Boolean!
-  isActive: Boolean!
-
-  """
-  A note about the customer.
-  
-  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
-  """
-  note: String
-
-  """List of user's permissions."""
-  userPermissions: [UserPermission!]
-
-  """List of user's permission groups."""
-  permissionGroups: [Group!]
-
-  """List of user's permission groups which user can manage."""
-  editableGroups: [Group!]
-  avatar(
-    """
-    Size of the image. If not provided, the original image will be returned.
-    """
-    size: Int
-
-    """
-    The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
-    
-    Added in Saleor 3.6.
-    
-    Note: this API is currently in Feature Preview and can be subject to changes at later point.
-    """
-    format: ThumbnailFormatEnum
-  ): Image
-
-  """
-  List of events associated with the user.
-  
-  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
-  """
-  events: [CustomerEvent!]
-
-  """User language code."""
-  languageCode: LanguageCodeEnum!
-  lastLogin: DateTime
-  dateJoined: DateTime!
-  updatedAt: DateTime!
-}
-
-type UserPermission {
-  """Internal code for permission."""
-  code: PermissionEnum!
-
-  """Describe action(s) allowed to do by permission."""
-  name: String!
-
-  """List of user permission groups which contains this permission."""
-  sourcePermissionGroups(
-    """ID of user whose groups should be returned."""
-    userId: ID!
-  ): [Group!]
-}
-
-"""An enumeration."""
-enum PermissionEnum {
-  MANAGE_USERS
-  MANAGE_STAFF
-  IMPERSONATE_USER
-  MANAGE_APPS
-  MANAGE_OBSERVABILITY
-  MANAGE_CHANNELS
-  MANAGE_DISCOUNTS
-  MANAGE_PLUGINS
-  MANAGE_GIFT_CARD
-  MANAGE_MENUS
-  MANAGE_ORDERS
-  MANAGE_PAGES
-  MANAGE_PAGE_TYPES_AND_ATTRIBUTES
-  HANDLE_PAYMENTS
-  MANAGE_SETTINGS
-  MANAGE_TRANSLATIONS
-  MANAGE_CHECKOUTS
-  HANDLE_CHECKOUTS
-  HANDLE_TAXES
-}
-
-"""Represents permission group data."""
-type Group implements Node {
-  id: ID!
-  name: String!
-
-  """
-  List of group users
-  
-  Requires one of the following permissions: MANAGE_STAFF.
-  """
-  users: [User!]
-
-  """List of group permissions"""
-  permissions: [Permission!]
-
-  """
-  True, if the currently authenticated user has rights to manage a group.
-  """
-  userCanManage: Boolean!
-}
-
-"""Represents a permission object in a friendly form."""
-type Permission {
-  """Internal code for permission."""
-  code: PermissionEnum!
-
-  """Describe action(s) allowed to do by permission."""
-  name: String!
-}
-
-"""Represents an image."""
-type Image {
-  """The URL of the image."""
-  url: String!
-
-  """Alt text for an image."""
-  alt: String
-}
-
-"""An enumeration."""
-enum ThumbnailFormatEnum {
-  WEBP
-}
-
-"""History log of the customer."""
-type CustomerEvent implements Node {
-  id: ID!
-
-  """Date when event happened at in ISO 8601 format."""
-  date: DateTime
-
-  """Customer event type."""
-  type: CustomerEventsEnum
-
-  """User who performed the action."""
-  user: User
-
-  """App that performed the action."""
-  app: App
-
-  """Content of the event."""
-  message: String
-
-  """Number of objects concerned by the event."""
-  count: Int
-}
-
-"""An enumeration."""
-enum CustomerEventsEnum {
-  ACCOUNT_CREATED
-  ACCOUNT_ACTIVATED
-  ACCOUNT_DEACTIVATED
-  PASSWORD_RESET_LINK_SENT
-  PASSWORD_RESET
-  EMAIL_CHANGED_REQUEST
-  PASSWORD_CHANGED
-  EMAIL_CHANGED
-  PLACED_ORDER
-  NOTE_ADDED_TO_ORDER
-  DIGITAL_LINK_DOWNLOADED
-  CUSTOMER_DELETED
-  NAME_ASSIGNED
-  EMAIL_ASSIGNED
-  NOTE_ADDED
-}
-
-"""Represents app data."""
-type App implements Node & ObjectWithMetadata {
-  id: ID!
-
-  """List of private metadata items. Requires staff permissions to access."""
-  privateMetadata: [MetadataItem!]!
-
-  """
-  A single key from private metadata. Requires staff permissions to access.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafield(key: String!): String
-
-  """
-  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafields(keys: [String!]): Metadata
-
-  """List of public metadata items. Can be accessed without permissions."""
-  metadata: [MetadataItem!]!
-
-  """
-  A single key from public metadata.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafield(key: String!): String
-
-  """
-  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-  
-  Added in Saleor 3.3.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafields(keys: [String!]): Metadata
-
-  """List of the app's permissions."""
-  permissions: [Permission!]
-
-  """The date and time when the app was created."""
-  created: DateTime
-
-  """Determine if app will be set active or not."""
-  isActive: Boolean
-
-  """Name of the app."""
-  name: String
-
-  """Type of the app."""
-  type: AppTypeEnum
-
-  """
-  Last 4 characters of the tokens.
-  
-  Requires one of the following permissions: MANAGE_APPS, OWNER.
-  """
-  tokens: [AppToken!]
-
-  """
-  List of webhooks assigned to this app.
-  
-  Requires one of the following permissions: MANAGE_APPS, OWNER.
-  """
-  webhooks: [Webhook!]
-
-  """Description of this app."""
-  aboutApp: String
-
-  """Description of the data privacy defined for this app."""
-  dataPrivacy: String @deprecated(reason: "This field will be removed in Saleor 4.0. Use `dataPrivacyUrl` instead.")
-
-  """URL to details about the privacy policy on the app owner page."""
-  dataPrivacyUrl: String
-
-  """Homepage of the app."""
-  homepageUrl: String
-
-  """Support page for the app."""
-  supportUrl: String
-
-  """URL to iframe with the configuration for the app."""
-  configurationUrl: String @deprecated(reason: "This field will be removed in Saleor 4.0. Use `appUrl` instead.")
-
-  """URL to iframe with the app."""
-  appUrl: String
-
-  """
-  URL to manifest used during app's installation.
-  
-  Added in Saleor 3.5.
-  """
-  manifestUrl: String
-
-  """Version number of the app."""
-  version: String
-
-  """JWT token used to authenticate by thridparty app."""
-  accessToken: String
-
-  """
-  App's dashboard extensions.
-  
-  Added in Saleor 3.1.
-  
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  extensions: [AppExtension!]!
-}
-
-"""Enum determining type of your App."""
-enum AppTypeEnum {
-  """
-  Local Saleor App. The app is fully manageable from dashboard. You can change assigned permissions, add webhooks, or authentication token
-  """
-  LOCAL
-
-  """
-  Third party external App. Installation is fully automated. Saleor uses a defined App manifest to gather all required information.
-  """
-  THIRDPARTY
-}
-
-"""Represents token data."""
-type AppToken implements Node {
-  id: ID!
-
-  """Name of the authenticated token."""
-  name: String
-
-  """Last 4 characters of the token."""
-  authToken: String
 }
 
 """Webhook."""
@@ -1176,6 +356,12 @@ type Webhook implements Node {
 
   """Used to define payloads for specific events."""
   subscriptionQuery: String
+}
+
+"""An object with an ID"""
+interface Node {
+  """The ID of the object."""
+  id: ID!
 }
 
 """Webhook event."""
@@ -1391,6 +577,299 @@ enum WebhookEventTypeAsyncEnum {
   OBSERVABILITY
 }
 
+"""Represents app data."""
+type App implements Node & ObjectWithMetadata {
+  id: ID!
+
+  """List of private metadata items. Requires staff permissions to access."""
+  privateMetadata: [MetadataItem!]!
+
+  """
+  A single key from private metadata. Requires staff permissions to access.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafield(key: String!): String
+
+  """
+  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafields(keys: [String!]): Metadata
+
+  """List of public metadata items. Can be accessed without permissions."""
+  metadata: [MetadataItem!]!
+
+  """
+  A single key from public metadata.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafield(key: String!): String
+
+  """
+  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafields(keys: [String!]): Metadata
+
+  """List of the app's permissions."""
+  permissions: [Permission!]
+
+  """The date and time when the app was created."""
+  created: DateTime
+
+  """Determine if app will be set active or not."""
+  isActive: Boolean
+
+  """Name of the app."""
+  name: String
+
+  """Type of the app."""
+  type: AppTypeEnum
+
+  """
+  Last 4 characters of the tokens.
+  
+  Requires one of the following permissions: MANAGE_APPS, OWNER.
+  """
+  tokens: [AppToken!]
+
+  """
+  List of webhooks assigned to this app.
+  
+  Requires one of the following permissions: MANAGE_APPS, OWNER.
+  """
+  webhooks: [Webhook!]
+
+  """Description of this app."""
+  aboutApp: String
+
+  """Description of the data privacy defined for this app."""
+  dataPrivacy: String @deprecated(reason: "This field will be removed in Saleor 4.0. Use `dataPrivacyUrl` instead.")
+
+  """URL to details about the privacy policy on the app owner page."""
+  dataPrivacyUrl: String
+
+  """Homepage of the app."""
+  homepageUrl: String
+
+  """Support page for the app."""
+  supportUrl: String
+
+  """URL to iframe with the configuration for the app."""
+  configurationUrl: String @deprecated(reason: "This field will be removed in Saleor 4.0. Use `appUrl` instead.")
+
+  """URL to iframe with the app."""
+  appUrl: String
+
+  """
+  URL to manifest used during app's installation.
+  
+  Added in Saleor 3.5.
+  """
+  manifestUrl: String
+
+  """Version number of the app."""
+  version: String
+
+  """JWT token used to authenticate by thridparty app."""
+  accessToken: String
+
+  """
+  App's dashboard extensions.
+  
+  Added in Saleor 3.1.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  extensions: [AppExtension!]!
+}
+
+interface ObjectWithMetadata {
+  """List of private metadata items. Requires staff permissions to access."""
+  privateMetadata: [MetadataItem!]!
+
+  """
+  A single key from private metadata. Requires staff permissions to access.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafield(key: String!): String
+
+  """
+  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafields(keys: [String!]): Metadata
+
+  """List of public metadata items. Can be accessed without permissions."""
+  metadata: [MetadataItem!]!
+
+  """
+  A single key from public metadata.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafield(key: String!): String
+
+  """
+  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafields(keys: [String!]): Metadata
+}
+
+type MetadataItem {
+  """Key of a metadata item."""
+  key: String!
+
+  """Value of a metadata item."""
+  value: String!
+}
+
+"""
+Metadata is a map of key-value pairs, both keys and values are `String`.
+
+Example:
+```
+{
+    "key1": "value1",
+    "key2": "value2"
+}
+```
+"""
+scalar Metadata
+
+"""Represents a permission object in a friendly form."""
+type Permission {
+  """Internal code for permission."""
+  code: PermissionEnum!
+
+  """Describe action(s) allowed to do by permission."""
+  name: String!
+}
+
+"""An enumeration."""
+enum PermissionEnum {
+  MANAGE_USERS
+  MANAGE_STAFF
+  IMPERSONATE_USER
+  MANAGE_APPS
+  MANAGE_OBSERVABILITY
+  MANAGE_INITIATIVES
+}
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+"""Enum determining type of your App."""
+enum AppTypeEnum {
+  """
+  Local Saleor App. The app is fully manageable from dashboard. You can change assigned permissions, add webhooks, or authentication token
+  """
+  LOCAL
+
+  """
+  Third party external App. Installation is fully automated. Saleor uses a defined App manifest to gather all required information.
+  """
+  THIRDPARTY
+}
+
+"""Represents token data."""
+type AppToken implements Node {
+  id: ID!
+
+  """Name of the authenticated token."""
+  name: String
+
+  """Last 4 characters of the token."""
+  authToken: String
+}
+
+"""Represents app data."""
+type AppExtension implements Node {
+  id: ID!
+
+  """List of the app extension's permissions."""
+  permissions: [Permission!]!
+
+  """Label of the extension to show in the dashboard."""
+  label: String!
+
+  """URL of a view where extension's iframe is placed."""
+  url: String!
+
+  """Place where given extension will be mounted."""
+  mount: AppExtensionMountEnum!
+
+  """Type of way how app extension will be opened."""
+  target: AppExtensionTargetEnum!
+  app: App!
+
+  """JWT token used to authenticate by thridparty app extension."""
+  accessToken: String
+}
+
+"""All places where app extension can be mounted."""
+enum AppExtensionMountEnum {
+  CUSTOMER_OVERVIEW_CREATE
+  CUSTOMER_OVERVIEW_MORE_ACTIONS
+  CUSTOMER_DETAILS_MORE_ACTIONS
+  INITIATIVE_OVERVIEW_CREATE
+  INITIATIVE_OVERVIEW_MORE_ACTIONS
+  INITIATIVE_DETAILS_MORE_ACTIONS
+  NAVIGATION_CATALOG
+  NAVIGATION_ORDERS
+  NAVIGATION_CUSTOMERS
+  NAVIGATION_DISCOUNTS
+  NAVIGATION_TRANSLATIONS
+  NAVIGATION_PAGES
+}
+
+"""
+All available ways of opening an app extension.
+
+    POPUP - app's extension will be mounted as a popup window
+    APP_PAGE - redirect to app's page
+"""
+enum AppExtensionTargetEnum {
+  POPUP
+  APP_PAGE
+}
+
 type EventDeliveryCountableConnection {
   """Pagination data for this connection."""
   pageInfo: PageInfo!
@@ -1398,6 +877,23 @@ type EventDeliveryCountableConnection {
 
   """A total count of items in the collection."""
   totalCount: Int
+}
+
+"""
+The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
+"""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
 }
 
 type EventDeliveryCountableEdge {
@@ -1501,6 +997,14 @@ input EventDeliveryAttemptSortingInput {
   field: EventDeliveryAttemptSortField!
 }
 
+enum OrderDirection {
+  """Specifies an ascending sort order."""
+  ASC
+
+  """Specifies a descending sort order."""
+  DESC
+}
+
 enum EventDeliveryAttemptSortField {
   """Sort event delivery attempts by created at."""
   CREATED_AT
@@ -1524,58 +1028,114 @@ input EventDeliveryFilterInput {
   eventType: WebhookEventTypeEnum
 }
 
-"""Represents app data."""
-type AppExtension implements Node {
+scalar JSONString
+
+"""An enumeration."""
+enum WebhookSampleEventTypeEnum {
+  APP_INSTALLED
+  APP_UPDATED
+  APP_DELETED
+  APP_STATUS_CHANGED
+  MENU_CREATED
+  MENU_UPDATED
+  MENU_DELETED
+  MENU_ITEM_CREATED
+  MENU_ITEM_UPDATED
+  MENU_ITEM_DELETED
+  CUSTOMER_CREATED
+  CUSTOMER_UPDATED
+  CUSTOMER_DELETED
+  INITIATIVE_CREATED
+  INITIATIVE_UPDATED
+  INITIATIVE_DELETED
+  NOTIFY_USER
+  PAGE_CREATED
+  PAGE_UPDATED
+  PAGE_DELETED
+  PAGE_TYPE_CREATED
+  PAGE_TYPE_UPDATED
+  PAGE_TYPE_DELETED
+  PERMISSION_GROUP_CREATED
+  PERMISSION_GROUP_UPDATED
+  PERMISSION_GROUP_DELETED
+  STAFF_CREATED
+  STAFF_UPDATED
+  STAFF_DELETED
+  OBSERVABILITY
+}
+
+type TranslatableItemConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [TranslatableItemEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type TranslatableItemEdge {
+  """The item at the end of the edge."""
+  node: TranslatableItem!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+union TranslatableItem = InitiativeTranslatableContent
+
+type InitiativeTranslatableContent implements Node {
+  id: ID!
+  seoTitle: String
+  seoDescription: String
+  name: String!
+
+  """
+  Description of the initiative.
+  
+  Rich text format. For reference see https://editorjs.io/
+  """
+  description: JSONString
+
+  """
+  Description of the initiative.
+  
+  Rich text format. For reference see https://editorjs.io/
+  """
+  descriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `description` field instead.")
+
+  """Returns translated initiative fields for the given language code."""
+  translation(
+    """A language code to return the translation for initiative."""
+    languageCode: LanguageCodeEnum!
+  ): InitiativeTranslation
+
+  """Represents an individual item for sale in the storefront."""
+  initiative: Initiative @deprecated(reason: "This field will be removed in Saleor 4.0. Get model fields from the root level queries.")
+}
+
+type InitiativeTranslation implements Node {
   id: ID!
 
-  """List of the app extension's permissions."""
-  permissions: [Permission!]!
+  """Translation language."""
+  language: LanguageDisplay!
+  seoTitle: String
+  seoDescription: String
+  name: String
 
-  """Label of the extension to show in the dashboard."""
-  label: String!
-
-  """URL of a view where extension's iframe is placed."""
-  url: String!
-
-  """Place where given extension will be mounted."""
-  mount: AppExtensionMountEnum!
-
-  """Type of way how app extension will be opened."""
-  target: AppExtensionTargetEnum!
-  app: App!
-
-  """JWT token used to authenticate by thridparty app extension."""
-  accessToken: String
+  """
+  Translated description of the product.
+  
+  Rich text format. For reference see https://editorjs.io/
+  """
+  description: JSONString
 }
 
-"""All places where app extension can be mounted."""
-enum AppExtensionMountEnum {
-  CUSTOMER_OVERVIEW_CREATE
-  CUSTOMER_OVERVIEW_MORE_ACTIONS
-  CUSTOMER_DETAILS_MORE_ACTIONS
-  PRODUCT_OVERVIEW_CREATE
-  PRODUCT_OVERVIEW_MORE_ACTIONS
-  PRODUCT_DETAILS_MORE_ACTIONS
-  NAVIGATION_CATALOG
-  NAVIGATION_ORDERS
-  NAVIGATION_CUSTOMERS
-  NAVIGATION_DISCOUNTS
-  NAVIGATION_TRANSLATIONS
-  NAVIGATION_PAGES
-  ORDER_DETAILS_MORE_ACTIONS
-  ORDER_OVERVIEW_CREATE
-  ORDER_OVERVIEW_MORE_ACTIONS
-}
+type LanguageDisplay {
+  """ISO 639 representation of the language name."""
+  code: LanguageCodeEnum!
 
-"""
-All available ways of opening an app extension.
-
-    POPUP - app's extension will be mounted as a popup window
-    APP_PAGE - redirect to app's page
-"""
-enum AppExtensionTargetEnum {
-  POPUP
-  APP_PAGE
+  """Full name of the language."""
+  language: String!
 }
 
 """An enumeration."""
@@ -2361,6 +1921,912 @@ enum LanguageCodeEnum {
   ZU_ZA
 }
 
+"""Represents an individual item for sale in the storefront."""
+type Initiative implements Node & ObjectWithMetadata {
+  id: ID!
+
+  """List of private metadata items. Requires staff permissions to access."""
+  privateMetadata: [MetadataItem!]!
+
+  """
+  A single key from private metadata. Requires staff permissions to access.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafield(key: String!): String
+
+  """
+  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafields(keys: [String!]): Metadata
+
+  """List of public metadata items. Can be accessed without permissions."""
+  metadata: [MetadataItem!]!
+
+  """
+  A single key from public metadata.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafield(key: String!): String
+
+  """
+  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafields(keys: [String!]): Metadata
+  seoTitle: String
+  seoDescription: String
+  title: String!
+
+  """
+  Description of the initiative.
+  
+  Rich text format. For reference see https://editorjs.io/
+  """
+  description: JSONString
+  slug: String!
+  created: DateTime!
+  updatedAt: DateTime!
+  thumbnail(
+    """
+    Size of the image. If not provided, the original image will be returned.
+    """
+    size: Int
+
+    """
+    The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
+    
+    Added in Saleor 3.6.
+    
+    Note: this API is currently in Feature Preview and can be subject to changes at later point.
+    """
+    format: ThumbnailFormatEnum
+  ): Image
+
+  """Get a single initiative media by ID."""
+  mediaById(
+    """ID of a initiative media."""
+    id: ID
+  ): InitiativeMedia
+
+  """Get a single initiative image by ID."""
+  imageById(
+    """ID of a initiative image."""
+    id: ID
+  ): InitiativeImage @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `mediaById` field instead.")
+
+  """List of media for the initiative."""
+  media: [InitiativeMedia!]
+
+  """List of images for the initiative."""
+  images: [InitiativeImage!] @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `media` field instead.")
+
+  """Returns translated initiative fields for the given language code."""
+  translation(
+    """A language code to return the translation for initiative."""
+    languageCode: LanguageCodeEnum!
+  ): InitiativeTranslation
+}
+
+"""Represents an image."""
+type Image {
+  """The URL of the image."""
+  url: String!
+
+  """Alt text for an image."""
+  alt: String
+}
+
+"""An enumeration."""
+enum ThumbnailFormatEnum {
+  WEBP
+}
+
+"""Represents a initiative media."""
+type InitiativeMedia implements Node {
+  id: ID!
+  sortOrder: Int
+  alt: String!
+  type: InitiativeMediaType!
+  oembedData: JSONString!
+  url(
+    """
+    Size of the image. If not provided, the original image will be returned.
+    """
+    size: Int
+
+    """
+    The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
+    
+    Added in Saleor 3.6.
+    
+    Note: this API is currently in Feature Preview and can be subject to changes at later point.
+    """
+    format: ThumbnailFormatEnum
+  ): String!
+}
+
+"""An enumeration."""
+enum InitiativeMediaType {
+  IMAGE
+  VIDEO
+}
+
+"""Represents a initiative image."""
+type InitiativeImage {
+  """The ID of the image."""
+  id: ID!
+
+  """The alt text of the image."""
+  alt: String
+
+  """
+  The new relative sorting position of the item (from -inf to +inf). 1 moves the item one position forward, -1 moves the item one position backward, 0 leaves the item unchanged.
+  """
+  sortOrder: Int
+  url(
+    """
+    Size of the image. If not provided, the original image will be returned.
+    """
+    size: Int
+
+    """
+    The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
+    
+    Added in Saleor 3.6.
+    
+    Note: this API is currently in Feature Preview and can be subject to changes at later point.
+    """
+    format: ThumbnailFormatEnum
+  ): String!
+}
+
+enum TranslatableKinds {
+  INITIATIVE
+}
+
+type PoliticalEntityCountableConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [PoliticalEntityCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type PoliticalEntityCountableEdge {
+  """The item at the end of the edge."""
+  node: PoliticalEntity!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+type PoliticalEntity {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+}
+
+type InitiativeCountableConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [InitiativeCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type InitiativeCountableEdge {
+  """The item at the end of the edge."""
+  node: Initiative!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input InitiativeFilterInput {
+  search: String
+  metadata: [MetadataFilter!]
+  ids: [ID!]
+
+  """
+  Specifies the channel by which the data should be filtered. 
+  
+  DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+  """
+  channel: String
+}
+
+input MetadataFilter {
+  """Key of a metadata item."""
+  key: String!
+
+  """Value of a metadata item."""
+  value: String
+}
+
+input InitiativeOrder {
+  """Specifies the direction in which to sort products."""
+  direction: OrderDirection!
+
+  """
+  Specifies the channel in which to sort the data.
+  
+  DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+  """
+  channel: String
+
+  """
+  Sort initiative by the selected attribute's values.
+  Note: this doesn't take translations into account yet.
+  """
+  attributeId: ID
+
+  """Sort initiatives by the selected field."""
+  field: InitiativeOrderField
+}
+
+enum InitiativeOrderField {
+  """Sort initiatives by name."""
+  NAME
+
+  """
+  Sort initiatives by rank. Note: This option is available only with the `search` filter.
+  """
+  RANK
+
+  """
+  Sort initiatives by price.
+  
+  This option requires a channel filter to work as the values can vary between channels.
+  """
+  PRICE
+
+  """
+  Sort initiatives by a minimal price of a initiative's variant.
+  
+  This option requires a channel filter to work as the values can vary between channels.
+  """
+  MINIMAL_PRICE
+
+  """Sort initiatives by update date."""
+  LAST_MODIFIED
+
+  """Sort initiatives by update date."""
+  DATE
+
+  """Sort initiatives by type."""
+  TYPE
+
+  """
+  Sort initiatives by publication status.
+  
+  This option requires a channel filter to work as the values can vary between channels.
+  """
+  PUBLISHED
+
+  """
+  Sort initiatives by publication date.
+  
+  This option requires a channel filter to work as the values can vary between channels.
+  """
+  PUBLICATION_DATE
+
+  """
+  Sort initiatives by publication date.
+  
+  This option requires a channel filter to work as the values can vary between channels.
+  """
+  PUBLISHED_AT
+
+  """Sort initiatives by update date."""
+  LAST_MODIFIED_AT
+
+  """
+  Sort initiatives by collection. Note: This option is available only for the `Collection.initiatives` query.
+  
+  This option requires a channel filter to work as the values can vary between channels.
+  """
+  COLLECTION
+
+  """Sort initiatives by rating."""
+  RATING
+}
+
+"""Represents ongoing installation of app."""
+type AppInstallation implements Node & Job {
+  id: ID!
+
+  """Job status."""
+  status: JobStatusEnum!
+
+  """Created date time of job in ISO 8601 format."""
+  createdAt: DateTime!
+
+  """Date time of job last update in ISO 8601 format."""
+  updatedAt: DateTime!
+
+  """Job message."""
+  message: String
+  appName: String!
+  manifestUrl: String!
+}
+
+interface Job {
+  """Job status."""
+  status: JobStatusEnum!
+
+  """Created date time of job in ISO 8601 format."""
+  createdAt: DateTime!
+
+  """Date time of job last update in ISO 8601 format."""
+  updatedAt: DateTime!
+
+  """Job message."""
+  message: String
+}
+
+"""An enumeration."""
+enum JobStatusEnum {
+  PENDING
+  SUCCESS
+  FAILED
+  DELETED
+}
+
+type AppCountableConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [AppCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type AppCountableEdge {
+  """The item at the end of the edge."""
+  node: App!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input AppFilterInput {
+  search: String
+  isActive: Boolean
+  type: AppTypeEnum
+}
+
+input AppSortingInput {
+  """Specifies the direction in which to sort products."""
+  direction: OrderDirection!
+
+  """Sort apps by the selected field."""
+  field: AppSortField!
+}
+
+enum AppSortField {
+  """Sort apps by name."""
+  NAME
+
+  """Sort apps by creation date."""
+  CREATION_DATE
+}
+
+type AppExtensionCountableConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [AppExtensionCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type AppExtensionCountableEdge {
+  """The item at the end of the edge."""
+  node: AppExtension!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input AppExtensionFilterInput {
+  mount: [AppExtensionMountEnum!]
+  target: AppExtensionTargetEnum
+}
+
+type AddressValidationData {
+  countryCode: String!
+  countryName: String!
+  addressFormat: String!
+  addressLatinFormat: String!
+  allowedFields: [String!]!
+  requiredFields: [String!]!
+  upperFields: [String!]!
+  countryAreaType: String!
+  countryAreaChoices: [ChoiceValue!]!
+  cityType: String!
+  cityChoices: [ChoiceValue!]!
+  cityAreaType: String!
+  cityAreaChoices: [ChoiceValue!]!
+  postalCodeType: String!
+  postalCodeMatchers: [String!]!
+  postalCodeExamples: [String!]!
+  postalCodePrefix: String!
+}
+
+type ChoiceValue {
+  raw: String
+  verbose: String
+}
+
+"""An enumeration."""
+enum CountryCode {
+  AF
+  AX
+  AL
+  DZ
+  AS
+  AD
+  AO
+  AI
+  AQ
+  AG
+  AR
+  AM
+  AW
+  AU
+  AT
+  AZ
+  BS
+  BH
+  BD
+  BB
+  BY
+  BE
+  BZ
+  BJ
+  BM
+  BT
+  BO
+  BQ
+  BA
+  BW
+  BV
+  BR
+  IO
+  BN
+  BG
+  BF
+  BI
+  CV
+  KH
+  CM
+  CA
+  KY
+  CF
+  TD
+  CL
+  CN
+  CX
+  CC
+  CO
+  KM
+  CG
+  CD
+  CK
+  CR
+  CI
+  HR
+  CU
+  CW
+  CY
+  CZ
+  DK
+  DJ
+  DM
+  DO
+  EC
+  EG
+  SV
+  GQ
+  ER
+  EE
+  SZ
+  ET
+  EU
+  FK
+  FO
+  FJ
+  FI
+  FR
+  GF
+  PF
+  TF
+  GA
+  GM
+  GE
+  DE
+  GH
+  GI
+  GR
+  GL
+  GD
+  GP
+  GU
+  GT
+  GG
+  GN
+  GW
+  GY
+  HT
+  HM
+  VA
+  HN
+  HK
+  HU
+  IS
+  IN
+  ID
+  IR
+  IQ
+  IE
+  IM
+  IL
+  IT
+  JM
+  JP
+  JE
+  JO
+  KZ
+  KE
+  KI
+  KW
+  KG
+  LA
+  LV
+  LB
+  LS
+  LR
+  LY
+  LI
+  LT
+  LU
+  MO
+  MG
+  MW
+  MY
+  MV
+  ML
+  MT
+  MH
+  MQ
+  MR
+  MU
+  YT
+  MX
+  FM
+  MD
+  MC
+  MN
+  ME
+  MS
+  MA
+  MZ
+  MM
+  NA
+  NR
+  NP
+  NL
+  NC
+  NZ
+  NI
+  NE
+  NG
+  NU
+  NF
+  KP
+  MK
+  MP
+  NO
+  OM
+  PK
+  PW
+  PS
+  PA
+  PG
+  PY
+  PE
+  PH
+  PN
+  PL
+  PT
+  PR
+  QA
+  RE
+  RO
+  RU
+  RW
+  BL
+  SH
+  KN
+  LC
+  MF
+  PM
+  VC
+  WS
+  SM
+  ST
+  SA
+  SN
+  RS
+  SC
+  SL
+  SG
+  SX
+  SK
+  SI
+  SB
+  SO
+  ZA
+  GS
+  KR
+  SS
+  ES
+  LK
+  SD
+  SR
+  SJ
+  SE
+  CH
+  SY
+  TW
+  TJ
+  TZ
+  TH
+  TL
+  TG
+  TK
+  TO
+  TT
+  TN
+  TR
+  TM
+  TC
+  TV
+  UG
+  UA
+  AE
+  GB
+  UM
+  US
+  UY
+  UZ
+  VU
+  VE
+  VN
+  VG
+  VI
+  WF
+  EH
+  YE
+  ZM
+  ZW
+}
+
+type UserCountableConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [UserCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type UserCountableEdge {
+  """The item at the end of the edge."""
+  node: User!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""Represents user data."""
+type User implements Node & ObjectWithMetadata {
+  id: ID!
+
+  """List of private metadata items. Requires staff permissions to access."""
+  privateMetadata: [MetadataItem!]!
+
+  """
+  A single key from private metadata. Requires staff permissions to access.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafield(key: String!): String
+
+  """
+  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafields(keys: [String!]): Metadata
+
+  """List of public metadata items. Can be accessed without permissions."""
+  metadata: [MetadataItem!]!
+
+  """
+  A single key from public metadata.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafield(key: String!): String
+
+  """
+  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafields(keys: [String!]): Metadata
+  email: String!
+  firstName: String!
+  lastName: String!
+  isStaff: Boolean!
+  isActive: Boolean!
+
+  """
+  A note about the customer.
+  
+  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
+  """
+  note: String
+
+  """List of user's permissions."""
+  userPermissions: [UserPermission!]
+
+  """List of user's permission groups."""
+  permissionGroups: [Group!]
+
+  """List of user's permission groups which user can manage."""
+  editableGroups: [Group!]
+  avatar(
+    """
+    Size of the image. If not provided, the original image will be returned.
+    """
+    size: Int
+
+    """
+    The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
+    
+    Added in Saleor 3.6.
+    
+    Note: this API is currently in Feature Preview and can be subject to changes at later point.
+    """
+    format: ThumbnailFormatEnum
+  ): Image
+
+  """
+  List of events associated with the user.
+  
+  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
+  """
+  events: [CustomerEvent!]
+
+  """User language code."""
+  languageCode: LanguageCodeEnum!
+  lastLogin: DateTime
+  dateJoined: DateTime!
+  updatedAt: DateTime!
+}
+
+type UserPermission {
+  """Internal code for permission."""
+  code: PermissionEnum!
+
+  """Describe action(s) allowed to do by permission."""
+  name: String!
+
+  """List of user permission groups which contains this permission."""
+  sourcePermissionGroups(
+    """ID of user whose groups should be returned."""
+    userId: ID!
+  ): [Group!]
+}
+
+"""Represents permission group data."""
+type Group implements Node {
+  id: ID!
+  name: String!
+
+  """
+  List of group users
+  
+  Requires one of the following permissions: MANAGE_STAFF.
+  """
+  users: [User!]
+
+  """List of group permissions"""
+  permissions: [Permission!]
+
+  """
+  True, if the currently authenticated user has rights to manage a group.
+  """
+  userCanManage: Boolean!
+}
+
+"""History log of the customer."""
+type CustomerEvent implements Node {
+  id: ID!
+
+  """Date when event happened at in ISO 8601 format."""
+  date: DateTime
+
+  """Customer event type."""
+  type: CustomerEventsEnum
+
+  """User who performed the action."""
+  user: User
+
+  """App that performed the action."""
+  app: App
+
+  """Content of the event."""
+  message: String
+
+  """Number of objects concerned by the event."""
+  count: Int
+}
+
+"""An enumeration."""
+enum CustomerEventsEnum {
+  ACCOUNT_CREATED
+  ACCOUNT_ACTIVATED
+  ACCOUNT_DEACTIVATED
+  PASSWORD_RESET_LINK_SENT
+  PASSWORD_RESET
+  EMAIL_CHANGED_REQUEST
+  PASSWORD_CHANGED
+  EMAIL_CHANGED
+  PLACED_ORDER
+  NOTE_ADDED_TO_ORDER
+  DIGITAL_LINK_DOWNLOADED
+  CUSTOMER_DELETED
+  NAME_ASSIGNED
+  EMAIL_ASSIGNED
+  NOTE_ADDED
+}
+
 input CustomerFilterInput {
   dateJoined: DateRangeInput
   numberOfOrders: IntRangeInput
@@ -2480,11 +2946,54 @@ enum StaffMemberStatus {
 
 type Mutation {
   """
+  Creates a new webhook subscription. 
+  
+  Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
+  """
+  webhookCreate(
+    """Fields required to create a webhook."""
+    input: WebhookCreateInput!
+  ): WebhookCreate
+
+  """
+  Deletes a webhook subscription. 
+  
+  Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
+  """
+  webhookDelete(
+    """ID of a webhook to delete."""
+    id: ID!
+  ): WebhookDelete
+
+  """
+  Updates a webhook subscription. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  webhookUpdate(
+    """ID of a webhook to update."""
+    id: ID!
+
+    """Fields required to update a webhook."""
+    input: WebhookUpdateInput!
+  ): WebhookUpdate
+
+  """
+  Retries event delivery. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  eventDeliveryRetry(
+    """ID of the event delivery to retry."""
+    id: ID!
+  ): EventDeliveryRetry
+
+  """
   Creates a new initiative. 
   
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
-  InitiativeCreate(
+  initiativeCreate(
     """Fields required to create a initiative."""
     input: InitiativeCreateInput!
   ): InitiativeCreate
@@ -2494,17 +3003,27 @@ type Mutation {
   
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
-  InitiativeDelete(
+  initiativeDelete(
     """ID of a initiative to delete."""
     id: ID!
   ): InitiativeDelete
+
+  """
+  Deletes initiatives. 
+  
+  Requires one of the following permissions: MANAGE_INITIATIVES.
+  """
+  initiativeBulkDelete(
+    """List of initiative IDs to delete."""
+    ids: [ID!]!
+  ): InitiativeBulkDelete
 
   """
   Updates an existing initiative. 
   
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
-  InitiativeUpdate(
+  initiativeUpdate(
     """ID of a initiative to update."""
     id: ID!
 
@@ -2512,12 +3031,8 @@ type Mutation {
     input: InitiativeInput!
   ): InitiativeUpdate
 
-  """
-  Creates/updates translations for a initiative. 
-  
-  Requires one of the following permissions: MANAGE_TRANSLATIONS.
-  """
-  InitiativeTranslate(
+  """Creates/updates translations for a initiative."""
+  initiativeTranslate(
     """Initiative ID or InitiativeTranslatableContent ID."""
     id: ID!
     input: TranslationInput!
@@ -2531,7 +3046,7 @@ type Mutation {
   
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
-  InitiativeMediaCreate(
+  initiativeMediaCreate(
     """Fields required to create a initiative media."""
     input: InitiativeMediaCreateInput!
   ): InitiativeMediaCreate
@@ -2541,17 +3056,27 @@ type Mutation {
   
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
-  InitiativeMediaDelete(
+  initiativeMediaDelete(
     """ID of a initiative media to delete."""
     id: ID!
   ): InitiativeMediaDelete
+
+  """
+  Deletes initiative media. 
+  
+  Requires one of the following permissions: MANAGE_INITIATIVES.
+  """
+  initiativeMediaBulkDelete(
+    """List of initiative media IDs to delete."""
+    ids: [ID!]!
+  ): InitiativeMediaBulkDelete
 
   """
   Changes ordering of the initiative media. 
   
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
-  InitiativeMediaReorder(
+  initiativeMediaReorder(
     """ID of initiative that media order will be altered."""
     initiativeId: ID!
 
@@ -2564,13 +3089,128 @@ type Mutation {
   
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
-  InitiativeMediaUpdate(
+  initiativeMediaUpdate(
     """ID of a initiative media to update."""
     id: ID!
 
     """Fields required to update a initiative media."""
     input: InitiativeMediaUpdateInput!
   ): InitiativeMediaUpdate
+
+  """
+  Creates a new app. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS.
+  """
+  appCreate(
+    """Fields required to create a new app."""
+    input: AppInput!
+  ): AppCreate
+
+  """
+  Updates an existing app. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appUpdate(
+    """ID of an app to update."""
+    id: ID!
+
+    """Fields required to update an existing app."""
+    input: AppInput!
+  ): AppUpdate
+
+  """
+  Deletes an app. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appDelete(
+    """ID of an app to delete."""
+    id: ID!
+  ): AppDelete
+
+  """
+  Creates a new token. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appTokenCreate(
+    """Fields required to create a new auth token."""
+    input: AppTokenInput!
+  ): AppTokenCreate
+
+  """
+  Deletes an authentication token assigned to app. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appTokenDelete(
+    """ID of an auth token to delete."""
+    id: ID!
+  ): AppTokenDelete
+
+  """Verify provided app token."""
+  appTokenVerify(
+    """App token to verify."""
+    token: String!
+  ): AppTokenVerify
+
+  """
+  Install new app by using app manifest. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS.
+  """
+  appInstall(
+    """Fields required to install a new app."""
+    input: AppInstallInput!
+  ): AppInstall
+
+  """
+  Retry failed installation of new app. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appRetryInstall(
+    """Determine if app will be set active or not."""
+    activateAfterInstallation: Boolean = true
+
+    """ID of failed installation."""
+    id: ID!
+  ): AppRetryInstall
+
+  """
+  Delete failed installation. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appDeleteFailedInstallation(
+    """ID of failed installation to delete."""
+    id: ID!
+  ): AppDeleteFailedInstallation
+
+  """
+  Fetch and validate manifest. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appFetchManifest(manifestUrl: String!): AppFetchManifest
+
+  """
+  Activate the app. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appActivate(
+    """ID of app to activate."""
+    id: ID!
+  ): AppActivate
+
+  """
+  Deactivate the app. 
+  
+  Requires one of the following permissions: MANAGE_APPS.
+  """
+  appDeactivate(
+    """ID of app to deactivate."""
+    id: ID!
+  ): AppDeactivate
 
   """Create JWT token."""
   tokenCreate(
@@ -2938,6 +3578,158 @@ type Mutation {
 }
 
 """
+Creates a new webhook subscription. 
+
+Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
+"""
+type WebhookCreate {
+  webhookErrors: [WebhookError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [WebhookError!]!
+  webhook: Webhook
+}
+
+type WebhookError {
+  """
+  Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  field: String
+
+  """The error message."""
+  message: String
+
+  """The error code."""
+  code: WebhookErrorCode!
+}
+
+"""An enumeration."""
+enum WebhookErrorCode {
+  GRAPHQL_ERROR
+  INVALID
+  NOT_FOUND
+  REQUIRED
+  UNIQUE
+}
+
+input WebhookCreateInput {
+  """The name of the webhook."""
+  name: String
+
+  """The url to receive the payload."""
+  targetUrl: String
+
+  """
+  The events that webhook wants to subscribe. 
+  
+  DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
+  """
+  events: [WebhookEventTypeEnum!]
+
+  """The asynchronous events that webhook wants to subscribe."""
+  asyncEvents: [WebhookEventTypeAsyncEnum!]
+
+  """The synchronous events that webhook wants to subscribe."""
+  syncEvents: [WebhookEventTypeSyncEnum!]
+
+  """ID of the app to which webhook belongs."""
+  app: ID
+
+  """Determine if webhook will be set active or not."""
+  isActive: Boolean
+
+  """
+  The secret key used to create a hash signature with each payload.
+  
+  DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
+  """
+  secretKey: String
+
+  """
+  Subscription query used to define a webhook payload.
+  
+  Added in Saleor 3.2.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  query: String
+}
+
+"""
+Deletes a webhook subscription. 
+
+Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
+"""
+type WebhookDelete {
+  webhookErrors: [WebhookError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [WebhookError!]!
+  webhook: Webhook
+}
+
+"""
+Updates a webhook subscription. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type WebhookUpdate {
+  webhookErrors: [WebhookError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [WebhookError!]!
+  webhook: Webhook
+}
+
+input WebhookUpdateInput {
+  """The new name of the webhook."""
+  name: String
+
+  """The url to receive the payload."""
+  targetUrl: String
+
+  """
+  The events that webhook wants to subscribe. 
+  
+  DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
+  """
+  events: [WebhookEventTypeEnum!]
+
+  """The asynchronous events that webhook wants to subscribe."""
+  asyncEvents: [WebhookEventTypeAsyncEnum!]
+
+  """The synchronous events that webhook wants to subscribe."""
+  syncEvents: [WebhookEventTypeSyncEnum!]
+
+  """ID of the app to which webhook belongs."""
+  app: ID
+
+  """Determine if webhook will be set active or not."""
+  isActive: Boolean
+
+  """
+  Use to create a hash signature with each payload.
+  
+  DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
+  """
+  secretKey: String
+
+  """
+  Subscription query used to define a webhook payload.
+  
+  Added in Saleor 3.2.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  query: String
+}
+
+"""
+Retries event delivery. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type EventDeliveryRetry {
+  """Event delivery."""
+  delivery: EventDelivery
+  errors: [WebhookError!]!
+}
+
+"""
 Creates a new initiative. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
@@ -2973,13 +3765,6 @@ enum InitiativeErrorCode {
 }
 
 input InitiativeCreateInput {
-  """
-  Initiative description.
-  
-  Rich text format. For reference see https://editorjs.io/
-  """
-  description: JSONString
-
   """Initiative title."""
   title: String
 
@@ -2988,9 +3773,6 @@ input InitiativeCreateInput {
 
   """Search engine optimization fields."""
   seo: SeoInput
-
-  """ID of the type that initiative belongs to."""
-  initiativeType: ID!
 }
 
 input SeoInput {
@@ -3013,6 +3795,18 @@ type InitiativeDelete {
 }
 
 """
+Deletes initiatives. 
+
+Requires one of the following permissions: MANAGE_INITIATIVES.
+"""
+type InitiativeBulkDelete {
+  """Returns how many objects were affected."""
+  count: Int!
+  initiativeErrors: [InitiativeError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [InitiativeError!]!
+}
+
+"""
 Updates an existing initiative. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
@@ -3024,13 +3818,6 @@ type InitiativeUpdate {
 }
 
 input InitiativeInput {
-  """
-  Initiative description.
-  
-  Rich text format. For reference see https://editorjs.io/
-  """
-  description: JSONString
-
   """Initiative title."""
   title: String
 
@@ -3041,11 +3828,7 @@ input InitiativeInput {
   seo: SeoInput
 }
 
-"""
-Creates/updates translations for a initiative. 
-
-Requires one of the following permissions: MANAGE_TRANSLATIONS.
-"""
+"""Creates/updates translations for a initiative."""
 type InitiativeTranslate {
   translationErrors: [TranslationError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
   errors: [TranslationError!]!
@@ -3098,36 +3881,6 @@ type InitiativeMediaCreate {
   errors: [InitiativeError!]!
 }
 
-"""Represents a initiative media."""
-type InitiativeMedia implements Node {
-  id: ID!
-  sortOrder: Int
-  alt: String!
-  type: InitiativeMediaType!
-  oembedData: JSONString!
-  url(
-    """
-    Size of the image. If not provided, the original image will be returned.
-    """
-    size: Int
-
-    """
-    The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
-    
-    Added in Saleor 3.6.
-    
-    Note: this API is currently in Feature Preview and can be subject to changes at later point.
-    """
-    format: ThumbnailFormatEnum
-  ): String!
-}
-
-"""An enumeration."""
-enum InitiativeMediaType {
-  IMAGE
-  VIDEO
-}
-
 input InitiativeMediaCreateInput {
   """Alt text for a initiative media."""
   alt: String
@@ -3160,6 +3913,18 @@ type InitiativeMediaDelete {
 }
 
 """
+Deletes initiative media. 
+
+Requires one of the following permissions: MANAGE_INITIATIVES.
+"""
+type InitiativeMediaBulkDelete {
+  """Returns how many objects were affected."""
+  count: Int!
+  initiativeErrors: [InitiativeError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [InitiativeError!]!
+}
+
+"""
 Changes ordering of the initiative media. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
@@ -3186,6 +3951,262 @@ type InitiativeMediaUpdate {
 input InitiativeMediaUpdateInput {
   """Alt text for a initiative media."""
   alt: String
+}
+
+"""
+Creates a new app. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS.
+"""
+type AppCreate {
+  """The newly created authentication token."""
+  authToken: String
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  app: App
+}
+
+type AppError {
+  """
+  Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  field: String
+
+  """The error message."""
+  message: String
+
+  """The error code."""
+  code: AppErrorCode!
+
+  """List of permissions which causes the error."""
+  permissions: [PermissionEnum!]
+}
+
+"""An enumeration."""
+enum AppErrorCode {
+  FORBIDDEN
+  GRAPHQL_ERROR
+  INVALID
+  INVALID_STATUS
+  INVALID_PERMISSION
+  INVALID_URL_FORMAT
+  INVALID_MANIFEST_FORMAT
+  MANIFEST_URL_CANT_CONNECT
+  NOT_FOUND
+  REQUIRED
+  UNIQUE
+  OUT_OF_SCOPE_APP
+  OUT_OF_SCOPE_PERMISSION
+}
+
+input AppInput {
+  """Name of the app."""
+  name: String
+
+  """List of permission code names to assign to this app."""
+  permissions: [PermissionEnum!]
+}
+
+"""
+Updates an existing app. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppUpdate {
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  app: App
+}
+
+"""
+Deletes an app. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppDelete {
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  app: App
+}
+
+"""
+Creates a new token. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppTokenCreate {
+  """The newly created authentication token."""
+  authToken: String
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  appToken: AppToken
+}
+
+input AppTokenInput {
+  """Name of the token."""
+  name: String
+
+  """ID of app."""
+  app: ID!
+}
+
+"""
+Deletes an authentication token assigned to app. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppTokenDelete {
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  appToken: AppToken
+}
+
+"""Verify provided app token."""
+type AppTokenVerify {
+  """Determine if token is valid or not."""
+  valid: Boolean!
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+}
+
+"""
+Install new app by using app manifest. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS.
+"""
+type AppInstall {
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  appInstallation: AppInstallation
+}
+
+input AppInstallInput {
+  """Name of the app to install."""
+  appName: String
+
+  """Url to app's manifest in JSON format."""
+  manifestUrl: String
+
+  """Determine if app will be set active or not."""
+  activateAfterInstallation: Boolean = true
+
+  """List of permission code names to assign to this app."""
+  permissions: [PermissionEnum!]
+}
+
+"""
+Retry failed installation of new app. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppRetryInstall {
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  appInstallation: AppInstallation
+}
+
+"""
+Delete failed installation. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppDeleteFailedInstallation {
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  appInstallation: AppInstallation
+}
+
+"""
+Fetch and validate manifest. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppFetchManifest {
+  manifest: Manifest
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+}
+
+"""The manifest definition."""
+type Manifest {
+  identifier: String!
+  version: String!
+  name: String!
+  about: String
+  permissions: [Permission!]
+  appUrl: String
+
+  """URL to iframe with the configuration for the app."""
+  configurationUrl: String @deprecated(reason: "This field will be removed in Saleor 4.0. Use `appUrl` instead.")
+  tokenTargetUrl: String
+
+  """Description of the data privacy defined for this app."""
+  dataPrivacy: String @deprecated(reason: "This field will be removed in Saleor 4.0. Use `dataPrivacyUrl` instead.")
+  dataPrivacyUrl: String
+  homepageUrl: String
+  supportUrl: String
+  extensions: [AppManifestExtension!]!
+
+  """
+  List of the app's webhooks.
+  
+  Added in Saleor 3.5.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  webhooks: [AppManifestWebhook!]!
+}
+
+type AppManifestExtension {
+  """List of the app extension's permissions."""
+  permissions: [Permission!]!
+
+  """Label of the extension to show in the dashboard."""
+  label: String!
+
+  """URL of a view where extension's iframe is placed."""
+  url: String!
+
+  """Place where given extension will be mounted."""
+  mount: AppExtensionMountEnum!
+
+  """Type of way how app extension will be opened."""
+  target: AppExtensionTargetEnum!
+}
+
+type AppManifestWebhook {
+  """The name of the webhook."""
+  name: String!
+
+  """The asynchronous events that webhook wants to subscribe."""
+  asyncEvents: [WebhookEventTypeAsyncEnum!]
+
+  """The synchronous events that webhook wants to subscribe."""
+  syncEvents: [WebhookEventTypeSyncEnum!]
+
+  """Subscription query of a webhook"""
+  query: String!
+
+  """The url to receive the payload."""
+  targetUrl: String!
+}
+
+"""
+Activate the app. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppActivate {
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  app: App
+}
+
+"""
+Deactivate the app. 
+
+Requires one of the following permissions: MANAGE_APPS.
+"""
+type AppDeactivate {
+  appErrors: [AppError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AppError!]!
+  app: App
 }
 
 """Create JWT token."""
@@ -4200,31 +5221,6 @@ type TranslationCreated implements Event {
 }
 
 union TranslationTypes = InitiativeTranslation
-
-type InitiativeTranslation implements Node {
-  id: ID!
-
-  """Translation language."""
-  language: LanguageDisplay!
-  seoTitle: String
-  seoDescription: String
-  name: String
-
-  """
-  Translated description of the product.
-  
-  Rich text format. For reference see https://editorjs.io/
-  """
-  description: JSONString
-}
-
-type LanguageDisplay {
-  """ISO 639 representation of the language name."""
-  code: LanguageCodeEnum!
-
-  """Full name of the language."""
-  language: String!
-}
 
 """
 Event sent when translation is updated.
