@@ -6,10 +6,10 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from ....account import events as account_events
 from ....account import models
 from ....account.error_codes import AccountErrorCode
-from ....account.notifications import (
-    send_password_reset_notification,
-    send_set_password_notification,
-)
+# from ....account.notifications import (
+#     send_password_reset_notification,
+#     send_set_password_notification,
+# )
 from ....account.search import prepare_user_search_document_value
 # from ....checkout import AddressType
 from ....core.db.utils import set_mutation_flag_in_context
@@ -193,13 +193,13 @@ class RequestPasswordReset(BaseMutation):
         #         channel_slug, error_class=AccountErrorCode
         #     ).slug
 
-        send_password_reset_notification(
-            redirect_url,
-            user,
-            info.context.plugins,
-            channel_slug=channel_slug,
-            staff=user.is_staff,
-        )
+        # send_password_reset_notification(
+        #     redirect_url,
+        #     user,
+        #     info.context.plugins,
+        #     channel_slug=channel_slug,
+        #     staff=user.is_staff,
+        # )
         return RequestPasswordReset()
 
 
@@ -485,50 +485,50 @@ class BaseCustomerCreate(ModelMutation, I18nMixin):
     @traced_atomic_transaction()
     def save(cls, info, instance, cleaned_input):
         default_shipping_address = cleaned_input.get(SHIPPING_ADDRESS_FIELD)
-        if default_shipping_address:
-            default_shipping_address = info.context.plugins.change_user_address(
-                default_shipping_address, "shipping", instance
-            )
-            default_shipping_address.save()
-            instance.default_shipping_address = default_shipping_address
-        default_billing_address = cleaned_input.get(BILLING_ADDRESS_FIELD)
-        if default_billing_address:
-            default_billing_address = info.context.plugins.change_user_address(
-                default_billing_address, "billing", instance
-            )
-            default_billing_address.save()
-            instance.default_billing_address = default_billing_address
+        # if default_shipping_address:
+        #     default_shipping_address = info.context.plugins.change_user_address(
+        #         default_shipping_address, "shipping", instance
+        #     )
+        #     default_shipping_address.save()
+        #     instance.default_shipping_address = default_shipping_address
+        # default_billing_address = cleaned_input.get(BILLING_ADDRESS_FIELD)
+        # if default_billing_address:
+        #     default_billing_address = info.context.plugins.change_user_address(
+        #         default_billing_address, "billing", instance
+        #     )
+        #     default_billing_address.save()
+        #     instance.default_billing_address = default_billing_address
 
         is_creation = instance.pk is None
         super().save(info, instance, cleaned_input)
-        if default_billing_address:
-            instance.addresses.add(default_billing_address)
-        if default_shipping_address:
-            instance.addresses.add(default_shipping_address)
+        # if default_billing_address:
+        #     instance.addresses.add(default_billing_address)
+        # if default_shipping_address:
+        #     instance.addresses.add(default_shipping_address)
 
         instance.search_document = prepare_user_search_document_value(instance)
         instance.save(update_fields=["search_document", "updated_at"])
 
         # The instance is a new object in db, create an event
         if is_creation:
-            info.context.plugins.customer_created(customer=instance)
+            # info.context.plugins.customer_created(customer=instance)
             account_events.customer_account_created_event(user=instance)
-        else:
-            info.context.plugins.customer_updated(instance)
+        # else:
+        #     info.context.plugins.customer_updated(instance)
 
-        if cleaned_input.get("redirect_url"):
-            channel_slug = cleaned_input.get("channel")
-            # if not instance.is_staff:
-            #     channel_slug = clean_channel(
-            #         channel_slug, error_class=AccountErrorCode
-            #     ).slug
-            # elif channel_slug is not None:
-            #     channel_slug = validate_channel(
-            #         channel_slug, error_class=AccountErrorCode
-            #     ).slug
-            send_set_password_notification(
-                cleaned_input.get("redirect_url"),
-                instance,
-                info.context.plugins,
-                channel_slug,
-            )
+        # if cleaned_input.get("redirect_url"):
+        #     channel_slug = cleaned_input.get("channel")
+        #     if not instance.is_staff:
+        #         channel_slug = clean_channel(
+        #             channel_slug, error_class=AccountErrorCode
+        #         ).slug
+        #     elif channel_slug is not None:
+        #         channel_slug = validate_channel(
+        #             channel_slug, error_class=AccountErrorCode
+        #         ).slug
+        #     send_set_password_notification(
+        #         cleaned_input.get("redirect_url"),
+        #         instance,
+        #         info.context.plugins,
+        #         channel_slug,
+        #     )

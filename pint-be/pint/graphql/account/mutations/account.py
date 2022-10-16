@@ -227,10 +227,9 @@ class AccountRequestDeletion(BaseMutation):
         # channel_slug = clean_channel(
         #     data.get("channel"), error_class=AccountErrorCode
         # ).slug
-        notifications.send_account_delete_confirmation_notification(
-            # redirect_url, user, info.context.plugins, channel_slug=channel_slug
-            redirect_url, user, info.context.plugins
-        )
+        # notifications.send_account_delete_confirmation_notification(
+        #     redirect_url, user, info.context.plugins, channel_slug=channel_slug
+        # )
         return AccountRequestDeletion()
 
 

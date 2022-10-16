@@ -8,7 +8,7 @@ from django.db import transaction
 from ....account import events as account_events
 from ....account import models, utils
 from ....account.error_codes import AccountErrorCode
-from ....account.notifications import send_set_password_notification
+# from ....account.notifications import send_set_password_notification
 from ....account.search import USER_SEARCH_FIELDS, prepare_user_search_document_value
 # from ....account.utils import (
 #     remove_staff_member,
@@ -287,14 +287,14 @@ class StaffCreate(ModelMutation):
                 user, attach_addresses_data=False
             )
         user.save()
-        if cleaned_input.get("redirect_url") and send_notification:
-            send_set_password_notification(
-                redirect_url=cleaned_input.get("redirect_url"),
-                user=user,
-                manager=info.context.plugins,
-                channel_slug=None,
-                staff=True,
-            )
+        # if cleaned_input.get("redirect_url") and send_notification:
+        #     send_set_password_notification(
+        #         redirect_url=cleaned_input.get("redirect_url"),
+        #         user=user,
+        #         manager=info.context.plugins,
+        #         channel_slug=None,
+        #         staff=True,
+        #     )
 
     @classmethod
     @traced_atomic_transaction()
