@@ -474,20 +474,20 @@ class RequestEmailChange(BaseMutation):
         #     error_class=AccountErrorCode,
         # ).slug
 
-        token_payload = {
-            "old_email": user.email,
-            "new_email": new_email,
-            "user_pk": user.pk,
-        }
-        token = create_token(token_payload, settings.JWT_TTL_REQUEST_EMAIL_CHANGE)
-        notifications.send_request_user_change_email_notification(
-            redirect_url,
-            user,
-            new_email,
-            token,
-            info.context.plugins
-            # channel_slug=channel_slug,
-        )
+        # token_payload = {
+        #     "old_email": user.email,
+        #     "new_email": new_email,
+        #     "user_pk": user.pk,
+        # }
+        # token = create_token(token_payload, settings.JWT_TTL_REQUEST_EMAIL_CHANGE)
+        # notifications.send_request_user_change_email_notification(
+        #     redirect_url,
+        #     user,
+        #     new_email,
+        #     token,
+        #     info.context.plugins
+        #     channel_slug=channel_slug,
+        # )
         return RequestEmailChange(user=user)
 
 
