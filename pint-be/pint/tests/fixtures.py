@@ -4768,17 +4768,17 @@ def permission_manage_settings():
 # @pytest.fixture
 # def permission_manage_payments():
 #     return Permission.objects.get(codename="handle_payments")
-#
-#
-# @pytest.fixture
-# def permission_group_manage_users(permission_manage_users, staff_users):
-#     group = Group.objects.create(name="Manage user groups.")
-#     group.permissions.add(permission_manage_users)
-#
-#     group.user_set.add(staff_users[1])
-#     return group
-#
-#
+
+
+@pytest.fixture
+def permission_group_manage_users(permission_manage_users, staff_users):
+    group = Group.objects.create(name="Manage user groups.")
+    group.permissions.add(permission_manage_users)
+
+    group.user_set.add(staff_users[1])
+    return group
+
+
 # @pytest.fixture
 # def collection(db):
 #     collection = Collection.objects.create(

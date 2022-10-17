@@ -22,7 +22,8 @@ ADDRESS_SEARCH_FIELDS = [
 
 
 def prepare_user_search_document_value(
-    user: "User", *, already_prefetched=False, attach_addresses_data=True
+    user: "User"
+    # user: "User", *, already_prefetched=False, attach_addresses_data=True
 ):
     """Prepare `search_document` user value - attach all field used in searching.
 
@@ -31,14 +32,14 @@ def prepare_user_search_document_value(
     """
     search_document = generate_user_fields_search_document_value(user)
 
-    if attach_addresses_data:
-        if not already_prefetched:
-            prefetch_related_objects(
-                [user],
-                "addresses",
-            )
-        for address in user.addresses.all():
-            search_document += generate_address_search_document_value(address)
+    # if attach_addresses_data:
+    #     if not already_prefetched:
+    #         prefetch_related_objects(
+    #             [user],
+    #             "addresses",
+    #         )
+    #     for address in user.addresses.all():
+    #         search_document += generate_address_search_document_value(address)
 
     return search_document.lower()
 
