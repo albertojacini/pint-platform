@@ -211,8 +211,17 @@ def get_out_of_scope_permissions(
 def get_out_of_scope_users(root_user: "User", users: List["User"]):
     """Return users whose permission scope is wider than the given user."""
     out_of_scope_users = []
+    print("root_user+++++++")
+    print(root_user)
+    print(root_user.get_all_permissions())
+
     for user in users:
+        print("user++++++++++++++++")
+        print(user)
         user_permissions = user.get_all_permissions()
+        print("user_permissions")
+        print(user_permissions)
+
         if not root_user.has_perms(user_permissions):
             out_of_scope_users.append(user)
     return out_of_scope_users

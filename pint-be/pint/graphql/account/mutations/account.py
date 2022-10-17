@@ -139,7 +139,8 @@ class AccountRegister(ModelMutation):
         password = cleaned_input["password"]
         user.set_password(password)
         user.search_document = search.prepare_user_search_document_value(
-            user, attach_addresses_data=False
+            user
+            # user, attach_addresses_data=False
         )
         if settings.ENABLE_ACCOUNT_CONFIRMATION_BY_EMAIL:
             user.is_active = False

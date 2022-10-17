@@ -2341,7 +2341,7 @@ def test_account_request_deletion_anonymous_user(api_client):
 @freeze_time("2018-05-31 12:00:01")
 # @patch("pint.plugins.manager.PluginsManager.notify")
 def test_account_request_deletion_subdomain(
-    user_api_client, settings, channel_PLN
+    user_api_client, settings
     # mocked_notify, user_api_client, settings, channel_PLN
 ):
     user = user_api_client.user
@@ -2685,13 +2685,13 @@ def test_staff_create(
     staff_user,
     media_root,
     permission_group_manage_users,
-    permission_manage_products,
+    # permission_manage_products,
     permission_manage_staff,
     permission_manage_users,
     # channel_PLN,
 ):
     group = permission_group_manage_users
-    group.permissions.add(permission_manage_products)
+    # group.permissions.add(permission_manage_products)
     staff_user.user_permissions.add(permission_manage_users)
     # staff_user.user_permissions.add(permission_manage_products, permission_manage_users)
     email = "api_user@example.com"
@@ -2757,10 +2757,10 @@ def test_promote_customer_to_staff_user(
     customer_user,
     media_root,
     permission_group_manage_users,
-    permission_manage_products,
+    # permission_manage_products,
     permission_manage_staff,
     permission_manage_users,
-    channel_PLN,
+    # channel_PLN,
 ):
     group = permission_group_manage_users
     # group.permissions.add(permission_manage_products)
@@ -2785,7 +2785,7 @@ def test_promote_customer_to_staff_user(
     assert data["user"]["isActive"]
 
     expected_perms = {
-        permission_manage_products.codename,
+        # permission_manage_products.codename,
         permission_manage_users.codename,
     }
     permissions = data["user"]["userPermissions"]
@@ -2814,7 +2814,7 @@ def test_staff_create_trigger_webhook(
     permission_group_manage_users,
     permission_manage_staff,
     permission_manage_users,
-    channel_PLN,
+    # channel_PLN,
     settings,
 ):
     # given
@@ -2870,13 +2870,13 @@ def test_staff_create_app_no_permission(
     staff_user,
     media_root,
     permission_group_manage_users,
-    permission_manage_products,
+    # permission_manage_products,
     permission_manage_staff,
     permission_manage_users,
 ):
     group = permission_group_manage_users
-    group.permissions.add(permission_manage_products)
-    staff_user.user_permissions.add(permission_manage_products, permission_manage_users)
+    # group.permissions.add(permission_manage_products)
+    staff_user.user_permissions.add(permission_manage_users)
     email = "api_user@example.com"
     variables = {
         "email": email,
@@ -3255,8 +3255,8 @@ def test_staff_update_groups_and_permissions(
     media_root,
     permission_manage_staff,
     permission_manage_users,
-    permission_manage_orders,
-    permission_manage_products,
+    # permission_manage_orders,
+    # permission_manage_products,
 ):
     query = STAFF_UPDATE_MUTATIONS
     groups = Group.objects.bulk_create(
@@ -3264,7 +3264,7 @@ def test_staff_update_groups_and_permissions(
     )
     group1, group2, group3 = groups
     group1.permissions.add(permission_manage_users)
-    group2.permissions.add(permission_manage_orders)
+    # group2.permissions.add(permission_manage_orders)
 
     staff_user = User.objects.create(email="staffuser@example.com", is_staff=True)
     staff_user.groups.add(group1)
@@ -3280,9 +3280,9 @@ def test_staff_update_groups_and_permissions(
         },
     }
 
-    staff_api_client.user.user_permissions.add(
-        permission_manage_users, permission_manage_orders, permission_manage_products
-    )
+    # staff_api_client.user.user_permissions.add(
+    #     permission_manage_users, permission_manage_orders, permission_manage_products
+    # )
 
     response = staff_api_client.post_graphql(
         query, variables, permissions=[permission_manage_staff]
@@ -3291,7 +3291,7 @@ def test_staff_update_groups_and_permissions(
     data = content["data"]["staffUpdate"]
     assert data["errors"] == []
     assert {perm["code"].lower() for perm in data["user"]["userPermissions"]} == {
-        permission_manage_orders.codename,
+        # permission_manage_orders.codename,
     }
     assert {group["name"] for group in data["user"]["permissionGroups"]} == {
         group2.name,
@@ -3341,8 +3341,8 @@ def test_staff_update_out_of_scope_groups(
     permission_manage_staff,
     media_root,
     permission_manage_users,
-    permission_manage_orders,
-    permission_manage_products,
+    # permission_manage_orders,
+    # permission_manage_products,
 ):
     """Ensure that staff user cannot add to groups which permission scope is wider
     than user's scope.
@@ -3353,18 +3353,18 @@ def test_staff_update_out_of_scope_groups(
     groups = Group.objects.bulk_create(
         [
             Group(name="manage users"),
-            Group(name="manage orders"),
-            Group(name="manage products"),
+            # Group(name="manage orders"),
+            # Group(name="manage products"),
         ]
     )
     group1, group2, group3 = groups
 
     group1.permissions.add(permission_manage_users)
-    group2.permissions.add(permission_manage_orders)
-    group3.permissions.add(permission_manage_products)
+    # group2.permissions.add(permission_manage_orders)
+    # group3.permissions.add(permission_manage_products)
 
     staff_user = User.objects.create(email="staffuser@example.com", is_staff=True)
-    staff_api_client.user.user_permissions.add(permission_manage_orders)
+    # staff_api_client.user.user_permissions.add(permission_manage_orders)
     id = graphene.Node.to_global_id("User", staff_user.id)
     variables = {
         "id": id,
@@ -3764,7 +3764,7 @@ def test_staff_delete_out_of_scope_user(
     staff_api_client,
     superuser_api_client,
     permission_manage_staff,
-    permission_manage_products,
+    permission_manage_initiatives,
 ):
     """Ensure staff user cannot delete users even when some of user permissions are
     out of requestor scope.
@@ -3772,7 +3772,7 @@ def test_staff_delete_out_of_scope_user(
     """
     query = STAFF_DELETE_MUTATION
     staff_user = User.objects.create(email="staffuser@example.com", is_staff=True)
-    staff_user.user_permissions.add(permission_manage_products)
+    staff_user.user_permissions.add(permission_manage_initiatives)
     user_id = graphene.Node.to_global_id("User", staff_user.id)
     variables = {"id": user_id}
 
@@ -3801,8 +3801,8 @@ def test_staff_delete_left_not_manageable_permissions(
     superuser_api_client,
     staff_users,
     permission_manage_staff,
-    permission_manage_users,
-    permission_manage_orders,
+    # permission_manage_users,
+    # permission_manage_orders,
 ):
     """Ensure staff user can't and superuser can delete staff user when some of
     permissions will be not manageable.
@@ -3812,14 +3812,14 @@ def test_staff_delete_left_not_manageable_permissions(
         [
             Group(name="manage users"),
             Group(name="manage staff"),
-            Group(name="manage orders"),
+            # Group(name="manage orders"),
         ]
     )
     group1, group2, group3 = groups
 
-    group1.permissions.add(permission_manage_users)
+    # group1.permissions.add(permission_manage_users)
     group2.permissions.add(permission_manage_staff)
-    group3.permissions.add(permission_manage_orders)
+    # group3.permissions.add(permission_manage_orders)
 
     staff_user, staff_user1, staff_user2 = staff_users
     group1.user_set.add(staff_user1)
@@ -3830,7 +3830,8 @@ def test_staff_delete_left_not_manageable_permissions(
     variables = {"id": user_id}
 
     # for staff user
-    staff_user.user_permissions.add(permission_manage_users, permission_manage_orders)
+    staff_user.user_permissions.add(permission_manage_users)
+    # staff_user.user_permissions.add(permission_manage_users, permission_manage_orders)
     response = staff_api_client.post_graphql(
         query, variables, permissions=[permission_manage_staff]
     )
@@ -3848,7 +3849,7 @@ def test_staff_delete_left_not_manageable_permissions(
     assert User.objects.filter(pk=staff_user1.id).exists()
 
     # for superuser
-    staff_user.user_permissions.add(permission_manage_users, permission_manage_orders)
+    # staff_user.user_permissions.add(permission_manage_users, permission_manage_orders)
     response = superuser_api_client.post_graphql(query, variables)
     content = get_graphql_content(response)
     data = content["data"]["staffDelete"]
@@ -5047,7 +5048,7 @@ def test_account_reset_password_storefront_hosts_not_allowed(
 @freeze_time("2018-05-31 12:00:01")
 # @patch("pint.plugins.manager.PluginsManager.notify")
 def test_account_reset_password_all_storefront_hosts_allowed(
-    user_api_client, customer_user, settings, channel_PLN
+    user_api_client, customer_user, settings
     # mocked_notify, user_api_client, customer_user, settings, channel_PLN, channel_USD
 ):
     settings.ALLOWED_CLIENT_HOSTS = ["*"]
@@ -5055,7 +5056,7 @@ def test_account_reset_password_all_storefront_hosts_allowed(
     variables = {
         "email": customer_user.email,
         "redirectUrl": redirect_url,
-        "channel": channel_PLN.slug,
+        # "channel": channel_PLN.slug,
     }
     response = user_api_client.post_graphql(REQUEST_PASSWORD_RESET_MUTATION, variables)
     content = get_graphql_content(response)
@@ -5072,7 +5073,7 @@ def test_account_reset_password_all_storefront_hosts_allowed(
         "recipient_email": customer_user.email,
         "site_name": "mirumee.com",
         "domain": "mirumee.com",
-        "channel_slug": channel_PLN.slug,
+        # "channel_slug": channel_PLN.slug,
     }
 
     # mocked_notify.assert_called_once_with(
@@ -5986,12 +5987,13 @@ QUERY_STAFF_USERS_WITH_SORT = """
         ({"field": "LAST_NAME", "direction": "DESC"}, ["Leslie", "Joe", "John", ""]),
         ({"field": "EMAIL", "direction": "ASC"}, ["John", "Leslie", "", "Joe"]),
         ({"field": "EMAIL", "direction": "DESC"}, ["Joe", "", "Leslie", "John"]),
-        ({"field": "ORDER_COUNT", "direction": "ASC"}, ["John", "Leslie", "", "Joe"]),
-        ({"field": "ORDER_COUNT", "direction": "DESC"}, ["Joe", "", "Leslie", "John"]),
+        # ({"field": "ORDER_COUNT", "direction": "ASC"}, ["John", "Leslie", "", "Joe"]),
+        # ({"field": "ORDER_COUNT", "direction": "DESC"}, ["Joe", "", "Leslie", "John"]),
     ],
 )
 def test_query_staff_members_with_sort(
-    customer_sort, result_order, staff_api_client, permission_manage_staff, channel_USD
+    customer_sort, result_order, staff_api_client, permission_manage_staff
+    # customer_sort, result_order, staff_api_client, permission_manage_staff, channel_USD
 ):
     User.objects.bulk_create(
         [
@@ -6240,12 +6242,13 @@ mutation requestEmailChange(
 """
 
 
-def test_request_email_change(user_api_client, customer_user, channel_PLN):
+def test_request_email_change(user_api_client, customer_user):
+# def test_request_email_change(user_api_client, customer_user, channel_PLN):
     variables = {
         "password": "password",
         "new_email": "new_email@example.com",
         "redirect_url": "http://www.example.com",
-        "channel": channel_PLN.slug,
+        # "channel": channel_PLN.slug,
     }
 
     response = user_api_client.post_graphql(REQUEST_EMAIL_CHANGE_QUERY, variables)
@@ -6328,14 +6331,14 @@ mutation emailUpdate($token: String!, $channel: String) {
 """
 
 
-@patch("pint.graphql.account.mutations.account.match_orders_with_new_user")
-@patch("pint.graphql.account.mutations.account.assign_user_gift_cards")
+# @patch("pint.graphql.account.mutations.account.match_orders_with_new_user")
+# @patch("pint.graphql.account.mutations.account.assign_user_gift_cards")
 def test_email_update(
-    assign_gift_cards_mock,
-    assign_orders_mock,
+    # assign_gift_cards_mock,
+    # assign_orders_mock,
     user_api_client,
     customer_user,
-    channel_PLN,
+    # channel_PLN,
 ):
     new_email = "new_email@example.com"
     payload = {
@@ -6346,7 +6349,7 @@ def test_email_update(
     user = user_api_client.user
 
     token = create_token(payload, timedelta(hours=1))
-    variables = {"token": token, "channel": channel_PLN.slug}
+    variables = {"token": token}
 
     response = user_api_client.post_graphql(EMAIL_UPDATE_QUERY, variables)
     content = get_graphql_content(response)
@@ -6354,8 +6357,8 @@ def test_email_update(
     assert data["user"]["email"] == new_email
     user.refresh_from_db()
     assert new_email in user.search_document
-    assign_gift_cards_mock.assert_called_once_with(customer_user)
-    assign_orders_mock.assert_called_once_with(customer_user)
+    # assign_gift_cards_mock.assert_called_once_with(customer_user)
+    # assign_orders_mock.assert_called_once_with(customer_user)
 
 
 def test_email_update_to_existing_email(user_api_client, customer_user, staff_user):

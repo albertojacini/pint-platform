@@ -284,7 +284,8 @@ class StaffCreate(ModelMutation):
     def save(cls, info, user, cleaned_input, send_notification=True):
         if any([field in cleaned_input for field in USER_SEARCH_FIELDS]):
             user.search_document = prepare_user_search_document_value(
-                user, attach_addresses_data=False
+                user
+                # user, attach_addresses_data=False
             )
         user.save()
         # if cleaned_input.get("redirect_url") and send_notification:
