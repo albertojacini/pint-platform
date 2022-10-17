@@ -144,17 +144,17 @@ class AccountRegister(ModelMutation):
         if settings.ENABLE_ACCOUNT_CONFIRMATION_BY_EMAIL:
             user.is_active = False
             user.save()
-            notifications.send_account_confirmation(
-                user,
-                cleaned_input["redirect_url"],
-                info.context.plugins,
-                channel_slug=cleaned_input["channel"],
-            )
+            # notifications.send_account_confirmation(
+            #     user,
+            #     cleaned_input["redirect_url"],
+            #     info.context.plugins,
+            #     channel_slug=cleaned_input["channel"],
+            # )
         else:
             user.save()
 
         account_events.customer_account_created_event(user=user)
-        info.context.plugins.customer_created(customer=user)
+        # info.context.plugins.customer_created(customer=user)
 
 
 class AccountInput(AccountBaseInput):
@@ -554,9 +554,8 @@ class ConfirmEmailChange(BaseMutation):
         # assign_user_gift_cards(user)
         # match_orders_with_new_user(user)
 
-        notifications.send_user_change_email_notification(
-            # old_email, user, info.context.plugins, channel_slug=channel_slug
-            old_email, user, info.context.plugins
-        )
-        info.context.plugins.customer_updated(user)
+        # notifications.send_user_change_email_notification(
+        #     old_email, user, info.context.plugins, channel_slug=channel_slug
+        # )
+        # info.context.plugins.customer_updated(user)
         return ConfirmEmailChange(user=user)

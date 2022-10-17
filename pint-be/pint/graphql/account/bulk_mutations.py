@@ -41,8 +41,8 @@ class CustomerBulkDelete(CustomerDeleteMixin, UserBulkDelete):
     def bulk_action(cls, info, queryset):
         instances = list(queryset)
         queryset.delete()
-        for instance in instances:
-            info.context.plugins.customer_deleted(instance)
+        # for instance in instances:
+        #     info.context.plugins.customer_deleted(instance)
 
 
 class StaffBulkDelete(StaffDeleteMixin, UserBulkDelete):
@@ -83,10 +83,10 @@ class StaffBulkDelete(StaffDeleteMixin, UserBulkDelete):
 
     @classmethod
     def bulk_action(cls, info, queryset):
-        instances = list(queryset)
+        # instances = list(queryset)
         queryset.delete()
-        for instance in instances:
-            info.context.plugins.staff_deleted(instance)
+        # for instance in instances:
+        #     info.context.plugins.staff_deleted(instance)
 
 
 class UserBulkSetActive(BaseBulkMutation):

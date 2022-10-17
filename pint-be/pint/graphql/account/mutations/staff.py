@@ -190,9 +190,9 @@ class CustomerDelete(CustomerDeleteMixin, UserDelete):
         cls.post_process(info)
         return results
 
-    @classmethod
-    def post_save_action(cls, info, instance, cleaned_input):
-        info.context.plugins.customer_deleted(instance)
+    # @classmethod
+    # def post_save_action(cls, info, instance, cleaned_input):
+    #     info.context.plugins.customer_deleted(instance)
 
 
 class StaffCreate(ModelMutation):
@@ -304,9 +304,9 @@ class StaffCreate(ModelMutation):
         if groups:
             instance.groups.add(*groups)
 
-    @classmethod
-    def post_save_action(cls, info, instance, cleaned_input):
-        info.context.plugins.staff_created(instance)
+    # @classmethod
+    # def post_save_action(cls, info, instance, cleaned_input):
+    #     info.context.plugins.staff_created(instance)
 
     @classmethod
     def get_instance(cls, info, **data):
@@ -478,9 +478,9 @@ class StaffUpdate(StaffCreate):
         #     match_orders_with_new_user(user)
         return response
 
-    @classmethod
-    def post_save_action(cls, info, instance, cleaned_input):
-        info.context.plugins.staff_updated(instance)
+    # @classmethod
+    # def post_save_action(cls, info, instance, cleaned_input):
+    #     info.context.plugins.staff_updated(instance)
 
 
 class StaffDelete(StaffDeleteMixin, UserDelete):
@@ -511,7 +511,7 @@ class StaffDelete(StaffDeleteMixin, UserDelete):
         instance.id = db_id
 
         response = cls.success_response(instance)
-        info.context.plugins.staff_deleted(instance)
+        # info.context.plugins.staff_deleted(instance)
 
         return response
 

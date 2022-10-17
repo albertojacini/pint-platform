@@ -78,11 +78,11 @@ class SetPassword(CreateToken):
     @classmethod
     def mutate(cls, root, info, **data):
         set_mutation_flag_in_context(info.context)
-        result = info.context.plugins.perform_mutation(
-            mutation_cls=cls, root=root, info=info, data=data
-        )
-        if result is not None:
-            return result
+        # result = info.context.plugins.perform_mutation(
+        #     mutation_cls=cls, root=root, info=info, data=data
+        # )
+        # if result is not None:
+        #     return result
 
         email = data["email"]
         password = data["password"]
