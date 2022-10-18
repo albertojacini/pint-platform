@@ -4705,6 +4705,11 @@ def permission_manage_initiatives():
     return Permission.objects.get(codename="manage_initiatives")
 
 
+@pytest.fixture
+def permission_manage_political_entities():
+    return Permission.objects.get(codename="manage_political_entities")
+
+
 # @pytest.fixture
 # def permission_manage_products():
 #     return Permission.objects.get(codename="manage_products")

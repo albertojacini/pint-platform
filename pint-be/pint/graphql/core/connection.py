@@ -282,6 +282,12 @@ def connection_from_queryset_slice(
     except ValueError:
         raise GraphQLError("Received cursor is invalid.")
     filtered_qs = filtered_qs[:end_margin]
+    print("+++++++++++++++++++++++++++++")
+    print(edge_type)
+    print("args++++++++++++++")
+    print(args)
+    print(filtered_qs)
+    print(sorting_fields)
     edges, page_info = _get_edges_for_connection(
         edge_type, filtered_qs, args, sorting_fields
     )

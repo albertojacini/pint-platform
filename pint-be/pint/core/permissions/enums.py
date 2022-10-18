@@ -73,6 +73,7 @@ class AppPermission(BasePermissionEnum):
 
 class InitiativePermissions(BasePermissionEnum):
     MANAGE_INITIATIVES = "initiative.manage_initiatives"
+    MANAGE_POLITICAL_ENTITIES = "initiative.manage_political_entities"
 
 
 # class ShippingPermissions(BasePermissionEnum):

@@ -248,8 +248,17 @@ class InitiativesQueryset(models.QuerySet):
         return self.prefetch_related(*common_fields)
 
 
-class PoliticalEntity(Model):
+class PoliticalEntity(SeoModel, ModelWithMetadata):
     name = models.CharField(max_length=255)
+
+    class Meta:
+        app_label = "initiative"
+        permissions = (
+            (InitiativePermissions.MANAGE_POLITICAL_ENTITIES.codename, "Manage political entities."),
+        )
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Initiative(SeoModel, ModelWithMetadata):
