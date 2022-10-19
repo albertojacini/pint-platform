@@ -13,21 +13,21 @@ from ....tests.utils import get_graphql_content
 @pytest.mark.count_queries(autouse=False)
 def test_query_staff_user(
     staff_api_client,
-    address,
+    # address,
     permission_manage_users,
     media_root,
     permission_group_manage_users,
-    permission_manage_orders,
-    permission_manage_products,
+    permission_manage_initiatives,
+    permission_manage_political_entities,
     permission_manage_staff,
     count_queries,
 ):
     group = permission_group_manage_users
-    group.permissions.add(permission_manage_products)
+    group.permissions.add(permission_manage_political_entities)
 
     staff_user = group.user_set.first()
-    staff_user.user_permissions.add(permission_manage_orders, permission_manage_staff)
-    staff_user.addresses.add(address.get_copy())
+    staff_user.user_permissions.add(permission_manage_initiatives, permission_manage_staff)
+    # staff_user.addresses.add(address.get_copy())
 
     avatar_mock = MagicMock(spec=File)
     avatar_mock.name = "image.jpg"
@@ -42,50 +42,50 @@ def test_query_staff_user(
                 lastName
                 isStaff
                 isActive
-                addresses {
-                    id
-                    isDefaultShippingAddress
-                    isDefaultBillingAddress
-                }
-                orders {
-                    totalCount
-                }
+                # addresses {
+                #     id
+                #     isDefaultShippingAddress
+                #     isDefaultBillingAddress
+                # }
+                # orders {
+                #     totalCount
+                # }
                 dateJoined
                 lastLogin
-                defaultShippingAddress {
-                    firstName
-                    lastName
-                    companyName
-                    streetAddress1
-                    streetAddress2
-                    city
-                    cityArea
-                    postalCode
-                    countryArea
-                    phone
-                    country {
-                        code
-                    }
-                    isDefaultShippingAddress
-                    isDefaultBillingAddress
-                }
-                defaultBillingAddress {
-                    firstName
-                    lastName
-                    companyName
-                    streetAddress1
-                    streetAddress2
-                    city
-                    cityArea
-                    postalCode
-                    countryArea
-                    phone
-                    country {
-                        code
-                    }
-                    isDefaultShippingAddress
-                    isDefaultBillingAddress
-                }
+                # defaultShippingAddress {
+                #     firstName
+                #     lastName
+                #     companyName
+                #     streetAddress1
+                #     streetAddress2
+                #     city
+                #     cityArea
+                #     postalCode
+                #     countryArea
+                #     phone
+                #     country {
+                #         code
+                #     }
+                #     isDefaultShippingAddress
+                #     isDefaultBillingAddress
+                # }
+                # defaultBillingAddress {
+                #     firstName
+                #     lastName
+                #     companyName
+                #     streetAddress1
+                #     streetAddress2
+                #     city
+                #     cityArea
+                #     postalCode
+                #     countryArea
+                #     phone
+                #     country {
+                #         code
+                #     }
+                #     isDefaultShippingAddress
+                #     isDefaultBillingAddress
+                # }
                 avatar {
                     url
                 }
@@ -107,7 +107,7 @@ def test_query_staff_user(
     response = staff_api_client.post_graphql(
         query,
         variables,
-        permissions=[permission_manage_staff, permission_manage_orders],
+        permissions=[permission_manage_staff, permission_manage_initiatives],
     )
     content = get_graphql_content(response)
     data = content["data"]["user"]
@@ -121,7 +121,7 @@ def test_staff_create(
     staff_user,
     media_root,
     permission_group_manage_users,
-    permission_manage_products,
+    permission_manage_political_entities,
     permission_manage_staff,
     permission_manage_users,
     count_queries,
@@ -160,7 +160,7 @@ def test_staff_create(
         }
     """
     group = permission_group_manage_users
-    staff_user.user_permissions.add(permission_manage_products, permission_manage_users)
+    staff_user.user_permissions.add(permission_manage_political_entities, permission_manage_users)
     email = "api_user@example.com"
     variables = {
         "email": email,
@@ -188,8 +188,8 @@ def test_staff_update_groups_and_permissions(
     media_root,
     permission_manage_staff,
     permission_manage_users,
-    permission_manage_orders,
-    permission_manage_products,
+    permission_manage_initiatives,
+    permission_manage_political_entities,
     count_queries,
 ):
     query = """
@@ -227,7 +227,7 @@ def test_staff_update_groups_and_permissions(
     group1, group2, group3 = groups
     group1.permissions.add(permission_manage_users)
     group2.permissions.add(permission_manage_staff)
-    group3.permissions.add(permission_manage_orders, permission_manage_products)
+    group3.permissions.add(permission_manage_initiatives, permission_manage_political_entities)
 
     staff_user, staff_user1, staff_user2 = staff_users
     group1.user_set.add(staff_user1, staff_user2)
@@ -246,7 +246,7 @@ def test_staff_update_groups_and_permissions(
     }
 
     staff_api_client.user.user_permissions.add(
-        permission_manage_users, permission_manage_orders, permission_manage_products
+        permission_manage_users, permission_manage_initiatives, permission_manage_political_entities
     )
 
     response = staff_api_client.post_graphql(
@@ -257,8 +257,8 @@ def test_staff_update_groups_and_permissions(
     assert data["errors"] == []
     assert len(data["user"]["userPermissions"]) == 3
     assert {perm["code"].lower() for perm in data["user"]["userPermissions"]} == {
-        permission_manage_orders.codename,
-        permission_manage_products.codename,
+        permission_manage_initiatives.codename,
+        permission_manage_political_entities.codename,
         permission_manage_staff.codename,
     }
     assert len(data["user"]["permissionGroups"]) == 2
@@ -275,7 +275,7 @@ def test_delete_staff_members(
     staff_users,
     permission_manage_staff,
     permission_manage_users,
-    permission_manage_orders,
+    permission_manage_initiatives,
     count_queries,
 ):
     """Ensure user can delete users when all permissions will be manageable."""
@@ -304,7 +304,7 @@ def test_delete_staff_members(
 
     group1.permissions.add(permission_manage_users)
     group2.permissions.add(permission_manage_staff)
-    group3.permissions.add(permission_manage_orders, permission_manage_users)
+    group3.permissions.add(permission_manage_initiatives, permission_manage_users)
 
     staff_user, staff_user1, staff_user2 = staff_users
     group1.user_set.add(staff_user1)
@@ -312,7 +312,7 @@ def test_delete_staff_members(
     group3.user_set.add(staff_user1, staff_user)
 
     staff_user.user_permissions.add(
-        permission_manage_users, permission_manage_orders, permission_manage_staff
+        permission_manage_users, permission_manage_initiatives, permission_manage_staff
     )
     variables = {
         "ids": [
@@ -338,9 +338,9 @@ CUSTOMERS_QUERY = """
             edges {
                 node {
                     events { id }
-                    orders(first: 10) { edges { node { id } } }
-                    addresses { id }
-                    giftCards(first: 10) { edges { node { id } } }
+                    # orders(first: 10) { edges { node { id } } }
+                    # addresses { id }
+                    # giftCards(first: 10) { edges { node { id } } }
                     permissionGroups { id }
                 }
             }
@@ -349,20 +349,20 @@ CUSTOMERS_QUERY = """
 """
 
 
-@pytest.mark.django_db
-@pytest.mark.count_queries(autouse=False)
-def test_customers_query(
-    staff_api_client,
-    permission_manage_users,
-    permission_manage_orders,
-    users_for_customers_benchmarks,
-    count_queries,
-):
-    staff_api_client.user.user_permissions.set(
-        [permission_manage_users, permission_manage_orders]
-    )
-    content = get_graphql_content(staff_api_client.post_graphql(CUSTOMERS_QUERY))
-    assert content["data"]["customers"] is not None
+# @pytest.mark.django_db
+# @pytest.mark.count_queries(autouse=False)
+# def test_customers_query(
+#     staff_api_client,
+#     permission_manage_users,
+#     permission_manage_orders,
+#     users_for_customers_benchmarks,
+#     count_queries,
+# ):
+#     staff_api_client.user.user_permissions.set(
+#         [permission_manage_users, permission_manage_orders]
+#     )
+#     content = get_graphql_content(staff_api_client.post_graphql(CUSTOMERS_QUERY))
+#     assert content["data"]["customers"] is not None
 
 
 @pytest.mark.django_db
@@ -443,71 +443,71 @@ def test_users_for_federation_query_count(
         assert len(content["data"]["_entities"]) == 4
 
 
-@pytest.mark.django_db
-@pytest.mark.count_queries(autouse=False)
-def test_addresses_for_federation_query_count(
-    address,
-    customer_user,
-    customer_user2,
-    staff_api_client,
-    permission_manage_users,
-    django_assert_num_queries,
-    count_queries,
-):
-    address2 = address.get_copy()
-    customer_user.addresses.add(address)
-    customer_user2.addresses.add(address2)
-
-    query = """
-        query GetAddressInFederation($representations: [_Any]) {
-            _entities(representations: $representations) {
-                __typename
-                ... on Address {
-                    id
-                    city
-                }
-            }
-        }
-    """
-
-    variables = {
-        "representations": [
-            {
-                "__typename": "Address",
-                "id": graphene.Node.to_global_id("Address", address.pk),
-            },
-        ],
-    }
-
-    with django_assert_num_queries(3):
-        response = staff_api_client.post_graphql(
-            query,
-            variables,
-            permissions=[permission_manage_users],
-            check_no_permissions=False,
-        )
-        content = get_graphql_content(response)
-        assert len(content["data"]["_entities"]) == 1
-
-    variables = {
-        "representations": [
-            {
-                "__typename": "Address",
-                "id": graphene.Node.to_global_id("Address", address.pk),
-            },
-            {
-                "__typename": "Address",
-                "id": graphene.Node.to_global_id("Address", address2.pk),
-            },
-        ],
-    }
-
-    with django_assert_num_queries(3):
-        response = staff_api_client.post_graphql(
-            query,
-            variables,
-            permissions=[permission_manage_users],
-            check_no_permissions=False,
-        )
-        content = get_graphql_content(response)
-        assert len(content["data"]["_entities"]) == 2
+# @pytest.mark.django_db
+# @pytest.mark.count_queries(autouse=False)
+# def test_addresses_for_federation_query_count(
+#     address,
+#     customer_user,
+#     customer_user2,
+#     staff_api_client,
+#     permission_manage_users,
+#     django_assert_num_queries,
+#     count_queries,
+# ):
+#     address2 = address.get_copy()
+#     customer_user.addresses.add(address)
+#     customer_user2.addresses.add(address2)
+#
+#     query = """
+#         query GetAddressInFederation($representations: [_Any]) {
+#             _entities(representations: $representations) {
+#                 __typename
+#                 ... on Address {
+#                     id
+#                     city
+#                 }
+#             }
+#         }
+#     """
+#
+#     variables = {
+#         "representations": [
+#             {
+#                 "__typename": "Address",
+#                 "id": graphene.Node.to_global_id("Address", address.pk),
+#             },
+#         ],
+#     }
+#
+#     with django_assert_num_queries(3):
+#         response = staff_api_client.post_graphql(
+#             query,
+#             variables,
+#             permissions=[permission_manage_users],
+#             check_no_permissions=False,
+#         )
+#         content = get_graphql_content(response)
+#         assert len(content["data"]["_entities"]) == 1
+#
+#     variables = {
+#         "representations": [
+#             {
+#                 "__typename": "Address",
+#                 "id": graphene.Node.to_global_id("Address", address.pk),
+#             },
+#             {
+#                 "__typename": "Address",
+#                 "id": graphene.Node.to_global_id("Address", address2.pk),
+#             },
+#         ],
+#     }
+#
+#     with django_assert_num_queries(3):
+#         response = staff_api_client.post_graphql(
+#             query,
+#             variables,
+#             permissions=[permission_manage_users],
+#             check_no_permissions=False,
+#         )
+#         content = get_graphql_content(response)
+#         assert len(content["data"]["_entities"]) == 2

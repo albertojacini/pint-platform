@@ -35,11 +35,11 @@ def test_verify_access_token(api_client, customer_user):
 
 
 def test_verify_access_token_with_permissions(
-    api_client, staff_user, permission_manage_users, permission_manage_gift_card
+    api_client, staff_user, permission_manage_users, permission_manage_initiatives
 ):
-    staff_user.user_permissions.add(permission_manage_gift_card)
+    staff_user.user_permissions.add(permission_manage_initiatives)
     staff_user.user_permissions.add(permission_manage_users)
-    assigned_permissions = ["MANAGE_ORDERS"]
+    assigned_permissions = ["MANAGE_INITIATIVES"]
     additional_payload = {PERMISSIONS_FIELD: assigned_permissions}
     variables = {"token": create_access_token(staff_user, additional_payload)}
     response = api_client.post_graphql(MUTATION_TOKEN_VERIFY, variables)
