@@ -33,7 +33,7 @@ def test_retry_install_app_mutation(
     app_installation,
     permission_manage_apps,
     staff_api_client,
-    permission_manage_orders,
+    permission_manage_initiatives,
     staff_user,
 ):
     app_installation.status = JobStatus.FAILED
@@ -43,7 +43,7 @@ def test_retry_install_app_mutation(
         "pint.graphql.app.mutations.install_app_task.delay", mocked_task
     )
     query = RETRY_INSTALL_APP_MUTATION
-    staff_user.user_permissions.set([permission_manage_apps, permission_manage_orders])
+    staff_user.user_permissions.set([permission_manage_apps, permission_manage_initiatives])
     id = graphene.Node.to_global_id("AppInstallation", app_installation.id)
     variables = {
         "id": id,
@@ -65,7 +65,7 @@ def test_retry_install_app_mutation(
 
 def test_retry_install_app_mutation_by_app(
     permission_manage_apps,
-    permission_manage_orders,
+    permission_manage_initiatives,
     app_api_client,
     monkeypatch,
     app_installation,
@@ -79,7 +79,7 @@ def test_retry_install_app_mutation_by_app(
     id = graphene.Node.to_global_id("AppInstallation", app_installation.id)
     query = RETRY_INSTALL_APP_MUTATION
     app_api_client.app.permissions.set(
-        [permission_manage_apps, permission_manage_orders]
+        [permission_manage_apps, permission_manage_initiatives]
     )
     variables = {
         "id": id,
@@ -104,11 +104,11 @@ def test_retry_install_app_mutation_app_has_more_permission_than_user_requestor(
     staff_api_client,
     staff_user,
     app_installation,
-    permission_manage_orders,
+    permission_manage_initiatives,
     monkeypatch,
 ):
     app_installation.status = JobStatus.FAILED
-    app_installation.permissions.add(permission_manage_orders)
+    app_installation.permissions.add(permission_manage_initiatives)
     app_installation.save()
 
     mocked_task = Mock()
@@ -147,11 +147,11 @@ def test_retry_install_app_mutation_app_has_more_permission_than_app_requestor(
     permission_manage_apps,
     app_api_client,
     app_installation,
-    permission_manage_orders,
+    permission_manage_initiatives,
     monkeypatch,
 ):
     app_installation.status = JobStatus.FAILED
-    app_installation.permissions.add(permission_manage_orders)
+    app_installation.permissions.add(permission_manage_initiatives)
     app_installation.save()
 
     mocked_task = Mock()
@@ -190,7 +190,7 @@ def test_cannot_retry_installation_if_status_is_different_than_failed(
     app_installation,
     permission_manage_apps,
     staff_api_client,
-    permission_manage_orders,
+    permission_manage_initiatives,
     staff_user,
 ):
     app_installation.status = JobStatus.PENDING
@@ -201,7 +201,7 @@ def test_cannot_retry_installation_if_status_is_different_than_failed(
         "pint.graphql.app.mutations.install_app_task.delay", mocked_task
     )
     query = RETRY_INSTALL_APP_MUTATION
-    staff_user.user_permissions.set([permission_manage_apps, permission_manage_orders])
+    staff_user.user_permissions.set([permission_manage_apps, permission_manage_initiatives])
     id = graphene.Node.to_global_id("AppInstallation", app_installation.id)
     variables = {
         "id": id,

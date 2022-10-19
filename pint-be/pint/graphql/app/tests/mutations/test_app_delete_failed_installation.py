@@ -20,10 +20,11 @@ DELETE_FAILED_INSTALLATION_MUTATION = """
 
 
 def test_drop_failed_installation_mutation(
+    db,
     app_installation,
     permission_manage_apps,
     staff_api_client,
-    permission_manage_orders,
+    permission_manage_initiatives,
     staff_user,
 ):
     # given
@@ -31,7 +32,7 @@ def test_drop_failed_installation_mutation(
     app_installation.save()
     query = DELETE_FAILED_INSTALLATION_MUTATION
 
-    staff_user.user_permissions.set([permission_manage_apps, permission_manage_orders])
+    staff_user.user_permissions.set([permission_manage_apps, permission_manage_initiatives])
     id = graphene.Node.to_global_id("AppInstallation", app_installation.id)
     variables = {
         "id": id,
@@ -50,8 +51,9 @@ def test_drop_failed_installation_mutation(
 
 
 def test_drop_failed_installation_mutation_by_app(
+    db,
     permission_manage_apps,
-    permission_manage_orders,
+    permission_manage_initiatives,
     app_api_client,
     app_installation,
 ):
@@ -62,7 +64,7 @@ def test_drop_failed_installation_mutation_by_app(
     id = graphene.Node.to_global_id("AppInstallation", app_installation.id)
     query = DELETE_FAILED_INSTALLATION_MUTATION
     app_api_client.app.permissions.set(
-        [permission_manage_apps, permission_manage_orders]
+        [permission_manage_apps, permission_manage_initiatives]
     )
     variables = {
         "id": id,
@@ -81,15 +83,16 @@ def test_drop_failed_installation_mutation_by_app(
 
 
 def test_drop_failed_installation_mutation_app_has_more_permission_than_user_requestor(
+    db,
     permission_manage_apps,
     staff_api_client,
     staff_user,
     app_installation,
-    permission_manage_orders,
+    permission_manage_initiatives,
 ):
     # given
     app_installation.status = JobStatus.FAILED
-    app_installation.permissions.add(permission_manage_orders)
+    app_installation.permissions.add(permission_manage_initiatives)
     app_installation.save()
 
     query = DELETE_FAILED_INSTALLATION_MUTATION
@@ -113,11 +116,11 @@ def test_drop_failed_installation_mutation_app_has_more_permission_than_user_req
 
 
 def test_drop_failed_installation_mutation_app_has_more_permission_than_app_requestor(
-    permission_manage_apps, app_api_client, app_installation, permission_manage_orders
+    db, permission_manage_apps, app_api_client, app_installation, permission_manage_initiatives
 ):
     # given
     app_installation.status = JobStatus.FAILED
-    app_installation.permissions.add(permission_manage_orders)
+    app_installation.permissions.add(permission_manage_initiatives)
     app_installation.save()
     query = DELETE_FAILED_INSTALLATION_MUTATION
 
@@ -139,10 +142,11 @@ def test_drop_failed_installation_mutation_app_has_more_permission_than_app_requ
 
 
 def test_cannot_drop_installation_if_status_is_different_than_failed(
+    db,
     app_installation,
     permission_manage_apps,
     staff_api_client,
-    permission_manage_orders,
+    permission_manage_initiatives,
     staff_user,
 ):
     # given
@@ -150,7 +154,7 @@ def test_cannot_drop_installation_if_status_is_different_than_failed(
     app_installation.save()
 
     query = DELETE_FAILED_INSTALLATION_MUTATION
-    staff_user.user_permissions.set([permission_manage_apps, permission_manage_orders])
+    staff_user.user_permissions.set([permission_manage_apps, permission_manage_initiatives])
     id = graphene.Node.to_global_id("AppInstallation", app_installation.id)
     variables = {
         "id": id,

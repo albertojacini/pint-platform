@@ -32,7 +32,7 @@ INSTALL_APP_MUTATION = """
 
 def test_install_app_mutation(
     permission_manage_apps,
-    permission_manage_orders,
+    permission_manage_initiatives,
     staff_api_client,
     staff_user,
     monkeypatch,
@@ -42,11 +42,11 @@ def test_install_app_mutation(
         "pint.graphql.app.mutations.install_app_task.delay", mocked_task
     )
     query = INSTALL_APP_MUTATION
-    staff_user.user_permissions.set([permission_manage_apps, permission_manage_orders])
+    staff_user.user_permissions.set([permission_manage_apps, permission_manage_initiatives])
     variables = {
         "app_name": "New external integration",
         "manifest_url": "http://localhost:3000/manifest",
-        "permissions": [PermissionEnum.MANAGE_ORDERS.name],
+        "permissions": [PermissionEnum.MANAGE_INITIATIVES.name],
     }
     response = staff_api_client.post_graphql(
         query,
@@ -63,17 +63,17 @@ def test_install_app_mutation(
 
 
 def test_app_is_not_allowed_to_install_app(
-    permission_manage_apps, permission_manage_orders, app_api_client, monkeypatch
+    permission_manage_apps, permission_manage_initiatives, app_api_client, monkeypatch
 ):
     # given
     query = INSTALL_APP_MUTATION
     app_api_client.app.permissions.set(
-        [permission_manage_apps, permission_manage_orders]
+        [permission_manage_apps, permission_manage_initiatives]
     )
     variables = {
         "app_name": "New external integration",
         "manifest_url": "http://localhost:3000/manifest",
-        "permissions": [PermissionEnum.MANAGE_ORDERS.name],
+        "permissions": [PermissionEnum.MANAGE_INITIATIVES.name],
     }
 
     # when
@@ -94,7 +94,7 @@ def test_app_install_mutation_out_of_scope_permissions(
     variables = {
         "app_name": "New external integration",
         "manifest_url": "http://localhost:3000/manifest",
-        "permissions": [PermissionEnum.MANAGE_ORDERS.name],
+        "permissions": [PermissionEnum.MANAGE_INITIATIVES.name],
     }
     response = staff_api_client.post_graphql(
         query,
@@ -109,4 +109,4 @@ def test_app_install_mutation_out_of_scope_permissions(
     error = errors[0]
     assert error["field"] == "permissions"
     assert error["code"] == AppErrorCode.OUT_OF_SCOPE_PERMISSION.name
-    assert error["permissions"] == [PermissionEnum.MANAGE_ORDERS.name]
+    assert error["permissions"] == [PermissionEnum.MANAGE_INITIATIVES.name]

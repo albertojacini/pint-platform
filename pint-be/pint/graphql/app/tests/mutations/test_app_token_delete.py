@@ -22,18 +22,19 @@ APP_TOKEN_DELETE_MUTATION = """
 
 
 def test_app_token_delete(
+    db,
     permission_manage_apps,
     staff_api_client,
     staff_user,
     app_with_token,
-    permission_manage_products,
+    permission_manage_initiatives,
 ):
 
     query = APP_TOKEN_DELETE_MUTATION
     app = app_with_token
     token = app.tokens.get()
-    staff_user.user_permissions.add(permission_manage_products)
-    app.permissions.add(permission_manage_products)
+    staff_user.user_permissions.add(permission_manage_initiatives)
+    app.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("AppToken", token.id)
     staff_user.user_permissions.add(permission_manage_apps)
 
@@ -44,17 +45,18 @@ def test_app_token_delete(
 
 
 def test_app_token_delete_for_app(
+    db,
     permission_manage_apps,
     app_api_client,
-    permission_manage_products,
+    permission_manage_initiatives,
 ):
     app = App.objects.create(name="New_app", is_active=True)
     token = AppToken.objects.create(app=app)
     query = APP_TOKEN_DELETE_MUTATION
     token = app.tokens.get()
     requestor = app_api_client.app
-    requestor.permissions.add(permission_manage_products)
-    app.permissions.add(permission_manage_products)
+    requestor.permissions.add(permission_manage_initiatives)
+    app.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("AppToken", token.id)
 
     variables = {"id": id}
@@ -65,7 +67,7 @@ def test_app_token_delete_for_app(
     assert not AppToken.objects.filter(id=token.id).first()
 
 
-def test_app_token_delete_no_permissions(staff_api_client, app_with_token):
+def test_app_token_delete_no_permissions(db, staff_api_client, app_with_token):
 
     query = APP_TOKEN_DELETE_MUTATION
     token = app_with_token.tokens.get()
@@ -78,15 +80,16 @@ def test_app_token_delete_no_permissions(staff_api_client, app_with_token):
 
 
 def test_app_token_delete_out_of_scope_app(
+    db,
     permission_manage_apps,
     staff_api_client,
     app_with_token,
-    permission_manage_products,
+    permission_manage_initiatives,
 ):
     """Ensure user can't delete app token with wider scope of permissions."""
     query = APP_TOKEN_DELETE_MUTATION
     token = app_with_token.tokens.get()
-    app_with_token.permissions.add(permission_manage_products)
+    app_with_token.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("AppToken", token.id)
 
     variables = {"id": id}
@@ -109,16 +112,17 @@ def test_app_token_delete_out_of_scope_app(
 
 
 def test_app_token_delete_superuser_can_delete_token_for_any_app(
+    db,
     permission_manage_apps,
     superuser_api_client,
     app_with_token,
-    permission_manage_products,
+    permission_manage_initiatives,
 ):
     """Ensure superuser can delete app token for app with any scope of permissions."""
     query = APP_TOKEN_DELETE_MUTATION
     app = app_with_token
     token = app.tokens.get()
-    app.permissions.add(permission_manage_products)
+    app.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("AppToken", token.id)
 
     variables = {"id": id}
@@ -135,14 +139,15 @@ def test_app_token_delete_superuser_can_delete_token_for_any_app(
 
 
 def test_app_token_delete_for_app_out_of_scope_app(
+    db,
     permission_manage_apps,
     app_api_client,
-    permission_manage_products,
+    permission_manage_initiatives,
 ):
     app = App.objects.create(name="New_app", is_active=True)
     token, _ = AppToken.objects.create(app=app)
     query = APP_TOKEN_DELETE_MUTATION
-    app.permissions.add(permission_manage_products)
+    app.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("AppToken", token.id)
 
     variables = {"id": id}

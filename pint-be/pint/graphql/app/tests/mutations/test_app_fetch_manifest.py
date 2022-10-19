@@ -73,7 +73,7 @@ def test_app_fetch_manifest(staff_api_client, staff_user, permission_manage_apps
     assert manifest["homepageUrl"] == "http://localhost:8888/homepage"
     assert manifest["supportUrl"] == "http://localhost:8888/support"
     assert set([perm["code"] for perm in manifest["permissions"]]) == {
-        "MANAGE_ORDERS",
+        "MANAGE_INITIATIVES",
         "MANAGE_USERS",
     }
 
@@ -276,10 +276,10 @@ def test_app_fetch_manifest_missing_extension_fields(
     # given
     app_manifest["extensions"] = [
         {
-            "permissions": ["MANAGE_PRODUCTS"],
+            "permissions": ["MANAGE_INITIATIVES"],
             "label": "Create product with App",
             "url": "http://127.0.0.1:9090/app-extension",
-            "mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
+            "mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
         }
     ]
     del app_manifest["extensions"][0][missing_field]
@@ -320,10 +320,10 @@ def test_app_fetch_manifest_extensions_incorrect_enum_values(
     # given
     app_manifest["extensions"] = [
         {
-            "permissions": ["MANAGE_PRODUCTS"],
+            "permissions": ["MANAGE_INITIATIVES"],
             "label": "Create product with App",
             "url": "http://127.0.0.1:9090/app-extension",
-            "mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
+            "mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
         }
     ]
     app_manifest["extensions"][0][incorrect_field] = "INCORRECT_VALUE"
@@ -380,10 +380,10 @@ def test_app_fetch_manifest_extensions_correct_url(
     app_manifest["appUrl"] = app_url
     app_manifest["extensions"] = [
         {
-            "permissions": ["MANAGE_PRODUCTS"],
+            "permissions": ["MANAGE_INITIATIVES"],
             "label": "Create product with App",
             "url": url,
-            "mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
+            "mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
             "target": target,
         }
     ]
@@ -427,10 +427,10 @@ def test_app_fetch_manifest_extensions_incorrect_url(
     # given
     app_manifest["extensions"] = [
         {
-            "permissions": ["MANAGE_PRODUCTS"],
+            "permissions": ["MANAGE_INITIATIVES"],
             "label": "Create product with App",
             "url": url,
-            "mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
+            "mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
             "target": target,
         }
     ]
@@ -465,8 +465,8 @@ def test_app_fetch_manifest_extensions_incorrect_url(
 @pytest.mark.parametrize(
     "app_permissions, extension_permissions",
     [
-        ([], ["MANAGE_PRODUCTS"]),
-        (["MANAGE_PRODUCTS"], ["MANAGE_PRODUCTS", "MANAGE_APPS"]),
+        ([], ["MANAGE_INITIATIVES"]),
+        (["MANAGE_INITIATIVES"], ["MANAGE_INITIATIVES", "MANAGE_APPS"]),
     ],
 )
 def test_app_fetch_manifest_extensions_permission_out_of_scope(
@@ -484,7 +484,7 @@ def test_app_fetch_manifest_extensions_permission_out_of_scope(
             "permissions": extension_permissions,
             "label": "Create product with App",
             "url": "http://127.0.0.1:8080/app",
-            "mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
+            "mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
         }
     ]
 
@@ -519,13 +519,13 @@ def test_app_fetch_manifest_extensions_invalid_permission(
     app_manifest, monkeypatch, staff_api_client, permission_manage_apps
 ):
     # given
-    app_manifest["permissions"] = ["MANAGE_ORDERS"]
+    app_manifest["permissions"] = ["MANAGE_POLITICAL_ENTITIES"]
     app_manifest["extensions"] = [
         {
             "permissions": ["incorrect_permission"],
             "label": "Create product with App",
             "url": "http://127.0.0.1:8080/app",
-            "mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
+            "mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
         }
     ]
 
@@ -564,10 +564,10 @@ def test_app_fetch_manifest_with_extensions(
 
     app_manifest["extensions"] = [
         {
-            "permissions": ["MANAGE_PRODUCTS"],
+            "permissions": ["MANAGE_INITIATIVES"],
             "label": "Create product with App",
             "url": "http://127.0.0.1:8080/app",
-            "mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
+            "mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
         }
     ]
 
@@ -597,9 +597,9 @@ def test_app_fetch_manifest_with_extensions(
 
     extension = extensions[0]
     assert extension["permissions"] == [
-        {"code": "MANAGE_PRODUCTS", "name": "Manage products."}
+        {"code": "MANAGE_INITIATIVES", "name": "Manage initiatives."}
     ]
     assert extension["label"] == "Create product with App"
     assert extension["url"] == "http://127.0.0.1:8080/app"
-    assert extension["mount"] == AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name
+    assert extension["mount"] == AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name
     assert extension["target"] == AppExtensionTargetEnum.POPUP.name

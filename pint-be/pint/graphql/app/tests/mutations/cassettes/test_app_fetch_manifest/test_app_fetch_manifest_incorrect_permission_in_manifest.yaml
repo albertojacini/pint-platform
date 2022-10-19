@@ -20,7 +20,7 @@ interactions:
         ,\n  \"supportUrl\": \"http://localhost:8888/support\",\n  \"configurationUrl\"\
         : \"htpp://localhost:8888/configuration\",\n  \"appUrl\": \"http://localhost:8888/app\"\
         ,\n  \"tokenTargetUrl\": \"http://localhost:3000/register\",\n  \"id\": \"\
-        app2\",\n  \"permissions\": [\n    \"MANAGE_WRONG\",\n    \"MANAGE_ORDERS\"\
+        app2\",\n  \"permissions\": [\n    \"MANAGE_WRONG\",\n    \"MANAGE_INITIATIVES\"\
         \n  ]\n}"
     headers:
       Access-Control-Allow-Credentials:
