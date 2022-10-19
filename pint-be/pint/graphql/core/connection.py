@@ -282,12 +282,6 @@ def connection_from_queryset_slice(
     except ValueError:
         raise GraphQLError("Received cursor is invalid.")
     filtered_qs = filtered_qs[:end_margin]
-    print("+++++++++++++++++++++++++++++")
-    print(edge_type)
-    print("args++++++++++++++")
-    print(args)
-    print(filtered_qs)
-    print(sorting_fields)
     edges, page_info = _get_edges_for_connection(
         edge_type, filtered_qs, args, sorting_fields
     )
@@ -443,21 +437,20 @@ def filter_connection_queryset(iterable, args, request=None, root=None):
     filterset_class = args[FILTERSET_CLASS]
     filter_field_name = args[FILTERS_NAME]
     filter_input = args.get(filter_field_name)
-
     if filter_input:
-        # for nested filters get channel from ChannelContext object
-        if "channel" not in args and root and hasattr(root, "channel_slug"):
-            args["channel"] = root.channel_slug
-
-        try:
-            filter_channel = str(filter_input["channel"])
-        except (GraphQLError, KeyError):
-            filter_channel = None
-        filter_input["channel"] = (
-            args.get("channel")
-            or filter_channel
-            # or get_default_channel_slug_or_graphql_error()
-        )
+        # # for nested filters get channel from ChannelContext object
+        # if "channel" not in args and root and hasattr(root, "channel_slug"):
+        #     args["channel"] = root.channel_slug
+        #
+        # try:
+        #     filter_channel = str(filter_input["channel"])
+        # except (GraphQLError, KeyError):
+        #     filter_channel = None
+        # filter_input["channel"] = (
+        #     args.get("channel")
+        #     or filter_channel
+        #     or get_default_channel_slug_or_graphql_error()
+        # )
 
         # if isinstance(iterable, ChannelQsContext):
         #     queryset = iterable.qs
