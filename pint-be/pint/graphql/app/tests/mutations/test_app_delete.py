@@ -32,12 +32,12 @@ def test_app_delete(
     staff_api_client,
     staff_user,
     app,
-    permission_manage_orders,
+    permission_manage_initiatives,
     permission_manage_apps,
 ):
     query = APP_DELETE_MUTATION
-    app.permissions.add(permission_manage_orders)
-    staff_user.user_permissions.add(permission_manage_orders)
+    app.permissions.add(permission_manage_initiatives)
+    staff_user.user_permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("App", app.id)
 
     variables = {"id": id}
@@ -62,7 +62,7 @@ def test_app_delete_trigger_webhook(
     staff_api_client,
     staff_user,
     app,
-    permission_manage_orders,
+    permission_manage_initiatives,
     permission_manage_apps,
     settings,
 ):
@@ -70,8 +70,8 @@ def test_app_delete_trigger_webhook(
     # mocked_get_webhooks_for_event.return_value = [any_webhook]
     # settings.PLUGINS = ["pint.plugins.webhook.plugin.WebhookPlugin"]
 
-    app.permissions.add(permission_manage_orders)
-    staff_user.user_permissions.add(permission_manage_orders)
+    app.permissions.add(permission_manage_initiatives)
+    staff_user.user_permissions.add(permission_manage_initiatives)
     app_global_id = graphene.Node.to_global_id("App", app.id)
 
     variables = {"id": app_global_id}
@@ -107,14 +107,14 @@ def test_app_delete_trigger_webhook(
 
 def test_app_delete_for_app(
     app_api_client,
-    permission_manage_orders,
+    permission_manage_initiatives,
     permission_manage_apps,
 ):
     requestor = app_api_client.app
     app = App.objects.create(name="New_app")
     query = APP_DELETE_MUTATION
-    app.permissions.add(permission_manage_orders)
-    requestor.permissions.add(permission_manage_orders)
+    app.permissions.add(permission_manage_initiatives)
+    requestor.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("App", app.id)
 
     variables = {"id": id}
@@ -134,11 +134,11 @@ def test_app_delete_out_of_scope_app(
     staff_user,
     app,
     permission_manage_apps,
-    permission_manage_orders,
+    permission_manage_initiatives,
 ):
     """Ensure user can't delete app with wider scope of permissions."""
     query = APP_DELETE_MUTATION
-    app.permissions.add(permission_manage_orders)
+    app.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("App", app.id)
 
     variables = {"id": id}
@@ -158,14 +158,15 @@ def test_app_delete_out_of_scope_app(
 
 
 def test_app_delete_superuser_can_delete_any_app(
+    db,
     superuser_api_client,
     app,
     permission_manage_apps,
-    permission_manage_orders,
+    permission_manage_initiatives,
 ):
     """Ensure superuser can delete app with any scope of permissions."""
     query = APP_DELETE_MUTATION
-    app.permissions.add(permission_manage_orders)
+    app.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("App", app.id)
 
     variables = {"id": id}
@@ -181,12 +182,12 @@ def test_app_delete_superuser_can_delete_any_app(
 
 def test_app_delete_for_app_out_of_scope_app(
     app_api_client,
-    permission_manage_orders,
+    permission_manage_initiatives,
     permission_manage_apps,
 ):
     app = App.objects.create(name="New_app")
     query = APP_DELETE_MUTATION
-    app.permissions.add(permission_manage_orders)
+    app.permissions.add(permission_manage_initiatives)
     id = graphene.Node.to_global_id("App", app.id)
 
     variables = {"id": id}

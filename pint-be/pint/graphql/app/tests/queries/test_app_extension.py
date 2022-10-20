@@ -22,15 +22,15 @@ query ($id: ID!){
 """
 
 
-def test_app_extension_staff_user(app, staff_api_client, permission_manage_products):
+def test_app_extension_staff_user(app, staff_api_client, permission_manage_political_entities):
     # given
     app_extension = AppExtension.objects.create(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -54,15 +54,15 @@ def test_app_extension_staff_user(app, staff_api_client, permission_manage_produ
     assert app_extension.permissions.first().codename == permission_code
 
 
-def test_app_extension_by_app(app, app_api_client, permission_manage_products):
+def test_app_extension_by_app(app, app_api_client, permission_manage_political_entities):
     # given
     app_extension = AppExtension.objects.create(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -86,15 +86,15 @@ def test_app_extension_by_app(app, app_api_client, permission_manage_products):
     assert app_extension.permissions.first().codename == permission_code
 
 
-def test_app_extension_normal_user(app, user_api_client, permission_manage_products):
+def test_app_extension_normal_user(app, user_api_client, permission_manage_political_entities):
     # given
     app_extension = AppExtension.objects.create(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -109,16 +109,16 @@ def test_app_extension_normal_user(app, user_api_client, permission_manage_produ
 
 
 def test_app_extension_staff_user_without_all_permissions(
-    app, staff_api_client, permission_manage_products, permission_manage_orders
+    app, staff_api_client, permission_manage_political_entities, permission_manage_initiatives
 ):
     # given
     app_extension = AppExtension.objects.create(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -126,7 +126,7 @@ def test_app_extension_staff_user_without_all_permissions(
     response = staff_api_client.post_graphql(
         QUERY_APP_EXTENSION,
         variables,
-        permissions=[permission_manage_orders],
+        permissions=[permission_manage_initiatives],
         check_no_permissions=False,
     )
 
@@ -139,8 +139,8 @@ def test_app_extension_staff_user_without_all_permissions(
 def test_app_extension_staff_user_fetching_access_token(
     app,
     staff_api_client,
-    permission_manage_orders,
-    permission_manage_products,
+    permission_manage_initiatives,
+    permission_manage_political_entities,
     permission_manage_apps,
 ):
     # given
@@ -148,9 +148,9 @@ def test_app_extension_staff_user_fetching_access_token(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products, permission_manage_orders)
+    app_extension.permissions.add(permission_manage_political_entities, permission_manage_initiatives)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -159,8 +159,8 @@ def test_app_extension_staff_user_fetching_access_token(
         QUERY_APP_EXTENSION,
         variables,
         permissions=[
-            permission_manage_orders,
-            permission_manage_products,
+            permission_manage_initiatives,
+            permission_manage_political_entities,
             permission_manage_apps,
         ],
         check_no_permissions=False,
@@ -173,15 +173,15 @@ def test_app_extension_staff_user_fetching_access_token(
     assert extension_data["accessToken"]
     decoded_token = jwt_decode(extension_data["accessToken"])
     assert set(decoded_token["permissions"]) == set(
-        ["MANAGE_PRODUCTS", "MANAGE_ORDERS"]
+        ["MANAGE_POLITICAL_ENTITIES", "MANAGE_INITIATIVES"]
     )
 
 
 def test_app_extension_staff_user_partial_permission(
     app,
     staff_api_client,
-    permission_manage_orders,
-    permission_manage_products,
+    permission_manage_initiatives,
+    permission_manage_political_entities,
     permission_manage_apps,
 ):
     # given
@@ -189,9 +189,9 @@ def test_app_extension_staff_user_partial_permission(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products, permission_manage_orders)
+    app_extension.permissions.add(permission_manage_political_entities, permission_manage_initiatives)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -199,7 +199,7 @@ def test_app_extension_staff_user_partial_permission(
     response = staff_api_client.post_graphql(
         QUERY_APP_EXTENSION,
         variables,
-        permissions=[permission_manage_orders, permission_manage_apps],
+        permissions=[permission_manage_initiatives, permission_manage_apps],
         check_no_permissions=False,
     )
 
@@ -230,16 +230,16 @@ query ($id: ID!){
 
 
 def test_app_extension_with_app_query_by_staff_without_permissions(
-    app, staff_api_client, permission_manage_products
+    app, staff_api_client, permission_manage_political_entities
 ):
     # given
     app_extension = AppExtension.objects.create(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -254,16 +254,16 @@ def test_app_extension_with_app_query_by_staff_without_permissions(
 
 
 def test_app_extension_with_app_query_by_app_without_permissions(
-    external_app, app_api_client, permission_manage_products
+    external_app, app_api_client, permission_manage_political_entities
 ):
     # given
     app_extension = AppExtension.objects.create(
         app=external_app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -282,16 +282,16 @@ def test_app_extension_with_app_query_by_app_with_permissions(
     app,
     permission_manage_apps,
     app_api_client,
-    permission_manage_products,
+    permission_manage_political_entities,
 ):
     # given
     app_extension = AppExtension.objects.create(
         app=external_app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     app.permissions.add(permission_manage_apps)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
@@ -307,16 +307,16 @@ def test_app_extension_with_app_query_by_app_with_permissions(
 
 
 def test_app_extension_with_app_query_by_owner_app(
-    app, app_api_client, permission_manage_products
+    app, app_api_client, permission_manage_political_entities
 ):
     # given
     app_extension = AppExtension.objects.create(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)
     variables = {"id": id}
 
@@ -338,7 +338,7 @@ def test_app_extension_with_app_query_by_staff_with_permissions(
         app=external_app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
 
     id = graphene.Node.to_global_id("AppExtension", app_extension.id)

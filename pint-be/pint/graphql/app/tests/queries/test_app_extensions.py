@@ -27,22 +27,22 @@ query ($filter: AppExtensionFilterInput){
 """
 
 
-def test_app_extensions(staff_api_client, app, permission_manage_products):
+def test_app_extensions(staff_api_client, app, permission_manage_political_entities):
     # given
     app_extension = AppExtension.objects.create(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     variables = {}
 
     # when
     response = staff_api_client.post_graphql(
         QUERY_APP_EXTENSIONS,
         variables,
-        permissions=[permission_manage_products],
+        permissions=[permission_manage_political_entities],
         check_no_permissions=False,
     )
 
@@ -68,7 +68,7 @@ def test_app_extensions(staff_api_client, app, permission_manage_products):
 
 
 def test_app_extensions_app_not_active(
-    staff_api_client, app, permission_manage_products
+    staff_api_client, app, permission_manage_political_entities
 ):
     # given
     app.is_active = False
@@ -77,9 +77,9 @@ def test_app_extensions_app_not_active(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     variables = {}
 
     # when
@@ -97,16 +97,16 @@ def test_app_extensions_app_not_active(
 
 
 def test_app_extensions_user_not_staff(
-    user_api_client, app, permission_manage_products
+    user_api_client, app, permission_manage_political_entities
 ):
     # given
     app_extension = AppExtension.objects.create(
         app=app,
         label="Create product with App",
         url="https://www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
-    app_extension.permissions.add(permission_manage_products)
+    app_extension.permissions.add(permission_manage_political_entities)
     variables = {}
 
     # when
@@ -125,13 +125,13 @@ def test_app_extensions_user_not_staff(
         ({}, 4),
         ({"target": AppExtensionTargetEnum.APP_PAGE.name}, 1),
         ({"target": AppExtensionTargetEnum.POPUP.name}, 3),
-        ({"mount": [AppExtensionMountEnum.PRODUCT_OVERVIEW_MORE_ACTIONS.name]}, 1),
-        ({"mount": [AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name]}, 2),
+        ({"mount": [AppExtensionMountEnum.INITIATIVE_OVERVIEW_MORE_ACTIONS.name]}, 1),
+        ({"mount": [AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name]}, 2),
         (
             {
                 "mount": [
-                    AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
-                    AppExtensionMountEnum.PRODUCT_OVERVIEW_MORE_ACTIONS.name,
+                    AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
+                    AppExtensionMountEnum.INITIATIVE_OVERVIEW_MORE_ACTIONS.name,
                 ]
             },
             3,
@@ -140,8 +140,8 @@ def test_app_extensions_user_not_staff(
             {
                 "target": AppExtensionTargetEnum.APP_PAGE.name,
                 "mount": [
-                    AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
-                    AppExtensionMountEnum.PRODUCT_OVERVIEW_MORE_ACTIONS.name,
+                    AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
+                    AppExtensionMountEnum.INITIATIVE_OVERVIEW_MORE_ACTIONS.name,
                 ],
             },
             1,
@@ -149,7 +149,7 @@ def test_app_extensions_user_not_staff(
     ],
 )
 def test_app_extensions_with_filter(
-    filter, expected_count, staff_api_client, app, permission_manage_products
+    filter, expected_count, staff_api_client, app, permission_manage_political_entities
 ):
     # given
     app_extensions = AppExtension.objects.bulk_create(
@@ -158,31 +158,31 @@ def test_app_extensions_with_filter(
                 app=app,
                 label="Create product with App1",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+                mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
                 target=AppExtensionTarget.APP_PAGE,
             ),
             AppExtension(
                 app=app,
                 label="Create product with App2",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_DETAILS_MORE_ACTIONS,
+                mount=AppExtensionMount.INITIATIVE_DETAILS_MORE_ACTIONS,
                 target=AppExtensionTarget.POPUP,
             ),
             AppExtension(
                 app=app,
                 label="Create product with App3",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_OVERVIEW_CREATE,
+                mount=AppExtensionMount.INITIATIVE_OVERVIEW_CREATE,
             ),
             AppExtension(
                 app=app,
                 label="Create product with App4",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_OVERVIEW_CREATE,
+                mount=AppExtensionMount.INITIATIVE_OVERVIEW_CREATE,
             ),
         ]
     )
-    app_extensions[0].permissions.add(permission_manage_products)
+    app_extensions[0].permissions.add(permission_manage_political_entities)
     variables = {"filter": filter}
 
     # when

@@ -29,6 +29,7 @@ RETRY_INSTALL_APP_MUTATION = """
 
 
 def test_retry_install_app_mutation(
+    db,
     monkeypatch,
     app_installation,
     permission_manage_apps,
@@ -64,6 +65,7 @@ def test_retry_install_app_mutation(
 
 
 def test_retry_install_app_mutation_by_app(
+    db,
     permission_manage_apps,
     permission_manage_initiatives,
     app_api_client,
@@ -100,6 +102,7 @@ def test_retry_install_app_mutation_by_app(
 
 
 def test_retry_install_app_mutation_app_has_more_permission_than_user_requestor(
+    db,
     permission_manage_apps,
     staff_api_client,
     staff_user,
@@ -144,6 +147,7 @@ def test_retry_install_app_mutation_app_has_more_permission_than_user_requestor(
 
 
 def test_retry_install_app_mutation_app_has_more_permission_than_app_requestor(
+    db,
     permission_manage_apps,
     app_api_client,
     app_installation,
@@ -186,6 +190,7 @@ def test_retry_install_app_mutation_app_has_more_permission_than_app_requestor(
 
 
 def test_cannot_retry_installation_if_status_is_different_than_failed(
+    db,
     monkeypatch,
     app_installation,
     permission_manage_apps,

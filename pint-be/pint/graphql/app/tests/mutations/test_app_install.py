@@ -31,6 +31,7 @@ INSTALL_APP_MUTATION = """
 
 
 def test_install_app_mutation(
+    db,
     permission_manage_apps,
     permission_manage_initiatives,
     staff_api_client,
@@ -63,7 +64,7 @@ def test_install_app_mutation(
 
 
 def test_app_is_not_allowed_to_install_app(
-    permission_manage_apps, permission_manage_initiatives, app_api_client, monkeypatch
+    db, permission_manage_apps, permission_manage_initiatives, app_api_client, monkeypatch
 ):
     # given
     query = INSTALL_APP_MUTATION
@@ -87,7 +88,7 @@ def test_app_is_not_allowed_to_install_app(
 
 
 def test_app_install_mutation_out_of_scope_permissions(
-    permission_manage_apps, staff_api_client, staff_user
+    db, permission_manage_apps, staff_api_client, staff_user
 ):
     query = INSTALL_APP_MUTATION
     staff_user.user_permissions.set([permission_manage_apps])

@@ -44,6 +44,7 @@ APP_CREATE_MUTATION = """
 
 
 def test_app_create_mutation(
+    db,
     permission_manage_apps,
     permission_manage_initiatives,
     staff_api_client,
@@ -126,6 +127,7 @@ def test_app_create_trigger_webhook(
 
 
 def test_app_is_not_allowed_to_call_create_mutation_for_app(
+    db,
     permission_manage_apps,
     permission_manage_initiatives,
     app_api_client,
@@ -149,6 +151,7 @@ def test_app_is_not_allowed_to_call_create_mutation_for_app(
 
 
 def test_app_create_mutation_out_of_scope_permissions(
+    db,
     permission_manage_apps,
     permission_manage_initiatives,
     staff_api_client,
@@ -180,6 +183,7 @@ def test_app_create_mutation_out_of_scope_permissions(
 
 
 def test_app_create_mutation_superuser_can_create_app_with_any_perms(
+    db,
     permission_manage_apps,
     permission_manage_initiatives,
     superuser_api_client,
@@ -205,6 +209,7 @@ def test_app_create_mutation_superuser_can_create_app_with_any_perms(
 
 
 def test_app_create_mutation_no_permissions(
+    db,
     permission_manage_apps,
     permission_manage_initiatives,
     staff_api_client,

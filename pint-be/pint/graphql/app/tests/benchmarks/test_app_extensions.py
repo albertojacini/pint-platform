@@ -10,7 +10,7 @@ from ...enums import AppExtensionMountEnum, AppExtensionTargetEnum
 def test_app_extensions(
     staff_api_client,
     app,
-    permission_manage_products,
+    permission_manage_political_entities,
     count_queries,
 ):
     # given
@@ -40,28 +40,28 @@ def test_app_extensions(
                 app=app,
                 label="Create product with App1",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+                mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
             ),
             AppExtension(
                 app=app,
                 label="Create product with App2",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_DETAILS_MORE_ACTIONS,
+                mount=AppExtensionMount.INITIATIVE_DETAILS_MORE_ACTIONS,
             ),
             AppExtension(
                 app=app,
                 label="Create product with App3",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_OVERVIEW_CREATE,
+                mount=AppExtensionMount.INITIATIVE_OVERVIEW_CREATE,
             ),
         ]
     )
-    app_extensions[0].permissions.add(permission_manage_products)
-    app_extensions[1].permissions.add(permission_manage_products)
+    app_extensions[0].permissions.add(permission_manage_political_entities)
+    app_extensions[1].permissions.add(permission_manage_political_entities)
 
     # when
     response = staff_api_client.post_graphql(
-        query, permissions=[permission_manage_products], check_no_permissions=False
+        query, permissions=[permission_manage_political_entities], check_no_permissions=False
     )
 
     # then
@@ -76,10 +76,10 @@ def test_app_extensions(
     "filter",
     [
         {},
-        {"mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name},
+        {"mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name},
         {"target": AppExtensionTargetEnum.POPUP.name},
         {
-            "mount": AppExtensionMountEnum.PRODUCT_OVERVIEW_CREATE.name,
+            "mount": AppExtensionMountEnum.INITIATIVE_OVERVIEW_CREATE.name,
             "target": AppExtensionTargetEnum.POPUP.name,
         },
     ],
@@ -89,7 +89,7 @@ def test_app_extensions_with_filter(
     filter,
     staff_api_client,
     app,
-    permission_manage_products,
+    permission_manage_political_entities,
     count_queries,
 ):
     # given
@@ -118,30 +118,30 @@ def test_app_extensions_with_filter(
                 app=app,
                 label="Create product with App1",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+                mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
             ),
             AppExtension(
                 app=app,
                 label="Create product with App2",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_DETAILS_MORE_ACTIONS,
+                mount=AppExtensionMount.INITIATIVE_DETAILS_MORE_ACTIONS,
             ),
             AppExtension(
                 app=app,
                 label="Create product with App3",
                 url="https://www.example.com/app-product",
-                mount=AppExtensionMount.PRODUCT_OVERVIEW_CREATE,
+                mount=AppExtensionMount.INITIATIVE_OVERVIEW_CREATE,
             ),
         ]
     )
-    app_extensions[0].permissions.add(permission_manage_products)
+    app_extensions[0].permissions.add(permission_manage_political_entities)
     variables = {"filter": filter}
 
     # when
     response = staff_api_client.post_graphql(
         query,
         variables,
-        permissions=[permission_manage_products],
+        permissions=[permission_manage_political_entities],
         check_no_permissions=False,
     )
 

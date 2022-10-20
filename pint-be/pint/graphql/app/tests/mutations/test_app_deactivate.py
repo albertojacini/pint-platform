@@ -125,7 +125,7 @@ def test_deactivate_app_by_app(app, app_api_client, permission_manage_apps):
 
 
 def test_deactivate_app_missing_permission(
-    app, staff_api_client, permission_manage_orders
+    app, staff_api_client, permission_manage_initiatives
 ):
     # given
     app.is_active = True
@@ -138,7 +138,7 @@ def test_deactivate_app_missing_permission(
 
     # when
     response = staff_api_client.post_graphql(
-        query, variables=variables, permissions=(permission_manage_orders,)
+        query, variables=variables, permissions=(permission_manage_initiatives,)
     )
 
     # then
@@ -149,7 +149,7 @@ def test_deactivate_app_missing_permission(
 
 
 def test_activate_app_by_app_missing_permission(
-    app, app_api_client, permission_manage_orders
+    app, app_api_client, permission_manage_initiatives
 ):
     # given
     app = App.objects.create(name="Sample app objects", is_active=True)
@@ -158,7 +158,7 @@ def test_activate_app_by_app_missing_permission(
     variables = {
         "id": id,
     }
-    app_api_client.app.permissions.set([permission_manage_orders])
+    app_api_client.app.permissions.set([permission_manage_initiatives])
 
     # when
     response = app_api_client.post_graphql(query, variables=variables)
@@ -170,10 +170,10 @@ def test_activate_app_by_app_missing_permission(
 
 
 def test_app_has_more_permission_than_user_requestor(
-    app, staff_api_client, permission_manage_orders, permission_manage_apps
+    app, staff_api_client, permission_manage_initiatives, permission_manage_apps
 ):
     # given
-    app.permissions.add(permission_manage_orders)
+    app.permissions.add(permission_manage_initiatives)
     app.is_active = True
     app.save()
 
@@ -200,11 +200,11 @@ def test_app_has_more_permission_than_user_requestor(
 
 
 def test_app_has_more_permission_than_app_requestor(
-    app_api_client, permission_manage_orders, permission_manage_apps
+    app_api_client, permission_manage_initiatives, permission_manage_apps
 ):
     # given
     app = App.objects.create(name="Sample app objects", is_active=True)
-    app.permissions.add(permission_manage_orders)
+    app.permissions.add(permission_manage_initiatives)
 
     query = APP_DEACTIVATE_MUTATION
     id = graphene.Node.to_global_id("App", app.id)

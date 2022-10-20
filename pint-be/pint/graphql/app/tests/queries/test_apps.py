@@ -67,7 +67,7 @@ QUERY_APPS_WITH_FILTER = """
 def test_apps_query(
     staff_api_client,
     permission_manage_apps,
-    permission_manage_orders,
+    permission_manage_initiatives,
     app_with_extensions,
     external_app,
     app_filter,
@@ -88,7 +88,7 @@ def test_apps_query(
     response = staff_api_client.post_graphql(
         QUERY_APPS_WITH_FILTER,
         variables,
-        permissions=[permission_manage_apps, permission_manage_orders],
+        permissions=[permission_manage_apps, permission_manage_initiatives],
     )
     content = get_graphql_content(response)
 
@@ -106,7 +106,7 @@ def test_apps_query(
 def test_apps_with_extensions_query(
     staff_api_client,
     permission_manage_apps,
-    permission_manage_orders,
+    permission_manage_initiatives,
     app_with_extensions,
 ):
     # given
@@ -115,7 +115,7 @@ def test_apps_with_extensions_query(
     # when
     response = staff_api_client.post_graphql(
         QUERY_APPS_WITH_FILTER,
-        permissions=[permission_manage_apps, permission_manage_orders],
+        permissions=[permission_manage_apps, permission_manage_initiatives],
     )
 
     # then
@@ -301,7 +301,7 @@ def test_apps_query_staff_without_permissions(
     staff_api_client,
     staff_user,
     permission_manage_apps,
-    permission_manage_orders,
+    permission_manage_initiatives,
     app,
 ):
     # given

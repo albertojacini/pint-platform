@@ -5505,7 +5505,7 @@ def app_with_extensions(app_with_token, permission_manage_initiatives):
         app=app_with_token,
         label="Create product with App",
         url="www.example.com/app-product",
-        mount=AppExtensionMount.PRODUCT_OVERVIEW_MORE_ACTIONS,
+        mount=AppExtensionMount.INITIATIVE_OVERVIEW_MORE_ACTIONS,
     )
     extensions = AppExtension.objects.bulk_create(
         [
@@ -5514,7 +5514,7 @@ def app_with_extensions(app_with_token, permission_manage_initiatives):
                 app=app_with_token,
                 label="Update product with App",
                 url="www.example.com/app-product-update",
-                mount=AppExtensionMount.PRODUCT_DETAILS_MORE_ACTIONS,
+                mount=AppExtensionMount.INITIATIVE_DETAILS_MORE_ACTIONS,
             ),
         ]
     )

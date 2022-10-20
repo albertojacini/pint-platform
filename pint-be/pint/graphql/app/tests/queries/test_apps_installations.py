@@ -11,7 +11,7 @@ APPS_INSTALLATION_QUERY = """
 """
 
 
-def test_apps_installation(app_installation, staff_api_client, permission_manage_apps):
+def test_apps_installation(db, app_installation, staff_api_client, permission_manage_apps):
 
     response = staff_api_client.post_graphql(
         APPS_INSTALLATION_QUERY, permissions=[permission_manage_apps]
@@ -25,7 +25,7 @@ def test_apps_installation(app_installation, staff_api_client, permission_manage
 
 
 def test_apps_installation_by_app(
-    app_installation, app_api_client, permission_manage_apps
+    db, app_installation, app_api_client, permission_manage_apps
 ):
     response = app_api_client.post_graphql(
         APPS_INSTALLATION_QUERY, permissions=[permission_manage_apps]
@@ -38,7 +38,7 @@ def test_apps_installation_by_app(
     assert int(app_id) == app_installation.id
 
 
-def test_apps_installation_by_app_missing_permission(app_api_client):
+def test_apps_installation_by_app_missing_permission(db, app_api_client):
     response = app_api_client.post_graphql(APPS_INSTALLATION_QUERY)
     assert_no_permission(response)
 
