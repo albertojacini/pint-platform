@@ -15,7 +15,7 @@ from .core.federation.schema import build_federated_schema
 # from .giftcard.schema import GiftCardMutations, GiftCardQueries
 # from .invoice.schema import InvoiceMutations
 # from .menu.schema import MenuMutations, MenuQueries
-# from .meta.schema import MetaMutations
+from .meta.schema import MetaMutations
 # from .order.schema import OrderMutations, OrderQueries
 # from .page.schema import PageMutations, PageQueries
 # from .payment.schema import PaymentMutations, PaymentQueries
@@ -71,7 +71,7 @@ class Mutation(
     # GiftCardMutations,
     # InvoiceMutations,
     # MenuMutations,
-    # MetaMutations,
+    MetaMutations,
     # OrderMutations,
     # PageMutations,
     # PaymentMutations,
