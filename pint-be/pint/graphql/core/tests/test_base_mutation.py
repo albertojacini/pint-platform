@@ -6,37 +6,38 @@ from django.core.exceptions import ImproperlyConfigured
 from graphql import GraphQLError
 from graphql.execution import ExecutionResult
 
-from pint.core.permissions import ProductPermissions
-from pint.plugins.tests.sample_plugins import PluginSample
+from ....core.permissions import InitiativePermissions
+# from pint.plugins.tests.sample_plugins import PluginSample
 
-from ....order.models import Order
-from ....product.models import Product
-from ...order import types as order_types
-from ...product import types as product_types
+# from ....initiative.models import Initiative
+from ....initiative.models import Initiative
+# from ...initiative import types as initiative_types
+# from ...initiative import types as initiative_types
+from ...initiative import types as initiative_types
 from ..mutations import BaseMutation
 from . import ErrorTest
 
 
 class Mutation(BaseMutation):
-    name = graphene.Field(graphene.String)
+    title = graphene.Field(graphene.String)
 
     class Arguments:
-        product_id = graphene.ID(required=True)
-        channel = graphene.String()
+        initiative_id = graphene.ID(required=True)
+        # channel = graphene.String()
 
     class Meta:
         description = "Base mutation"
         error_type_class = ErrorTest
 
     @classmethod
-    def perform_mutation(cls, _root, info, product_id, channel):
+    def perform_mutation(cls, _root, info, initiative_id):
         # Need to mock `app_middleware`
         info.context.app = None
 
-        product = cls.get_node_or_error(
-            info, product_id, field="product_id", only_type=product_types.Product
+        initiative = cls.get_node_or_error(
+            info, initiative_id, field="initiative_id", only_type=initiative_types.Initiative
         )
-        return Mutation(name=product.name)
+        return Mutation(title=initiative.title)
 
 
 class MutationWithCustomErrors(Mutation):
@@ -54,41 +55,41 @@ class RestrictedMutation(Mutation):
     )
 
     class Meta:
-        permissions = (ProductPermissions.MANAGE_PRODUCTS,)
-        description = "Mutation requiring manage product user permission"
+        permissions = (InitiativePermissions.MANAGE_INITIATIVES,)
+        description = "Mutation requiring manage initiative user permission"
         error_type_class = ErrorTest
 
 
-class OrderMutation(BaseMutation):
-    number = graphene.Field(graphene.String)
-
-    class Arguments:
-        id = graphene.ID(required=True)
-        channel = graphene.String()
-
-    class Meta:
-        description = "Base mutation"
-        error_type_class = ErrorTest
-
-    @classmethod
-    def perform_mutation(cls, _root, info, id, channel):
-        # Need to mock `app_middleware`
-        info.context.app = None
-
-        order = cls.get_node_or_error(info, id, only_type=order_types.Order)
-        return OrderMutation(number=order.number)
+# class OrderMutation(BaseMutation):
+#     number = graphene.Field(graphene.String)
+#
+#     class Arguments:
+#         id = graphene.ID(required=True)
+#         channel = graphene.String()
+#
+#     class Meta:
+#         description = "Base mutation"
+#         error_type_class = ErrorTest
+#
+#     @classmethod
+#     def perform_mutation(cls, _root, info, id, channel):
+#         # Need to mock `app_middleware`
+#         info.context.app = None
+#
+#         initiative = cls.get_node_or_error(info, id, only_type=initiative_types.Initiative)
+#         return OrderMutation(number=initiative.number)
 
 
 class Mutations(graphene.ObjectType):
     test = Mutation.Field()
     test_with_custom_errors = MutationWithCustomErrors.Field()
     restricted_mutation = RestrictedMutation.Field()
-    test_order_mutation = OrderMutation.Field()
+    # test_initiative_mutation = OrderMutation.Field()
 
 
 schema = graphene.Schema(
     mutation=Mutations,
-    types=[product_types.Product, product_types.ProductVariant, order_types.Order],
+    types=[initiative_types.Initiative],
 )
 
 
@@ -96,27 +97,27 @@ def test_mutation_without_description_raises_error():
     with pytest.raises(ImproperlyConfigured):
 
         class MutationNoDescription(BaseMutation):
-            name = graphene.Field(graphene.String)
+            title = graphene.Field(graphene.String)
 
             class Arguments:
-                product_id = graphene.ID(required=True)
+                initiative_id = graphene.ID(required=True)
 
 
 def test_mutation_without_error_type_class_raises_error():
     with pytest.raises(ImproperlyConfigured):
 
         class MutationNoDescription(BaseMutation):
-            name = graphene.Field(graphene.String)
+            title = graphene.Field(graphene.String)
             description = "Base mutation with custom errors"
 
             class Arguments:
-                product_id = graphene.ID(required=True)
+                initiative_id = graphene.ID(required=True)
 
 
 TEST_MUTATION = """
-    mutation testMutation($productId: ID!, $channel: String) {
-        test(productId: $productId, channel: $channel) {
-            name
+    mutation testMutation($initiativeId: ID!) {
+        test(initiativeId: $initiativeId) {
+            title
             errors {
                 field
                 message
@@ -126,31 +127,31 @@ TEST_MUTATION = """
 """
 
 
-def test_resolve_id(product, schema_context, channel_USD):
-    product_id = graphene.Node.to_global_id("Product", product.pk)
-    variables = {"productId": product_id, "channel": channel_USD.slug}
+def test_resolve_id(initiative, schema_context):
+    initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
+    variables = {"initiativeId": initiative_id}
     result = schema.execute(
         TEST_MUTATION, variables=variables, context_value=schema_context
     )
     assert not result.errors
-    assert result.data["test"]["name"] == product.name
+    assert result.data["test"]["title"] == initiative.title
 
 
-def test_user_error_nonexistent_id(schema_context, channel_USD):
-    variables = {"productId": "not-really", "channel": channel_USD.slug}
+def test_user_error_nonexistent_id(schema_context):
+    variables = {"initiativeId": "not-really"}
     result = schema.execute(
         TEST_MUTATION, variables=variables, context_value=schema_context
     )
     assert not result.errors
     user_errors = result.data["test"]["errors"]
     assert user_errors
-    assert user_errors[0]["field"] == "productId"
+    assert user_errors[0]["field"] == "initiativeId"
     assert user_errors[0]["message"] == "Couldn't resolve id: not-really."
 
 
-TEST_ORDER_MUTATION = """
-    mutation TestOrderMutation($id: ID!, $channel: String) {
-        testOrderMutation(id: $id, channel: $channel) {
+TEST_INITIATIVE_MUTATION = """
+    mutation TestInitiativeMutation($id: ID!) {
+        testInitiativeMutation(id: $id) {
             number
             errors {
                 field
@@ -161,39 +162,39 @@ TEST_ORDER_MUTATION = """
 """
 
 
-def test_order_mutation_resolve_uuid_id(order, schema_context, channel_USD):
-    """Ensure that order migrations can be perfromed with use of
-    new order id (uuid type)."""
-    order_id = graphene.Node.to_global_id("Order", order.pk)
-    variables = {"id": order_id, "channel": channel_USD.slug}
-    result = schema.execute(
-        TEST_ORDER_MUTATION, variables=variables, context_value=schema_context
-    )
-    assert not result.errors
-    assert result.data["testOrderMutation"]["number"] == str(order.number)
+# def test_initiative_mutation_resolve_uuid_id(initiative, schema_context):
+#     """Ensure that initiative migrations can be perfromed with use of
+#     new initiative id (uuid type)."""
+#     initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
+#     variables = {"id": initiative_id}
+#     result = schema.execute(
+#         TEST_MUTATION, variables=variables, context_value=schema_context
+#     )
+#     assert not result.errors
+#     assert result.data["test"]["number"] == str(initiative.number)
 
 
-def test_order_mutation_for_old_int_id(order, schema_context, channel_USD):
-    """Ensure that order migrations for orders with `use_old_id` flag set to True,
-    can be perfromed with use of old order id (int type)."""
-    order.use_old_id = True
-    order.save(update_fields=["use_old_id"])
+# def test_initiative_mutation_for_old_int_id(initiative, schema_context):
+#     """Ensure that initiative migrations for initiatives with `use_old_id` flag set to True,
+#     can be perfromed with use of old initiative id (int type)."""
+#     initiative.use_old_id = True
+#     initiative.save(update_fields=["use_old_id"])
+#
+#     initiative_id = graphene.Node.to_global_id("Initiative", initiative.number)
+#     variables = {"id": initiative_id}
+#     result = schema.execute(
+#         TEST_INITIATIVE_MUTATION, variables=variables, context_value=schema_context
+#     )
+#     assert not result.errors
+#     assert result.data["testInitiativeMutation"]["number"] == str(initiative.number)
 
-    order_id = graphene.Node.to_global_id("Order", order.number)
-    variables = {"id": order_id, "channel": channel_USD.slug}
-    result = schema.execute(
-        TEST_ORDER_MUTATION, variables=variables, context_value=schema_context
-    )
-    assert not result.errors
-    assert result.data["testOrderMutation"]["number"] == str(order.number)
 
-
-def test_mutation_custom_errors_default_value(product, schema_context, channel_USD):
-    product_id = graphene.Node.to_global_id("Product", product.pk)
+def test_mutation_custom_errors_default_value(initiative, schema_context):
+    initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
     query = """
-        mutation testMutation($productId: ID!, $channel: String) {
-            testWithCustomErrors(productId: $productId, channel: $channel) {
-                name
+        mutation testMutation($initiativeId: ID!) {
+            testWithCustomErrors(initiativeId: $initiativeId) {
+                title
                 errors {
                     field
                     message
@@ -205,28 +206,28 @@ def test_mutation_custom_errors_default_value(product, schema_context, channel_U
             }
         }
     """
-    variables = {"productId": product_id, "channel": channel_USD.slug}
+    variables = {"initiativeId": initiative_id}
     result = schema.execute(query, variables=variables, context_value=schema_context)
     assert result.data["testWithCustomErrors"]["errors"] == []
     assert result.data["testWithCustomErrors"]["customErrors"] == []
 
 
-def test_user_error_id_of_different_type(product, schema_context, channel_USD):
-    # Test that get_node_or_error checks that the returned ID must be of
-    # proper type. Providing correct ID but of different type than expected
-    # should result in user error.
-    variant = product.variants.first()
-    variant_id = graphene.Node.to_global_id("ProductVariant", variant.pk)
-
-    variables = {"productId": variant_id, "channel": channel_USD.slug}
-    result = schema.execute(
-        TEST_MUTATION, variables=variables, context_value=schema_context
-    )
-    assert not result.errors
-    user_errors = result.data["test"]["errors"]
-    assert user_errors
-    assert user_errors[0]["field"] == "productId"
-    assert user_errors[0]["message"] == "Must receive a Product id."
+# def test_user_error_id_of_different_type(initiative, schema_context):
+#     # Test that get_node_or_error checks that the returned ID must be of
+#     # proper type. Providing correct ID but of different type than expected
+#     # should result in user error.
+#     # variant = initiative.variants.first()
+#     # variant_id = graphene.Node.to_global_id("InitiativeVariant", variant.pk)
+#
+#     variables = {"initiativeId": initiative.id}
+#     result = schema.execute(
+#         TEST_MUTATION, variables=variables, context_value=schema_context
+#     )
+#     assert not result.errors
+#     user_errors = result.data["test"]["errors"]
+#     assert user_errors
+#     assert user_errors[0]["field"] == "initiativeId"
+#     assert user_errors[0]["message"] == "Must receive a Initiative id."
 
 
 def test_get_node_or_error_returns_null_for_empty_id():
@@ -235,197 +236,179 @@ def test_get_node_or_error_returns_null_for_empty_id():
     assert response is None
 
 
-def test_mutation_plugin_perform_mutation_handles_graphql_error(
-    request,
-    settings,
-    plugin_configuration,
-    product,
-    channel_USD,
-):
-    """Ensure when the mutation calls the method 'perform_mutation' on plugins,
-    the returned error "GraphQLError" is properly returned and transformed into a dict
-    """
-    settings.PLUGINS = [
-        "pint.plugins.tests.sample_plugins.PluginSample",
-    ]
-
-    schema_context = request.getfixturevalue("schema_context")
-
-    product_id = graphene.Node.to_global_id("Product", product.pk)
-    variables = {"productId": product_id, "channel": channel_USD.slug}
-
-    with mock.patch.object(
-        PluginSample,
-        "perform_mutation",
-        return_value=GraphQLError("My Custom Error"),
-    ):
-        result = schema.execute(
-            TEST_MUTATION, variables=variables, context_value=schema_context
-        )
-    assert result.to_dict() == {
-        "data": {"test": None},
-        "errors": [
-            {
-                "locations": [{"column": 9, "line": 3}],
-                "message": "My Custom Error",
-                "path": ["test"],
-            }
-        ],
-    }
-
-
-def test_mutation_plugin_perform_mutation_handles_custom_execution_result(
-    request,
-    settings,
-    plugin_configuration,
-    product,
-    channel_USD,
-):
-    """Ensure when the mutation calls the method 'perform_mutation' on plugins,
-    if a "ExecutionResult" object is returned, then the GraphQL response contains it
-    """
-    settings.PLUGINS = [
-        "pint.plugins.tests.sample_plugins.PluginSample",
-    ]
-
-    schema_context = request.getfixturevalue("schema_context")
-
-    product_id = graphene.Node.to_global_id("Product", product.pk)
-    variables = {"productId": product_id, "channel": channel_USD.slug}
-
-    with mock.patch.object(
-        PluginSample,
-        "perform_mutation",
-        return_value=ExecutionResult(data={}, errors=[GraphQLError("My Custom Error")]),
-    ):
-        result = schema.execute(
-            TEST_MUTATION, variables=variables, context_value=schema_context
-        )
-    assert result.to_dict() == {
-        "data": {"test": None},
-        "errors": [
-            {
-                "locations": [{"column": 13, "line": 5}],
-                "message": "My Custom Error",
-                "path": ["test", "errors", 0],
-            }
-        ],
-    }
-
-
-@mock.patch.object(
-    PluginSample,
-    "perform_mutation",
-    return_value=ExecutionResult(data={}, errors=[GraphQLError("My Custom Error")]),
-)
-def test_mutation_calls_plugin_perform_mutation_after_permission_checks(
-    mocked_plugin,
-    request,
-    settings,
-    staff_user,
-    plugin_configuration,
-    product,
-    channel_USD,
-    permission_manage_products,
-):
-    """
-    Ensure the mutation calls the method 'perform_mutation' on plugins only once the
-    user/app permissions are verified
-    """
-    mutation_query = """
-        mutation testRestrictedMutation($productId: ID!, $channel: String) {
-            restrictedMutation(productId: $productId, channel: $channel) {
-                name
-                errors {
-                    field
-                    message
-                }
-            }
-        }
-    """
-
-    settings.PLUGINS = [
-        "pint.plugins.tests.sample_plugins.PluginSample",
-    ]
-
-    schema_context = request.getfixturevalue("schema_context")
-    schema_context.user = staff_user
-
-    product_id = graphene.Node.to_global_id("Product", product.pk)
-    variables = {"productId": product_id, "channel": channel_USD.slug}
-
-    # When permission is missing, it should not return the custom error from plugin
-    result = schema.execute(
-        mutation_query, variables=variables, context_value=schema_context
-    )
-    assert len(result.errors) == 1, result.to_dict()
-    assert "You need one of the following permissions" in result.errors[0].message
-
-    # When permission is not missing, the execution of the plugin should happen
-    staff_user.user_permissions.set([permission_manage_products])
-    del staff_user._perm_cache  # force django to re-fetch permissions
-    result = schema.execute(
-        mutation_query, variables=variables, context_value=schema_context
-    )
-    assert len(result.errors) == 1, result.to_dict()
-    assert result.errors[0].message == "My Custom Error"
-
-
-def test_base_mutation_get_node_by_pk_with_order_qs_and_old_int_id(staff_user, order):
-    # given
-    order.use_old_id = True
-    order.save(update_fields=["use_old_id"])
-
-    info = mock.Mock(context=mock.Mock(user=staff_user))
-
-    # when
-    node = BaseMutation._get_node_by_pk(
-        info, order_types.Order, order.number, qs=Order.objects.all()
-    )
-
-    # then
-    assert node.id == order.id
+# def test_mutation_plugin_perform_mutation_handles_graphql_error(
+#     request,
+#     settings,
+#     plugin_configuration,
+#     initiative,
+#     channel_USD,
+# ):
+#     """Ensure when the mutation calls the method 'perform_mutation' on plugins,
+#     the returned error "GraphQLError" is properly returned and transformed into a dict
+#     """
+#     settings.PLUGINS = [
+#         "pint.plugins.tests.sample_plugins.PluginSample",
+#     ]
+#
+#     schema_context = request.getfixturevalue("schema_context")
+#
+#     initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
+#     variables = {"initiativeId": initiative_id}
+#
+#     with mock.patch.object(
+#         PluginSample,
+#         "perform_mutation",
+#         return_value=GraphQLError("My Custom Error"),
+#     ):
+#         result = schema.execute(
+#             TEST_MUTATION, variables=variables, context_value=schema_context
+#         )
+#     assert result.to_dict() == {
+#         "data": {"test": None},
+#         "errors": [
+#             {
+#                 "locations": [{"column": 9, "line": 3}],
+#                 "message": "My Custom Error",
+#                 "path": ["test"],
+#             }
+#         ],
+#     }
+#
+#
+# def test_mutation_plugin_perform_mutation_handles_custom_execution_result(
+#     request,
+#     settings,
+#     plugin_configuration,
+#     initiative,
+#     channel_USD,
+# ):
+#     """Ensure when the mutation calls the method 'perform_mutation' on plugins,
+#     if a "ExecutionResult" object is returned, then the GraphQL response contains it
+#     """
+#     settings.PLUGINS = [
+#         "pint.plugins.tests.sample_plugins.PluginSample",
+#     ]
+#
+#     schema_context = request.getfixturevalue("schema_context")
+#
+#     initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
+#     variables = {"initiativeId": initiative_id}
+#
+#     with mock.patch.object(
+#         PluginSample,
+#         "perform_mutation",
+#         return_value=ExecutionResult(data={}, errors=[GraphQLError("My Custom Error")]),
+#     ):
+#         result = schema.execute(
+#             TEST_MUTATION, variables=variables, context_value=schema_context
+#         )
+#     assert result.to_dict() == {
+#         "data": {"test": None},
+#         "errors": [
+#             {
+#                 "locations": [{"column": 13, "line": 5}],
+#                 "message": "My Custom Error",
+#                 "path": ["test", "errors", 0],
+#             }
+#         ],
+#     }
+#
+#
+# @mock.patch.object(
+#     PluginSample,
+#     "perform_mutation",
+#     return_value=ExecutionResult(data={}, errors=[GraphQLError("My Custom Error")]),
+# )
+# def test_mutation_calls_plugin_perform_mutation_after_permission_checks(
+#     mocked_plugin,
+#     request,
+#     settings,
+#     staff_user,
+#     plugin_configuration,
+#     initiative,
+#     channel_USD,
+#     permission_manage_initiatives,
+# ):
+#     """
+#     Ensure the mutation calls the method 'perform_mutation' on plugins only once the
+#     user/app permissions are verified
+#     """
+#     mutation_query = """
+#         mutation testRestrictedMutation($initiativeId: ID!) {
+#             restrictedMutation(initiativeId: $initiativeId) {
+#                 name
+#                 errors {
+#                     field
+#                     message
+#                 }
+#             }
+#         }
+#     """
+#
+#     settings.PLUGINS = [
+#         "pint.plugins.tests.sample_plugins.PluginSample",
+#     ]
+#
+#     schema_context = request.getfixturevalue("schema_context")
+#     schema_context.user = staff_user
+#
+#     initiative_id = graphene.Node.to_global_id("Initiative", initiative.pk)
+#     variables = {"initiativeId": initiative_id}
+#
+#     # When permission is missing, it should not return the custom error from plugin
+#     result = schema.execute(
+#         mutation_query, variables=variables, context_value=schema_context
+#     )
+#     assert len(result.errors) == 1, result.to_dict()
+#     assert "You need one of the following permissions" in result.errors[0].message
+#
+#     # When permission is not missing, the execution of the plugin should happen
+#     staff_user.user_permissions.set([permission_manage_initiatives])
+#     del staff_user._perm_cache  # force django to re-fetch permissions
+#     result = schema.execute(
+#         mutation_query, variables=variables, context_value=schema_context
+#     )
+#     assert len(result.errors) == 1, result.to_dict()
+#     assert result.errors[0].message == "My Custom Error"
 
 
-def test_base_mutation_get_node_by_pk_with_order_qs_and_new_uuid_id(staff_user, order):
-    # given
-    info = mock.Mock(context=mock.Mock(user=staff_user))
-
-    # when
-    node = BaseMutation._get_node_by_pk(
-        info, order_types.Order, order.pk, qs=Order.objects.all()
-    )
-
-    # then
-    assert node.id == order.id
-
-
-def test_base_mutation_get_node_by_pk_with_order_qs_and_int_id_use_old_id_set_to_false(
-    staff_user, order
-):
-    # given
-    order.use_old_id = False
-    order.save(update_fields=["use_old_id"])
-
-    info = mock.Mock(context=mock.Mock(user=staff_user))
-
-    # when
-    node = BaseMutation._get_node_by_pk(
-        info, order_types.Order, order.number, qs=Order.objects.all()
-    )
-
-    # then
-    assert node is None
+# def test_base_mutation_get_node_by_pk_with_initiative_qs_and_old_int_id(staff_user, initiative):
+#     # given
+#     initiative.use_old_id = True
+#     initiative.save(update_fields=["use_old_id"])
+#
+#     info = mock.Mock(context=mock.Mock(user=staff_user))
+#
+#     # when
+#     node = BaseMutation._get_node_by_pk(
+#         info, initiative_types.Initiative, initiative.number, qs=Initiative.objects.all()
+#     )
+#
+#     # then
+#     assert node.id == initiative.id
 
 
-def test_base_mutation_get_node_by_pk_with_qs_for_product(staff_user, product):
+def test_base_mutation_get_node_by_pk_with_initiative_qs_and_new_uuid_id(staff_user, initiative):
     # given
     info = mock.Mock(context=mock.Mock(user=staff_user))
 
     # when
     node = BaseMutation._get_node_by_pk(
-        info, product_types.Product, product.pk, qs=Product.objects.all()
+        info, initiative_types.Initiative, initiative.pk, qs=Initiative.objects.all()
     )
 
     # then
-    assert node.id == product.id
+    assert node.id == initiative.id
+
+
+def test_base_mutation_get_node_by_pk_with_qs_for_initiative(staff_user, initiative):
+    # given
+    info = mock.Mock(context=mock.Mock(user=staff_user))
+
+    # when
+    node = BaseMutation._get_node_by_pk(
+        info, initiative_types.Initiative, initiative.pk, qs=Initiative.objects.all()
+    )
+
+    # then
+    assert node.id == initiative.id

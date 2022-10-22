@@ -15,12 +15,12 @@ order_confirmed_event_enum_description = (
     "setting `automatically_confirm_all_new_orders` is enabled."
 )
 
-order_fully_paid_event_enum_description = "Payment is made and an order is fully paid."
-
-order_updated_event_enum_description = (
-    "An order is updated; triggered for all changes related to an order; "
-    "covers all other order webhooks, except for ORDER_CREATED."
-)
+# order_fully_paid_event_enum_description = "Payment is made and an order is fully paid."
+#
+# order_updated_event_enum_description = (
+#     "An order is updated; triggered for all changes related to an order; "
+#     "covers all other order webhooks, except for ORDER_CREATED."
+# )
 
 
 WEBHOOK_EVENT_DESCRIPTION = {
