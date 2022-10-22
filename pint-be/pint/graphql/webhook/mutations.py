@@ -283,6 +283,6 @@ class EventDeliveryRetry(BaseMutation):
             data["id"],
             only_type=EventDelivery,
         )
-        manager = info.context.plugins
-        manager.event_delivery_retry(delivery)
+        # manager = info.context.plugins
+        # manager.event_delivery_retry(delivery)
         return EventDeliveryRetry(delivery=delivery)
