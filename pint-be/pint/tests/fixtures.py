@@ -52,7 +52,7 @@ from ..core.units import MeasurementUnits
 from ..core.utils.editorjs import clean_editor_js
 from ..csv.events import ExportEvents
 from ..csv.models import ExportEvent, ExportFile
-from ..initiative.models import Initiative, InitiativeMedia
+from ..initiative.models import Initiative, InitiativeMedia, PoliticalEntity
 
 # from ..product.models import (
 #     Category,
@@ -1821,11 +1821,11 @@ def image_list():
     ]
 
 
-# @pytest.fixture
-# def category(db):  # pylint: disable=W0613
-#     return Category.objects.create(name="Default", slug="default")
-#
-#
+@pytest.fixture
+def political_entity(db):  # pylint: disable=W0613
+    return PoliticalEntity.objects.create(name="Default", slug="default")
+
+
 # @pytest.fixture
 # def category_with_image(db, image, media_root):  # pylint: disable=W0613
 #     return Category.objects.create(
