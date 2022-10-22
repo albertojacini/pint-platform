@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 
 from django.core.files.storage import default_storage
 
-from ....product.tests.utils import create_image
+from ....initiative.tests.utils import create_image
 from ....tests.consts import TEST_SERVER_DOMAIN
 from ...tests.utils import (
     assert_no_permission,
@@ -26,7 +26,7 @@ mutation fileUpload($file: Upload!) {
 """
 
 
-def test_file_upload_by_staff(staff_api_client, site_settings, media_root):
+def test_file_upload_by_staff(staff_api_client, media_root):
     # given
     image_file, image_name = create_image()
     variables = {"image": image_name}
@@ -93,7 +93,7 @@ def test_file_upload_by_app(app_api_client, media_root):
     assert default_storage.exists(file_path.lstrip("/media"))
 
 
-def test_file_upload_by_superuser(superuser_api_client, media_root):
+def test_file_upload_by_superuser(db, superuser_api_client, media_root):
     # given
     image_file, image_name = create_image()
     variables = {"image": image_name}

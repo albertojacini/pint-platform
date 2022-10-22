@@ -595,13 +595,13 @@ class InitiativeFilter(MetadataFilterBase):
             "search",
         ]
 
-    def filter_is_published(self, queryset, name, value):
-        return _filter_initiatives_is_published(
-            queryset,
-            name,
-            value,
-            # channel_slug,
-        )
+    # def filter_is_published(self, queryset, name, value):
+    #     return _filter_initiatives_is_published(
+    #         queryset,
+    #         name,
+    #         value,
+    #         # channel_slug,
+    #     )
 
 
 # class ProductFilter(MetadataFilterBase):

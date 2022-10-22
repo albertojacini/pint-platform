@@ -132,76 +132,76 @@ from ..core.types import ChannelSortInputObjectType, SortInputObjectType
 
 
 class InitiativeOrderField(graphene.Enum):
-    NAME = ["name", "slug"]
+    NAME = ["title", "slug"]
     RANK = ["search_rank", "id"]
-    PRICE = ["min_variants_price_amount", "name", "slug"]
-    MINIMAL_PRICE = ["discounted_price_amount", "name", "slug"]
+    # PRICE = ["min_variants_price_amount", "name", "slug"]
+    # MINIMAL_PRICE = ["discounted_price_amount", "name", "slug"]
     LAST_MODIFIED = ["updated_at", "name", "slug"]
     DATE = ["updated_at", "name", "slug"]
-    TYPE = ["initiative_type__name", "name", "slug"]
-    PUBLISHED = ["is_published", "name", "slug"]
-    PUBLICATION_DATE = ["published_at", "name", "slug"]
-    PUBLISHED_AT = ["published_at", "name", "slug"]
+    # TYPE = ["initiative_type__name", "name", "slug"]
+    # PUBLISHED = ["is_published", "name", "slug"]
+    # PUBLICATION_DATE = ["published_at", "name", "slug"]
+    # PUBLISHED_AT = ["published_at", "name", "slug"]
     LAST_MODIFIED_AT = ["updated_at", "name", "slug"]
-    COLLECTION = ["collectioninitiative__sort_order", "pk"]
-    RATING = ["rating", "name", "slug"]
+    # COLLECTION = ["collectioninitiative__sort_order", "pk"]
+    # RATING = ["rating", "name", "slug"]
 
     @property
     def description(self):
         # pylint: disable=no-member
         descriptions = {
-            InitiativeOrderField.COLLECTION.name: (
-                "collection. Note: "
-                "This option is available only for the `Collection.initiatives` query."
-                + CHANNEL_REQUIRED
-            ),
+            # InitiativeOrderField.COLLECTION.name: (
+            #     "collection. Note: "
+            #     "This option is available only for the `Collection.initiatives` query."
+            #     + CHANNEL_REQUIRED
+            # ),
             InitiativeOrderField.RANK.name: (
                 "rank. Note: This option is available only with the `search` filter."
             ),
-            InitiativeOrderField.NAME.name: "name.",
-            InitiativeOrderField.PRICE.name: ("price." + CHANNEL_REQUIRED),
-            InitiativeOrderField.TYPE.name: "type.",
-            InitiativeOrderField.MINIMAL_PRICE.name: (
-                "a minimal price of a initiative's variant." + CHANNEL_REQUIRED
-            ),
+            InitiativeOrderField.NAME.title: "name.",
+            # InitiativeOrderField.PRICE.name: ("price." + CHANNEL_REQUIRED),
+            # InitiativeOrderField.TYPE.name: "type.",
+            # InitiativeOrderField.MINIMAL_PRICE.name: (
+            #     "a minimal price of a initiative's variant." + CHANNEL_REQUIRED
+            # ),
             InitiativeOrderField.DATE.name: f"update date. {DEPRECATED_IN_3X_INPUT}",
-            InitiativeOrderField.PUBLISHED.name: (
-                "publication status." + CHANNEL_REQUIRED
-            ),
-            InitiativeOrderField.PUBLICATION_DATE.name: (
-                "publication date." + CHANNEL_REQUIRED + DEPRECATED_IN_3X_INPUT
-            ),
+            # InitiativeOrderField.PUBLISHED.name: (
+            #     "publication status." + CHANNEL_REQUIRED
+            # ),
+            # InitiativeOrderField.PUBLICATION_DATE.name: (
+            #     "publication date." + CHANNEL_REQUIRED + DEPRECATED_IN_3X_INPUT
+            # ),
             InitiativeOrderField.LAST_MODIFIED.name: (
                 f"update date. {DEPRECATED_IN_3X_INPUT}"
             ),
-            InitiativeOrderField.PUBLISHED_AT.name: (
-                "publication date." + CHANNEL_REQUIRED
-            ),
+            # InitiativeOrderField.PUBLISHED_AT.name: (
+            #     "publication date." + CHANNEL_REQUIRED
+            # ),
             InitiativeOrderField.LAST_MODIFIED_AT.name: "update date.",
-            InitiativeOrderField.RATING.name: "rating.",
+            # InitiativeOrderField.RATING.name: "rating.",
         }
         if self.name in descriptions:
             return f"Sort initiatives by {descriptions[self.name]}"
         raise ValueError("Unsupported enum value: %s" % self.value)
 
-    @staticmethod
-    def qs_with_price(queryset: QuerySet, channel_slug: str) -> QuerySet:
-        return queryset.annotate(
-            min_variants_price_amount=Min(
-                "variants__channel_listings__price_amount",
-                filter=Q(variants__channel_listings__channel__slug=str(channel_slug))
-                & Q(variants__channel_listings__price_amount__isnull=False),
-            )
-        )
+    # @staticmethod
+    # def qs_with_price(queryset: QuerySet, channel_slug: str) -> QuerySet:
+    #     return queryset.annotate(
+    #         min_variants_price_amount=Min(
+    #             "variants__channel_listings__price_amount",
+    #             filter=Q(variants__channel_listings__channel__slug=str(channel_slug))
+    #             & Q(variants__channel_listings__price_amount__isnull=False),
+    #         )
+    #     )
 
-    @staticmethod
-    def qs_with_minimal_price(queryset: QuerySet, channel_slug: str) -> QuerySet:
-        return queryset.annotate(
-            discounted_price_amount=Min(
-                "channel_listings__discounted_price_amount",
-                filter=Q(channel_listings__channel__slug=str(channel_slug)),
-            )
-        )
+    # @staticmethod
+    # def qs_with_minimal_price(queryset: QuerySet, channel_slug: str) -> QuerySet:
+    #     return queryset.annotate(
+    #         discounted_price_amount=Min(
+    #             "channel_listings__discounted_price_amount",
+    #             filter=Q(channel_listings__channel__slug=str(channel_slug)),
+    #         )
+    #     )
 
     # @staticmethod
     # def qs_with_published(queryset: QuerySet, channel_slug: str) -> QuerySet:
@@ -214,9 +214,9 @@ class InitiativeOrderField(graphene.Enum):
     #         is_published=ExpressionWrapper(subquery, output_field=BooleanField())
     #     )
 
-    @staticmethod
-    def qs_with_publication_date(queryset: QuerySet, channel_slug: str) -> QuerySet:
-        return InitiativeOrderField.qs_with_published_at(queryset, channel_slug)
+    # @staticmethod
+    # def qs_with_publication_date(queryset: QuerySet, channel_slug: str) -> QuerySet:
+    #     return InitiativeOrderField.qs_with_published_at(queryset, channel_slug)
 
     # @staticmethod
     # def qs_with_published_at(queryset: QuerySet, channel_slug: str) -> QuerySet:
@@ -229,17 +229,17 @@ class InitiativeOrderField(graphene.Enum):
     #         published_at=ExpressionWrapper(subquery, output_field=DateTimeField())
     #     )
 
-    @staticmethod
-    def qs_with_collection(queryset: QuerySet, **_kwargs) -> QuerySet:
-        return queryset.annotate(
-            sort_order=Window(
-                expression=DenseRank(),
-                order_by=(
-                    F("collectioninitiative__sort_order").asc(nulls_last=True),
-                    F("collectioninitiative__id"),
-                ),
-            )
-        )
+    # @staticmethod
+    # def qs_with_collection(queryset: QuerySet, **_kwargs) -> QuerySet:
+    #     return queryset.annotate(
+    #         sort_order=Window(
+    #             expression=DenseRank(),
+    #             order_by=(
+    #                 F("collectioninitiative__sort_order").asc(nulls_last=True),
+    #                 F("collectioninitiative__id"),
+    #             ),
+    #         )
+    #     )
 
 
 class InitiativeOrder(ChannelSortInputObjectType):
