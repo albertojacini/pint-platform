@@ -186,877 +186,877 @@ QUERY_CHECKOUT_PUBLIC_META = """
 """
 
 
-def test_query_public_meta_for_checkout_as_anonymous_user(api_client, checkout):
-    # given
-    checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    checkout.save(update_fields=["metadata"])
-    variables = {"token": checkout.pk}
-
-    # when
-    response = api_client.post_graphql(QUERY_CHECKOUT_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["checkout"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_other_customer_checkout_as_anonymous_user(
-    api_client, checkout, customer_user
-):
-    # given
-    checkout.user = customer_user
-    checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    checkout.save(update_fields=["user", "metadata"])
-    variables = {"token": checkout.pk}
-
-    # when
-    response = api_client.post_graphql(QUERY_CHECKOUT_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    assert not content["data"]["checkout"]
-
-
-def test_query_public_meta_for_checkout_as_customer(user_api_client, checkout):
-    # given
-    checkout.user = user_api_client.user
-    checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    checkout.save(update_fields=["user", "metadata"])
-    variables = {"token": checkout.pk}
-
-    # when
-    response = user_api_client.post_graphql(QUERY_CHECKOUT_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["checkout"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_checkout_as_staff(
-    staff_api_client, checkout, customer_user, permission_manage_checkouts
-):
-    # given
-    checkout.user = customer_user
-    checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    checkout.save(update_fields=["user", "metadata"])
-    variables = {"token": checkout.pk}
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_CHECKOUT_PUBLIC_META,
-        variables,
-        [permission_manage_checkouts],
-        check_no_permissions=False,  # Remove after fix #5245
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["checkout"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_checkout_as_app(
-    app_api_client, checkout, customer_user, permission_manage_checkouts
-):
-    # given
-    checkout.user = customer_user
-    checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    checkout.save(update_fields=["user", "metadata"])
-    variables = {"token": checkout.pk}
-
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_CHECKOUT_PUBLIC_META,
-        variables,
-        [permission_manage_checkouts],
-        check_no_permissions=False,  # Remove after fix #5245
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["checkout"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_ORDER_BY_TOKEN_PUBLIC_META = """
-    query orderMeta($token: UUID!){
-        orderByToken(token: $token){
-            metadata{
-                key
-                value
-            }
-        }
-    }
-"""
-
-
-def test_query_public_meta_for_order_by_token_as_anonymous_user(api_client, order):
-    # given
-    order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    order.save(update_fields=["metadata"])
-    variables = {"token": order.id}
-
-    # when
-    response = api_client.post_graphql(QUERY_ORDER_BY_TOKEN_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["orderByToken"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_order_by_token_as_customer(user_api_client, order):
-    # given
-    order.user = user_api_client.user
-    order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    order.save(update_fields=["user", "metadata"])
-    variables = {"token": order.id}
-
-    # when
-    response = user_api_client.post_graphql(QUERY_ORDER_BY_TOKEN_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["orderByToken"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_order_by_token_as_staff(
-    staff_api_client, order, customer_user, permission_manage_orders
-):
-    # given
-    order.user = customer_user
-    order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    order.save(update_fields=["user", "metadata"])
-    variables = {"token": order.id}
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_ORDER_BY_TOKEN_PUBLIC_META,
-        variables,
-        [permission_manage_orders],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["orderByToken"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_order_by_token_as_app(
-    app_api_client, order, customer_user, permission_manage_orders
-):
-    # given
-    order.user = customer_user
-    order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    order.save(update_fields=["user", "metadata"])
-    variables = {"token": order.id}
-
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_ORDER_BY_TOKEN_PUBLIC_META,
-        variables,
-        [permission_manage_orders],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["orderByToken"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_ORDER_PUBLIC_META = """
-    query orderMeta($id: ID!){
-        order(id: $id){
-            metadata{
-                key
-                value
-            }
-        }
-    }
-"""
-
-
-def test_query_public_meta_for_order_as_anonymous_user(api_client, order):
-    # given
-    order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    order.save(update_fields=["user", "metadata"])
-    variables = {"id": graphene.Node.to_global_id("Order", order.pk)}
-
-    # when
-    response = api_client.post_graphql(QUERY_ORDER_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["order"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_order_as_customer(user_api_client, order):
-    # given
-    order.user = user_api_client.user
-    order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    order.save(update_fields=["user", "metadata"])
-    variables = {"id": graphene.Node.to_global_id("Order", order.pk)}
-
-    # when
-    response = user_api_client.post_graphql(QUERY_ORDER_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["order"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_order_as_staff(
-    staff_api_client, order, customer_user, permission_manage_orders
-):
-    # given
-    order.user = customer_user
-    order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    order.save(update_fields=["user", "metadata"])
-    variables = {"id": graphene.Node.to_global_id("Order", order.pk)}
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_ORDER_PUBLIC_META,
-        variables,
-        [permission_manage_orders],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["order"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_order_as_app(
-    app_api_client, order, customer_user, permission_manage_orders
-):
-    # given
-    order.user = customer_user
-    order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    order.save(update_fields=["user", "metadata"])
-    variables = {"id": graphene.Node.to_global_id("Order", order.pk)}
-
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_ORDER_PUBLIC_META,
-        variables,
-        [permission_manage_orders],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["order"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_DRAFT_ORDER_PUBLIC_META = """
-    query draftOrderMeta($id: ID!){
-        order(id: $id){
-            metadata{
-                key
-                value
-            }
-        }
-    }
-"""
-
-
-def test_query_public_meta_for_draft_order_as_anonymous_user(api_client, draft_order):
-    # given
-    draft_order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    draft_order.save(update_fields=["user", "metadata"])
-    variables = {"id": graphene.Node.to_global_id("Order", draft_order.pk)}
-
-    # when
-    response = api_client.post_graphql(QUERY_DRAFT_ORDER_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["order"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_draft_order_as_customer(user_api_client, draft_order):
-    # given
-    draft_order.user = user_api_client.user
-    draft_order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    draft_order.save(update_fields=["user", "metadata"])
-    variables = {"id": graphene.Node.to_global_id("Order", draft_order.pk)}
-
-    # when
-    response = user_api_client.post_graphql(QUERY_DRAFT_ORDER_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["order"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_draft_order_as_staff(
-    staff_api_client, draft_order, customer_user, permission_manage_orders
-):
-    # given
-    draft_order.user = customer_user
-    draft_order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    draft_order.save(update_fields=["user", "metadata"])
-    variables = {"id": graphene.Node.to_global_id("Order", draft_order.pk)}
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_DRAFT_ORDER_PUBLIC_META,
-        variables,
-        [permission_manage_orders],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["order"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_draft_order_as_app(
-    app_api_client, draft_order, customer_user, permission_manage_orders
-):
-    # given
-    draft_order.user = customer_user
-    draft_order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    draft_order.save(update_fields=["user", "metadata"])
-    variables = {"id": graphene.Node.to_global_id("Order", draft_order.pk)}
-
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_ORDER_PUBLIC_META,
-        variables,
-        [permission_manage_orders],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["order"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_FULFILLMENT_PUBLIC_META = """
-    query fulfillmentMeta($token: UUID!){
-        orderByToken(token: $token){
-            fulfillments{
-                metadata{
-                    key
-                    value
-                }
-          }
-        }
-    }
-"""
-
-
-def test_query_public_meta_for_fulfillment_as_anonymous_user(
-    api_client, fulfilled_order
-):
-    # given
-    fulfillment = fulfilled_order.fulfillments.first()
-    fulfillment.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    fulfillment.save(update_fields=["metadata"])
-    variables = {"token": fulfilled_order.id}
-
-    # when
-    response = api_client.post_graphql(QUERY_FULFILLMENT_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["orderByToken"]["fulfillments"][0]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_fulfillment_as_customer(
-    user_api_client, fulfilled_order
-):
-    # given
-    fulfillment = fulfilled_order.fulfillments.first()
-    fulfillment.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    fulfillment.save(update_fields=["metadata"])
-    fulfilled_order.user = user_api_client.user
-    fulfilled_order.save(update_fields=["user"])
-    variables = {"token": fulfilled_order.id}
-
-    # when
-    response = user_api_client.post_graphql(QUERY_FULFILLMENT_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["orderByToken"]["fulfillments"][0]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_fulfillment_as_staff(
-    staff_api_client, fulfilled_order, customer_user, permission_manage_orders
-):
-    # given
-    fulfillment = fulfilled_order.fulfillments.first()
-    fulfillment.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    fulfillment.save(update_fields=["metadata"])
-    fulfilled_order.user = customer_user
-    fulfilled_order.save(update_fields=["user"])
-    variables = {"token": fulfilled_order.id}
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_FULFILLMENT_PUBLIC_META,
-        variables,
-        [permission_manage_orders],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["orderByToken"]["fulfillments"][0]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_fulfillment_as_app(
-    app_api_client, fulfilled_order, customer_user, permission_manage_orders
-):
-    # given
-    fulfillment = fulfilled_order.fulfillments.first()
-    fulfillment.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    fulfillment.save(update_fields=["metadata"])
-    fulfilled_order.user = customer_user
-    fulfilled_order.save(update_fields=["user"])
-    variables = {"token": fulfilled_order.id}
-
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_FULFILLMENT_PUBLIC_META,
-        variables,
-        [permission_manage_orders],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["orderByToken"]["fulfillments"][0]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_ATTRIBUTE_PUBLIC_META = """
-    query attributeMeta($id: ID!){
-        attribute(id: $id){
-            metadata{
-                key
-                value
-            }
-        }
-    }
-"""
-
-
-def test_query_public_meta_for_attribute_as_anonymous_user(api_client, color_attribute):
-    # given
-    color_attribute.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    color_attribute.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("Attribute", color_attribute.pk)}
-
-    # when
-    response = api_client.post_graphql(QUERY_ATTRIBUTE_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["attribute"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_attribute_as_customer(user_api_client, color_attribute):
-    # given
-    color_attribute.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    color_attribute.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("Attribute", color_attribute.pk)}
-
-    # when
-    response = user_api_client.post_graphql(QUERY_ATTRIBUTE_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["attribute"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_attribute_as_staff(
-    staff_api_client, color_attribute, permission_manage_products
-):
-    # given
-    color_attribute.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    color_attribute.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("Attribute", color_attribute.pk)}
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_ATTRIBUTE_PUBLIC_META,
-        variables,
-        [permission_manage_products],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["attribute"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_attribute_as_app(
-    app_api_client, color_attribute, permission_manage_products
-):
-    # given
-    color_attribute.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    color_attribute.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("Attribute", color_attribute.pk)}
-
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_ATTRIBUTE_PUBLIC_META,
-        variables,
-        [permission_manage_products],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["attribute"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_CATEGORY_PUBLIC_META = """
-    query categoryMeta($id: ID!){
-        category(id: $id){
-            metadata{
-                key
-                value
-            }
-        }
-    }
-"""
-
-
-def test_query_public_meta_for_category_as_anonymous_user(api_client, category):
-    # given
-    category.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    category.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("Category", category.pk)}
-
-    # when
-    response = api_client.post_graphql(QUERY_CATEGORY_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["category"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_category_as_customer(user_api_client, category):
-    # given
-    category.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    category.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("Category", category.pk)}
-
-    # when
-    response = user_api_client.post_graphql(QUERY_CATEGORY_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["category"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_category_as_staff(
-    staff_api_client, category, permission_manage_products
-):
-    # given
-    category.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    category.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("Category", category.pk)}
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_CATEGORY_PUBLIC_META,
-        variables,
-        [permission_manage_products],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["category"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_category_as_app(
-    app_api_client, category, permission_manage_products
-):
-    # given
-    category.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    category.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("Category", category.pk)}
-
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_CATEGORY_PUBLIC_META,
-        variables,
-        [permission_manage_products],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["category"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_COLLECTION_PUBLIC_META = """
-    query collectionMeta($id: ID!, $channel: String) {
-        collection(id: $id, channel: $channel) {
-            metadata{
-                key
-                value
-            }
-        }
-    }
-"""
-
-
-def test_query_public_meta_for_collection_as_anonymous_user(
-    api_client, published_collection, channel_USD
-):
-    # given
-    collection = published_collection
-    collection.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    collection.save(update_fields=["metadata"])
-    variables = {
-        "id": graphene.Node.to_global_id("Collection", collection.pk),
-        "channel": channel_USD.slug,
-    }
-    # when
-    response = api_client.post_graphql(QUERY_COLLECTION_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["collection"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_collection_as_customer(
-    user_api_client, published_collection, channel_USD
-):
-    # given
-    collection = published_collection
-    collection.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    collection.save(update_fields=["metadata"])
-    variables = {
-        "id": graphene.Node.to_global_id("Collection", collection.pk),
-        "channel": channel_USD.slug,
-    }
-
-    # when
-    response = user_api_client.post_graphql(QUERY_COLLECTION_PUBLIC_META, variables)
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["collection"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_collection_as_staff(
-    staff_api_client, published_collection, permission_manage_products, channel_USD
-):
-    # given
-    collection = published_collection
-    collection.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    collection.save(update_fields=["metadata"])
-    variables = {
-        "id": graphene.Node.to_global_id("Collection", collection.pk),
-        "channel": channel_USD.slug,
-    }
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_COLLECTION_PUBLIC_META,
-        variables,
-        [permission_manage_products],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["collection"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_collection_as_app(
-    app_api_client, published_collection, permission_manage_products, channel_USD
-):
-    # given
-    collection = published_collection
-    collection.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    collection.save(update_fields=["metadata"])
-    variables = {
-        "id": graphene.Node.to_global_id("Collection", collection.pk),
-        "channel": channel_USD.slug,
-    }
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_COLLECTION_PUBLIC_META,
-        variables,
-        [permission_manage_products],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["collection"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_DIGITAL_CONTENT_PUBLIC_META = """
-    query digitalContentMeta($id: ID!){
-        digitalContent(id: $id){
-            metadata{
-                key
-                value
-            }
-        }
-    }
-"""
-
-
-def test_query_public_meta_for_digital_content_as_anonymous_user(
-    api_client, digital_content
-):
-    # given
-    variables = {"id": graphene.Node.to_global_id("DigitalContent", digital_content.pk)}
-
-    # when
-    response = api_client.post_graphql(QUERY_DIGITAL_CONTENT_PUBLIC_META, variables)
-
-    # then
-    assert_no_permission(response)
-
-
-def test_query_public_meta_for_digital_content_as_customer(
-    user_api_client, digital_content
-):
-    # given
-    digital_content.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    digital_content.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("DigitalContent", digital_content.pk)}
-
-    # when
-    response = user_api_client.post_graphql(
-        QUERY_DIGITAL_CONTENT_PUBLIC_META, variables
-    )
-
-    # then
-    assert_no_permission(response)
-
-
-def test_query_public_meta_for_digital_content_as_staff(
-    staff_api_client, digital_content, permission_manage_products
-):
-    # given
-    digital_content.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    digital_content.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("DigitalContent", digital_content.pk)}
-
-    # when
-    response = staff_api_client.post_graphql(
-        QUERY_DIGITAL_CONTENT_PUBLIC_META,
-        variables,
-        [permission_manage_products],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["digitalContent"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-def test_query_public_meta_for_digital_content_as_app(
-    app_api_client, digital_content, permission_manage_products
-):
-    # given
-    digital_content.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
-    digital_content.save(update_fields=["metadata"])
-    variables = {"id": graphene.Node.to_global_id("DigitalContent", digital_content.pk)}
-
-    # when
-    response = app_api_client.post_graphql(
-        QUERY_DIGITAL_CONTENT_PUBLIC_META,
-        variables,
-        [permission_manage_products],
-        check_no_permissions=False,
-    )
-    content = get_graphql_content(response)
-
-    # then
-    metadata = content["data"]["digitalContent"]["metadata"][0]
-    assert metadata["key"] == PUBLIC_KEY
-    assert metadata["value"] == PUBLIC_VALUE
-
-
-QUERY_TRANSACTION_ITEM_PUBLIC_META = """
-query transactionItemMeta($id: ID!){
-  order(id: $id){
-    transactions{
-      metadata{
-        key
-        value
-      }
-    }
-  }
-}
-"""
+# def test_query_public_meta_for_checkout_as_anonymous_user(api_client, checkout):
+#     # given
+#     checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     checkout.save(update_fields=["metadata"])
+#     variables = {"token": checkout.pk}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_CHECKOUT_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["checkout"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_other_customer_checkout_as_anonymous_user(
+#     api_client, checkout, customer_user
+# ):
+#     # given
+#     checkout.user = customer_user
+#     checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     checkout.save(update_fields=["user", "metadata"])
+#     variables = {"token": checkout.pk}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_CHECKOUT_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     assert not content["data"]["checkout"]
+#
+#
+# def test_query_public_meta_for_checkout_as_customer(user_api_client, checkout):
+#     # given
+#     checkout.user = user_api_client.user
+#     checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     checkout.save(update_fields=["user", "metadata"])
+#     variables = {"token": checkout.pk}
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_CHECKOUT_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["checkout"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_checkout_as_staff(
+#     staff_api_client, checkout, customer_user, permission_manage_checkouts
+# ):
+#     # given
+#     checkout.user = customer_user
+#     checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     checkout.save(update_fields=["user", "metadata"])
+#     variables = {"token": checkout.pk}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_CHECKOUT_PUBLIC_META,
+#         variables,
+#         [permission_manage_checkouts],
+#         check_no_permissions=False,  # Remove after fix #5245
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["checkout"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_checkout_as_app(
+#     app_api_client, checkout, customer_user, permission_manage_checkouts
+# ):
+#     # given
+#     checkout.user = customer_user
+#     checkout.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     checkout.save(update_fields=["user", "metadata"])
+#     variables = {"token": checkout.pk}
+#
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_CHECKOUT_PUBLIC_META,
+#         variables,
+#         [permission_manage_checkouts],
+#         check_no_permissions=False,  # Remove after fix #5245
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["checkout"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_ORDER_BY_TOKEN_PUBLIC_META = """
+#     query orderMeta($token: UUID!){
+#         orderByToken(token: $token){
+#             metadata{
+#                 key
+#                 value
+#             }
+#         }
+#     }
+# """
+#
+#
+# def test_query_public_meta_for_order_by_token_as_anonymous_user(api_client, order):
+#     # given
+#     order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     order.save(update_fields=["metadata"])
+#     variables = {"token": order.id}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_ORDER_BY_TOKEN_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["orderByToken"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_order_by_token_as_customer(user_api_client, order):
+#     # given
+#     order.user = user_api_client.user
+#     order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     order.save(update_fields=["user", "metadata"])
+#     variables = {"token": order.id}
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_ORDER_BY_TOKEN_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["orderByToken"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_order_by_token_as_staff(
+#     staff_api_client, order, customer_user, permission_manage_orders
+# ):
+#     # given
+#     order.user = customer_user
+#     order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     order.save(update_fields=["user", "metadata"])
+#     variables = {"token": order.id}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_ORDER_BY_TOKEN_PUBLIC_META,
+#         variables,
+#         [permission_manage_orders],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["orderByToken"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_order_by_token_as_app(
+#     app_api_client, order, customer_user, permission_manage_orders
+# ):
+#     # given
+#     order.user = customer_user
+#     order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     order.save(update_fields=["user", "metadata"])
+#     variables = {"token": order.id}
+#
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_ORDER_BY_TOKEN_PUBLIC_META,
+#         variables,
+#         [permission_manage_orders],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["orderByToken"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_ORDER_PUBLIC_META = """
+#     query orderMeta($id: ID!){
+#         order(id: $id){
+#             metadata{
+#                 key
+#                 value
+#             }
+#         }
+#     }
+# """
+#
+#
+# def test_query_public_meta_for_order_as_anonymous_user(api_client, order):
+#     # given
+#     order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     order.save(update_fields=["user", "metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Order", order.pk)}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_ORDER_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["order"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_order_as_customer(user_api_client, order):
+#     # given
+#     order.user = user_api_client.user
+#     order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     order.save(update_fields=["user", "metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Order", order.pk)}
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_ORDER_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["order"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_order_as_staff(
+#     staff_api_client, order, customer_user, permission_manage_orders
+# ):
+#     # given
+#     order.user = customer_user
+#     order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     order.save(update_fields=["user", "metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Order", order.pk)}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_ORDER_PUBLIC_META,
+#         variables,
+#         [permission_manage_orders],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["order"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_order_as_app(
+#     app_api_client, order, customer_user, permission_manage_orders
+# ):
+#     # given
+#     order.user = customer_user
+#     order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     order.save(update_fields=["user", "metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Order", order.pk)}
+#
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_ORDER_PUBLIC_META,
+#         variables,
+#         [permission_manage_orders],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["order"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_DRAFT_ORDER_PUBLIC_META = """
+#     query draftOrderMeta($id: ID!){
+#         order(id: $id){
+#             metadata{
+#                 key
+#                 value
+#             }
+#         }
+#     }
+# """
+#
+#
+# def test_query_public_meta_for_draft_order_as_anonymous_user(api_client, draft_order):
+#     # given
+#     draft_order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     draft_order.save(update_fields=["user", "metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Order", draft_order.pk)}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_DRAFT_ORDER_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["order"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_draft_order_as_customer(user_api_client, draft_order):
+#     # given
+#     draft_order.user = user_api_client.user
+#     draft_order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     draft_order.save(update_fields=["user", "metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Order", draft_order.pk)}
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_DRAFT_ORDER_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["order"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_draft_order_as_staff(
+#     staff_api_client, draft_order, customer_user, permission_manage_orders
+# ):
+#     # given
+#     draft_order.user = customer_user
+#     draft_order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     draft_order.save(update_fields=["user", "metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Order", draft_order.pk)}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_DRAFT_ORDER_PUBLIC_META,
+#         variables,
+#         [permission_manage_orders],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["order"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_draft_order_as_app(
+#     app_api_client, draft_order, customer_user, permission_manage_orders
+# ):
+#     # given
+#     draft_order.user = customer_user
+#     draft_order.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     draft_order.save(update_fields=["user", "metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Order", draft_order.pk)}
+#
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_ORDER_PUBLIC_META,
+#         variables,
+#         [permission_manage_orders],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["order"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_FULFILLMENT_PUBLIC_META = """
+#     query fulfillmentMeta($token: UUID!){
+#         orderByToken(token: $token){
+#             fulfillments{
+#                 metadata{
+#                     key
+#                     value
+#                 }
+#           }
+#         }
+#     }
+# """
+#
+#
+# def test_query_public_meta_for_fulfillment_as_anonymous_user(
+#     api_client, fulfilled_order
+# ):
+#     # given
+#     fulfillment = fulfilled_order.fulfillments.first()
+#     fulfillment.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     fulfillment.save(update_fields=["metadata"])
+#     variables = {"token": fulfilled_order.id}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_FULFILLMENT_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["orderByToken"]["fulfillments"][0]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_fulfillment_as_customer(
+#     user_api_client, fulfilled_order
+# ):
+#     # given
+#     fulfillment = fulfilled_order.fulfillments.first()
+#     fulfillment.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     fulfillment.save(update_fields=["metadata"])
+#     fulfilled_order.user = user_api_client.user
+#     fulfilled_order.save(update_fields=["user"])
+#     variables = {"token": fulfilled_order.id}
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_FULFILLMENT_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["orderByToken"]["fulfillments"][0]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_fulfillment_as_staff(
+#     staff_api_client, fulfilled_order, customer_user, permission_manage_orders
+# ):
+#     # given
+#     fulfillment = fulfilled_order.fulfillments.first()
+#     fulfillment.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     fulfillment.save(update_fields=["metadata"])
+#     fulfilled_order.user = customer_user
+#     fulfilled_order.save(update_fields=["user"])
+#     variables = {"token": fulfilled_order.id}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_FULFILLMENT_PUBLIC_META,
+#         variables,
+#         [permission_manage_orders],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["orderByToken"]["fulfillments"][0]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_fulfillment_as_app(
+#     app_api_client, fulfilled_order, customer_user, permission_manage_orders
+# ):
+#     # given
+#     fulfillment = fulfilled_order.fulfillments.first()
+#     fulfillment.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     fulfillment.save(update_fields=["metadata"])
+#     fulfilled_order.user = customer_user
+#     fulfilled_order.save(update_fields=["user"])
+#     variables = {"token": fulfilled_order.id}
+#
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_FULFILLMENT_PUBLIC_META,
+#         variables,
+#         [permission_manage_orders],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["orderByToken"]["fulfillments"][0]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_ATTRIBUTE_PUBLIC_META = """
+#     query attributeMeta($id: ID!){
+#         attribute(id: $id){
+#             metadata{
+#                 key
+#                 value
+#             }
+#         }
+#     }
+# """
+#
+#
+# def test_query_public_meta_for_attribute_as_anonymous_user(api_client, color_attribute):
+#     # given
+#     color_attribute.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     color_attribute.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Attribute", color_attribute.pk)}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_ATTRIBUTE_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["attribute"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_attribute_as_customer(user_api_client, color_attribute):
+#     # given
+#     color_attribute.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     color_attribute.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Attribute", color_attribute.pk)}
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_ATTRIBUTE_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["attribute"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_attribute_as_staff(
+#     staff_api_client, color_attribute, permission_manage_products
+# ):
+#     # given
+#     color_attribute.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     color_attribute.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Attribute", color_attribute.pk)}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_ATTRIBUTE_PUBLIC_META,
+#         variables,
+#         [permission_manage_products],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["attribute"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_attribute_as_app(
+#     app_api_client, color_attribute, permission_manage_products
+# ):
+#     # given
+#     color_attribute.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     color_attribute.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Attribute", color_attribute.pk)}
+#
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_ATTRIBUTE_PUBLIC_META,
+#         variables,
+#         [permission_manage_products],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["attribute"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_CATEGORY_PUBLIC_META = """
+#     query categoryMeta($id: ID!){
+#         category(id: $id){
+#             metadata{
+#                 key
+#                 value
+#             }
+#         }
+#     }
+# """
+#
+#
+# def test_query_public_meta_for_category_as_anonymous_user(api_client, category):
+#     # given
+#     category.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     category.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Category", category.pk)}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_CATEGORY_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["category"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_category_as_customer(user_api_client, category):
+#     # given
+#     category.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     category.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Category", category.pk)}
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_CATEGORY_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["category"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+# 
+#
+# def test_query_public_meta_for_category_as_staff(
+#     staff_api_client, category, permission_manage_products
+# ):
+#     # given
+#     category.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     category.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Category", category.pk)}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_CATEGORY_PUBLIC_META,
+#         variables,
+#         [permission_manage_products],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["category"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_category_as_app(
+#     app_api_client, category, permission_manage_products
+# ):
+#     # given
+#     category.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     category.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("Category", category.pk)}
+#
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_CATEGORY_PUBLIC_META,
+#         variables,
+#         [permission_manage_products],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["category"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_COLLECTION_PUBLIC_META = """
+#     query collectionMeta($id: ID!, $channel: String) {
+#         collection(id: $id, channel: $channel) {
+#             metadata{
+#                 key
+#                 value
+#             }
+#         }
+#     }
+# """
+#
+#
+# def test_query_public_meta_for_collection_as_anonymous_user(
+#     api_client, published_collection, channel_USD
+# ):
+#     # given
+#     collection = published_collection
+#     collection.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     collection.save(update_fields=["metadata"])
+#     variables = {
+#         "id": graphene.Node.to_global_id("Collection", collection.pk),
+#         "channel": channel_USD.slug,
+#     }
+#     # when
+#     response = api_client.post_graphql(QUERY_COLLECTION_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["collection"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_collection_as_customer(
+#     user_api_client, published_collection, channel_USD
+# ):
+#     # given
+#     collection = published_collection
+#     collection.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     collection.save(update_fields=["metadata"])
+#     variables = {
+#         "id": graphene.Node.to_global_id("Collection", collection.pk),
+#         "channel": channel_USD.slug,
+#     }
+#
+#     # when
+#     response = user_api_client.post_graphql(QUERY_COLLECTION_PUBLIC_META, variables)
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["collection"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_collection_as_staff(
+#     staff_api_client, published_collection, permission_manage_products, channel_USD
+# ):
+#     # given
+#     collection = published_collection
+#     collection.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     collection.save(update_fields=["metadata"])
+#     variables = {
+#         "id": graphene.Node.to_global_id("Collection", collection.pk),
+#         "channel": channel_USD.slug,
+#     }
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_COLLECTION_PUBLIC_META,
+#         variables,
+#         [permission_manage_products],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["collection"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_collection_as_app(
+#     app_api_client, published_collection, permission_manage_products, channel_USD
+# ):
+#     # given
+#     collection = published_collection
+#     collection.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     collection.save(update_fields=["metadata"])
+#     variables = {
+#         "id": graphene.Node.to_global_id("Collection", collection.pk),
+#         "channel": channel_USD.slug,
+#     }
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_COLLECTION_PUBLIC_META,
+#         variables,
+#         [permission_manage_products],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["collection"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_DIGITAL_CONTENT_PUBLIC_META = """
+#     query digitalContentMeta($id: ID!){
+#         digitalContent(id: $id){
+#             metadata{
+#                 key
+#                 value
+#             }
+#         }
+#     }
+# """
+#
+#
+# def test_query_public_meta_for_digital_content_as_anonymous_user(
+#     api_client, digital_content
+# ):
+#     # given
+#     variables = {"id": graphene.Node.to_global_id("DigitalContent", digital_content.pk)}
+#
+#     # when
+#     response = api_client.post_graphql(QUERY_DIGITAL_CONTENT_PUBLIC_META, variables)
+#
+#     # then
+#     assert_no_permission(response)
+#
+#
+# def test_query_public_meta_for_digital_content_as_customer(
+#     user_api_client, digital_content
+# ):
+#     # given
+#     digital_content.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     digital_content.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("DigitalContent", digital_content.pk)}
+#
+#     # when
+#     response = user_api_client.post_graphql(
+#         QUERY_DIGITAL_CONTENT_PUBLIC_META, variables
+#     )
+#
+#     # then
+#     assert_no_permission(response)
+#
+#
+# def test_query_public_meta_for_digital_content_as_staff(
+#     staff_api_client, digital_content, permission_manage_products
+# ):
+#     # given
+#     digital_content.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     digital_content.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("DigitalContent", digital_content.pk)}
+#
+#     # when
+#     response = staff_api_client.post_graphql(
+#         QUERY_DIGITAL_CONTENT_PUBLIC_META,
+#         variables,
+#         [permission_manage_products],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["digitalContent"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# def test_query_public_meta_for_digital_content_as_app(
+#     app_api_client, digital_content, permission_manage_products
+# ):
+#     # given
+#     digital_content.store_value_in_metadata({PUBLIC_KEY: PUBLIC_VALUE})
+#     digital_content.save(update_fields=["metadata"])
+#     variables = {"id": graphene.Node.to_global_id("DigitalContent", digital_content.pk)}
+#
+#     # when
+#     response = app_api_client.post_graphql(
+#         QUERY_DIGITAL_CONTENT_PUBLIC_META,
+#         variables,
+#         [permission_manage_products],
+#         check_no_permissions=False,
+#     )
+#     content = get_graphql_content(response)
+#
+#     # then
+#     metadata = content["data"]["digitalContent"]["metadata"][0]
+#     assert metadata["key"] == PUBLIC_KEY
+#     assert metadata["value"] == PUBLIC_VALUE
+#
+#
+# QUERY_TRANSACTION_ITEM_PUBLIC_META = """
+# query transactionItemMeta($id: ID!){
+#   order(id: $id){
+#     transactions{
+#       metadata{
+#         key
+#         value
+#       }
+#     }
+#   }
+# }
+# """
 
 
 # def execute_query_public_metadata_for_transaction_item(

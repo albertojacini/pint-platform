@@ -1,12 +1,12 @@
 import pytest
 
-from pint.product.models import Product
+from pint.initiative.models import Initiative
 
 from ...tests.utils import get_graphql_content
 
 FILTER_BY_META_QUERY = """
-query filterProductsByMetadata ($filter:ProductFilterInput, $channel: String){
-  products(first: 100, channel: $channel, filter: $filter){
+query filterInitiativesByMetadata ($filter:InitiativeFilterInput){
+  initiatives(first: 100, filter: $filter){
     edges {
       node {
         slug
@@ -96,65 +96,68 @@ query filterProductsByMetadata ($filter:ProductFilterInput, $channel: String){
     ],
 )
 def test_filter_by_meta_total_returned_objects(
-    metadata, total_count, api_client, product_list, channel_USD
+    metadata, total_count, api_client, initiative_list
+    # metadata, total_count, api_client, initiative_list, channel_USD
 ):
-    product1, product2, product3 = product_list
+    initiative1, initiative2, initiative3 = initiative_list
     variables = {
-        "channel": channel_USD.slug,
+        # "channel": channel_USD.slug,
         "filter": {
             "metadata": metadata,
         },
     }
-    product1.store_value_in_metadata({"A": "1", "B": "2", "C": "3"})
-    product2.store_value_in_metadata({"C": "3", "Z": "4"})
-    Product.objects.bulk_update([product1, product2], ["metadata"])
+    initiative1.store_value_in_metadata({"A": "1", "B": "2", "C": "3"})
+    initiative2.store_value_in_metadata({"C": "3", "Z": "4"})
+    Initiative.objects.bulk_update([initiative1, initiative2], ["metadata"])
 
     response = api_client.post_graphql(FILTER_BY_META_QUERY, variables)
     content = get_graphql_content(response)
-    assert len(content["data"]["products"]["edges"]) == total_count
+    assert len(content["data"]["initiatives"]["edges"]) == total_count
 
 
-def test_filter_by_meta_expected_product_for_key_and_value(
-    api_client, product_list, channel_USD
+def test_filter_by_meta_expected_initiative_for_key_and_value(
+    api_client, initiative_list
+    # api_client, initiative_list, channel_USD
 ):
-    product = product_list[0]
+    initiative = initiative_list[0]
     variables = {
-        "channel": channel_USD.slug,
+        # "channel": channel_USD.slug,
         "filter": {
             "metadata": [{"key": "A", "value": "1"}],
         },
     }
-    product.store_value_in_metadata({"A": "1", "B": "2", "C": "3"})
-    product.save()
+    initiative.store_value_in_metadata({"A": "1", "B": "2", "C": "3"})
+    initiative.save()
 
     # when
     response = api_client.post_graphql(FILTER_BY_META_QUERY, variables)
     content = get_graphql_content(response)
 
     # then
-    product_data = content["data"]["products"]["edges"][0]["node"]
+    initiative_data = content["data"]["initiatives"]["edges"][0]["node"]
 
-    assert product_data["slug"] == product.slug
+    assert initiative_data["slug"] == initiative.slug
 
 
-def test_filter_by_meta_expected_product_for_only_key(
-    api_client, product_list, channel_USD
+def test_filter_by_meta_expected_initiative_for_only_key(
+    api_client, initiative_list
+    # api_client, initiative_list, channel_USD
 ):
-    product = product_list[0]
+    initiative = initiative_list[0]
     variables = {
-        "channel": channel_USD.slug,
+        # "channel": channel_USD.slug,
         "filter": {
             "metadata": [{"key": "A"}],
         },
     }
-    product.store_value_in_metadata({"A": "1", "B": "2", "C": "3"})
-    product.save(update_fields=["metadata"])
+    initiative.store_value_in_metadata({"A": "1", "B": "2", "C": "3"})
+    initiative.save(update_fields=["metadata"])
 
     # when
     response = api_client.post_graphql(FILTER_BY_META_QUERY, variables)
     content = get_graphql_content(response)
 
     # then
-    product_data = content["data"]["products"]["edges"][0]["node"]
+    initiative_data = content["data"]["initiatives"]["edges"][0]["node"]
 
-    assert product_data["slug"] == product.slug
+    assert initiative_data["slug"] == initiative.slug
