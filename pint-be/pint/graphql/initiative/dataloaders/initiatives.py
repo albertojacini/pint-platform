@@ -189,7 +189,7 @@ class ImagesByInitiativeIdLoader(DataLoader):
         images_map = defaultdict(list)
         for image in images.iterator():
             images_map[image.initiative_id].append(image)
-        return [images_map[initiative_id] for product_id in keys]
+        return [images_map[initiative_id] for initiative_id in keys]
 
 
 # class ImagesByProductIdLoader(DataLoader):
@@ -206,29 +206,29 @@ class ImagesByInitiativeIdLoader(DataLoader):
 #         return [images_map[product_id] for product_id in keys]
 
 
-class ProductVariantByIdLoader(DataLoader):
-    context_key = "productvariant_by_id"
+# class ProductVariantByIdLoader(DataLoader):
+#     context_key = "productvariant_by_id"
+#
+#     def batch_load(self, keys):
+#         variants = ProductVariant.objects.using(self.database_connection_name).in_bulk(
+#             keys
+#         )
+#         return [variants.get(key) for key in keys]
 
-    def batch_load(self, keys):
-        variants = ProductVariant.objects.using(self.database_connection_name).in_bulk(
-            keys
-        )
-        return [variants.get(key) for key in keys]
 
-
-class ProductVariantsByProductIdLoader(DataLoader):
-    context_key = "productvariants_by_product"
-
-    def batch_load(self, keys):
-        variants = ProductVariant.objects.using(self.database_connection_name).filter(
-            product_id__in=keys
-        )
-        variant_map = defaultdict(list)
-        variant_loader = ProductVariantByIdLoader(self.context)
-        for variant in variants.iterator():
-            variant_map[variant.product_id].append(variant)
-            variant_loader.prime(variant.id, variant)
-        return [variant_map.get(product_id, []) for product_id in keys]
+# class ProductVariantsByProductIdLoader(DataLoader):
+#     context_key = "productvariants_by_product"
+#
+#     def batch_load(self, keys):
+#         variants = ProductVariant.objects.using(self.database_connection_name).filter(
+#             product_id__in=keys
+#         )
+#         variant_map = defaultdict(list)
+#         variant_loader = ProductVariantByIdLoader(self.context)
+#         for variant in variants.iterator():
+#             variant_map[variant.product_id].append(variant)
+#             variant_loader.prime(variant.id, variant)
+#         return [variant_map.get(product_id, []) for product_id in keys]
 
 
 # class ProductVariantsByProductIdAndChannel(DataLoader):
