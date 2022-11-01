@@ -27,7 +27,7 @@ jobs:
         run: echo 'My python version is ' && python --version
 
   build:
-    if: ${{ !contains(github.event.head_commit.message, '#test') }}
+    if: ${{ contains(github.event.head_commit.message, '#test') }}
     runs-on: ubuntu-latest
     container: python:3.8
 
