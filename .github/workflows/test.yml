@@ -8,4 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Say hello
-        run: echo 'A review from octo-team was requested'
+        run: echo 'A review from octo-team was requested 2'
