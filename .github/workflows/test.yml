@@ -9,3 +9,11 @@ jobs:
     steps:
       - name: Say hello
         run: echo 'A review from octo-team was requested 2'
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Print python version
+        run: echo 'My python version is ' && 'python --version'
