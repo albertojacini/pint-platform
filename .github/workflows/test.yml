@@ -16,4 +16,4 @@ jobs:
         with:
           python-version: '3.9'
       - name: Print python version
-        run: echo 'My python version is ' && 'python --version'
+        run: echo 'My python version is ' && python --version
