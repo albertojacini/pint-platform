@@ -10,9 +10,9 @@ jobs:
       - name: Say hello
         run: echo 'A review from octo-team was requested 2'
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: foo bar
       - name: Print python version
