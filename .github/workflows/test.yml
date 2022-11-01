@@ -5,12 +5,12 @@ on:
     branches:
       - main
       - ci/*
-    paths:
-#      - "**.py"
-#      - Dockerfile
-#      - requirements_dev.txt
-      - pint-be/pint/**
-      - .github/workflows/test.yml
+#    paths:
+##      - "**.py"
+##      - Dockerfile
+##      - requirements_dev.txt
+#      - pint-be/pint/**
+#      - .github/workflows/test.yml
 
 jobs:
   say_hello:
