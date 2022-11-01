@@ -11,7 +11,7 @@ jobs:
         run: echo 'A review from octo-team was requested 2'
       - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
