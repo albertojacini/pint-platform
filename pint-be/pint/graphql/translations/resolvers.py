@@ -2,12 +2,12 @@
 # from ...discount import models as discount_models
 # from ...menu import models as menu_models
 # from ...page import models as page_models
-from ...initiative import models as product_models
+from ...initiative import models as initiative_models
 # from ...product import models as product_models
 # from ...shipping import interface as shipping_interface
 # from ...shipping import models as shipping_models
 # from ...site import models as site_models
-# from . import dataloaders
+from . import dataloaders
 
 TYPE_TO_TRANSLATION_LOADER_MAP = {
     # attribute_models.Attribute: (
@@ -23,6 +23,7 @@ TYPE_TO_TRANSLATION_LOADER_MAP = {
     # menu_models.MenuItem: (dataloaders.MenuItemTranslationByIdAndLanguageCodeLoader),
     # page_models.Page: dataloaders.PageTranslationByIdAndLanguageCodeLoader,
     # product_models.Product: (dataloaders.ProductTranslationByIdAndLanguageCodeLoader),
+    initiative_models.Initiative: (dataloaders.InitiativeTranslationByIdAndLanguageCodeLoader),
     # product_models.ProductVariant: (
     #     dataloaders.ProductVariantTranslationByIdAndLanguageCodeLoader
     # ),

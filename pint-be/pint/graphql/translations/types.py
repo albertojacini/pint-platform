@@ -183,7 +183,7 @@ class InitiativeTranslation(BaseTranslationType):
     id = graphene.GlobalID(required=True)
     seo_title = graphene.String()
     seo_description = graphene.String()
-    name = graphene.String()
+    title = graphene.String()
     description = JSONString(
         description="Translated description of the product." + RICH_CONTENT
     )

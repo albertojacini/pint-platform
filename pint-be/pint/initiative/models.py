@@ -303,21 +303,21 @@ class InitiativeTranslation(SeoModelTranslation):
     initiative = models.ForeignKey(
         Initiative, related_name="translations", on_delete=models.CASCADE
     )
-    name = models.CharField(max_length=250, blank=True, null=True)
+    title = models.CharField(max_length=250, blank=True, null=True)
     description = SanitizedJSONField(blank=True, null=True, sanitizer=clean_editor_js)
 
     class Meta:
         unique_together = (("language_code", "initiative"),)
 
     def __str__(self) -> str:
-        return self.name if self.name else str(self.pk)
+        return self.title if self.title else str(self.pk)
 
     def __repr__(self) -> str:
         class_ = type(self)
         return "%s(pk=%r, name=%r, initiative_pk=%r)" % (
             class_.__name__,
             self.pk,
-            self.name,
+            self.title,
             self.initiative_id,
         )
 
@@ -328,7 +328,7 @@ class InitiativeTranslation(SeoModelTranslation):
         translated_keys = super().get_translated_keys()
         translated_keys.update(
             {
-                "name": self.name,
+                "name": self.title,
                 "description": self.description,
             }
         )

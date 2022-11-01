@@ -11,25 +11,25 @@ NUMBER_OF_WEBHOOKS_PER_APP = 6
 
 def _prepare_async_and_sync_events(webhook):
     return [
-        WebhookEvent(
-            webhook=webhook, event_type=WebhookEventSyncType.PAYMENT_AUTHORIZE
-        ),
+        # WebhookEvent(
+        #     webhook=webhook, event_type=WebhookEventSyncType.PAYMENT_AUTHORIZE
+        # ),
         WebhookEvent(webhook=webhook, event_type=WebhookEventAsyncType.ANY),
     ]
 
 
 def _prepare_sync_event(webhook):
     return [
-        WebhookEvent(
-            webhook=webhook,
-            event_type=WebhookEventSyncType.ORDER_FILTER_SHIPPING_METHODS,
-        )
+        # WebhookEvent(
+        #     webhook=webhook,
+        #     event_type=WebhookEventSyncType.ORDER_FILTER_SHIPPING_METHODS,
+        # )
     ]
 
 
 def _prepare_async_event(webhook):
     return [
-        WebhookEvent(webhook=webhook, event_type=WebhookEventAsyncType.CHANNEL_CREATED)
+        # WebhookEvent(webhook=webhook, event_type=WebhookEventAsyncType.CHANNEL_CREATED)
     ]
 
 

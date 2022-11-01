@@ -604,13 +604,13 @@ QUERY_INITIATIVES_WITH_FILTER = """
 def test_initiative_translations(api_client, initiative_list, count_queries):
 # def test_initiative_translations(api_client, initiative_list, channel_USD, count_queries):
     query = """
-      query() {
+      query {
         initiatives(first: 20) {
           edges {
             node {
-              name
+              title
               translation(languageCode: EN) {
-                name
+                title
               }
             }
           }
