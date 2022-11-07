@@ -10,7 +10,7 @@ on:
 #      - Dockerfile
 #      - requirements_dev.txt
       - pint-be/pint/**
-      - .github/workflows/test.yml
+      - .github/workflows/**
 
 env:
   AWS_REGION: eu-central-1
