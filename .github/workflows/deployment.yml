@@ -73,16 +73,22 @@ jobs:
 #        cache-from: type=local,src=/tmp/.buildx-cache
 #        cache-to: type=local,dest=/tmp/.buildx-cache-new
 
-    - name: Executing remote  command
-      uses: appleboy/ssh-action@master
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
       with:
-        host: 165.227.175.45
-        username: root
-#        PORT: ${{ secrets.PORT }}
-        password: ${{ secrets.PROD_HOST_PWD }}
-        script: |
-          docker compose -f docker-compose.yml -f docker-compose-prod.yml up -d
-
+        key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
+    - name: Deploy to Digital Ocean
+      id: deploy-to-digital-ocean
+#      env:
+#        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker context create prod-host --docker="host=ssh://root@165.227.175.45"
+        export DOCKER_CONTEXT='prod-host'
+        docker ps
+#        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG pint-be
+#        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 #    - name: Fill in the new image ID in the Amazon ECS task definition
 #      id: task-def
 #      uses: aws-actions/amazon-ecs-render-task-definition@v1
