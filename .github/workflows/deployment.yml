@@ -46,18 +46,44 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG pint-be
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+#    - name: Build, tag, and push image to Amazon ECR
+#      id: build-image
+#      env:
+#        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#        IMAGE_TAG: ${{ github.sha }}
+#      run: |
+#        # Build a docker container and
+#        # push it to ECR so that it can
+#        # be deployed to ECS.
+#        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG pint-be
+#        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+#    - name: Build and push
+#      id: docker_build
+#      uses: docker/build-push-action@v3
+#      with:
+#        build-args: |
+#          PIP_EXTRA_INDEX_URL=https://pypi.org/simple
+#          PIP_INDEX_URL=https://${{ secrets.PYPI_USER }}:${{ secrets.PYPI_PASSWORD }}@pypi.scoutbee.co/repository/data/simple
+#        context: ./
+#        file: Dockerfile
+#        push: true
+#        tags: registry.xxxx/backend:${{ steps.extract_tag.outputs.tag }}
+#        cache-from: type=local,src=/tmp/.buildx-cache
+#        cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+    - name: Executing remote  command
+      uses: appleboy/ssh-action@master
+      with:
+        host: 165.227.175.45
+        USERNAME: root
+#        PORT: ${{ secrets.PORT }}
+        password: ${{ secrets.PROD_HOST_PWD }}
+        script: |
+          whoami
+#            docker-compose --host tcp://$PROD_ENGINE --tlsverify --tlscacert $ca --tlscert $cert --tlskey $key -p timecheck-prod -f docker-compose.yml -f docker-compose-prod.yml up -d
+
 #    - name: Fill in the new image ID in the Amazon ECS task definition
 #      id: task-def
 #      uses: aws-actions/amazon-ecs-render-task-definition@v1
