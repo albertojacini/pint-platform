@@ -77,6 +77,7 @@ jobs:
       uses: shimataro/ssh-key-action@v2
       with:
         key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
+        known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
     - name: Deploy to Digital Ocean
       id: deploy-to-digital-ocean
 #      env:
