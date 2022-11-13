@@ -81,7 +81,7 @@ jobs:
 #        PORT: ${{ secrets.PORT }}
         password: ${{ secrets.PROD_HOST_PWD }}
         script: |
-          docker-compose -p timecheck-prod -f docker-compose.yml -f docker-compose-prod.yml up -d
+          docker compose -f docker-compose.yml -f docker-compose-prod.yml up -d
 
 #    - name: Fill in the new image ID in the Amazon ECS task definition
 #      id: task-def
