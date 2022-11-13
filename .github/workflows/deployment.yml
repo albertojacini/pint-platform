@@ -77,12 +77,11 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: 165.227.175.45
-        USERNAME: root
+        username: root
 #        PORT: ${{ secrets.PORT }}
         password: ${{ secrets.PROD_HOST_PWD }}
         script: |
-          whoami
-#            docker-compose --host tcp://$PROD_ENGINE --tlsverify --tlscacert $ca --tlscert $cert --tlskey $key -p timecheck-prod -f docker-compose.yml -f docker-compose-prod.yml up -d
+          docker-compose -p timecheck-prod -f docker-compose.yml -f docker-compose-prod.yml up -d
 
 #    - name: Fill in the new image ID in the Amazon ECS task definition
 #      id: task-def
