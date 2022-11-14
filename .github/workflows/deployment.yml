@@ -11,6 +11,7 @@ on:
 #      - requirements_dev.txt
       - pint-be/pint/**
       - .github/workflows/**
+      - docker-compose*
 
 env:
   AWS_REGION: eu-central-1
