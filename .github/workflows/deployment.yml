@@ -88,7 +88,10 @@ jobs:
 #        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
 #        IMAGE_TAG: ${{ github.sha }}
       run: |
-        export AWS_ACCESS_KEY_ID={{ secrets.AWS_ACCESS_KEY_ID}}
+#        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+#        unzip awscliv2.zip
+#        sudo ./aws/install
+        export AWS_ACCESS_KEY_ID={{ secrets.AWS_ACCESS_KEY_ID }}
         export AWS_SECRET_ACCESS_KEY={{ AWS_SECRET_ACCESS_KEY }}
         docker context create prod-host --docker="host=ssh://root@${{ secrets.PROD_HOST }}"
         export DOCKER_CONTEXT='prod-host'
