@@ -2,4 +2,4 @@ version: "3.4"
 
 services:
   api:
-    image: 812138262065.dkr.ecr.eu-central-1.amazonaws.com/pint-be
+    image: 812138262065.dkr.ecr.eu-central-1.amazonaws.com/pint-be:9cfe750d7038f68a2e78e693b2210855393631ad
