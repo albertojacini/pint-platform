@@ -88,21 +88,12 @@ jobs:
 #        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
 #        IMAGE_TAG: ${{ github.sha }}
       run: |
-#        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#        unzip awscliv2.zip
-#        sudo ./aws/install
         export AWS_ACCESS_KEY_ID={{ secrets.AWS_ACCESS_KEY_ID }}
         export AWS_SECRET_ACCESS_KEY={{ AWS_SECRET_ACCESS_KEY }}
         docker context create prod-host --docker="host=ssh://root@${{ secrets.PROD_HOST }}"
         export DOCKER_CONTEXT='prod-host'
-
         aws ecr get-login-password --profile albertojacini | docker login --username AWS --password-stdin 812138262065.dkr.ecr.eu-central-1.amazonaws.com
-        
-        
         docker compose -f docker-compose.yml -f docker-compose-prod.yml up -d
-#        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG pint-be
-#        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-#        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 #    - name: Fill in the new image ID in the Amazon ECS task definition
 #      id: task-def
 #      uses: aws-actions/amazon-ecs-render-task-definition@v1
