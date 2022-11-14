@@ -90,7 +90,7 @@ jobs:
       run: |
         docker context create prod-host --docker="host=ssh://root@${{ secrets.PROD_HOST }}"
         export DOCKER_CONTEXT='prod-host'
-        docker ps
+        docker compose -f docker-compose.yml -f docker-compose-prod.yml up -d
 #        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG pint-be
 #        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 #        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
