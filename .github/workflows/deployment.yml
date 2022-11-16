@@ -87,12 +87,15 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.PROD_HOST }}
-#        username: ${{ secrets.USERNAME }}
-#        password: ${{ secrets.PASSWORD }}
+        username: root
+        password: ${{ secrets.PROD_HOST_PWD }}
 #        port: ${{ secrets.PORT }}
-        key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
+#        key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
         script: |
-          whoami
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws ecr get-login-password | docker login --username AWS --password-stdin 812138262065.dkr.ecr.eu-central-1.amazonaws.com
+          docker pull 812138262065.dkr.ecr.eu-central-1.amazonaws.com/pint-be:9cfe750d7038f68a2e78e693b2210855393631ad
 
 
 
