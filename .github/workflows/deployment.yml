@@ -91,9 +91,9 @@ jobs:
 #        password: ${{ secrets.PASSWORD }}
 #        port: ${{ secrets.PORT }}
         script: |
-          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws ecr get-login-password | docker login --username AWS --password-stdin 812138262065.dkr.ecr.eu-central-1.amazonaws.com
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws ecr get-login-password  | docker login --username AWS --password-stdin 812138262065.dkr.ecr.eu-central-1.amazonaws.com
           docker pull 812138262065.dkr.ecr.eu-central-1.amazonaws.com/pint-be:9cfe750d7038f68a2e78e693b2210855393631ad
 
 
