@@ -90,7 +90,7 @@ jobs:
         username: root
 #        password: ${{ secrets.PROD_HOST_PWD }}
 #        port: ${{ secrets.PORT }}
-        key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
+#        key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
         script: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
