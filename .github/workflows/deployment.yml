@@ -86,14 +86,25 @@ jobs:
           aws ecr get-login-password | docker login --username AWS --password-stdin 812138262065.dkr.ecr.eu-central-1.amazonaws.com
           docker pull 812138262065.dkr.ecr.eu-central-1.amazonaws.com/pint-be:9cfe750d7038f68a2e78e693b2210855393631ad
 
+
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
+        known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+
+    - name: Adding Known Hosts
+      run: ssh-keyscan -H ${{ secrets.PROD_HOST }} >> ~/.ssh/known_hosts
+
+
+
+
     - name: Deploy to Digital Ocean
       id: deploy-to-digital-ocean
 #      env:
 #        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
 #        IMAGE_TAG: ${{ github.sha }}
       run: |
-        export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-        export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
         docker context create prod-host --docker="host=ssh://root@${{ secrets.PROD_HOST }}"
         export DOCKER_CONTEXT='prod-host'
         docker compose -f docker-compose.yml -f docker-compose-prod.yml up -d
