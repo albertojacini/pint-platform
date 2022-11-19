@@ -2,16 +2,16 @@ name: Deploy to Amazon ECS
 
 on:
   push:
-#    branches:
+    branches:
 #      - $default-branch
-#      - feature/**
-#    paths:
-##      - "**.py"
-##      - Dockerfile
-##      - requirements_dev.txt
-#      - pint-be/pint/**
-#      - .github/workflows/**
-#      - docker-compose*
+      - feature/**
+    paths:
+#      - "**.py"
+#      - Dockerfile
+#      - requirements_dev.txt
+      - pint-be/pint/**
+      - .github/workflows/**
+      - docker-compose*
   pull_request:
     types:
       - closed
@@ -20,6 +20,8 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+
+
 
 
 
