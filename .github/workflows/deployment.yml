@@ -45,7 +45,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-    if: github.event.type == 'pull_request' && github.event.pull_request.merged == true
+    if: github.event.type != 'pull_request' || github.event.pull_request.merged == true
     env:
       TAG: ${{ github.event.type }}
 
