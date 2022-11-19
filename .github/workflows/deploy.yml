@@ -50,6 +50,7 @@ jobs:
 #          token: ${{ secrets.GITHUB_TOKEN }}
 
   build-and-push-image:
+    if: github.event.type != 'pull_request' || github.event.pull_request.merged == true
     permissions:
       contents: read
       packages: write
@@ -70,27 +71,27 @@ jobs:
 #        with:
 #          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          file: ops/docker/ci/guru-rpc.Dockerfile
-          context: .
-          push: true
-          tags: |
-#            ${{ steps.meta.outputs.tags }}
-            albertojacini/pint-be:${{ env.IMAGE_TAG }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#      - name: Cache Docker layers
+#        uses: actions/cache@v2
+#        with:
+#          path: /tmp/.buildx-cache
+#          key: ${{ runner.os }}-buildx-${{ github.sha }}
+#          restore-keys: |
+#            ${{ runner.os }}-buildx-
+#
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v2
+#        with:
+#          file: ops/docker/ci/guru-rpc.Dockerfile
+#          context: .
+#          push: true
+#          tags: |
+##            ${{ steps.meta.outputs.tags }}
+#            albertojacini/pint-be:${{ env.IMAGE_TAG }}
+#          labels: ${{ steps.meta.outputs.labels }}
+#          build-args: |
+#            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+#            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 #  deploy:
 #    name: Deploy
