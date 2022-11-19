@@ -4,8 +4,8 @@ services:
   api:
     ports:
       - 8000:8000
-    image:
-      albertojacini/pint-be:cada91d
+#    image:
+#      albertojacini/pint-be:
 #    build:
 #      context: ./pint-be
 #      dockerfile: ./Dockerfile
