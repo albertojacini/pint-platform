@@ -1,10 +1,5 @@
 name: Deploy to Amazon ECS
 
-#on:
-#  release:
-#    types: [published]
-
-
 on:
   push:
     branches:
@@ -17,12 +12,12 @@ on:
       - pint-be/pint/**
       - .github/workflows/**
       - docker-compose*
-  merge:
-    branches:
-      - $default-branch
-  release:
-    types: [published]
-  workflow_dispatch:
+#  merge:
+#    branches:
+#      - $default-branch
+#  release:
+#    types: [published]
+#  workflow_dispatch:
 
 
 
