@@ -2,9 +2,9 @@ name: Deploy to Amazon ECS
 
 on:
   push:
-    branches:
+#    branches:
 #      - $default-branch
-      - feature/**
+#      - feature/**
     paths:
 #      - "**.py"
 #      - Dockerfile
