@@ -5,13 +5,13 @@ on:
 #    branches:
 #      - $default-branch
 #      - feature/**
-    paths:
-#      - "**.py"
-#      - Dockerfile
-#      - requirements_dev.txt
-      - pint-be/pint/**
-      - .github/workflows/**
-      - docker-compose*
+#    paths:
+##      - "**.py"
+##      - Dockerfile
+##      - requirements_dev.txt
+#      - pint-be/pint/**
+#      - .github/workflows/**
+#      - docker-compose*
   pull_request:
     types:
       - closed
