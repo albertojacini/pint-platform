@@ -1,5 +1,10 @@
 name: Deploy to Amazon ECS
 
+#on:
+#  release:
+#    types: [published]
+
+
 on:
   push:
     branches:
@@ -12,6 +17,14 @@ on:
       - pint-be/pint/**
       - .github/workflows/**
       - docker-compose*
+  merge:
+    branches:
+      - $default-branch
+  release:
+    types: [published]
+  workflow_dispatch:
+
+
 
 env:
   AWS_REGION: eu-central-1
@@ -22,6 +35,7 @@ env:
                                                # file, e.g. .aws/task-definition.json
 #  CONTAINER_NAME: MY_CONTAINER_NAME           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
+  IMAGE_TAG: ${{ github.event.release.tag_name }} | ${{ github.sha }}
 
 permissions:
   contents: read
@@ -31,6 +45,8 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
+    env:
+      TAG: ${{ github.event.type }}
 
     steps:
     - name: Checkout
@@ -74,6 +90,16 @@ jobs:
 #        cache-from: type=local,src=/tmp/.buildx-cache
 #        cache-to: type=local,dest=/tmp/.buildx-cache-new
 
+#    - name: Set tag for merge
+#      if: ${{ github.event.type == 'merge' || 'push' }}
+#      run: |
+#          echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
+
+#    - name: Set tag for release
+#      if: ${{ github.event.type == 'release' }}
+#      run: |
+#          echo "TAG=${{ github. }}" >> $GITHUB_ENV
+
     - name: Deploy to Digital Ocean
       uses: appleboy/ssh-action@master
       with:
@@ -83,9 +109,9 @@ jobs:
         script: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws ecr get-login-password | docker login --username AWS --password-stdin 812138262065.dkr.ecr.eu-central-1.amazonaws.com
-          docker pull 812138262065.dkr.ecr.eu-central-1.amazonaws.com/pint-be:9cfe750d7038f68a2e78e693b2210855393631ad
-
+#          aws ecr get-login-password | docker login --username AWS --password-stdin 812138262065.dkr.ecr.eu-central-1.amazonaws.com
+#          docker pull 812138262065.dkr.ecr.eu-central-1.amazonaws.com/pint-be:{{ env.IMAGE_TAG }}
+          docker pull albertojacini/pint-be:{{ env.IMAGE_TAG }}
 
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
@@ -95,9 +121,6 @@ jobs:
 
     - name: Adding Known Hosts
       run: ssh-keyscan -H ${{ secrets.PROD_HOST }} >> ~/.ssh/known_hosts
-
-
-
 
     - name: Deploy to Digital Ocean
       id: deploy-to-digital-ocean
