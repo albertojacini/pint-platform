@@ -12,7 +12,9 @@ on:
       - pint-be/pint/**
       - .github/workflows/**
       - docker-compose*
-  merge:
+  pull_request:
+    types:
+      - closed
     branches:
       - $default-branch
   release:
@@ -40,6 +42,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
+    if: github.event.pull_request.merged == true
     env:
       TAG: ${{ github.event.type }}
 
