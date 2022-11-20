@@ -47,52 +47,52 @@ jobs:
 #      - uses: n1hility/cancel-previous-runs@v2
 #        with:
 #          token: ${{ secrets.GITHUB_TOKEN }}
-  build-and-push-image:
-    if: github.event.type != 'pull_request' || github.event.pull_request.merged == true
-    permissions:
-      contents: read
-      packages: write
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: tenhaus/get-release-or-tag@v2
-        id: tag-or-sha
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-
-#      - name: Extract metadata (tags, labels) for Docker
-#        id: meta
-#        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+#  build-and-push-image:
+#    if: github.event.type != 'pull_request' || github.event.pull_request.merged == true
+#    permissions:
+#      contents: read
+#      packages: write
+#    runs-on: ubuntu-20.04
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - uses: tenhaus/get-release-or-tag@v2
+#        id: tag-or-sha
+#
+#      - name: Log in to the Container registry
+#        uses: docker/login-action@v2
 #        with:
-#          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          file: pint-be/Dockerfile
-          context: pint-be
-          push: true
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            albertojacini/pint-be:${{ steps.tag-or-sha.outputs.tag }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#
+#
+##      - name: Extract metadata (tags, labels) for Docker
+##        id: meta
+##        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+##        with:
+##          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+#
+#      - name: Cache Docker layers
+#        uses: actions/cache@v2
+#        with:
+#          path: /tmp/.buildx-cache
+#          key: ${{ runner.os }}-buildx-${{ github.sha }}
+#          restore-keys: |
+#            ${{ runner.os }}-buildx-
+#
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v2
+#        with:
+#          file: pint-be/Dockerfile
+#          context: pint-be
+#          push: true
+#          tags: |
+#            ${{ steps.meta.outputs.tags }}
+#            albertojacini/pint-be:${{ steps.tag-or-sha.outputs.tag }}
+#          labels: ${{ steps.meta.outputs.labels }}
+#          build-args: |
+#            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+#            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   deploy:
     name: Deploy
