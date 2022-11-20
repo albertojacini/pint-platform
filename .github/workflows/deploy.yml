@@ -94,37 +94,37 @@ jobs:
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-#  deploy:
-#    name: Deploy
-#    runs-on: ubuntu-latest
-#    environment: production
-#    if: github.event.type != 'pull_request' || github.event.pull_request.merged == true
-#    env:
-#      TAG: ${{ github.event.type }}
-#
-#    steps:
-#    - name: Checkout
-#      uses: actions/checkout@v3
-#
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.event.type != 'pull_request' || github.event.pull_request.merged == true
+    env:
+      TAG: ${{ github.event.type }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
 #    - name: Configure AWS credentials
 #      uses: aws-actions/configure-aws-credentials@v1
 #      with:
 #        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 #        aws-region: ${{ env.AWS_REGION }}
-#
-#    - name: Install SSH Key
-#      uses: shimataro/ssh-key-action@v2
-#      with:
-#        key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
-#        known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-#
-#    - name: Adding Known Hosts
-#      run: ssh-keyscan -H ${{ secrets.PROD_HOST }} >> ~/.ssh/known_hosts
-#
-#    - name: Deploy to Digital Ocean
-#      id: deploy-to-digital-ocean
-#      run: |
-#        docker context create prod-host --docker="host=ssh://root@${{ secrets.PROD_HOST }}"
-#        export DOCKER_CONTEXT='prod-host'
-#        docker compose -f docker-compose-prod.yml up -d --image albertojacini/pint-be:${{ env.IMAGE_TAG }}
+
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.PROD_HOST_SSH_PRIVATE_KEY }}
+        known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+
+    - name: Adding Known Hosts
+      run: ssh-keyscan -H ${{ secrets.PROD_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy to Digital Ocean
+      id: deploy-to-digital-ocean
+      run: |
+        docker context create prod-host --docker="host=ssh://root@${{ secrets.PROD_HOST }}"
+        export DOCKER_CONTEXT='prod-host'
+        docker compose -f docker-compose-prod.yml up -d --image albertojacini/pint-be:${{ env.IMAGE_TAG }}
