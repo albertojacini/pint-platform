@@ -113,6 +113,9 @@ jobs:
 #        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 #        aws-region: ${{ env.AWS_REGION }}
 
+    - uses: tenhaus/get-release-or-tag@v2
+      id: tag-or-sha
+
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
       with:
@@ -127,4 +130,4 @@ jobs:
       run: |
         docker context create prod-host --docker="host=ssh://root@${{ secrets.PROD_HOST }}"
         export DOCKER_CONTEXT='prod-host'
-        IMAGE_TAG=${{ env.IMAGE_TAG }} docker compose -f docker-compose-prod.yml up -d
+        IMAGE_TAG=${{ steps.tag-or-sha.outputs.tag }} docker compose -f docker-compose-prod.yml up -d
