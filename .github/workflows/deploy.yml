@@ -59,12 +59,12 @@ jobs:
       - uses: tenhaus/get-release-or-tag@v2
         id: tag-or-sha
 
-#      - name: Log in to the Container registry
-#        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-#        with:
-#          registry: ${{ env.REGISTRY }}
-#          username: ${{ github.actor }}
-#          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          username: albertojacini
+          password: @03D10o77
+
 
 #      - name: Extract metadata (tags, labels) for Docker
 #        id: meta
