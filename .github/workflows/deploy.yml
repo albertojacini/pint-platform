@@ -127,4 +127,4 @@ jobs:
       run: |
         docker context create prod-host --docker="host=ssh://root@${{ secrets.PROD_HOST }}"
         export DOCKER_CONTEXT='prod-host'
-        docker compose -f docker-compose-prod.yml up -d --image albertojacini/pint-be:${{ env.IMAGE_TAG }}
+        docker compose -f docker-compose-prod.yml up -d -e IMAGE_TAG=${{ env.IMAGE_TAG }}

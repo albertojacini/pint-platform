@@ -4,8 +4,7 @@ services:
   api:
     ports:
       - 8000:8000
-#    image:
-#      albertojacini/pint-be:
+    image: "albertojacini/pint-be:${TAG}"
 #    build:
 #      context: ./pint-be
 #      dockerfile: ./Dockerfile
