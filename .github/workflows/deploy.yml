@@ -84,7 +84,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: pint-be/Dockerfile
-          context: .
+          context: pint-be
           push: true
           tags: |
             ${{ steps.meta.outputs.tags }}
