@@ -1,17 +1,17 @@
 name: Deploy to Amazon ECS
 
 on:
-  push:
-    branches:
-#      - $default-branch
-      - feature/**
-    paths:
-#      - "**.py"
-#      - Dockerfile
-#      - requirements_dev.txt
-      - pint-be/pint/**
-      - .github/workflows/**
-      - docker-compose*
+#  push:
+#    branches:
+##      - $default-branch
+#      - feature/**
+#    paths:
+##      - "**.py"
+##      - Dockerfile
+##      - requirements_dev.txt
+#      - pint-be/pint/**
+#      - .github/workflows/**
+#      - docker-compose*
   pull_request:
     types:
       - closed
@@ -64,7 +64,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
 
 #      - name: Extract metadata (tags, labels) for Docker
 #        id: meta
