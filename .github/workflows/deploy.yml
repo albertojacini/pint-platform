@@ -12,18 +12,14 @@ on:
 #      - pint-be/pint/**
 #      - .github/workflows/**
 #      - docker-compose*
-  pull_request:
-    types:
-      - closed
-    branches:
-      - $default-branch
+#  pull_request:
+#    types:
+#      - closed
+#    branches:
+#      - $default-branch
   release:
     types: [published]
   workflow_dispatch:
-
-
-
-
 
 
 env:
