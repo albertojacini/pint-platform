@@ -16,24 +16,24 @@ class ExportScope(graphene.Enum):
     def description(self):
         # pylint: disable=no-member
         description_mapping = {
-            ExportScope.ALL.name: "Export all products.",
-            ExportScope.IDS.name: "Export products with given ids.",
-            ExportScope.FILTER.name: "Export the filtered products.",
+            ExportScope.ALL.name: "Export all initiatives.",
+            ExportScope.IDS.name: "Export initiatives with given ids.",
+            ExportScope.FILTER.name: "Export the filtered initiatives.",
         }
         if self.name in description_mapping:
             return description_mapping[self.name]
         raise ValueError("Unsupported enum value: %s" % self.value)
 
 
-class ProductFieldEnum(graphene.Enum):
+class InitiativeFieldEnum(graphene.Enum):
     NAME = "name"
     DESCRIPTION = "description"
-    PRODUCT_TYPE = "product type"
+    INITIATIVE_TYPE = "initiative type"
     CATEGORY = "category"
-    PRODUCT_WEIGHT = "product weight"
+    INITIATIVE_WEIGHT = "initiative weight"
     COLLECTIONS = "collections"
     CHARGE_TAXES = "charge taxes"
-    PRODUCT_MEDIA = "product media"
+    INITIATIVE_MEDIA = "initiative media"
     VARIANT_ID = "variant id"
     VARIANT_SKU = "variant sku"
     VARIANT_WEIGHT = "variant weight"

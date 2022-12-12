@@ -1,3 +1,5 @@
+# Important: THIS IS BRANCHED OUT OF SALEOR VERSION 3.7.6
+
 # Pint
 Commands:
 Build graphql schema
@@ -51,10 +53,10 @@ make run
 
 #### Run only backend services
 ```shell
-make run-backend 
+make run-backend
 ```
 
-See [Makefile](Makefile) for all commands 
+See [Makefile](Makefile) for all commands
 
 ### With Docker steps
 
@@ -100,7 +102,7 @@ docker-compose up
 - Saleor React Storefront - http://localhost:3001
 - Saleor Dashboard - http://localhost:9000
 - Jaeger UI (APM) - http://localhost:16686
-- Mailhog (Test email interface) - http://localhost:8025 
+- Mailhog (Test email interface) - http://localhost:8025
 
 ## How to update the subprojects to the newest versions?
 This repository contains the newest stable versions.
@@ -118,7 +120,7 @@ You can find the latest version of Saleor, Storefront and Dashboard in their ind
 
 ## How to solve issues with lack of available space or build errors after an update
 
-Most of the time both issues can be solved by cleaning up space taken by old containers. After that, we build again whole platform. 
+Most of the time both issues can be solved by cleaning up space taken by old containers. After that, we build again whole platform.
 
 
 1. Make sure docker stack is not running
@@ -133,7 +135,7 @@ docker-compose stop
 docker-compose rm
 ```
 
-3. Build fresh containers 
+3. Build fresh containers
 ```shell
 docker-compose build
 ```
@@ -148,10 +150,10 @@ If you are getting issues with lack of available space, consider pruning your do
   - all stopped containers
   - all networks not used by at least one container
   - all dangling images
-  - all dangling build cache 
-  
+  - all dangling build cache
+
   More info: https://docs.docker.com/engine/reference/commandline/system_prune/
-  
+
 <details><summary>I've been warned</summary>
 <p>
 
@@ -164,7 +166,7 @@ docker system prune
 
 ### Issues with migrations after changing the versions - resetting the database
 
-Please submit an issue ticket if you spot issues with database migrations during the version update. 
+Please submit an issue ticket if you spot issues with database migrations during the version update.
 
 When testing developer releases or making local changes, you might end up in a state where you would like to reset the database completely. Since its state is persisted in the mounted volume, you'll need to use a dedicated command.
 
@@ -179,7 +181,7 @@ docker-compose down --volumes db
 
 </p>
 </details>
-   
+
 ## How to run application parts?
   - `docker-compose up api worker` for backend services only
   - `docker-compose up` for backend and frontend services

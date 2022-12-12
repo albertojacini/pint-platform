@@ -4,26 +4,31 @@ from django.utils.functional import SimpleLazyObject
 # from ..graphql.notifications.schema import ExternalNotificationMutations
 from .account.schema import AccountMutations, AccountQueries
 from .app.schema import AppMutations, AppQueries
+
 # from .attribute.schema import AttributeMutations, AttributeQueries
 # from .channel.schema import ChannelMutations, ChannelQueries
 # from .checkout.schema import CheckoutMutations, CheckoutQueries
 from .core.enums import unit_enums
 from .core.federation.schema import build_federated_schema
 from .core.schema import CoreMutations, CoreQueries
-# from .csv.schema import CsvMutations, CsvQueries
-# from .discount.schema import DiscountMutations, DiscountQueries
-# from .giftcard.schema import GiftCardMutations, GiftCardQueries
-# from .invoice.schema import InvoiceMutations
-# from .menu.schema import MenuMutations, MenuQueries
-from .meta.schema import MetaMutations
+from .csv.schema import CsvMutations, CsvQueries
+
 # from .order.schema import OrderMutations, OrderQueries
 # from .page.schema import PageMutations, PageQueries
 # from .payment.schema import PaymentMutations, PaymentQueries
 # from .plugins.schema import PluginsMutations, PluginsQueries
 from .initiative.schema import InitiativeMutations, InitiativeQueries
+
+# from .discount.schema import DiscountMutations, DiscountQueries
+# from .giftcard.schema import GiftCardMutations, GiftCardQueries
+# from .invoice.schema import InvoiceMutations
+# from .menu.schema import MenuMutations, MenuQueries
+from .meta.schema import MetaMutations
+
 # from .shipping.schema import ShippingMutations, ShippingQueries
 # from .shop.schema import ShopMutations, ShopQueries
 from .translations.schema import TranslationQueries
+
 # from .warehouse.schema import StockQueries, WarehouseMutations, WarehouseQueries
 from .webhook.schema import WebhookMutations, WebhookQueries
 from .webhook.subscription_types import WEBHOOK_TYPES_MAP, Subscription
@@ -38,7 +43,7 @@ class Query(
     # ChannelQueries,
     # CheckoutQueries,
     CoreQueries,
-    # CsvQueries,
+    CsvQueries,
     # DiscountQueries,
     # PluginsQueries,
     # GiftCardQueries,
@@ -64,7 +69,7 @@ class Mutation(
     # ChannelMutations,
     # CheckoutMutations,
     CoreMutations,
-    # CsvMutations,
+    CsvMutations,
     # DiscountMutations,
     # ExternalNotificationMutations,
     # PluginsMutations,

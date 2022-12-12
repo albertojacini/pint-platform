@@ -15,7 +15,7 @@ type Query {
 
   """
   List of all available webhook events.
-
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   webhookEvents: [WebhookEvent!] @deprecated(reason: "This field will be removed in Saleor 4.0. Use `WebhookEventTypeAsyncEnum` and `WebhookEventTypeSyncEnum` to get available event types.")
@@ -103,15 +103,50 @@ type Query {
   ): InitiativeCountableConnection
 
   """
-  List of all apps installations
+  Look up a export file by ID.
+  
+  Requires one of the following permissions: MANAGE_INITIATIVES.
+  """
+  exportFile(
+    """ID of the export file job."""
+    id: ID!
+  ): ExportFile
 
+  """
+  List of export files.
+  
+  Requires one of the following permissions: MANAGE_INITIATIVES.
+  """
+  exportFiles(
+    """Filtering options for export files."""
+    filter: ExportFileFilterInput
+
+    """Sort export files."""
+    sortBy: ExportFileSortingInput
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Return the first n elements from the list."""
+    first: Int
+
+    """Return the last n elements from the list."""
+    last: Int
+  ): ExportFileCountableConnection
+
+  """
+  List of all apps installations
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appsInstallations: [AppInstallation!]!
 
   """
   List of the apps.
-
+  
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER, MANAGE_APPS.
   """
   apps(
@@ -136,7 +171,7 @@ type Query {
 
   """
   Look up an app by ID. If ID is not provided, return the currently authenticated app.
-
+  
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER AUTHENTICATED_APP. The authenticated app has access to its resources. Fetching different apps requires MANAGE_APPS permission.
   """
   app(
@@ -146,11 +181,11 @@ type Query {
 
   """
   List of all extensions.
-
+  
   Added in Saleor 3.1.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
-
+  
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
   """
   appExtensions(
@@ -172,11 +207,11 @@ type Query {
 
   """
   Look up an app extension by ID.
-
+  
   Added in Saleor 3.1.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
-
+  
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
   """
   appExtension(
@@ -201,7 +236,7 @@ type Query {
 
   """
   List of the shop's customers.
-
+  
   Requires one of the following permissions: MANAGE_USERS.
   """
   customers(
@@ -226,7 +261,7 @@ type Query {
 
   """
   List of permission groups.
-
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   permissionGroups(
@@ -251,7 +286,7 @@ type Query {
 
   """
   Look up permission group by ID.
-
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   permissionGroup(
@@ -264,7 +299,7 @@ type Query {
 
   """
   List of the shop's staff users.
-
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   staffUsers(
@@ -289,7 +324,7 @@ type Query {
 
   """
   Look up a user by ID or email address.
-
+  
   Requires one of the following permissions: MANAGE_STAFF, MANAGE_USERS.
   """
   user(
@@ -383,24 +418,6 @@ enum WebhookEventTypeEnum {
 
   """An app status is changed."""
   APP_STATUS_CHANGED
-
-  """A new menu created."""
-  MENU_CREATED
-
-  """A menu is updated."""
-  MENU_UPDATED
-
-  """A menu is deleted."""
-  MENU_DELETED
-
-  """A new menu item created."""
-  MENU_ITEM_CREATED
-
-  """A menu item is updated."""
-  MENU_ITEM_UPDATED
-
-  """A menu item is deleted."""
-  MENU_ITEM_DELETED
 
   """A new customer account is created."""
   CUSTOMER_CREATED
@@ -498,24 +515,6 @@ enum WebhookEventTypeAsyncEnum {
   """An app status is changed."""
   APP_STATUS_CHANGED
 
-  """A new menu created."""
-  MENU_CREATED
-
-  """A menu is updated."""
-  MENU_UPDATED
-
-  """A menu is deleted."""
-  MENU_DELETED
-
-  """A new menu item created."""
-  MENU_ITEM_CREATED
-
-  """A menu item is updated."""
-  MENU_ITEM_UPDATED
-
-  """A menu item is deleted."""
-  MENU_ITEM_DELETED
-
   """A new customer account is created."""
   CUSTOMER_CREATED
 
@@ -580,20 +579,20 @@ type App implements Node & ObjectWithMetadata {
 
   """
   A single key from private metadata. Requires staff permissions to access.
-
+  
   Tip: Use GraphQL aliases to fetch multiple keys.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   privateMetafield(key: String!): String
 
   """
   Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   privateMetafields(keys: [String!]): Metadata
@@ -603,20 +602,20 @@ type App implements Node & ObjectWithMetadata {
 
   """
   A single key from public metadata.
-
+  
   Tip: Use GraphQL aliases to fetch multiple keys.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   metafield(key: String!): String
 
   """
   Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   metafields(keys: [String!]): Metadata
@@ -638,14 +637,14 @@ type App implements Node & ObjectWithMetadata {
 
   """
   Last 4 characters of the tokens.
-
+  
   Requires one of the following permissions: MANAGE_APPS, OWNER.
   """
   tokens: [AppToken!]
 
   """
   List of webhooks assigned to this app.
-
+  
   Requires one of the following permissions: MANAGE_APPS, OWNER.
   """
   webhooks: [Webhook!]
@@ -673,7 +672,7 @@ type App implements Node & ObjectWithMetadata {
 
   """
   URL to manifest used during app's installation.
-
+  
   Added in Saleor 3.5.
   """
   manifestUrl: String
@@ -686,9 +685,9 @@ type App implements Node & ObjectWithMetadata {
 
   """
   App's dashboard extensions.
-
+  
   Added in Saleor 3.1.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   extensions: [AppExtension!]!
@@ -700,20 +699,20 @@ interface ObjectWithMetadata {
 
   """
   A single key from private metadata. Requires staff permissions to access.
-
+  
   Tip: Use GraphQL aliases to fetch multiple keys.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   privateMetafield(key: String!): String
 
   """
   Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   privateMetafields(keys: [String!]): Metadata
@@ -723,20 +722,20 @@ interface ObjectWithMetadata {
 
   """
   A single key from public metadata.
-
+  
   Tip: Use GraphQL aliases to fetch multiple keys.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   metafield(key: String!): String
 
   """
   Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   metafields(keys: [String!]): Metadata
@@ -780,6 +779,7 @@ enum PermissionEnum {
   MANAGE_APPS
   MANAGE_OBSERVABILITY
   MANAGE_INITIATIVES
+  MANAGE_POLITICAL_ENTITIES
 }
 
 """
@@ -1030,12 +1030,6 @@ enum WebhookSampleEventTypeEnum {
   APP_UPDATED
   APP_DELETED
   APP_STATUS_CHANGED
-  MENU_CREATED
-  MENU_UPDATED
-  MENU_DELETED
-  MENU_ITEM_CREATED
-  MENU_ITEM_UPDATED
-  MENU_ITEM_DELETED
   CUSTOMER_CREATED
   CUSTOMER_UPDATED
   CUSTOMER_DELETED
@@ -1085,14 +1079,14 @@ type InitiativeTranslatableContent implements Node {
 
   """
   Description of the initiative.
-
+  
   Rich text format. For reference see https://editorjs.io/
   """
   description: JSONString
 
   """
   Description of the initiative.
-
+  
   Rich text format. For reference see https://editorjs.io/
   """
   descriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `description` field instead.")
@@ -1114,11 +1108,11 @@ type InitiativeTranslation implements Node {
   language: LanguageDisplay!
   seoTitle: String
   seoDescription: String
-  name: String
+  title: String
 
   """
   Translated description of the product.
-
+  
   Rich text format. For reference see https://editorjs.io/
   """
   description: JSONString
@@ -1924,20 +1918,20 @@ type Initiative implements Node & ObjectWithMetadata {
 
   """
   A single key from private metadata. Requires staff permissions to access.
-
+  
   Tip: Use GraphQL aliases to fetch multiple keys.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   privateMetafield(key: String!): String
 
   """
   Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   privateMetafields(keys: [String!]): Metadata
@@ -1947,20 +1941,20 @@ type Initiative implements Node & ObjectWithMetadata {
 
   """
   A single key from public metadata.
-
+  
   Tip: Use GraphQL aliases to fetch multiple keys.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   metafield(key: String!): String
 
   """
   Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-
+  
   Added in Saleor 3.3.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   metafields(keys: [String!]): Metadata
@@ -1970,7 +1964,7 @@ type Initiative implements Node & ObjectWithMetadata {
 
   """
   Description of the initiative.
-
+  
   Rich text format. For reference see https://editorjs.io/
   """
   description: JSONString
@@ -1985,9 +1979,9 @@ type Initiative implements Node & ObjectWithMetadata {
 
     """
     The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
-
+    
     Added in Saleor 3.6.
-
+    
     Note: this API is currently in Feature Preview and can be subject to changes at later point.
     """
     format: ThumbnailFormatEnum
@@ -2047,9 +2041,9 @@ type InitiativeMedia implements Node {
 
     """
     The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
-
+    
     Added in Saleor 3.6.
-
+    
     Note: this API is currently in Feature Preview and can be subject to changes at later point.
     """
     format: ThumbnailFormatEnum
@@ -2082,9 +2076,9 @@ type InitiativeImage {
 
     """
     The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
-
+    
     Added in Saleor 3.6.
-
+    
     Note: this API is currently in Feature Preview and can be subject to changes at later point.
     """
     format: ThumbnailFormatEnum
@@ -2143,8 +2137,8 @@ input InitiativeFilterInput {
   ids: [ID!]
 
   """
-  Specifies the channel by which the data should be filtered.
-
+  Specifies the channel by which the data should be filtered. 
+  
   DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
   """
   channel: String
@@ -2164,7 +2158,7 @@ input InitiativeOrder {
 
   """
   Specifies the channel in which to sort the data.
-
+  
   DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
   """
   channel: String
@@ -2180,74 +2174,15 @@ input InitiativeOrder {
 }
 
 enum InitiativeOrderField {
-  """Sort initiatives by name."""
   NAME
-
-  """
-  Sort initiatives by rank. Note: This option is available only with the `search` filter.
-  """
   RANK
-
-  """
-  Sort initiatives by price.
-
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  PRICE
-
-  """
-  Sort initiatives by a minimal price of a initiative's variant.
-
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  MINIMAL_PRICE
-
-  """Sort initiatives by update date."""
   LAST_MODIFIED
-
-  """Sort initiatives by update date."""
   DATE
-
-  """Sort initiatives by type."""
-  TYPE
-
-  """
-  Sort initiatives by publication status.
-
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  PUBLISHED
-
-  """
-  Sort initiatives by publication date.
-
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  PUBLICATION_DATE
-
-  """
-  Sort initiatives by publication date.
-
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  PUBLISHED_AT
-
-  """Sort initiatives by update date."""
   LAST_MODIFIED_AT
-
-  """
-  Sort initiatives by collection. Note: This option is available only for the `Collection.initiatives` query.
-
-  This option requires a channel filter to work as the values can vary between channels.
-  """
-  COLLECTION
-
-  """Sort initiatives by rating."""
-  RATING
 }
 
-"""Represents ongoing installation of app."""
-type AppInstallation implements Node & Job {
+"""Represents a job data of exported file."""
+type ExportFile implements Node & Job {
   id: ID!
 
   """Job status."""
@@ -2261,8 +2196,14 @@ type AppInstallation implements Node & Job {
 
   """Job message."""
   message: String
-  appName: String!
-  manifestUrl: String!
+
+  """The URL of field to download."""
+  url: String
+
+  """List of events associated with the export."""
+  events: [ExportEvent!]
+  user: User
+  app: App
 }
 
 interface Job {
@@ -2285,6 +2226,285 @@ enum JobStatusEnum {
   SUCCESS
   FAILED
   DELETED
+}
+
+"""History log of export file."""
+type ExportEvent implements Node {
+  """The ID of the object."""
+  id: ID!
+
+  """Date when event happened at in ISO 8601 format."""
+  date: DateTime!
+
+  """Export event type."""
+  type: ExportEventsEnum!
+
+  """
+  User who performed the action. Requires one of the following permissions: OWNER, MANAGE_STAFF.
+  """
+  user: User
+
+  """
+  App which performed the action. Requires one of the following permissions: OWNER, MANAGE_APPS.
+  """
+  app: App
+
+  """Content of the event."""
+  message: String!
+}
+
+"""An enumeration."""
+enum ExportEventsEnum {
+  EXPORT_PENDING
+  EXPORT_SUCCESS
+  EXPORT_FAILED
+  EXPORT_DELETED
+  EXPORTED_FILE_SENT
+  EXPORT_FAILED_INFO_SENT
+}
+
+"""Represents user data."""
+type User implements Node & ObjectWithMetadata {
+  id: ID!
+
+  """List of private metadata items. Requires staff permissions to access."""
+  privateMetadata: [MetadataItem!]!
+
+  """
+  A single key from private metadata. Requires staff permissions to access.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafield(key: String!): String
+
+  """
+  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  privateMetafields(keys: [String!]): Metadata
+
+  """List of public metadata items. Can be accessed without permissions."""
+  metadata: [MetadataItem!]!
+
+  """
+  A single key from public metadata.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafield(key: String!): String
+
+  """
+  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
+  
+  Added in Saleor 3.3.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  metafields(keys: [String!]): Metadata
+  email: String!
+  firstName: String!
+  lastName: String!
+  isStaff: Boolean!
+  isActive: Boolean!
+
+  """
+  A note about the customer.
+  
+  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
+  """
+  note: String
+
+  """List of user's permissions."""
+  userPermissions: [UserPermission!]
+
+  """List of user's permission groups."""
+  permissionGroups: [Group!]
+
+  """List of user's permission groups which user can manage."""
+  editableGroups: [Group!]
+  avatar(
+    """
+    Size of the image. If not provided, the original image will be returned.
+    """
+    size: Int
+
+    """
+    The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
+    
+    Added in Saleor 3.6.
+    
+    Note: this API is currently in Feature Preview and can be subject to changes at later point.
+    """
+    format: ThumbnailFormatEnum
+  ): Image
+
+  """
+  List of events associated with the user.
+  
+  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
+  """
+  events: [CustomerEvent!]
+
+  """User language code."""
+  languageCode: LanguageCodeEnum!
+  lastLogin: DateTime
+  dateJoined: DateTime!
+  updatedAt: DateTime!
+}
+
+type UserPermission {
+  """Internal code for permission."""
+  code: PermissionEnum!
+
+  """Describe action(s) allowed to do by permission."""
+  name: String!
+
+  """List of user permission groups which contains this permission."""
+  sourcePermissionGroups(
+    """ID of user whose groups should be returned."""
+    userId: ID!
+  ): [Group!]
+}
+
+"""Represents permission group data."""
+type Group implements Node {
+  id: ID!
+  name: String!
+
+  """
+  List of group users
+  
+  Requires one of the following permissions: MANAGE_STAFF.
+  """
+  users: [User!]
+
+  """List of group permissions"""
+  permissions: [Permission!]
+
+  """
+  True, if the currently authenticated user has rights to manage a group.
+  """
+  userCanManage: Boolean!
+}
+
+"""History log of the customer."""
+type CustomerEvent implements Node {
+  id: ID!
+
+  """Date when event happened at in ISO 8601 format."""
+  date: DateTime
+
+  """Customer event type."""
+  type: CustomerEventsEnum
+
+  """User who performed the action."""
+  user: User
+
+  """App that performed the action."""
+  app: App
+
+  """Content of the event."""
+  message: String
+
+  """Number of objects concerned by the event."""
+  count: Int
+}
+
+"""An enumeration."""
+enum CustomerEventsEnum {
+  ACCOUNT_CREATED
+  ACCOUNT_ACTIVATED
+  ACCOUNT_DEACTIVATED
+  PASSWORD_RESET_LINK_SENT
+  PASSWORD_RESET
+  EMAIL_CHANGED_REQUEST
+  PASSWORD_CHANGED
+  EMAIL_CHANGED
+  PLACED_ORDER
+  NOTE_ADDED_TO_ORDER
+  DIGITAL_LINK_DOWNLOADED
+  CUSTOMER_DELETED
+  NAME_ASSIGNED
+  EMAIL_ASSIGNED
+  NOTE_ADDED
+}
+
+type ExportFileCountableConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [ExportFileCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type ExportFileCountableEdge {
+  """The item at the end of the edge."""
+  node: ExportFile!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input ExportFileFilterInput {
+  createdAt: DateTimeRangeInput
+  updatedAt: DateTimeRangeInput
+  status: JobStatusEnum
+  user: String
+  app: String
+}
+
+input DateTimeRangeInput {
+  """Start date."""
+  gte: DateTime
+
+  """End date."""
+  lte: DateTime
+}
+
+input ExportFileSortingInput {
+  """Specifies the direction in which to sort products."""
+  direction: OrderDirection!
+
+  """Sort export file by the selected field."""
+  field: ExportFileSortField!
+}
+
+enum ExportFileSortField {
+  STATUS
+  CREATED_AT
+  UPDATED_AT
+  LAST_MODIFIED_AT
+}
+
+"""Represents ongoing installation of app."""
+type AppInstallation implements Node & Job {
+  id: ID!
+
+  """Job status."""
+  status: JobStatusEnum!
+
+  """Created date time of job in ISO 8601 format."""
+  createdAt: DateTime!
+
+  """Date time of job last update in ISO 8601 format."""
+  updatedAt: DateTime!
+
+  """Job message."""
+  message: String
+  appName: String!
+  manifestUrl: String!
 }
 
 type AppCountableConnection {
@@ -2644,183 +2864,6 @@ type UserCountableEdge {
   cursor: String!
 }
 
-"""Represents user data."""
-type User implements Node & ObjectWithMetadata {
-  id: ID!
-
-  """List of private metadata items. Requires staff permissions to access."""
-  privateMetadata: [MetadataItem!]!
-
-  """
-  A single key from private metadata. Requires staff permissions to access.
-
-  Tip: Use GraphQL aliases to fetch multiple keys.
-
-  Added in Saleor 3.3.
-
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafield(key: String!): String
-
-  """
-  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-
-  Added in Saleor 3.3.
-
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  privateMetafields(keys: [String!]): Metadata
-
-  """List of public metadata items. Can be accessed without permissions."""
-  metadata: [MetadataItem!]!
-
-  """
-  A single key from public metadata.
-
-  Tip: Use GraphQL aliases to fetch multiple keys.
-
-  Added in Saleor 3.3.
-
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafield(key: String!): String
-
-  """
-  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-
-  Added in Saleor 3.3.
-
-  Note: this API is currently in Feature Preview and can be subject to changes at later point.
-  """
-  metafields(keys: [String!]): Metadata
-  email: String!
-  firstName: String!
-  lastName: String!
-  isStaff: Boolean!
-  isActive: Boolean!
-
-  """
-  A note about the customer.
-
-  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
-  """
-  note: String
-
-  """List of user's permissions."""
-  userPermissions: [UserPermission!]
-
-  """List of user's permission groups."""
-  permissionGroups: [Group!]
-
-  """List of user's permission groups which user can manage."""
-  editableGroups: [Group!]
-  avatar(
-    """
-    Size of the image. If not provided, the original image will be returned.
-    """
-    size: Int
-
-    """
-    The format of the image. When not provided, format of the original image will be used. Must be provided together with the size value, otherwise original image will be returned.
-
-    Added in Saleor 3.6.
-
-    Note: this API is currently in Feature Preview and can be subject to changes at later point.
-    """
-    format: ThumbnailFormatEnum
-  ): Image
-
-  """
-  List of events associated with the user.
-
-  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
-  """
-  events: [CustomerEvent!]
-
-  """User language code."""
-  languageCode: LanguageCodeEnum!
-  lastLogin: DateTime
-  dateJoined: DateTime!
-  updatedAt: DateTime!
-}
-
-type UserPermission {
-  """Internal code for permission."""
-  code: PermissionEnum!
-
-  """Describe action(s) allowed to do by permission."""
-  name: String!
-
-  """List of user permission groups which contains this permission."""
-  sourcePermissionGroups(
-    """ID of user whose groups should be returned."""
-    userId: ID!
-  ): [Group!]
-}
-
-"""Represents permission group data."""
-type Group implements Node {
-  id: ID!
-  name: String!
-
-  """
-  List of group users
-
-  Requires one of the following permissions: MANAGE_STAFF.
-  """
-  users: [User!]
-
-  """List of group permissions"""
-  permissions: [Permission!]
-
-  """
-  True, if the currently authenticated user has rights to manage a group.
-  """
-  userCanManage: Boolean!
-}
-
-"""History log of the customer."""
-type CustomerEvent implements Node {
-  id: ID!
-
-  """Date when event happened at in ISO 8601 format."""
-  date: DateTime
-
-  """Customer event type."""
-  type: CustomerEventsEnum
-
-  """User who performed the action."""
-  user: User
-
-  """App that performed the action."""
-  app: App
-
-  """Content of the event."""
-  message: String
-
-  """Number of objects concerned by the event."""
-  count: Int
-}
-
-"""An enumeration."""
-enum CustomerEventsEnum {
-  ACCOUNT_CREATED
-  ACCOUNT_ACTIVATED
-  ACCOUNT_DEACTIVATED
-  PASSWORD_RESET_LINK_SENT
-  PASSWORD_RESET
-  EMAIL_CHANGED_REQUEST
-  PASSWORD_CHANGED
-  EMAIL_CHANGED
-  PLACED_ORDER
-  NOTE_ADDED_TO_ORDER
-  DIGITAL_LINK_DOWNLOADED
-  CUSTOMER_DELETED
-  NAME_ASSIGNED
-  EMAIL_ASSIGNED
-  NOTE_ADDED
-}
-
 input CustomerFilterInput {
   dateJoined: DateRangeInput
   numberOfOrders: IntRangeInput
@@ -2851,14 +2894,6 @@ input IntRangeInput {
 
   """Value less than or equal to."""
   lte: Int
-}
-
-input DateTimeRangeInput {
-  """Start date."""
-  gte: DateTime
-
-  """End date."""
-  lte: DateTime
 }
 
 input UserSortingInput {
@@ -2940,8 +2975,8 @@ enum StaffMemberStatus {
 
 type Mutation {
   """
-  Creates a new webhook subscription.
-
+  Creates a new webhook subscription. 
+  
   Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
   """
   webhookCreate(
@@ -2950,8 +2985,8 @@ type Mutation {
   ): WebhookCreate
 
   """
-  Deletes a webhook subscription.
-
+  Deletes a webhook subscription. 
+  
   Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
   """
   webhookDelete(
@@ -2960,8 +2995,8 @@ type Mutation {
   ): WebhookDelete
 
   """
-  Updates a webhook subscription.
-
+  Updates a webhook subscription. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   webhookUpdate(
@@ -2973,8 +3008,8 @@ type Mutation {
   ): WebhookUpdate
 
   """
-  Retries event delivery.
-
+  Retries event delivery. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   eventDeliveryRetry(
@@ -2983,8 +3018,8 @@ type Mutation {
   ): EventDeliveryRetry
 
   """
-  Creates a new initiative.
-
+  Creates a new initiative. 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeCreate(
@@ -2993,8 +3028,8 @@ type Mutation {
   ): InitiativeCreate
 
   """
-  Deletes a initiative.
-
+  Deletes a initiative. 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeDelete(
@@ -3003,8 +3038,8 @@ type Mutation {
   ): InitiativeDelete
 
   """
-  Deletes initiatives.
-
+  Deletes initiatives. 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeBulkDelete(
@@ -3013,8 +3048,8 @@ type Mutation {
   ): InitiativeBulkDelete
 
   """
-  Updates an existing initiative.
-
+  Updates an existing initiative. 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeUpdate(
@@ -3036,8 +3071,8 @@ type Mutation {
   ): InitiativeTranslate
 
   """
-  Create a media object (image or video URL) associated with initiative. For image, this mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
-
+  Create a media object (image or video URL) associated with initiative. For image, this mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeMediaCreate(
@@ -3046,8 +3081,8 @@ type Mutation {
   ): InitiativeMediaCreate
 
   """
-  Deletes a initiative media.
-
+  Deletes a initiative media. 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeMediaDelete(
@@ -3056,8 +3091,8 @@ type Mutation {
   ): InitiativeMediaDelete
 
   """
-  Deletes initiative media.
-
+  Deletes initiative media. 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeMediaBulkDelete(
@@ -3066,8 +3101,8 @@ type Mutation {
   ): InitiativeMediaBulkDelete
 
   """
-  Changes ordering of the initiative media.
-
+  Changes ordering of the initiative media. 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeMediaReorder(
@@ -3079,8 +3114,8 @@ type Mutation {
   ): InitiativeMediaReorder
 
   """
-  Updates a initiative media.
-
+  Updates a initiative media. 
+  
   Requires one of the following permissions: MANAGE_INITIATIVES.
   """
   initiativeMediaUpdate(
@@ -3092,6 +3127,70 @@ type Mutation {
   ): InitiativeMediaUpdate
 
   """
+  Delete metadata of an object. To use it, you need to have access to the modified object.
+  """
+  deleteMetadata(
+    """ID or token (for Order and Checkout) of an object to update."""
+    id: ID!
+
+    """Metadata keys to delete."""
+    keys: [String!]!
+  ): DeleteMetadata
+
+  """
+  Delete object's private metadata. To use it, you need to be an authenticated staff user or an app and have access to the modified object.
+  """
+  deletePrivateMetadata(
+    """ID or token (for Order and Checkout) of an object to update."""
+    id: ID!
+
+    """Metadata keys to delete."""
+    keys: [String!]!
+  ): DeletePrivateMetadata
+
+  """
+  Updates metadata of an object. To use it, you need to have access to the modified object.
+  """
+  updateMetadata(
+    """ID or token (for Order and Checkout) of an object to update."""
+    id: ID!
+
+    """Fields required to update the object's metadata."""
+    input: [MetadataInput!]!
+  ): UpdateMetadata
+
+  """
+  Updates private metadata of an object. To use it, you need to be an authenticated staff user or an app and have access to the modified object.
+  """
+  updatePrivateMetadata(
+    """ID or token (for Order and Checkout) of an object to update."""
+    id: ID!
+
+    """Fields required to update the object's metadata."""
+    input: [MetadataInput!]!
+  ): UpdatePrivateMetadata
+
+  """
+  Export initiatives to csv file. 
+  
+  Requires one of the following permissions: MANAGE_INITIATIVES.
+  """
+  exportInitiatives(
+    """Fields required to export initiative data."""
+    input: ExportInitiativesInput!
+  ): ExportInitiatives
+
+  """
+  Upload a file. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+  
+  Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
+  """
+  fileUpload(
+    """Represents a file in a multipart request."""
+    file: Upload!
+  ): FileUpload
+
+  """
   Creates a new app. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS.
   """
   appCreate(
@@ -3100,8 +3199,8 @@ type Mutation {
   ): AppCreate
 
   """
-  Updates an existing app.
-
+  Updates an existing app. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appUpdate(
@@ -3113,8 +3212,8 @@ type Mutation {
   ): AppUpdate
 
   """
-  Deletes an app.
-
+  Deletes an app. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appDelete(
@@ -3123,8 +3222,8 @@ type Mutation {
   ): AppDelete
 
   """
-  Creates a new token.
-
+  Creates a new token. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appTokenCreate(
@@ -3133,8 +3232,8 @@ type Mutation {
   ): AppTokenCreate
 
   """
-  Deletes an authentication token assigned to app.
-
+  Deletes an authentication token assigned to app. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appTokenDelete(
@@ -3157,8 +3256,8 @@ type Mutation {
   ): AppInstall
 
   """
-  Retry failed installation of new app.
-
+  Retry failed installation of new app. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appRetryInstall(
@@ -3170,8 +3269,8 @@ type Mutation {
   ): AppRetryInstall
 
   """
-  Delete failed installation.
-
+  Delete failed installation. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appDeleteFailedInstallation(
@@ -3180,15 +3279,15 @@ type Mutation {
   ): AppDeleteFailedInstallation
 
   """
-  Fetch and validate manifest.
-
+  Fetch and validate manifest. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appFetchManifest(manifestUrl: String!): AppFetchManifest
 
   """
-  Activate the app.
-
+  Activate the app. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appActivate(
@@ -3197,8 +3296,8 @@ type Mutation {
   ): AppActivate
 
   """
-  Deactivate the app.
-
+  Deactivate the app. 
+  
   Requires one of the following permissions: MANAGE_APPS.
   """
   appDeactivate(
@@ -3235,56 +3334,11 @@ type Mutation {
   ): VerifyToken
 
   """
-  Deactivate all JWT tokens of the currently authenticated user.
-
+  Deactivate all JWT tokens of the currently authenticated user. 
+  
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
   tokensDeactivateAll: DeactivateAllUserTokens
-
-  """Prepare external authentication url for user by custom plugin."""
-  externalAuthenticationUrl(
-    """The data required by plugin to create external authentication url."""
-    input: JSONString!
-
-    """The ID of the authentication plugin."""
-    pluginId: String!
-  ): ExternalAuthenticationUrl
-
-  """Obtain external access tokens for user by custom plugin."""
-  externalObtainAccessTokens(
-    """The data required by plugin to create authentication data."""
-    input: JSONString!
-
-    """The ID of the authentication plugin."""
-    pluginId: String!
-  ): ExternalObtainAccessTokens
-
-  """Refresh user's access by custom plugin."""
-  externalRefresh(
-    """The data required by plugin to proceed the refresh process."""
-    input: JSONString!
-
-    """The ID of the authentication plugin."""
-    pluginId: String!
-  ): ExternalRefresh
-
-  """Logout user by custom plugin."""
-  externalLogout(
-    """The data required by plugin to proceed the logout process."""
-    input: JSONString!
-
-    """The ID of the authentication plugin."""
-    pluginId: String!
-  ): ExternalLogout
-
-  """Verify external authentication data by plugin."""
-  externalVerify(
-    """The data required by plugin to proceed the verification."""
-    input: JSONString!
-
-    """The ID of the authentication plugin."""
-    pluginId: String!
-  ): ExternalVerify
 
   """Sends an email with the account password modification link."""
   requestPasswordReset(
@@ -3326,8 +3380,8 @@ type Mutation {
   ): SetPassword
 
   """
-  Change the password of the logged in user.
-
+  Change the password of the logged in user. 
+  
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
   passwordChange(
@@ -3339,8 +3393,8 @@ type Mutation {
   ): PasswordChange
 
   """
-  Request email change of the logged in user.
-
+  Request email change of the logged in user. 
+  
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
   requestEmailChange(
@@ -3362,8 +3416,8 @@ type Mutation {
   ): RequestEmailChange
 
   """
-  Confirm the email change of the logged-in user.
-
+  Confirm the email change of the logged-in user. 
+  
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
   confirmEmailChange(
@@ -3383,8 +3437,8 @@ type Mutation {
   ): AccountRegister
 
   """
-  Updates the account of the logged-in user.
-
+  Updates the account of the logged-in user. 
+  
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
   accountUpdate(
@@ -3393,8 +3447,8 @@ type Mutation {
   ): AccountUpdate
 
   """
-  Sends an email with the account removal link for the logged-in user.
-
+  Sends an email with the account removal link for the logged-in user. 
+  
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
   accountRequestDeletion(
@@ -3410,8 +3464,8 @@ type Mutation {
   ): AccountRequestDeletion
 
   """
-  Remove user account.
-
+  Remove user account. 
+  
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
   accountDelete(
@@ -3422,8 +3476,8 @@ type Mutation {
   ): AccountDelete
 
   """
-  Creates a new customer.
-
+  Creates a new customer. 
+  
   Requires one of the following permissions: MANAGE_USERS.
   """
   customerCreate(
@@ -3432,8 +3486,8 @@ type Mutation {
   ): CustomerCreate
 
   """
-  Updates an existing customer.
-
+  Updates an existing customer. 
+  
   Requires one of the following permissions: MANAGE_USERS.
   """
   customerUpdate(
@@ -3445,8 +3499,8 @@ type Mutation {
   ): CustomerUpdate
 
   """
-  Deletes a customer.
-
+  Deletes a customer. 
+  
   Requires one of the following permissions: MANAGE_USERS.
   """
   customerDelete(
@@ -3455,8 +3509,8 @@ type Mutation {
   ): CustomerDelete
 
   """
-  Deletes customers.
-
+  Deletes customers. 
+  
   Requires one of the following permissions: MANAGE_USERS.
   """
   customerBulkDelete(
@@ -3465,8 +3519,8 @@ type Mutation {
   ): CustomerBulkDelete
 
   """
-  Creates a new staff user. Apps are not allowed to perform this mutation.
-
+  Creates a new staff user. Apps are not allowed to perform this mutation. 
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   staffCreate(
@@ -3475,8 +3529,8 @@ type Mutation {
   ): StaffCreate
 
   """
-  Updates an existing staff user. Apps are not allowed to perform this mutation.
-
+  Updates an existing staff user. Apps are not allowed to perform this mutation. 
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   staffUpdate(
@@ -3488,8 +3542,8 @@ type Mutation {
   ): StaffUpdate
 
   """
-  Deletes a staff user. Apps are not allowed to perform this mutation.
-
+  Deletes a staff user. Apps are not allowed to perform this mutation. 
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   staffDelete(
@@ -3498,8 +3552,8 @@ type Mutation {
   ): StaffDelete
 
   """
-  Deletes staff users. Apps are not allowed to perform this mutation.
-
+  Deletes staff users. Apps are not allowed to perform this mutation. 
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   staffBulkDelete(
@@ -3508,8 +3562,8 @@ type Mutation {
   ): StaffBulkDelete
 
   """
-  Create a user avatar. Only for staff members. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
-
+  Create a user avatar. Only for staff members. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+  
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
   """
   userAvatarUpdate(
@@ -3518,15 +3572,15 @@ type Mutation {
   ): UserAvatarUpdate
 
   """
-  Deletes a user avatar. Only for staff members.
-
+  Deletes a user avatar. Only for staff members. 
+  
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
   """
   userAvatarDelete: UserAvatarDelete
 
   """
-  Activate or deactivate users.
-
+  Activate or deactivate users. 
+  
   Requires one of the following permissions: MANAGE_USERS.
   """
   userBulkSetActive(
@@ -3538,8 +3592,8 @@ type Mutation {
   ): UserBulkSetActive
 
   """
-  Create new permission group. Apps are not allowed to perform this mutation.
-
+  Create new permission group. Apps are not allowed to perform this mutation. 
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   permissionGroupCreate(
@@ -3548,8 +3602,8 @@ type Mutation {
   ): PermissionGroupCreate
 
   """
-  Update permission group. Apps are not allowed to perform this mutation.
-
+  Update permission group. Apps are not allowed to perform this mutation. 
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   permissionGroupUpdate(
@@ -3561,8 +3615,8 @@ type Mutation {
   ): PermissionGroupUpdate
 
   """
-  Delete permission group. Apps are not allowed to perform this mutation.
-
+  Delete permission group. Apps are not allowed to perform this mutation. 
+  
   Requires one of the following permissions: MANAGE_STAFF.
   """
   permissionGroupDelete(
@@ -3572,7 +3626,7 @@ type Mutation {
 }
 
 """
-Creates a new webhook subscription.
+Creates a new webhook subscription. 
 
 Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
 """
@@ -3612,8 +3666,8 @@ input WebhookCreateInput {
   targetUrl: String
 
   """
-  The events that webhook wants to subscribe.
-
+  The events that webhook wants to subscribe. 
+  
   DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
   """
   events: [WebhookEventTypeEnum!]
@@ -3632,23 +3686,23 @@ input WebhookCreateInput {
 
   """
   The secret key used to create a hash signature with each payload.
-
+  
   DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
   """
   secretKey: String
 
   """
   Subscription query used to define a webhook payload.
-
+  
   Added in Saleor 3.2.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   query: String
 }
 
 """
-Deletes a webhook subscription.
+Deletes a webhook subscription. 
 
 Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
 """
@@ -3659,7 +3713,7 @@ type WebhookDelete {
 }
 
 """
-Updates a webhook subscription.
+Updates a webhook subscription. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -3677,8 +3731,8 @@ input WebhookUpdateInput {
   targetUrl: String
 
   """
-  The events that webhook wants to subscribe.
-
+  The events that webhook wants to subscribe. 
+  
   DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
   """
   events: [WebhookEventTypeEnum!]
@@ -3697,23 +3751,23 @@ input WebhookUpdateInput {
 
   """
   Use to create a hash signature with each payload.
-
+  
   DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
   """
   secretKey: String
 
   """
   Subscription query used to define a webhook payload.
-
+  
   Added in Saleor 3.2.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   query: String
 }
 
 """
-Retries event delivery.
+Retries event delivery. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -3724,7 +3778,7 @@ type EventDeliveryRetry {
 }
 
 """
-Creates a new initiative.
+Creates a new initiative. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3756,6 +3810,15 @@ type InitiativeError {
 """An enumeration."""
 enum InitiativeErrorCode {
   ALREADY_EXISTS
+  MEDIA_ALREADY_ASSIGNED
+  DUPLICATED_INPUT_ITEM
+  GRAPHQL_ERROR
+  INVALID
+  NOT_INITIATIVES_IMAGE
+  NOT_FOUND
+  REQUIRED
+  UNIQUE
+  UNSUPPORTED_MEDIA_PROVIDER
 }
 
 input InitiativeCreateInput {
@@ -3778,7 +3841,7 @@ input SeoInput {
 }
 
 """
-Deletes a initiative.
+Deletes a initiative. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3789,7 +3852,7 @@ type InitiativeDelete {
 }
 
 """
-Deletes initiatives.
+Deletes initiatives. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3801,7 +3864,7 @@ type InitiativeBulkDelete {
 }
 
 """
-Updates an existing initiative.
+Updates an existing initiative. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3857,14 +3920,14 @@ input TranslationInput {
 
   """
   Translated description.
-
+  
   Rich text format. For reference see https://editorjs.io/
   """
   description: JSONString
 }
 
 """
-Create a media object (image or video URL) associated with initiative. For image, this mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
+Create a media object (image or video URL) associated with initiative. For image, this mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3895,7 +3958,7 @@ Variables of this type must be set to null in mutations. They will be replaced w
 scalar Upload
 
 """
-Deletes a initiative media.
+Deletes a initiative media. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3907,7 +3970,7 @@ type InitiativeMediaDelete {
 }
 
 """
-Deletes initiative media.
+Deletes initiative media. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3919,7 +3982,7 @@ type InitiativeMediaBulkDelete {
 }
 
 """
-Changes ordering of the initiative media.
+Changes ordering of the initiative media. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3931,7 +3994,7 @@ type InitiativeMediaReorder {
 }
 
 """
-Updates a initiative media.
+Updates a initiative media. 
 
 Requires one of the following permissions: MANAGE_INITIATIVES.
 """
@@ -3945,6 +4008,207 @@ type InitiativeMediaUpdate {
 input InitiativeMediaUpdateInput {
   """Alt text for a initiative media."""
   alt: String
+}
+
+"""
+Delete metadata of an object. To use it, you need to have access to the modified object.
+"""
+type DeleteMetadata {
+  metadataErrors: [MetadataError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [MetadataError!]!
+  item: ObjectWithMetadata
+}
+
+type MetadataError {
+  """
+  Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  field: String
+
+  """The error message."""
+  message: String
+
+  """The error code."""
+  code: MetadataErrorCode!
+}
+
+"""An enumeration."""
+enum MetadataErrorCode {
+  GRAPHQL_ERROR
+  INVALID
+  NOT_FOUND
+  REQUIRED
+  NOT_UPDATED
+}
+
+"""
+Delete object's private metadata. To use it, you need to be an authenticated staff user or an app and have access to the modified object.
+"""
+type DeletePrivateMetadata {
+  metadataErrors: [MetadataError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [MetadataError!]!
+  item: ObjectWithMetadata
+}
+
+"""
+Updates metadata of an object. To use it, you need to have access to the modified object.
+"""
+type UpdateMetadata {
+  metadataErrors: [MetadataError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [MetadataError!]!
+  item: ObjectWithMetadata
+}
+
+input MetadataInput {
+  """Key of a metadata item."""
+  key: String!
+
+  """Value of a metadata item."""
+  value: String!
+}
+
+"""
+Updates private metadata of an object. To use it, you need to be an authenticated staff user or an app and have access to the modified object.
+"""
+type UpdatePrivateMetadata {
+  metadataErrors: [MetadataError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [MetadataError!]!
+  item: ObjectWithMetadata
+}
+
+"""
+Export initiatives to csv file. 
+
+Requires one of the following permissions: MANAGE_INITIATIVES.
+"""
+type ExportInitiatives {
+  """
+  The newly created export file job which is responsible for export data.
+  """
+  exportFile: ExportFile
+  exportErrors: [ExportError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [ExportError!]!
+}
+
+type ExportError {
+  """
+  Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  field: String
+
+  """The error message."""
+  message: String
+
+  """The error code."""
+  code: ExportErrorCode!
+}
+
+"""An enumeration."""
+enum ExportErrorCode {
+  GRAPHQL_ERROR
+  INVALID
+  NOT_FOUND
+  REQUIRED
+}
+
+input ExportInitiativesInput {
+  """Determine which initiatives should be exported."""
+  scope: ExportScope!
+
+  """Filtering options for initiatives."""
+  filter: InitiativeFilterInput
+
+  """List of initiatives IDs to export."""
+  ids: [ID!]
+
+  """Input with info about fields which should be exported."""
+  exportInfo: ExportInfoInput
+
+  """Type of exported file."""
+  fileType: FileTypesEnum!
+}
+
+enum ExportScope {
+  """Export all initiatives."""
+  ALL
+
+  """Export initiatives with given ids."""
+  IDS
+
+  """Export the filtered initiatives."""
+  FILTER
+}
+
+input ExportInfoInput {
+  """List of attribute ids witch should be exported."""
+  attributes: [ID!]
+
+  """List of warehouse ids witch should be exported."""
+  warehouses: [ID!]
+
+  """List of channels ids which should be exported."""
+  channels: [ID!]
+
+  """List of initiative fields witch should be exported."""
+  fields: [InitiativeFieldEnum!]
+}
+
+enum InitiativeFieldEnum {
+  NAME
+  DESCRIPTION
+  INITIATIVE_TYPE
+  CATEGORY
+  INITIATIVE_WEIGHT
+  COLLECTIONS
+  CHARGE_TAXES
+  INITIATIVE_MEDIA
+  VARIANT_ID
+  VARIANT_SKU
+  VARIANT_WEIGHT
+  VARIANT_MEDIA
+}
+
+"""An enumeration."""
+enum FileTypesEnum {
+  CSV
+  XLSX
+}
+
+"""
+Upload a file. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+
+Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
+"""
+type FileUpload {
+  uploadedFile: File
+  uploadErrors: [UploadError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [UploadError!]!
+}
+
+type File {
+  """The URL of the file."""
+  url: String!
+
+  """Content type of the file."""
+  contentType: String
+}
+
+type UploadError {
+  """
+  Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  field: String
+
+  """The error message."""
+  message: String
+
+  """The error code."""
+  code: UploadErrorCode!
+}
+
+"""An enumeration."""
+enum UploadErrorCode {
+  GRAPHQL_ERROR
 }
 
 """
@@ -4000,7 +4264,7 @@ input AppInput {
 }
 
 """
-Updates an existing app.
+Updates an existing app. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4011,7 +4275,7 @@ type AppUpdate {
 }
 
 """
-Deletes an app.
+Deletes an app. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4022,7 +4286,7 @@ type AppDelete {
 }
 
 """
-Creates a new token.
+Creates a new token. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4043,7 +4307,7 @@ input AppTokenInput {
 }
 
 """
-Deletes an authentication token assigned to app.
+Deletes an authentication token assigned to app. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4085,7 +4349,7 @@ input AppInstallInput {
 }
 
 """
-Retry failed installation of new app.
+Retry failed installation of new app. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4096,7 +4360,7 @@ type AppRetryInstall {
 }
 
 """
-Delete failed installation.
+Delete failed installation. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4107,7 +4371,7 @@ type AppDeleteFailedInstallation {
 }
 
 """
-Fetch and validate manifest.
+Fetch and validate manifest. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4139,9 +4403,9 @@ type Manifest {
 
   """
   List of the app's webhooks.
-
+  
   Added in Saleor 3.5.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   webhooks: [AppManifestWebhook!]!
@@ -4182,7 +4446,7 @@ type AppManifestWebhook {
 }
 
 """
-Activate the app.
+Activate the app. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4193,7 +4457,7 @@ type AppActivate {
 }
 
 """
-Deactivate the app.
+Deactivate the app. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -4305,75 +4569,11 @@ String, Boolean, Int, Float, List or Object.
 scalar GenericScalar
 
 """
-Deactivate all JWT tokens of the currently authenticated user.
+Deactivate all JWT tokens of the currently authenticated user. 
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
 type DeactivateAllUserTokens {
-  accountErrors: [AccountError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
-  errors: [AccountError!]!
-}
-
-"""Prepare external authentication url for user by custom plugin."""
-type ExternalAuthenticationUrl {
-  """The data returned by authentication plugin."""
-  authenticationData: JSONString
-  accountErrors: [AccountError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
-  errors: [AccountError!]!
-}
-
-"""Obtain external access tokens for user by custom plugin."""
-type ExternalObtainAccessTokens {
-  """The token, required to authenticate."""
-  token: String
-
-  """The refresh token, required to re-generate external access token."""
-  refreshToken: String
-
-  """CSRF token required to re-generate external access token."""
-  csrfToken: String
-
-  """A user instance."""
-  user: User
-  accountErrors: [AccountError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
-  errors: [AccountError!]!
-}
-
-"""Refresh user's access by custom plugin."""
-type ExternalRefresh {
-  """The token, required to authenticate."""
-  token: String
-
-  """The refresh token, required to re-generate external access token."""
-  refreshToken: String
-
-  """CSRF token required to re-generate external access token."""
-  csrfToken: String
-
-  """A user instance."""
-  user: User
-  accountErrors: [AccountError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
-  errors: [AccountError!]!
-}
-
-"""Logout user by custom plugin."""
-type ExternalLogout {
-  """The data returned by authentication plugin."""
-  logoutData: JSONString
-  accountErrors: [AccountError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
-  errors: [AccountError!]!
-}
-
-"""Verify external authentication data by plugin."""
-type ExternalVerify {
-  """User assigned to data."""
-  user: User
-
-  """Determine if authentication data is valid or not."""
-  isValid: Boolean!
-
-  """External data."""
-  verifyData: JSONString
   accountErrors: [AccountError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
   errors: [AccountError!]!
 }
@@ -4412,7 +4612,7 @@ type SetPassword {
 }
 
 """
-Change the password of the logged in user.
+Change the password of the logged in user. 
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -4424,7 +4624,7 @@ type PasswordChange {
 }
 
 """
-Request email change of the logged in user.
+Request email change of the logged in user. 
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -4436,7 +4636,7 @@ type RequestEmailChange {
 }
 
 """
-Confirm the email change of the logged-in user.
+Confirm the email change of the logged-in user. 
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -4484,16 +4684,8 @@ input AccountRegisterInput {
   channel: String
 }
 
-input MetadataInput {
-  """Key of a metadata item."""
-  key: String!
-
-  """Value of a metadata item."""
-  value: String!
-}
-
 """
-Updates the account of the logged-in user.
+Updates the account of the logged-in user. 
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -4515,7 +4707,7 @@ input AccountInput {
 }
 
 """
-Sends an email with the account removal link for the logged-in user.
+Sends an email with the account removal link for the logged-in user. 
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -4525,7 +4717,7 @@ type AccountRequestDeletion {
 }
 
 """
-Remove user account.
+Remove user account. 
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -4536,7 +4728,7 @@ type AccountDelete {
 }
 
 """
-Creates a new customer.
+Creates a new customer. 
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -4572,7 +4764,7 @@ input UserCreateInput {
 }
 
 """
-Updates an existing customer.
+Updates an existing customer. 
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -4603,7 +4795,7 @@ input CustomerInput {
 }
 
 """
-Deletes a customer.
+Deletes a customer. 
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -4614,7 +4806,7 @@ type CustomerDelete {
 }
 
 """
-Deletes customers.
+Deletes customers. 
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -4626,7 +4818,7 @@ type CustomerBulkDelete {
 }
 
 """
-Creates a new staff user. Apps are not allowed to perform this mutation.
+Creates a new staff user. Apps are not allowed to perform this mutation. 
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -4684,7 +4876,7 @@ input StaffCreateInput {
 }
 
 """
-Updates an existing staff user. Apps are not allowed to perform this mutation.
+Updates an existing staff user. Apps are not allowed to perform this mutation. 
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -4718,7 +4910,7 @@ input StaffUpdateInput {
 }
 
 """
-Deletes a staff user. Apps are not allowed to perform this mutation.
+Deletes a staff user. Apps are not allowed to perform this mutation. 
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -4729,7 +4921,7 @@ type StaffDelete {
 }
 
 """
-Deletes staff users. Apps are not allowed to perform this mutation.
+Deletes staff users. Apps are not allowed to perform this mutation. 
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -4741,7 +4933,7 @@ type StaffBulkDelete {
 }
 
 """
-Create a user avatar. Only for staff members. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
+Create a user avatar. Only for staff members. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
 
 Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
 """
@@ -4753,7 +4945,7 @@ type UserAvatarUpdate {
 }
 
 """
-Deletes a user avatar. Only for staff members.
+Deletes a user avatar. Only for staff members. 
 
 Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
 """
@@ -4765,7 +4957,7 @@ type UserAvatarDelete {
 }
 
 """
-Activate or deactivate users.
+Activate or deactivate users. 
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -4777,7 +4969,7 @@ type UserBulkSetActive {
 }
 
 """
-Create new permission group. Apps are not allowed to perform this mutation.
+Create new permission group. Apps are not allowed to perform this mutation. 
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -4830,7 +5022,7 @@ input PermissionGroupCreateInput {
 }
 
 """
-Update permission group. Apps are not allowed to perform this mutation.
+Update permission group. Apps are not allowed to perform this mutation. 
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -4858,7 +5050,7 @@ input PermissionGroupUpdateInput {
 }
 
 """
-Delete permission group. Apps are not allowed to perform this mutation.
+Delete permission group. Apps are not allowed to perform this mutation. 
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -4871,9 +5063,9 @@ type PermissionGroupDelete {
 type Subscription {
   """
   Look up subscription event.
-
+  
   Added in Saleor 3.2.
-
+  
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   event: Event

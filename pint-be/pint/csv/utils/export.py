@@ -6,12 +6,12 @@ from typing import IO, TYPE_CHECKING, Any, Dict, List, Set, Union
 import petl as etl
 from django.utils import timezone
 
-from ...giftcard.models import GiftCard
-from ...product.models import Product
+# from ...giftcard.models import GiftCard
+from ...initiative.models import Initiative
 from .. import FileTypes
 from ..notifications import send_export_download_link_notification
-from .product_headers import get_product_export_fields_and_headers_info
-from .products_data import get_products_data
+from .initiative_headers import get_initiative_export_fields_and_headers_info
+from .initiatives_data import get_initiatives_data
 
 if TYPE_CHECKING:
     # flake8: noqa
@@ -23,27 +23,27 @@ if TYPE_CHECKING:
 BATCH_SIZE = 10000
 
 
-def export_products(
+def export_initiatives(
     export_file: "ExportFile",
     scope: Dict[str, Union[str, dict]],
     export_info: Dict[str, list],
     file_type: str,
     delimiter: str = ",",
 ):
-    from ...graphql.product.filters import ProductFilter
+    from ...graphql.initiative.filters import InitiativeFilter
 
-    file_name = get_filename("product", file_type)
-    queryset = get_queryset(Product, ProductFilter, scope)
+    file_name = get_filename("initiative", file_type)
+    queryset = get_queryset(Initiative, InitiativeFilter, scope)
 
     (
         export_fields,
         file_headers,
         data_headers,
-    ) = get_product_export_fields_and_headers_info(export_info)
+    ) = get_initiative_export_fields_and_headers_info(export_info)
 
     temporary_file = create_file_with_headers(file_headers, delimiter, file_type)
 
-    export_products_in_batches(
+    export_initiatives_in_batches(
         queryset,
         export_info,
         set(export_fields),
@@ -56,7 +56,7 @@ def export_products(
     save_csv_file_in_export_file(export_file, temporary_file, file_name)
     temporary_file.close()
 
-    send_export_download_link_notification(export_file, "products")
+    send_export_download_link_notification(export_file, "initiatives")
 
 
 def export_gift_cards(
@@ -148,7 +148,7 @@ def create_file_with_headers(file_headers: List[str], delimiter: str, file_type:
     return temp_file
 
 
-def export_products_in_batches(
+def export_initiatives_in_batches(
     queryset: "QuerySet",
     export_info: Dict[str, list],
     export_fields: Set[str],
@@ -162,17 +162,17 @@ def export_products_in_batches(
     channels = export_info.get("channels")
 
     for batch_pks in queryset_in_batches(queryset):
-        product_batch = Product.objects.filter(pk__in=batch_pks).prefetch_related(
+        initiative_batch = Initiative.objects.filter(pk__in=batch_pks).prefetch_related(
             "attributes",
             "variants",
             "collections",
             "media",
-            "product_type",
+            "initiative_type",
             "category",
         )
 
-        export_data = get_products_data(
-            product_batch, export_fields, attributes, warehouses, channels
+        export_data = get_initiatives_data(
+            initiative_batch, export_fields, attributes, warehouses, channels
         )
 
         append_to_file(export_data, headers, temporary_file, file_type, delimiter)

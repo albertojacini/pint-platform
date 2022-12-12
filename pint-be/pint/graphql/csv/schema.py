@@ -1,11 +1,13 @@
 import graphene
 
-from ...core.permissions import ProductPermissions
+from ...core.permissions import InitiativePermissions
 from ..core.connection import create_connection_slice, filter_connection_queryset
 from ..core.fields import FilterConnectionField, PermissionsField
 from ..core.utils import from_global_id_or_error
 from .filters import ExportFileFilterInput
-from .mutations import ExportGiftCards, ExportProducts
+
+# from .mutations import ExportGiftCards, ExportInitiatives
+from .mutations import ExportInitiatives
 from .resolvers import resolve_export_file, resolve_export_files
 from .sorters import ExportFileSortingInput
 from .types import ExportFile, ExportFileCountableConnection
@@ -18,14 +20,14 @@ class CsvQueries(graphene.ObjectType):
             graphene.ID, description="ID of the export file job.", required=True
         ),
         description="Look up a export file by ID.",
-        permissions=[ProductPermissions.MANAGE_PRODUCTS],
+        permissions=[InitiativePermissions.MANAGE_INITIATIVES],
     )
     export_files = FilterConnectionField(
         ExportFileCountableConnection,
         filter=ExportFileFilterInput(description="Filtering options for export files."),
         sort_by=ExportFileSortingInput(description="Sort export files."),
         description="List of export files.",
-        permissions=[ProductPermissions.MANAGE_PRODUCTS],
+        permissions=[InitiativePermissions.MANAGE_INITIATIVES],
     )
 
     def resolve_export_file(self, _info, id):
@@ -39,5 +41,5 @@ class CsvQueries(graphene.ObjectType):
 
 
 class CsvMutations(graphene.ObjectType):
-    export_products = ExportProducts.Field()
-    export_gift_cards = ExportGiftCards.Field()
+    export_initiatives = ExportInitiatives.Field()
+    # export_gift_cards = ExportGiftCards.Field()

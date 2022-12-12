@@ -1,4 +1,4 @@
-name: Deploy to Amazon ECS
+name: Deploy to production
 
 on:
 #  push:
@@ -36,13 +36,7 @@ permissions:
   contents: read
 
 jobs:
-  cancel_previous_runs:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: n1hility/cancel-previous-runs@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+
   build-and-push-image:
     if: github.event.type != 'pull_request' || github.event.pull_request.merged == true
     permissions:

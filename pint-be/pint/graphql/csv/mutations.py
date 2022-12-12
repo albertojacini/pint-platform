@@ -3,22 +3,26 @@ from typing import Dict, List, Mapping, Union
 import graphene
 from django.core.exceptions import ValidationError
 
-from ...core.permissions import GiftcardPermissions, InitiativePermissions
+# from ...core.permissions import GiftcardPermissions, InitiativePermissions
+from ...core.permissions import InitiativePermissions
 from ...csv import models as csv_models
 from ...csv.events import export_started_event
-from ...csv.tasks import export_gift_cards_task, export_Initiatives_task
-from ..attribute.types import Attribute
-from ..channel.types import Channel
+from ...csv.tasks import export_gift_cards_task, export_initiatives_task
+
+# from ..attribute.types import Attribute
+# from ..channel.types import Channel
 from ..core.descriptions import ADDED_IN_31, PREVIEW_FEATURE
 from ..core.enums import ExportErrorCode
 from ..core.mutations import BaseMutation
 from ..core.types import ExportError, NonNullList
-from ..giftcard.filters import GiftCardFilterInput
-from ..giftcard.types import GiftCard
-from ..product.filters import ProductFilterInput
-from ..product.types import Product
-from ..warehouse.types import Warehouse
-from .enums import ExportScope, FileTypeEnum, ProductFieldEnum
+
+# from ..giftcard.filters import GiftCardFilterInput
+# from ..giftcard.types import GiftCard
+from ..initiative.filters import InitiativeFilterInput
+from ..initiative.types import Initiative
+
+# from ..warehouse.types import Warehouse
+from .enums import ExportScope, FileTypeEnum, InitiativeFieldEnum
 from .types import ExportFile
 
 
@@ -86,21 +90,21 @@ class ExportInfoInput(graphene.InputObjectType):
         description="List of channels ids which should be exported.",
     )
     fields = NonNullList(
-        ProductFieldEnum,
-        description="List of product fields witch should be exported.",
+        InitiativeFieldEnum,
+        description="List of initiative fields witch should be exported.",
     )
 
 
-class ExportProductsInput(graphene.InputObjectType):
+class ExportInitiativesInput(graphene.InputObjectType):
     scope = ExportScope(
-        description="Determine which products should be exported.", required=True
+        description="Determine which initiatives should be exported.", required=True
     )
-    filter = ProductFilterInput(
-        description="Filtering options for products.", required=False
+    filter = InitiativeFilterInput(
+        description="Filtering options for initiatives.", required=False
     )
     ids = NonNullList(
         graphene.ID,
-        description="List of products IDs to export.",
+        description="List of initiatives IDs to export.",
         required=False,
     )
     export_info = ExportInfoInput(
@@ -110,22 +114,22 @@ class ExportProductsInput(graphene.InputObjectType):
     file_type = FileTypeEnum(description="Type of exported file.", required=True)
 
 
-class ExportProducts(BaseExportMutation):
+class ExportInitiatives(BaseExportMutation):
     class Arguments:
-        input = ExportProductsInput(
-            required=True, description="Fields required to export product data."
+        input = ExportInitiativesInput(
+            required=True, description="Fields required to export initiative data."
         )
 
     class Meta:
-        description = "Export products to csv file."
-        permissions = (ProductPermissions.MANAGE_PRODUCTS,)
+        description = "Export initiatives to csv file."
+        permissions = (InitiativePermissions.MANAGE_INITIATIVES,)
         error_type_class = ExportError
         error_type_field = "export_errors"
 
     @classmethod
     def perform_mutation(cls, _root, info, **data):
         input = data["input"]
-        scope = cls.get_scope(input, Product)
+        scope = cls.get_scope(input, Initiative)
         export_info = cls.get_export_info(input["export_info"])
         file_type = input["file_type"]
 
@@ -134,7 +138,7 @@ class ExportProducts(BaseExportMutation):
 
         export_file = csv_models.ExportFile.objects.create(**kwargs)
         export_started_event(export_file=export_file, **kwargs)
-        export_products_task.delay(export_file.pk, scope, export_info, file_type)
+        export_initiatives_task.delay(export_file.pk, scope, export_info, file_type)
 
         export_file.refresh_from_db()
         return cls(export_file=export_file)
@@ -166,44 +170,44 @@ class ExportProducts(BaseExportMutation):
         return pks
 
 
-class ExportGiftCardsInput(graphene.InputObjectType):
-    scope = ExportScope(
-        description="Determine which gift cards should be exported.", required=True
-    )
-    filter = GiftCardFilterInput(
-        description="Filtering options for gift cards.", required=False
-    )
-    ids = NonNullList(
-        graphene.ID,
-        description="List of gift cards IDs to export.",
-        required=False,
-    )
-    file_type = FileTypeEnum(description="Type of exported file.", required=True)
+# class ExportGiftCardsInput(graphene.InputObjectType):
+#     scope = ExportScope(
+#         description="Determine which gift cards should be exported.", required=True
+#     )
+#     filter = GiftCardFilterInput(
+#         description="Filtering options for gift cards.", required=False
+#     )
+#     ids = NonNullList(
+#         graphene.ID,
+#         description="List of gift cards IDs to export.",
+#         required=False,
+#     )
+#     file_type = FileTypeEnum(description="Type of exported file.", required=True)
 
 
-class ExportGiftCards(BaseExportMutation):
-    class Arguments:
-        input = ExportGiftCardsInput(
-            required=True, description="Fields required to export gift cards data."
-        )
-
-    class Meta:
-        description = "Export gift cards to csv file." + ADDED_IN_31 + PREVIEW_FEATURE
-        permissions = (GiftcardPermissions.MANAGE_GIFT_CARD,)
-        error_type_class = ExportError
-
-    @classmethod
-    def perform_mutation(cls, _root, info, **data):
-        input = data["input"]
-        scope = cls.get_scope(input, GiftCard)
-        file_type = input["file_type"]
-
-        app = info.context.app
-        kwargs = {"app": app} if app else {"user": info.context.user}
-
-        export_file = csv_models.ExportFile.objects.create(**kwargs)
-        export_started_event(export_file=export_file, **kwargs)
-        export_gift_cards_task.delay(export_file.pk, scope, file_type)
-
-        export_file.refresh_from_db()
-        return cls(export_file=export_file)
+# class ExportGiftCards(BaseExportMutation):
+#     class Arguments:
+#         input = ExportGiftCardsInput(
+#             required=True, description="Fields required to export gift cards data."
+#         )
+#
+#     class Meta:
+#         description = "Export gift cards to csv file." + ADDED_IN_31 + PREVIEW_FEATURE
+#         permissions = (GiftcardPermissions.MANAGE_GIFT_CARD,)
+#         error_type_class = ExportError
+#
+#     @classmethod
+#     def perform_mutation(cls, _root, info, **data):
+#         input = data["input"]
+#         scope = cls.get_scope(input, GiftCard)
+#         file_type = input["file_type"]
+#
+#         app = info.context.app
+#         kwargs = {"app": app} if app else {"user": info.context.user}
+#
+#         export_file = csv_models.ExportFile.objects.create(**kwargs)
+#         export_started_event(export_file=export_file, **kwargs)
+#         export_gift_cards_task.delay(export_file.pk, scope, file_type)
+#
+#         export_file.refresh_from_db()
+#         return cls(export_file=export_file)

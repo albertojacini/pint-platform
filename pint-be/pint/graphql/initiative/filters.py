@@ -23,9 +23,8 @@ from django.utils import timezone
 # )
 # from ...channel.models import Channel
 # from ...product import ProductTypeKind
-from ...initiative.models import (
-    Initiative,
-)
+from ...initiative.models import Initiative
+
 # from ...product.models import (
 #     Category,
 #     Collection,
@@ -37,6 +36,7 @@ from ...initiative.models import (
 #     ProductVariantChannelListing,
 # )
 from ...initiative.search import search_initiatives
+
 # from ...product.search import search_products
 # from ...warehouse.models import Allocation, Stock, Warehouse
 # from ..channel.filters import get_channel_slug_from_filter_data
@@ -47,18 +47,18 @@ from ..core.filters import (
     MetadataFilterBase,
     ObjectTypeFilter,
 )
-from ..core.types import (
+from ..core.types import (  # PriceRangeInput,
     ChannelFilterInputObjectType,
     DateTimeRangeInput,
     FilterInputObjectType,
     IntRangeInput,
     NonNullList,
-    # PriceRangeInput,
 )
 from ..utils import resolve_global_ids_to_primary_keys
 from ..utils.filters import filter_by_id, filter_range_field
+
 # from ..warehouse import types as warehouse_types
-from . import types as product_types
+# from . import types as product_types
 # from .enums import (
 #     CollectionPublished,
 #     ProductTypeConfigurable,
@@ -440,6 +440,8 @@ def _filter_initiatives_is_published(qs, _):
         # Exists(product_channel_listings.filter(product_id=OuterRef("pk"))),
         # Exists(variants.filter(product_id=OuterRef("pk"))),
     )
+
+
 #
 #
 # def _filter_variant_price(qs, _, value, channel_slug):
@@ -464,8 +466,10 @@ def _filter_initiatives_is_published(qs, _):
 #         qs = filter_products_by_stock_availability(qs, value, channel_slug)
 #     return qs
 
+
 def filter_search(qs, _, value):
     return search_initiatives(qs, value)
+
 
 # def filter_search(qs, _, value):
 #     return search_products(qs, value)
@@ -583,6 +587,7 @@ def filter_search(qs, _, value):
 # class ProductStockFilterInput(graphene.InputObjectType):
 #     warehouse_ids = NonNullList(graphene.ID, required=False)
 #     quantity = graphene.Field(IntRangeInput, required=False)
+
 
 class InitiativeFilter(MetadataFilterBase):
     search = django_filters.CharFilter(method=filter_search)
@@ -773,6 +778,7 @@ class InitiativeFilter(MetadataFilterBase):
 class InitiativeFilterInput(ChannelFilterInputObjectType):
     class Meta:
         filterset_class = InitiativeFilter
+
 
 # class ProductFilterInput(ChannelFilterInputObjectType):
 #     class Meta:
