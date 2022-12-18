@@ -582,6 +582,85 @@ export enum EventDeliveryStatusEnum {
   FAILED = 'FAILED'
 }
 
+/** An enumeration. */
+export enum ExportErrorCode {
+  GRAPHQL_ERROR = 'GRAPHQL_ERROR',
+  INVALID = 'INVALID',
+  NOT_FOUND = 'NOT_FOUND',
+  REQUIRED = 'REQUIRED'
+}
+
+/** An enumeration. */
+export enum ExportEventsEnum {
+  EXPORT_PENDING = 'EXPORT_PENDING',
+  EXPORT_SUCCESS = 'EXPORT_SUCCESS',
+  EXPORT_FAILED = 'EXPORT_FAILED',
+  EXPORT_DELETED = 'EXPORT_DELETED',
+  EXPORTED_FILE_SENT = 'EXPORTED_FILE_SENT',
+  EXPORT_FAILED_INFO_SENT = 'EXPORT_FAILED_INFO_SENT'
+}
+
+export type ExportFileFilterInput = {
+  createdAt?: InputMaybe<DateTimeRangeInput>;
+  updatedAt?: InputMaybe<DateTimeRangeInput>;
+  status?: InputMaybe<JobStatusEnum>;
+  user?: InputMaybe<Scalars['String']>;
+  app?: InputMaybe<Scalars['String']>;
+};
+
+export enum ExportFileSortField {
+  STATUS = 'STATUS',
+  CREATED_AT = 'CREATED_AT',
+  UPDATED_AT = 'UPDATED_AT',
+  LAST_MODIFIED_AT = 'LAST_MODIFIED_AT'
+}
+
+export type ExportFileSortingInput = {
+  /** Specifies the direction in which to sort products. */
+  direction: OrderDirection;
+  /** Sort export file by the selected field. */
+  field: ExportFileSortField;
+};
+
+export type ExportInfoInput = {
+  /** List of attribute ids witch should be exported. */
+  attributes?: InputMaybe<Array<Scalars['ID']>>;
+  /** List of warehouse ids witch should be exported. */
+  warehouses?: InputMaybe<Array<Scalars['ID']>>;
+  /** List of channels ids which should be exported. */
+  channels?: InputMaybe<Array<Scalars['ID']>>;
+  /** List of initiative fields witch should be exported. */
+  fields?: InputMaybe<Array<InitiativeFieldEnum>>;
+};
+
+export type ExportInitiativesInput = {
+  /** Determine which initiatives should be exported. */
+  scope: ExportScope;
+  /** Filtering options for initiatives. */
+  filter?: InputMaybe<InitiativeFilterInput>;
+  /** List of initiatives IDs to export. */
+  ids?: InputMaybe<Array<Scalars['ID']>>;
+  /** Input with info about fields which should be exported. */
+  exportInfo?: InputMaybe<ExportInfoInput>;
+  /** Type of exported file. */
+  fileType: FileTypesEnum;
+};
+
+export enum ExportScope {
+  /** Export all initiatives. */
+  ALL = 'ALL',
+  /** Export initiatives with given ids. */
+  IDS = 'IDS',
+  /** Export the filtered initiatives. */
+  FILTER = 'FILTER'
+}
+
+/** An enumeration. */
+export enum FileTypesEnum {
+  CSV = 'CSV',
+  XLSX = 'XLSX'
+}
+
 export type InitiativeCreateInput = {
   /** Initiative title. */
   title?: InputMaybe<Scalars['String']>;
@@ -603,6 +682,21 @@ export enum InitiativeErrorCode {
   REQUIRED = 'REQUIRED',
   UNIQUE = 'UNIQUE',
   UNSUPPORTED_MEDIA_PROVIDER = 'UNSUPPORTED_MEDIA_PROVIDER'
+}
+
+export enum InitiativeFieldEnum {
+  NAME = 'NAME',
+  DESCRIPTION = 'DESCRIPTION',
+  INITIATIVE_TYPE = 'INITIATIVE_TYPE',
+  CATEGORY = 'CATEGORY',
+  INITIATIVE_WEIGHT = 'INITIATIVE_WEIGHT',
+  COLLECTIONS = 'COLLECTIONS',
+  CHARGE_TAXES = 'CHARGE_TAXES',
+  INITIATIVE_MEDIA = 'INITIATIVE_MEDIA',
+  VARIANT_ID = 'VARIANT_ID',
+  VARIANT_SKU = 'VARIANT_SKU',
+  VARIANT_WEIGHT = 'VARIANT_WEIGHT',
+  VARIANT_MEDIA = 'VARIANT_MEDIA'
 }
 
 export type InitiativeFilterInput = {
@@ -2124,11 +2218,47 @@ export type WebhookErrorFragment = { __typename: 'WebhookError', code: WebhookEr
 
 export type AppErrorFragment = { __typename: 'AppError', field: string | null, message: string | null, code: AppErrorCode, permissions: Array<PermissionEnum> | null };
 
+export type ExportErrorFragment = { __typename: 'ExportError', code: ExportErrorCode, field: string | null, message: string | null };
+
 export type MetadataErrorFragment = { __typename: 'MetadataError', code: MetadataErrorCode, field: string | null, message: string | null };
 
 export type UploadErrorFragment = { __typename: 'UploadError', code: UploadErrorCode, field: string | null, message: string | null };
 
+export type InitiativeTypeDeleteErrorFragmentFragment = { __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null };
+
+export type InitiativeTypeBulkDeleteErrorFragmentFragment = { __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null };
+
+export type InitiativeTypeBulkUpdateErrorFragmentFragment = { __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null };
+
+export type InitiativeAttributeAssignErrorFragmentFragment = { __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null };
+
+export type InitiativeAttributeUnassignErrorFragmentFragment = { __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null };
+
+export type InitiativeTypeCreateErrorFragmentFragment = { __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null };
+
+export type InitiativeTypeReorderAttributesErrorFragmentFragment = { __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null };
+
+export type InitiativeAttributeAssignmentUpdateErrorFragmentFragment = { __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null, attributes: Array<string> | null };
+
 export type InitiativeTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type InitiativeVariantTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type CategoryTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type CollectionTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type PageTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type VoucherTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type SaleTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type AttributeTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type AttributeValueTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
+
+export type ShippingPriceTranslateErrorFragmentFragment = { __typename: 'TranslationError', code: TranslationErrorCode, field: string | null, message: string | null };
 
 export type FileFragment = { __typename: 'File', url: string, contentType: string | null };
 
@@ -2136,9 +2266,9 @@ export type InitiativeMediaFragment = { __typename: 'InitiativeMedia', id: strin
 
 export type InitiativeWithChannelListingsFragment = { __typename: 'Initiative', id: string, title: string, thumbnail: { __typename: 'Image', url: string } | null };
 
-export type InitiativeVariantAttributesFragment = { __typename: 'Initiative', id: string };
+export type InitiativeFragment = { __typename: 'Initiative', title: string, slug: string, description: any | null, seoTitle: string | null, seoDescription: string | null, media: Array<{ __typename: 'InitiativeMedia', id: string, alt: string, sortOrder: number | null, url: string, type: InitiativeMediaType, oembedData: any }> | null, metadata: Array<{ __typename: 'MetadataItem', key: string, value: string }>, privateMetadata: Array<{ __typename: 'MetadataItem', key: string, value: string }> };
 
-export type InitiativeFragment = { __typename: 'Initiative', title: string, slug: string, description: any | null, seoTitle: string | null, seoDescription: string | null, id: string, media: Array<{ __typename: 'InitiativeMedia', id: string, alt: string, sortOrder: number | null, url: string, type: InitiativeMediaType, oembedData: any }> | null, metadata: Array<{ __typename: 'MetadataItem', key: string, value: string }>, privateMetadata: Array<{ __typename: 'MetadataItem', key: string, value: string }> };
+export type ExportFileFragment = { __typename: 'ExportFile', id: string, status: JobStatusEnum, url: string | null };
 
 export type MetadataItemFragment = { __typename: 'MetadataItem', key: string, value: string };
 
@@ -2230,6 +2360,13 @@ export type InitiativeBulkDeleteMutationVariables = Exact<{
 
 export type InitiativeBulkDeleteMutation = { __typename: 'Mutation', initiativeBulkDelete: { __typename: 'InitiativeBulkDelete', errors: Array<{ __typename: 'InitiativeError', code: InitiativeErrorCode, field: string | null, message: string | null }> } | null };
 
+export type InitiativeExportMutationVariables = Exact<{
+  input: ExportInitiativesInput;
+}>;
+
+
+export type InitiativeExportMutation = { __typename: 'Mutation', exportInitiatives: { __typename: 'ExportInitiatives', exportFile: { __typename: 'ExportFile', id: string, status: JobStatusEnum, url: string | null } | null, errors: Array<{ __typename: 'ExportError', code: ExportErrorCode, field: string | null, message: string | null }> } | null };
+
 export type InitiativeListQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['String']>;
@@ -2240,7 +2377,7 @@ export type InitiativeListQueryVariables = Exact<{
 }>;
 
 
-export type InitiativeListQuery = { __typename: 'Query', initiatives: { __typename: 'InitiativeCountableConnection', totalCount: number | null, edges: Array<{ __typename: 'InitiativeCountableEdge', node: { __typename: 'Initiative', updatedAt: any, title: string, slug: string, description: any | null, seoTitle: string | null, seoDescription: string | null, id: string, media: Array<{ __typename: 'InitiativeMedia', id: string, alt: string, sortOrder: number | null, url: string, type: InitiativeMediaType, oembedData: any }> | null, metadata: Array<{ __typename: 'MetadataItem', key: string, value: string }>, privateMetadata: Array<{ __typename: 'MetadataItem', key: string, value: string }> } }>, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string | null, endCursor: string | null } } | null };
+export type InitiativeListQuery = { __typename: 'Query', initiatives: { __typename: 'InitiativeCountableConnection', totalCount: number | null, edges: Array<{ __typename: 'InitiativeCountableEdge', node: { __typename: 'Initiative', updatedAt: any, title: string, slug: string, description: any | null, seoTitle: string | null, seoDescription: string | null, media: Array<{ __typename: 'InitiativeMedia', id: string, alt: string, sortOrder: number | null, url: string, type: InitiativeMediaType, oembedData: any }> | null, metadata: Array<{ __typename: 'MetadataItem', key: string, value: string }>, privateMetadata: Array<{ __typename: 'MetadataItem', key: string, value: string }> } }>, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string | null, endCursor: string | null } } | null };
 
 export type InitiativeCountQueryVariables = Exact<{
   filter?: InputMaybe<InitiativeFilterInput>;
@@ -2258,7 +2395,7 @@ export type InitiativeDetailsQueryVariables = Exact<{
 }>;
 
 
-export type InitiativeDetailsQuery = { __typename: 'Query', initiative: { __typename: 'Initiative', title: string, slug: string, description: any | null, seoTitle: string | null, seoDescription: string | null, id: string, media: Array<{ __typename: 'InitiativeMedia', id: string, alt: string, sortOrder: number | null, url: string, type: InitiativeMediaType, oembedData: any }> | null, metadata: Array<{ __typename: 'MetadataItem', key: string, value: string }>, privateMetadata: Array<{ __typename: 'MetadataItem', key: string, value: string }> } | null };
+export type InitiativeDetailsQuery = { __typename: 'Query', initiative: { __typename: 'Initiative', title: string, slug: string, description: any | null, seoTitle: string | null, seoDescription: string | null, media: Array<{ __typename: 'InitiativeMedia', id: string, alt: string, sortOrder: number | null, url: string, type: InitiativeMediaType, oembedData: any }> | null, metadata: Array<{ __typename: 'MetadataItem', key: string, value: string }>, privateMetadata: Array<{ __typename: 'MetadataItem', key: string, value: string }> } | null };
 
 export type InitiativeMediaByIdQueryVariables = Exact<{
   initiativeId: Scalars['ID'];

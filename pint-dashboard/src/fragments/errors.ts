@@ -16,89 +16,89 @@ export const initiativeErrorFragment = gql`
   }
 `;
 
-export const initiativeErrorWithAttributesFragment = gql`
-  fragment InitiativeErrorWithAttributes on InitiativeError {
-    ...InitiativeError
-    // attributes
-  }
-`;
-
-export const initiativeChannelListingErrorFragment = gql`
-  fragment InitiativeChannelListingError on InitiativeChannelListingError {
-    code
-    field
-    message
-    // channels
-  }
-`;
-
-export const collectionChannelListingErrorFragment = gql`
-  fragment CollectionChannelListingError on CollectionChannelListingError {
-    code
-    field
-    message
-    channels
-  }
-`;
+// export const initiativeErrorWithAttributesFragment = gql`
+//   fragment InitiativeErrorWithAttributes on InitiativeError {
+//     ...InitiativeError
+//     // attributes
+//   }
+// `;
+//
+// export const initiativeChannelListingErrorFragment = gql`
+//   fragment InitiativeChannelListingError on InitiativeChannelListingError {
+//     code
+//     field
+//     message
+//     // channels
+//   }
+// `;
+//
+// export const collectionChannelListingErrorFragment = gql`
+//   fragment CollectionChannelListingError on CollectionChannelListingError {
+//     code
+//     field
+//     message
+//     channels
+//   }
+// `;
 
 export const accountErrorFragment = gql`
   fragment AccountError on AccountError {
     code
     field
-    // addressType
+#    // addressType
     message
   }
 `;
 
-export const discountErrorFragment = gql`
-  fragment DiscountError on DiscountError {
-    code
-    field
-    // channels
-    message
-  }
-`;
+// export const discountErrorFragment = gql`
+//   fragment DiscountError on DiscountError {
+//     code
+//     field
+//     // channels
+//     message
+//   }
+// `;
 
-export const menuErrorFragment = gql`
-  fragment MenuError on MenuError {
-    code
-    field
-    message
-  }
-`;
-
-export const orderErrorFragment = gql`
-  fragment OrderError on OrderError {
-    code
-    field
-    // addressType
-    message
-    orderLines
-  }
-`;
-
-export const orderSettingsErrorFragment = gql`
-  fragment OrderSettingsError on OrderSettingsError {
-    code
-    field
-    message
-  }
-`;
-
-export const pageErrorFragment = gql`
-  fragment PageError on PageError {
-    code
-    field
-    message
-  }
-`;
-
-export const pageErrorWithAttributesFragment = gql`
-  fragment PageErrorWithAttributes on PageError {
-    ...PageError
-    attributes
-  }
-`;
+// export const menuErrorFragment = gql`
+//   fragment MenuError on MenuError {
+//     code
+//     field
+//     message
+//   }
+// `;
+//
+// export const orderErrorFragment = gql`
+//   fragment OrderError on OrderError {
+//     code
+//     field
+//     // addressType
+//     message
+//     orderLines
+//   }
+// `;
+//
+// export const orderSettingsErrorFragment = gql`
+//   fragment OrderSettingsError on OrderSettingsError {
+//     code
+//     field
+//     message
+//   }
+// `;
+//
+// export const pageErrorFragment = gql`
+//   fragment PageError on PageError {
+//     code
+//     field
+//     message
+//   }
+// `;
+//
+// export const pageErrorWithAttributesFragment = gql`
+//   fragment PageErrorWithAttributes on PageError {
+//     ...PageError
+//     attributes
+//   }
+// `;
 
 export const permissionGroupErrorFragment = gql`
   fragment PermissionGroupError on PermissionGroupError {
@@ -108,55 +108,55 @@ export const permissionGroupErrorFragment = gql`
   }
 `;
 
-export const bulkInitiativeErrorFragment = gql`
-  fragment BulkInitiativeError on BulkInitiativeError {
-    field
-    code
-    index
-    channels
-    message
-  }
-`;
-export const bulkStockErrorFragment = gql`
-  fragment BulkStockError on BulkStockError {
-    code
-    field
-    index
-    message
-  }
-`;
-export const stockErrorFragment = gql`
-  fragment StockError on StockError {
-    code
-    field
-    message
-  }
-`;
-
-export const shippingChannelsErrorFragment = gql`
-  fragment ShippingChannelsError on ShippingError {
-    code
-    field
-    channels
-    message
-  }
-`;
-
-export const shippingErrorFragment = gql`
-  fragment ShippingError on ShippingError {
-    code
-    field
-    message
-  }
-`;
-
-export const shopErrorFragment = gql`
-  fragment ShopError on ShopError {
-    code
-    field
-    message
-  }
-`;
+// export const bulkInitiativeErrorFragment = gql`
+//   fragment BulkInitiativeError on BulkInitiativeError {
+//     field
+//     code
+//     index
+//     channels
+//     message
+//   }
+// `;
+// export const bulkStockErrorFragment = gql`
+//   fragment BulkStockError on BulkStockError {
+//     code
+//     field
+//     index
+//     message
+//   }
+// `;
+// export const stockErrorFragment = gql`
+//   fragment StockError on StockError {
+//     code
+//     field
+//     message
+//   }
+// `;
+//
+// export const shippingChannelsErrorFragment = gql`
+//   fragment ShippingChannelsError on ShippingError {
+//     code
+//     field
+//     channels
+//     message
+//   }
+// `;
+//
+// export const shippingErrorFragment = gql`
+//   fragment ShippingError on ShippingError {
+//     code
+//     field
+//     message
+//   }
+// `;
+//
+// export const shopErrorFragment = gql`
+//   fragment ShopError on ShopError {
+//     code
+//     field
+//     message
+//   }
+// `;
 
 export const staffErrorFragment = gql`
   fragment StaffError on StaffError {
@@ -223,13 +223,13 @@ export const metadataErrorFragment = gql`
   }
 `;
 
-export const collectionsErrorFragment = gql`
-  fragment CollectionError on CollectionError {
-    code
-    field
-    message
-  }
-`;
+// export const collectionsErrorFragment = gql`
+//   fragment CollectionError on CollectionError {
+//     code
+//     field
+//     message
+//   }
+// `;
 
 export const uploadErrorFragment = gql`
   fragment UploadError on UploadError {
@@ -392,21 +392,21 @@ export const initiativeAttributeAssignmentUpdateErrorFragment = gql`
   }
 `;
 
-export const shopSettingsUpdateErrorFragment = gql`
-  fragment ShopSettingsUpdateErrorFragment on ShopError {
-    code
-    field
-    message
-  }
-`;
-
-export const shopFetchTaxRatesErrorFragment = gql`
-  fragment ShopFetchTaxRatesErrorFragment on ShopError {
-    code
-    field
-    message
-  }
-`;
+// export const shopSettingsUpdateErrorFragment = gql`
+//   fragment ShopSettingsUpdateErrorFragment on ShopError {
+//     code
+//     field
+//     message
+//   }
+// `;
+//
+// export const shopFetchTaxRatesErrorFragment = gql`
+//   fragment ShopFetchTaxRatesErrorFragment on ShopError {
+//     code
+//     field
+//     message
+//   }
+// `;
 
 export const initiativeTranslateErrorFragment = gql`
   fragment InitiativeTranslateErrorFragment on TranslationError {

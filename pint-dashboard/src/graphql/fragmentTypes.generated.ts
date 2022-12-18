@@ -26,7 +26,8 @@
       "User"
     ],
     "Job": [
-      "AppInstallation"
+      "AppInstallation",
+      "ExportFile"
     ],
     "Node": [
       "App",
@@ -36,6 +37,8 @@
       "CustomerEvent",
       "EventDelivery",
       "EventDeliveryAttempt",
+      "ExportEvent",
+      "ExportFile",
       "Group",
       "Initiative",
       "InitiativeMedia",
@@ -63,3 +66,4 @@
   }
 };
       export default result;
+    

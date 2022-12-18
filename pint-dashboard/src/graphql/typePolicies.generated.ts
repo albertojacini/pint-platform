@@ -388,6 +388,50 @@ export type EventDeliveryRetryFieldPolicy = {
 	delivery?: FieldPolicy<any> | FieldReadFunction<any>,
 	errors?: FieldPolicy<any> | FieldReadFunction<any>
 };
+export type ExportErrorKeySpecifier = ('field' | 'message' | 'code' | ExportErrorKeySpecifier)[];
+export type ExportErrorFieldPolicy = {
+	field?: FieldPolicy<any> | FieldReadFunction<any>,
+	message?: FieldPolicy<any> | FieldReadFunction<any>,
+	code?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type ExportEventKeySpecifier = ('id' | 'date' | 'type' | 'user' | 'app' | 'message' | ExportEventKeySpecifier)[];
+export type ExportEventFieldPolicy = {
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	date?: FieldPolicy<any> | FieldReadFunction<any>,
+	type?: FieldPolicy<any> | FieldReadFunction<any>,
+	user?: FieldPolicy<any> | FieldReadFunction<any>,
+	app?: FieldPolicy<any> | FieldReadFunction<any>,
+	message?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type ExportFileKeySpecifier = ('id' | 'status' | 'createdAt' | 'updatedAt' | 'message' | 'url' | 'events' | 'user' | 'app' | ExportFileKeySpecifier)[];
+export type ExportFileFieldPolicy = {
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	status?: FieldPolicy<any> | FieldReadFunction<any>,
+	createdAt?: FieldPolicy<any> | FieldReadFunction<any>,
+	updatedAt?: FieldPolicy<any> | FieldReadFunction<any>,
+	message?: FieldPolicy<any> | FieldReadFunction<any>,
+	url?: FieldPolicy<any> | FieldReadFunction<any>,
+	events?: FieldPolicy<any> | FieldReadFunction<any>,
+	user?: FieldPolicy<any> | FieldReadFunction<any>,
+	app?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type ExportFileCountableConnectionKeySpecifier = ('pageInfo' | 'edges' | 'totalCount' | ExportFileCountableConnectionKeySpecifier)[];
+export type ExportFileCountableConnectionFieldPolicy = {
+	pageInfo?: FieldPolicy<any> | FieldReadFunction<any>,
+	edges?: FieldPolicy<any> | FieldReadFunction<any>,
+	totalCount?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type ExportFileCountableEdgeKeySpecifier = ('node' | 'cursor' | ExportFileCountableEdgeKeySpecifier)[];
+export type ExportFileCountableEdgeFieldPolicy = {
+	node?: FieldPolicy<any> | FieldReadFunction<any>,
+	cursor?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type ExportInitiativesKeySpecifier = ('exportFile' | 'exportErrors' | 'errors' | ExportInitiativesKeySpecifier)[];
+export type ExportInitiativesFieldPolicy = {
+	exportFile?: FieldPolicy<any> | FieldReadFunction<any>,
+	exportErrors?: FieldPolicy<any> | FieldReadFunction<any>,
+	errors?: FieldPolicy<any> | FieldReadFunction<any>
+};
 export type FileKeySpecifier = ('url' | 'contentType' | FileKeySpecifier)[];
 export type FileFieldPolicy = {
 	url?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -629,7 +673,7 @@ export type MetadataItemFieldPolicy = {
 	key?: FieldPolicy<any> | FieldReadFunction<any>,
 	value?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('webhookCreate' | 'webhookDelete' | 'webhookUpdate' | 'eventDeliveryRetry' | 'initiativeCreate' | 'initiativeDelete' | 'initiativeBulkDelete' | 'initiativeUpdate' | 'initiativeTranslate' | 'initiativeMediaCreate' | 'initiativeMediaDelete' | 'initiativeMediaBulkDelete' | 'initiativeMediaReorder' | 'initiativeMediaUpdate' | 'deleteMetadata' | 'deletePrivateMetadata' | 'updateMetadata' | 'updatePrivateMetadata' | 'fileUpload' | 'appCreate' | 'appUpdate' | 'appDelete' | 'appTokenCreate' | 'appTokenDelete' | 'appTokenVerify' | 'appInstall' | 'appRetryInstall' | 'appDeleteFailedInstallation' | 'appFetchManifest' | 'appActivate' | 'appDeactivate' | 'tokenCreate' | 'tokenRefresh' | 'tokenVerify' | 'tokensDeactivateAll' | 'requestPasswordReset' | 'confirmAccount' | 'setPassword' | 'passwordChange' | 'requestEmailChange' | 'confirmEmailChange' | 'accountRegister' | 'accountUpdate' | 'accountRequestDeletion' | 'accountDelete' | 'customerCreate' | 'customerUpdate' | 'customerDelete' | 'customerBulkDelete' | 'staffCreate' | 'staffUpdate' | 'staffDelete' | 'staffBulkDelete' | 'userAvatarUpdate' | 'userAvatarDelete' | 'userBulkSetActive' | 'permissionGroupCreate' | 'permissionGroupUpdate' | 'permissionGroupDelete' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('webhookCreate' | 'webhookDelete' | 'webhookUpdate' | 'eventDeliveryRetry' | 'initiativeCreate' | 'initiativeDelete' | 'initiativeBulkDelete' | 'initiativeUpdate' | 'initiativeTranslate' | 'initiativeMediaCreate' | 'initiativeMediaDelete' | 'initiativeMediaBulkDelete' | 'initiativeMediaReorder' | 'initiativeMediaUpdate' | 'deleteMetadata' | 'deletePrivateMetadata' | 'updateMetadata' | 'updatePrivateMetadata' | 'exportInitiatives' | 'fileUpload' | 'appCreate' | 'appUpdate' | 'appDelete' | 'appTokenCreate' | 'appTokenDelete' | 'appTokenVerify' | 'appInstall' | 'appRetryInstall' | 'appDeleteFailedInstallation' | 'appFetchManifest' | 'appActivate' | 'appDeactivate' | 'tokenCreate' | 'tokenRefresh' | 'tokenVerify' | 'tokensDeactivateAll' | 'requestPasswordReset' | 'confirmAccount' | 'setPassword' | 'passwordChange' | 'requestEmailChange' | 'confirmEmailChange' | 'accountRegister' | 'accountUpdate' | 'accountRequestDeletion' | 'accountDelete' | 'customerCreate' | 'customerUpdate' | 'customerDelete' | 'customerBulkDelete' | 'staffCreate' | 'staffUpdate' | 'staffDelete' | 'staffBulkDelete' | 'userAvatarUpdate' | 'userAvatarDelete' | 'userBulkSetActive' | 'permissionGroupCreate' | 'permissionGroupUpdate' | 'permissionGroupDelete' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	webhookCreate?: FieldPolicy<any> | FieldReadFunction<any>,
 	webhookDelete?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -649,6 +693,7 @@ export type MutationFieldPolicy = {
 	deletePrivateMetadata?: FieldPolicy<any> | FieldReadFunction<any>,
 	updateMetadata?: FieldPolicy<any> | FieldReadFunction<any>,
 	updatePrivateMetadata?: FieldPolicy<any> | FieldReadFunction<any>,
+	exportInitiatives?: FieldPolicy<any> | FieldReadFunction<any>,
 	fileUpload?: FieldPolicy<any> | FieldReadFunction<any>,
 	appCreate?: FieldPolicy<any> | FieldReadFunction<any>,
 	appUpdate?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -788,7 +833,7 @@ export type PoliticalEntityCountableEdgeFieldPolicy = {
 	node?: FieldPolicy<any> | FieldReadFunction<any>,
 	cursor?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type QueryKeySpecifier = ('webhook' | 'webhookEvents' | 'webhookSamplePayload' | 'translations' | 'translation' | 'politicalEntities' | 'initiative' | 'initiatives' | 'appsInstallations' | 'apps' | 'app' | 'appExtensions' | 'appExtension' | 'addressValidationRules' | 'customers' | 'permissionGroups' | 'permissionGroup' | 'me' | 'staffUsers' | 'user' | '_entities' | '_service' | QueryKeySpecifier)[];
+export type QueryKeySpecifier = ('webhook' | 'webhookEvents' | 'webhookSamplePayload' | 'translations' | 'translation' | 'politicalEntities' | 'initiative' | 'initiatives' | 'exportFile' | 'exportFiles' | 'appsInstallations' | 'apps' | 'app' | 'appExtensions' | 'appExtension' | 'addressValidationRules' | 'customers' | 'permissionGroups' | 'permissionGroup' | 'me' | 'staffUsers' | 'user' | '_entities' | '_service' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	webhook?: FieldPolicy<any> | FieldReadFunction<any>,
 	webhookEvents?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -798,6 +843,8 @@ export type QueryFieldPolicy = {
 	politicalEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	initiative?: FieldPolicy<any> | FieldReadFunction<any>,
 	initiatives?: FieldPolicy<any> | FieldReadFunction<any>,
+	exportFile?: FieldPolicy<any> | FieldReadFunction<any>,
+	exportFiles?: FieldPolicy<any> | FieldReadFunction<any>,
 	appsInstallations?: FieldPolicy<any> | FieldReadFunction<any>,
 	apps?: FieldPolicy<any> | FieldReadFunction<any>,
 	app?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -1265,6 +1312,30 @@ export type StrictTypedTypePolicies = {
 	EventDeliveryRetry?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | EventDeliveryRetryKeySpecifier | (() => undefined | EventDeliveryRetryKeySpecifier),
 		fields?: EventDeliveryRetryFieldPolicy,
+	},
+	ExportError?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | ExportErrorKeySpecifier | (() => undefined | ExportErrorKeySpecifier),
+		fields?: ExportErrorFieldPolicy,
+	},
+	ExportEvent?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | ExportEventKeySpecifier | (() => undefined | ExportEventKeySpecifier),
+		fields?: ExportEventFieldPolicy,
+	},
+	ExportFile?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | ExportFileKeySpecifier | (() => undefined | ExportFileKeySpecifier),
+		fields?: ExportFileFieldPolicy,
+	},
+	ExportFileCountableConnection?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | ExportFileCountableConnectionKeySpecifier | (() => undefined | ExportFileCountableConnectionKeySpecifier),
+		fields?: ExportFileCountableConnectionFieldPolicy,
+	},
+	ExportFileCountableEdge?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | ExportFileCountableEdgeKeySpecifier | (() => undefined | ExportFileCountableEdgeKeySpecifier),
+		fields?: ExportFileCountableEdgeFieldPolicy,
+	},
+	ExportInitiatives?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | ExportInitiativesKeySpecifier | (() => undefined | ExportInitiativesKeySpecifier),
+		fields?: ExportInitiativesFieldPolicy,
 	},
 	File?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | FileKeySpecifier | (() => undefined | FileKeySpecifier),

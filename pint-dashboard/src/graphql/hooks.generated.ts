@@ -198,6 +198,13 @@ export const AppErrorFragmentDoc = gql`
   permissions
 }
     `;
+export const ExportErrorFragmentDoc = gql`
+    fragment ExportError on ExportError {
+  code
+  field
+  message
+}
+    `;
 export const MetadataErrorFragmentDoc = gql`
     fragment MetadataError on MetadataError {
   code
@@ -212,8 +219,128 @@ export const UploadErrorFragmentDoc = gql`
   message
 }
     `;
+export const InitiativeTypeDeleteErrorFragmentFragmentDoc = gql`
+    fragment InitiativeTypeDeleteErrorFragment on InitiativeError {
+  code
+  field
+  message
+}
+    `;
+export const InitiativeTypeBulkDeleteErrorFragmentFragmentDoc = gql`
+    fragment InitiativeTypeBulkDeleteErrorFragment on InitiativeError {
+  code
+  field
+  message
+}
+    `;
+export const InitiativeTypeBulkUpdateErrorFragmentFragmentDoc = gql`
+    fragment InitiativeTypeBulkUpdateErrorFragment on InitiativeError {
+  code
+  field
+  message
+}
+    `;
+export const InitiativeAttributeAssignErrorFragmentFragmentDoc = gql`
+    fragment InitiativeAttributeAssignErrorFragment on InitiativeError {
+  code
+  field
+  message
+}
+    `;
+export const InitiativeAttributeUnassignErrorFragmentFragmentDoc = gql`
+    fragment InitiativeAttributeUnassignErrorFragment on InitiativeError {
+  code
+  field
+  message
+}
+    `;
+export const InitiativeTypeCreateErrorFragmentFragmentDoc = gql`
+    fragment InitiativeTypeCreateErrorFragment on InitiativeError {
+  code
+  field
+  message
+}
+    `;
+export const InitiativeTypeReorderAttributesErrorFragmentFragmentDoc = gql`
+    fragment InitiativeTypeReorderAttributesErrorFragment on InitiativeError {
+  code
+  field
+  message
+}
+    `;
+export const InitiativeAttributeAssignmentUpdateErrorFragmentFragmentDoc = gql`
+    fragment InitiativeAttributeAssignmentUpdateErrorFragment on InitiativeError {
+  code
+  field
+  message
+  attributes
+}
+    `;
 export const InitiativeTranslateErrorFragmentFragmentDoc = gql`
     fragment InitiativeTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const InitiativeVariantTranslateErrorFragmentFragmentDoc = gql`
+    fragment InitiativeVariantTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const CategoryTranslateErrorFragmentFragmentDoc = gql`
+    fragment CategoryTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const CollectionTranslateErrorFragmentFragmentDoc = gql`
+    fragment CollectionTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const PageTranslateErrorFragmentFragmentDoc = gql`
+    fragment PageTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const VoucherTranslateErrorFragmentFragmentDoc = gql`
+    fragment VoucherTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const SaleTranslateErrorFragmentFragmentDoc = gql`
+    fragment SaleTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const AttributeTranslateErrorFragmentFragmentDoc = gql`
+    fragment AttributeTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const AttributeValueTranslateErrorFragmentFragmentDoc = gql`
+    fragment AttributeValueTranslateErrorFragment on TranslationError {
+  code
+  field
+  message
+}
+    `;
+export const ShippingPriceTranslateErrorFragmentFragmentDoc = gql`
+    fragment ShippingPriceTranslateErrorFragment on TranslationError {
   code
   field
   message
@@ -234,11 +361,6 @@ export const InitiativeWithChannelListingsFragmentDoc = gql`
   }
 }
     `;
-export const InitiativeVariantAttributesFragmentDoc = gql`
-    fragment InitiativeVariantAttributes on Initiative {
-  id
-}
-    `;
 export const InitiativeMediaFragmentDoc = gql`
     fragment InitiativeMedia on InitiativeMedia {
   id
@@ -251,7 +373,6 @@ export const InitiativeMediaFragmentDoc = gql`
     `;
 export const InitiativeFragmentDoc = gql`
     fragment Initiative on Initiative {
-  ...InitiativeVariantAttributes
   ...Metadata
   title
   slug
@@ -262,9 +383,15 @@ export const InitiativeFragmentDoc = gql`
     ...InitiativeMedia
   }
 }
-    ${InitiativeVariantAttributesFragmentDoc}
-${MetadataFragmentDoc}
+    ${MetadataFragmentDoc}
 ${InitiativeMediaFragmentDoc}`;
+export const ExportFileFragmentDoc = gql`
+    fragment ExportFile on ExportFile {
+  id
+  status
+  url
+}
+    `;
 export const PermissionGroupFragmentDoc = gql`
     fragment PermissionGroup on Group {
   id
@@ -1582,6 +1709,45 @@ export function useInitiativeBulkDeleteMutation(baseOptions?: ApolloReactHooks.M
 export type InitiativeBulkDeleteMutationHookResult = ReturnType<typeof useInitiativeBulkDeleteMutation>;
 export type InitiativeBulkDeleteMutationResult = Apollo.MutationResult<Types.InitiativeBulkDeleteMutation>;
 export type InitiativeBulkDeleteMutationOptions = Apollo.BaseMutationOptions<Types.InitiativeBulkDeleteMutation, Types.InitiativeBulkDeleteMutationVariables>;
+export const InitiativeExportDocument = gql`
+    mutation InitiativeExport($input: ExportInitiativesInput!) {
+  exportInitiatives(input: $input) {
+    exportFile {
+      ...ExportFile
+    }
+    errors {
+      ...ExportError
+    }
+  }
+}
+    ${ExportFileFragmentDoc}
+${ExportErrorFragmentDoc}`;
+export type InitiativeExportMutationFn = Apollo.MutationFunction<Types.InitiativeExportMutation, Types.InitiativeExportMutationVariables>;
+
+/**
+ * __useInitiativeExportMutation__
+ *
+ * To run a mutation, you first call `useInitiativeExportMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInitiativeExportMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [initiativeExportMutation, { data, loading, error }] = useInitiativeExportMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useInitiativeExportMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.InitiativeExportMutation, Types.InitiativeExportMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<Types.InitiativeExportMutation, Types.InitiativeExportMutationVariables>(InitiativeExportDocument, options);
+      }
+export type InitiativeExportMutationHookResult = ReturnType<typeof useInitiativeExportMutation>;
+export type InitiativeExportMutationResult = Apollo.MutationResult<Types.InitiativeExportMutation>;
+export type InitiativeExportMutationOptions = Apollo.BaseMutationOptions<Types.InitiativeExportMutation, Types.InitiativeExportMutationVariables>;
 export const InitiativeListDocument = gql`
     query InitiativeList($first: Int, $after: String, $last: Int, $before: String, $filter: InitiativeFilterInput, $sort: InitiativeOrder) {
   initiatives(
