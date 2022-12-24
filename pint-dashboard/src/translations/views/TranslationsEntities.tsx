@@ -12,7 +12,7 @@ import { LanguageEntitiesUrlQueryParams, TranslatableEntities } from "../urls";
 // import TranslationsCategoryList from "./EntityLists/TranslationsCategoryList";
 // import TranslationsCollectionList from "./EntityLists/TranslationsCollectionList";
 // import TranslationsMenuItemList from "./EntityLists/TranslationsMenuItemList";
-import TranslationsPageList from "./EntityLists/TranslationsPageList";
+// import TranslationsPageList from "./EntityLists/TranslationsPageList";
 import TranslationsInitiativeList from "./EntityLists/TranslationsInitiativeList";
 // import TranslationsSaleList from "./EntityLists/TranslationsSaleList";
 // import TranslationsShippingMethodList from "./EntityLists/TranslationsShippingMethodList";

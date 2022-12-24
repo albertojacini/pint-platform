@@ -11,16 +11,16 @@ import Accordion, { AccordionProps } from "@saleor/components/Accordion";
 // import ChannelsAvailabilityDialogContentWrapper from "@saleor/components/ChannelsAvailabilityDialogWrapper";
 import Checkbox from "@saleor/components/Checkbox";
 import Chip from "@saleor/components/Chip";
-import Hr from "@saleor/components/Hr";
+// import Hr from "@saleor/components/Hr";
 import { MultiAutocompleteChoiceType } from "@saleor/components/MultiAutocompleteSelectField";
-// import {
-//   ChannelFragment,
-//   ExportInitiativesInput,
-//   InitiativeFieldEnum,
-// } from "@saleor/graphql";
+import {
+  // ChannelFragment,
+  ExportInitiativesInput,
+  InitiativeFieldEnum,
+} from "@saleor/graphql";
 import { ChangeEvent, FormChange } from "@saleor/hooks/useForm";
 import useSearchQuery from "@saleor/hooks/useSearchQuery";
-import { sectionNames } from "@saleor/intl";
+// import { sectionNames } from "@saleor/intl";
 import { makeStyles } from "@saleor/macaw-ui";
 import { FetchMoreProps } from "@saleor/types";
 import { toggle } from "@saleor/utils/lists";

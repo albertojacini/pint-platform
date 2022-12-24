@@ -15,7 +15,7 @@ import Metadata from "@saleor/components/Metadata";
 import { MultiAutocompleteChoiceType } from "@saleor/components/MultiAutocompleteSelectField";
 import PageHeader from "@saleor/components/PageHeader";
 import Savebar from "@saleor/components/Savebar";
-import SeoForm from "@saleor/components/SeoForm";
+// import SeoForm from "@saleor/components/SeoForm";
 import {
   PermissionEnum,
   // InitiativeChannelListingErrorFragment,
@@ -291,23 +291,23 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
                     {/*<CardSpacer />*/}
                   </>
                 )}
-                <SeoForm
-                  allowEmptySlug={true}
-                  helperText={intl.formatMessage({
-                    id: "LKoIB1",
-                    defaultMessage:
-                      "Add search engine title and description to make this initiative easier to find",
-                  })}
-                  title={data.seoTitle}
-                  slug={data.slug}
-                  slugPlaceholder={data.name}
-                  titlePlaceholder={data.name}
-                  description={data.seoDescription}
-                  descriptionPlaceholder={data.seoTitle}
-                  loading={loading}
-                  onChange={change}
-                />
-                <CardSpacer />
+                {/*<SeoForm*/}
+                {/*  allowEmptySlug={true}*/}
+                {/*  helperText={intl.formatMessage({*/}
+                {/*    id: "LKoIB1",*/}
+                {/*    defaultMessage:*/}
+                {/*      "Add search engine title and description to make this initiative easier to find",*/}
+                {/*  })}*/}
+                {/*  title={data.seoTitle}*/}
+                {/*  slug={data.slug}*/}
+                {/*  slugPlaceholder={data.name}*/}
+                {/*  titlePlaceholder={data.name}*/}
+                {/*  description={data.seoDescription}*/}
+                {/*  descriptionPlaceholder={data.seoTitle}*/}
+                {/*  loading={loading}*/}
+                {/*  onChange={change}*/}
+                {/*/>*/}
+                {/*<CardSpacer />*/}
                 <Metadata data={data} onChange={handlers.changeMetadata} />
               </div>
               <div>

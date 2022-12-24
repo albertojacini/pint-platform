@@ -202,7 +202,7 @@ export function useAuthProvider({
 
   return {
     login: handleLogin,
-    requestLoginByExternalPlugin: handleRequestExternalLogin,
+    // requestLoginByExternalPlugin: handleRequestExternalLogin,
     loginByExternalPlugin: handleExternalLogin,
     logout: handleLogout,
     authenticating: authenticating && !error,
