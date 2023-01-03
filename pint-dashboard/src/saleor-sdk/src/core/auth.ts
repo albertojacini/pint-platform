@@ -1,33 +1,33 @@
 import {
   CHANGE_USER_PASSWORD,
-  EXTERNAL_AUTHENTICATION_URL,
-  EXTERNAL_LOGOUT,
-  EXTERNAL_REFRESH,
-  EXTERNAL_VERIFY_TOKEN,
+  // EXTERNAL_AUTHENTICATION_URL,
+  // EXTERNAL_LOGOUT,
+  // EXTERNAL_REFRESH,
+  // EXTERNAL_VERIFY_TOKEN,
   LOGIN,
-  OBTAIN_EXTERNAL_ACCESS_TOKEN,
+  // OBTAIN_EXTERNAL_ACCESS_TOKEN,
   REQUEST_PASSWORD_RESET,
   REFRESH_TOKEN,
   REGISTER,
   SET_PASSWORD,
   VERIFY_TOKEN,
   REFRESH_TOKEN_WITH_USER,
-  EXTERNAL_REFRESH_WITH_USER,
+  // EXTERNAL_REFRESH_WITH_USER,
   LOGIN_WITHOUT_DETAILS,
 } from "../apollo/mutations";
 import {
-  ExternalAuthenticationUrlMutation,
-  ExternalAuthenticationUrlMutationVariables,
+  // ExternalAuthenticationUrlMutation,
+  // ExternalAuthenticationUrlMutationVariables,
   ExternalLogoutMutation,
   ExternalLogoutMutationVariables,
-  ExternalObtainAccessTokensMutation,
-  ExternalObtainAccessTokensMutationVariables,
-  ExternalRefreshMutation,
-  ExternalRefreshMutationVariables,
-  ExternalRefreshWithUserMutation,
-  ExternalRefreshWithUserMutationVariables,
-  ExternalVerifyMutation,
-  ExternalVerifyMutationVariables,
+  // ExternalObtainAccessTokensMutation,
+  // ExternalObtainAccessTokensMutationVariables,
+  // ExternalRefreshMutation,
+  // ExternalRefreshMutationVariables,
+  // ExternalRefreshWithUserMutation,
+  // ExternalRefreshWithUserMutationVariables,
+  // ExternalVerifyMutation,
+  // ExternalVerifyMutationVariables,
   LoginMutation,
   LoginMutationVariables,
   PasswordChangeMutation,
@@ -48,20 +48,20 @@ import {
 import {
   ChangePasswordResult,
   LogoutOpts,
-  GetExternalAccessTokenResult,
-  GetExternalAuthUrlResult,
+  // GetExternalAccessTokenResult,
+  // GetExternalAuthUrlResult,
   LoginResult,
   LogoutResult,
-  RefreshExternalTokenResult,
+  // RefreshExternalTokenResult,
   RefreshTokenResult,
   RegisterResult,
   RequestPasswordResetResult,
   SaleorClientMethodsProps,
   SetPasswordResult,
-  VerifyExternalTokenResult,
+  // VerifyExternalTokenResult,
   VerifyTokenResult,
-  GetExternalAuthUrlOpts,
-  GetExternalAccessTokenOpts,
+  // GetExternalAuthUrlOpts,
+  // GetExternalAccessTokenOpts,
 } from "./types";
 import {
   ChangePasswordOpts,
@@ -140,48 +140,48 @@ export interface AuthSDK {
    * @returns User assigned to token and the information if the token is valid or not.
    */
   verifyToken: () => Promise<VerifyTokenResult>;
-  /**
-   * Executing externalAuthenticationUrl mutation will prepare special URL which will redirect user to requested
-   * page after successfull authentication. After redirection state and code fields will be added to the URL.
-   *
-   * @param opts - Object withpluginId default value set as "mirumee.authentication.openidconnect" and input as
-   * JSON with redirectUrl - the URL where the user should be redirected after successful authentication.
-   * @returns Authentication data and errors
-   */
-  getExternalAuthUrl: (
-    opts: GetExternalAuthUrlOpts
-  ) => Promise<GetExternalAuthUrlResult>;
-  /**
-   * The externalObtainAccessTokens mutation will generate requested access tokens.
-   *
-   * @param opts - Object withpluginId default value set as "mirumee.authentication.openidconnect" and input as
-   * JSON with code - the authorization code received from the OAuth provider and state - the state value received
-   * from the OAuth provider
-   * @returns Login authentication data and errors
-   */
-  getExternalAccessToken: (
-    opts: GetExternalAccessTokenOpts
-  ) => Promise<GetExternalAccessTokenResult>;
-  /**
-   * The externalRefresh mutation will generate new access tokens when provided with a valid refresh token.
-   *
-   * @param includeUser - Whether to fetch user. Default false.
-   * @returns Token refresh data and errors
-   */
-  refreshExternalToken: (
-    includeUser?: boolean
-  ) => Promise<RefreshExternalTokenResult>;
-  /**
-   * The mutation will verify the authentication token.
-   *
-   * @returns Token verification data and errors
-   */
-  verifyExternalToken: () => Promise<VerifyExternalTokenResult>;
+  // /**
+  //  * Executing externalAuthenticationUrl mutation will prepare special URL which will redirect user to requested
+  //  * page after successfull authentication. After redirection state and code fields will be added to the URL.
+  //  *
+  //  * @param opts - Object withpluginId default value set as "mirumee.authentication.openidconnect" and input as
+  //  * JSON with redirectUrl - the URL where the user should be redirected after successful authentication.
+  //  * @returns Authentication data and errors
+  //  */
+  // getExternalAuthUrl: (
+  //   opts: GetExternalAuthUrlOpts
+  // ) => Promise<GetExternalAuthUrlResult>;
+  // /**
+  //  * The externalObtainAccessTokens mutation will generate requested access tokens.
+  //  *
+  //  * @param opts - Object withpluginId default value set as "mirumee.authentication.openidconnect" and input as
+  //  * JSON with code - the authorization code received from the OAuth provider and state - the state value received
+  //  * from the OAuth provider
+  //  * @returns Login authentication data and errors
+  //  */
+  // getExternalAccessToken: (
+  //   opts: GetExternalAccessTokenOpts
+  // ) => Promise<GetExternalAccessTokenResult>;
+  // /**
+  //  * The externalRefresh mutation will generate new access tokens when provided with a valid refresh token.
+  //  *
+  //  * @param includeUser - Whether to fetch user. Default false.
+  //  * @returns Token refresh data and errors
+  //  */
+  // refreshExternalToken: (
+  //   includeUser?: boolean
+  // ) => Promise<RefreshExternalTokenResult>;
+  // /**
+  //  * The mutation will verify the authentication token.
+  //  *
+  //  * @returns Token verification data and errors
+  //  */
+  // verifyExternalToken: () => Promise<VerifyExternalTokenResult>;
 }
 
 export const auth = ({
   apolloClient: client,
-  channel,
+  // channel,
 }: SaleorClientMethodsProps): AuthSDK => {
   const login: AuthSDK["login"] = ({ includeDetails = true, ...opts }) => {
     const query = includeDetails ? USER : USER_WITHOUT_DETAILS;
@@ -253,7 +253,7 @@ export const auth = ({
       variables: {
         input: {
           ...opts,
-          channel,
+          // channel,
         },
       },
     });
@@ -339,7 +339,8 @@ export const auth = ({
       RequestPasswordResetMutationVariables
     >({
       mutation: REQUEST_PASSWORD_RESET,
-      variables: { ...opts, channel },
+      // variables: { ...opts, channel },
+      variables: { ...opts },
     });
 
     return result;
@@ -360,152 +361,152 @@ export const auth = ({
     });
   };
 
-  const getExternalAuthUrl: AuthSDK["getExternalAuthUrl"] = async opts => {
-    const result = await client.mutate<
-      ExternalAuthenticationUrlMutation,
-      ExternalAuthenticationUrlMutationVariables
-    >({
-      mutation: EXTERNAL_AUTHENTICATION_URL,
-      variables: { ...opts },
-    });
+  // const getExternalAuthUrl: AuthSDK["getExternalAuthUrl"] = async opts => {
+  //   const result = await client.mutate<
+  //     ExternalAuthenticationUrlMutation,
+  //     ExternalAuthenticationUrlMutationVariables
+  //   >({
+  //     mutation: EXTERNAL_AUTHENTICATION_URL,
+  //     variables: { ...opts },
+  //   });
+  //
+  //   return result;
+  // };
+  //
+  // const getExternalAccessToken: AuthSDK["getExternalAccessToken"] = opts => {
+  //   client.writeQuery({
+  //     query: USER,
+  //     data: {
+  //       authenticating: true,
+  //     },
+  //   });
+  //
+  //   return client.mutate<
+  //     ExternalObtainAccessTokensMutation,
+  //     ExternalObtainAccessTokensMutationVariables
+  //   >({
+  //     mutation: OBTAIN_EXTERNAL_ACCESS_TOKEN,
+  //     variables: {
+  //       ...opts,
+  //     },
+  //     update: (_, { data }) => {
+  //       if (data?.externalObtainAccessTokens?.token) {
+  //         storage.setAuthPluginId(opts.pluginId);
+  //         storage.setTokens({
+  //           accessToken: data.externalObtainAccessTokens.token,
+  //           csrfToken: data.externalObtainAccessTokens.csrfToken || null,
+  //         });
+  //       } else {
+  //         client.writeQuery({
+  //           query: USER,
+  //           data: {
+  //             authenticating: false,
+  //           },
+  //         });
+  //       }
+  //     },
+  //   });
+  // };
+  //
+  // const refreshExternalToken: AuthSDK["refreshExternalToken"] = (
+  //   includeUser = false
+  // ) => {
+  //   const csrfToken = storage.getCSRFToken();
+  //   const authPluginId = storage.getAuthPluginId();
+  //
+  //   if (!csrfToken) {
+  //     throw Error("csrfToken not present");
+  //   }
+  //
+  //   if (includeUser) {
+  //     return client.mutate<
+  //       ExternalRefreshWithUserMutation,
+  //       ExternalRefreshWithUserMutationVariables
+  //     >({
+  //       mutation: EXTERNAL_REFRESH_WITH_USER,
+  //       variables: {
+  //         pluginId: authPluginId,
+  //         input: JSON.stringify({
+  //           csrfToken,
+  //         }),
+  //       },
+  //       update: (_, { data }) => {
+  //         if (data?.externalRefresh?.token) {
+  //           storage.setTokens({
+  //             accessToken: data.externalRefresh.token,
+  //             csrfToken: data.externalRefresh.csrfToken || null,
+  //           });
+  //         } else {
+  //           logout();
+  //         }
+  //       },
+  //     });
+  //   }
+  //
+  //   return client.mutate<
+  //     ExternalRefreshMutation,
+  //     ExternalRefreshMutationVariables
+  //   >({
+  //     mutation: EXTERNAL_REFRESH,
+  //     variables: {
+  //       pluginId: authPluginId,
+  //       input: JSON.stringify({
+  //         csrfToken,
+  //       }),
+  //     },
+  //     update: (_, { data }) => {
+  //       if (data?.externalRefresh?.token) {
+  //         storage.setTokens({
+  //           accessToken: data.externalRefresh.token,
+  //           csrfToken: data.externalRefresh.csrfToken || null,
+  //         });
+  //       } else {
+  //         logout();
+  //       }
+  //     },
+  //   });
+  // };
 
-    return result;
-  };
-
-  const getExternalAccessToken: AuthSDK["getExternalAccessToken"] = opts => {
-    client.writeQuery({
-      query: USER,
-      data: {
-        authenticating: true,
-      },
-    });
-
-    return client.mutate<
-      ExternalObtainAccessTokensMutation,
-      ExternalObtainAccessTokensMutationVariables
-    >({
-      mutation: OBTAIN_EXTERNAL_ACCESS_TOKEN,
-      variables: {
-        ...opts,
-      },
-      update: (_, { data }) => {
-        if (data?.externalObtainAccessTokens?.token) {
-          storage.setAuthPluginId(opts.pluginId);
-          storage.setTokens({
-            accessToken: data.externalObtainAccessTokens.token,
-            csrfToken: data.externalObtainAccessTokens.csrfToken || null,
-          });
-        } else {
-          client.writeQuery({
-            query: USER,
-            data: {
-              authenticating: false,
-            },
-          });
-        }
-      },
-    });
-  };
-
-  const refreshExternalToken: AuthSDK["refreshExternalToken"] = (
-    includeUser = false
-  ) => {
-    const csrfToken = storage.getCSRFToken();
-    const authPluginId = storage.getAuthPluginId();
-
-    if (!csrfToken) {
-      throw Error("csrfToken not present");
-    }
-
-    if (includeUser) {
-      return client.mutate<
-        ExternalRefreshWithUserMutation,
-        ExternalRefreshWithUserMutationVariables
-      >({
-        mutation: EXTERNAL_REFRESH_WITH_USER,
-        variables: {
-          pluginId: authPluginId,
-          input: JSON.stringify({
-            csrfToken,
-          }),
-        },
-        update: (_, { data }) => {
-          if (data?.externalRefresh?.token) {
-            storage.setTokens({
-              accessToken: data.externalRefresh.token,
-              csrfToken: data.externalRefresh.csrfToken || null,
-            });
-          } else {
-            logout();
-          }
-        },
-      });
-    }
-
-    return client.mutate<
-      ExternalRefreshMutation,
-      ExternalRefreshMutationVariables
-    >({
-      mutation: EXTERNAL_REFRESH,
-      variables: {
-        pluginId: authPluginId,
-        input: JSON.stringify({
-          csrfToken,
-        }),
-      },
-      update: (_, { data }) => {
-        if (data?.externalRefresh?.token) {
-          storage.setTokens({
-            accessToken: data.externalRefresh.token,
-            csrfToken: data.externalRefresh.csrfToken || null,
-          });
-        } else {
-          logout();
-        }
-      },
-    });
-  };
-
-  const verifyExternalToken: AuthSDK["verifyExternalToken"] = async () => {
-    const csrfToken = storage.getCSRFToken();
-    const authPluginId = storage.getAuthPluginId();
-
-    if (!csrfToken) {
-      throw Error("csrfToken not present");
-    }
-
-    const result = await client.mutate<
-      ExternalVerifyMutation,
-      ExternalVerifyMutationVariables
-    >({
-      mutation: EXTERNAL_VERIFY_TOKEN,
-      variables: {
-        pluginId: authPluginId,
-        input: JSON.stringify({
-          csrfToken,
-        }),
-      },
-    });
-
-    if (!result.data?.externalVerify?.isValid) {
-      storage.clear();
-    }
-
-    return result;
-  };
+  // const verifyExternalToken: AuthSDK["verifyExternalToken"] = async () => {
+  //   const csrfToken = storage.getCSRFToken();
+  //   const authPluginId = storage.getAuthPluginId();
+  //
+  //   if (!csrfToken) {
+  //     throw Error("csrfToken not present");
+  //   }
+  //
+  //   const result = await client.mutate<
+  //     ExternalVerifyMutation,
+  //     ExternalVerifyMutationVariables
+  //   >({
+  //     mutation: EXTERNAL_VERIFY_TOKEN,
+  //     variables: {
+  //       pluginId: authPluginId,
+  //       input: JSON.stringify({
+  //         csrfToken,
+  //       }),
+  //     },
+  //   });
+  //
+  //   if (!result.data?.externalVerify?.isValid) {
+  //     storage.clear();
+  //   }
+  //
+  //   return result;
+  // };
 
   return {
     changePassword,
-    getExternalAccessToken,
-    getExternalAuthUrl,
+    // getExternalAccessToken,
+    // getExternalAuthUrl,
     login,
     logout,
-    refreshExternalToken,
+    // refreshExternalToken,
     refreshToken,
     register,
     requestPasswordReset,
     setPassword,
-    verifyExternalToken,
+    // verifyExternalToken,
     verifyToken,
   };
 };

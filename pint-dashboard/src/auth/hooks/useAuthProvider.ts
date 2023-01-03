@@ -44,8 +44,8 @@ export function useAuthProvider({
 }: UseAuthProviderOpts): UserContext {
   const {
     login,
-    getExternalAuthUrl,
-    getExternalAccessToken,
+    // getExternalAuthUrl,
+    // getExternalAccessToken,
     logout,
   } = useAuth();
   const navigate = useNavigator();

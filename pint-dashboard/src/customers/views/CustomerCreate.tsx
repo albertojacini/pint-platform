@@ -43,8 +43,8 @@ export const CustomerCreate: React.FC = () => {
       createCustomer({
         variables: {
           input: {
-            defaultBillingAddress: formData.address,
-            defaultShippingAddress: formData.address,
+            // defaultBillingAddress: formData.address,
+            // defaultShippingAddress: formData.address,
             email: formData.email,
             firstName: formData.customerFirstName,
             lastName: formData.customerLastName,

@@ -8,7 +8,7 @@ import { UserContextError } from "@saleor/auth/types";
 import { passwordResetUrl } from "@saleor/auth/urls";
 import { Button } from "@saleor/components/Button";
 import { FormSpacer } from "@saleor/components/FormSpacer";
-import { AvailableExternalAuthenticationsQuery } from "@saleor/graphql";
+// import { AvailableExternalAuthenticationsQuery } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
 import { commonMessages } from "@saleor/intl";
 import { EyeIcon, IconButton } from "@saleor/macaw-ui";
@@ -34,8 +34,8 @@ const LoginCard: React.FC<LoginCardProps> = props => {
     error,
     disabled,
     loading,
-    externalAuthentications = [],
-    onExternalAuthentication,
+    // externalAuthentications = [],
+    // onExternalAuthentication,
     onSubmit,
   } = props;
 
@@ -140,36 +140,36 @@ const LoginCard: React.FC<LoginCardProps> = props => {
               />
             </Button>
           </div>
-          {externalAuthentications.length > 0 && (
-            <>
-              <FormSpacer />
-              <Divider />
-              <FormSpacer />
-              <Typography>
-                <FormattedMessage
-                  id="ENBELI"
-                  defaultMessage="or login using"
-                  description="description"
-                />
-              </Typography>
-            </>
-          )}
-          {externalAuthentications.map(externalAuthentication => (
-            <React.Fragment key={externalAuthentication.id}>
-              <FormSpacer />
-              <Button
-                fullWidth
-                variant="secondary"
-                onClick={() =>
-                  onExternalAuthentication(externalAuthentication.id)
-                }
-                data-test-id="external-authentication"
-                disabled={disabled}
-              >
-                {externalAuthentication.name}
-              </Button>
-            </React.Fragment>
-          ))}
+          {/*{externalAuthentications.length > 0 && (*/}
+          {/*  <>*/}
+          {/*    <FormSpacer />*/}
+          {/*    <Divider />*/}
+          {/*    <FormSpacer />*/}
+          {/*    <Typography>*/}
+          {/*      <FormattedMessage*/}
+          {/*        id="ENBELI"*/}
+          {/*        defaultMessage="or login using"*/}
+          {/*        description="description"*/}
+          {/*      />*/}
+          {/*    </Typography>*/}
+          {/*  </>*/}
+          {/*)}*/}
+          {/*{externalAuthentications.map(externalAuthentication => (*/}
+          {/*  <React.Fragment key={externalAuthentication.id}>*/}
+          {/*    <FormSpacer />*/}
+          {/*    <Button*/}
+          {/*      fullWidth*/}
+          {/*      variant="secondary"*/}
+          {/*      onClick={() =>*/}
+          {/*        onExternalAuthentication(externalAuthentication.id)*/}
+          {/*      }*/}
+          {/*      data-test-id="external-authentication"*/}
+          {/*      disabled={disabled}*/}
+          {/*    >*/}
+          {/*      {externalAuthentication.name}*/}
+          {/*    </Button>*/}
+          {/*  </React.Fragment>*/}
+          {/*))}*/}
         </>
       )}
     </LoginForm>
