@@ -11,106 +11,78 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /**
-   * The `Date` scalar type represents a Date
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
   Date: any;
-  /**
-   * The `DateTime` scalar type represents a DateTime
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
   DateTime: any;
-  /**
-   * The `GenericScalar` scalar type represents a generic
-   * GraphQL scalar value that could be:
-   * String, Boolean, Int, Float, List or Object.
-   */
   GenericScalar: any;
   JSONString: any;
-  /**
-   * Metadata is a map of key-value pairs, both keys and values are `String`.
-   *
-   * Example:
-   * ```
-   * {
-   *     "key1": "value1",
-   *     "key2": "value2"
-   * }
-   * ```
-   */
   Metadata: any;
-  /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
   Upload: any;
-  /** _Any value scalar as defined by Federation spec. */
   _Any: any;
 };
 
 /** An enumeration. */
 export enum AccountErrorCode {
+  ACCOUNT_NOT_CONFIRMED = 'ACCOUNT_NOT_CONFIRMED',
   ACTIVATE_OWN_ACCOUNT = 'ACTIVATE_OWN_ACCOUNT',
   ACTIVATE_SUPERUSER_ACCOUNT = 'ACTIVATE_SUPERUSER_ACCOUNT',
-  DUPLICATED_INPUT_ITEM = 'DUPLICATED_INPUT_ITEM',
+  CHANNEL_INACTIVE = 'CHANNEL_INACTIVE',
   DEACTIVATE_OWN_ACCOUNT = 'DEACTIVATE_OWN_ACCOUNT',
   DEACTIVATE_SUPERUSER_ACCOUNT = 'DEACTIVATE_SUPERUSER_ACCOUNT',
   DELETE_NON_STAFF_USER = 'DELETE_NON_STAFF_USER',
   DELETE_OWN_ACCOUNT = 'DELETE_OWN_ACCOUNT',
   DELETE_STAFF_ACCOUNT = 'DELETE_STAFF_ACCOUNT',
   DELETE_SUPERUSER_ACCOUNT = 'DELETE_SUPERUSER_ACCOUNT',
+  DUPLICATED_INPUT_ITEM = 'DUPLICATED_INPUT_ITEM',
   GRAPHQL_ERROR = 'GRAPHQL_ERROR',
   INACTIVE = 'INACTIVE',
   INVALID = 'INVALID',
-  INVALID_PASSWORD = 'INVALID_PASSWORD',
-  LEFT_NOT_MANAGEABLE_PERMISSION = 'LEFT_NOT_MANAGEABLE_PERMISSION',
   INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
+  INVALID_PASSWORD = 'INVALID_PASSWORD',
+  JWT_DECODE_ERROR = 'JWT_DECODE_ERROR',
+  JWT_INVALID_CSRF_TOKEN = 'JWT_INVALID_CSRF_TOKEN',
+  JWT_INVALID_TOKEN = 'JWT_INVALID_TOKEN',
+  JWT_MISSING_TOKEN = 'JWT_MISSING_TOKEN',
+  JWT_SIGNATURE_EXPIRED = 'JWT_SIGNATURE_EXPIRED',
+  LEFT_NOT_MANAGEABLE_PERMISSION = 'LEFT_NOT_MANAGEABLE_PERMISSION',
+  MISSING_CHANNEL_SLUG = 'MISSING_CHANNEL_SLUG',
   NOT_FOUND = 'NOT_FOUND',
-  OUT_OF_SCOPE_USER = 'OUT_OF_SCOPE_USER',
   OUT_OF_SCOPE_GROUP = 'OUT_OF_SCOPE_GROUP',
   OUT_OF_SCOPE_PERMISSION = 'OUT_OF_SCOPE_PERMISSION',
+  OUT_OF_SCOPE_USER = 'OUT_OF_SCOPE_USER',
   PASSWORD_ENTIRELY_NUMERIC = 'PASSWORD_ENTIRELY_NUMERIC',
   PASSWORD_TOO_COMMON = 'PASSWORD_TOO_COMMON',
   PASSWORD_TOO_SHORT = 'PASSWORD_TOO_SHORT',
   PASSWORD_TOO_SIMILAR = 'PASSWORD_TOO_SIMILAR',
   REQUIRED = 'REQUIRED',
-  UNIQUE = 'UNIQUE',
-  JWT_SIGNATURE_EXPIRED = 'JWT_SIGNATURE_EXPIRED',
-  JWT_INVALID_TOKEN = 'JWT_INVALID_TOKEN',
-  JWT_DECODE_ERROR = 'JWT_DECODE_ERROR',
-  JWT_MISSING_TOKEN = 'JWT_MISSING_TOKEN',
-  JWT_INVALID_CSRF_TOKEN = 'JWT_INVALID_CSRF_TOKEN',
-  CHANNEL_INACTIVE = 'CHANNEL_INACTIVE',
-  MISSING_CHANNEL_SLUG = 'MISSING_CHANNEL_SLUG',
-  ACCOUNT_NOT_CONFIRMED = 'ACCOUNT_NOT_CONFIRMED'
+  UNIQUE = 'UNIQUE'
 }
 
 export type AccountInput = {
   /** Given name. */
   firstName?: InputMaybe<Scalars['String']>;
-  /** Family name. */
-  lastName?: InputMaybe<Scalars['String']>;
   /** User language code. */
   languageCode?: InputMaybe<LanguageCodeEnum>;
+  /** Family name. */
+  lastName?: InputMaybe<Scalars['String']>;
 };
 
 export type AccountRegisterInput = {
-  /** Given name. */
-  firstName?: InputMaybe<Scalars['String']>;
-  /** Family name. */
-  lastName?: InputMaybe<Scalars['String']>;
-  /** User language code. */
-  languageCode?: InputMaybe<LanguageCodeEnum>;
+  /** Slug of a channel which will be used to notify users. Optional when only one channel exists. */
+  channel?: InputMaybe<Scalars['String']>;
   /** The email address of the user. */
   email: Scalars['String'];
+  /** Given name. */
+  firstName?: InputMaybe<Scalars['String']>;
+  /** User language code. */
+  languageCode?: InputMaybe<LanguageCodeEnum>;
+  /** Family name. */
+  lastName?: InputMaybe<Scalars['String']>;
+  /** User public metadata. */
+  metadata?: InputMaybe<Array<MetadataInput>>;
   /** Password. */
   password: Scalars['String'];
   /** Base of frontend URL that will be needed to create confirmation URL. */
   redirectUrl?: InputMaybe<Scalars['String']>;
-  /** User public metadata. */
-  metadata?: InputMaybe<Array<MetadataInput>>;
-  /** Slug of a channel which will be used to notify users. Optional when only one channel exists. */
-  channel?: InputMaybe<Scalars['String']>;
 };
 
 /** An enumeration. */
@@ -118,16 +90,16 @@ export enum AppErrorCode {
   FORBIDDEN = 'FORBIDDEN',
   GRAPHQL_ERROR = 'GRAPHQL_ERROR',
   INVALID = 'INVALID',
-  INVALID_STATUS = 'INVALID_STATUS',
-  INVALID_PERMISSION = 'INVALID_PERMISSION',
-  INVALID_URL_FORMAT = 'INVALID_URL_FORMAT',
   INVALID_MANIFEST_FORMAT = 'INVALID_MANIFEST_FORMAT',
+  INVALID_PERMISSION = 'INVALID_PERMISSION',
+  INVALID_STATUS = 'INVALID_STATUS',
+  INVALID_URL_FORMAT = 'INVALID_URL_FORMAT',
   MANIFEST_URL_CANT_CONNECT = 'MANIFEST_URL_CANT_CONNECT',
   NOT_FOUND = 'NOT_FOUND',
-  REQUIRED = 'REQUIRED',
-  UNIQUE = 'UNIQUE',
   OUT_OF_SCOPE_APP = 'OUT_OF_SCOPE_APP',
-  OUT_OF_SCOPE_PERMISSION = 'OUT_OF_SCOPE_PERMISSION'
+  OUT_OF_SCOPE_PERMISSION = 'OUT_OF_SCOPE_PERMISSION',
+  REQUIRED = 'REQUIRED',
+  UNIQUE = 'UNIQUE'
 }
 
 export type AppExtensionFilterInput = {
@@ -137,18 +109,18 @@ export type AppExtensionFilterInput = {
 
 /** All places where app extension can be mounted. */
 export enum AppExtensionMountEnum {
+  CUSTOMER_DETAILS_MORE_ACTIONS = 'CUSTOMER_DETAILS_MORE_ACTIONS',
   CUSTOMER_OVERVIEW_CREATE = 'CUSTOMER_OVERVIEW_CREATE',
   CUSTOMER_OVERVIEW_MORE_ACTIONS = 'CUSTOMER_OVERVIEW_MORE_ACTIONS',
-  CUSTOMER_DETAILS_MORE_ACTIONS = 'CUSTOMER_DETAILS_MORE_ACTIONS',
+  INITIATIVE_DETAILS_MORE_ACTIONS = 'INITIATIVE_DETAILS_MORE_ACTIONS',
   INITIATIVE_OVERVIEW_CREATE = 'INITIATIVE_OVERVIEW_CREATE',
   INITIATIVE_OVERVIEW_MORE_ACTIONS = 'INITIATIVE_OVERVIEW_MORE_ACTIONS',
-  INITIATIVE_DETAILS_MORE_ACTIONS = 'INITIATIVE_DETAILS_MORE_ACTIONS',
   NAVIGATION_CATALOG = 'NAVIGATION_CATALOG',
-  NAVIGATION_ORDERS = 'NAVIGATION_ORDERS',
   NAVIGATION_CUSTOMERS = 'NAVIGATION_CUSTOMERS',
   NAVIGATION_DISCOUNTS = 'NAVIGATION_DISCOUNTS',
-  NAVIGATION_TRANSLATIONS = 'NAVIGATION_TRANSLATIONS',
-  NAVIGATION_PAGES = 'NAVIGATION_PAGES'
+  NAVIGATION_ORDERS = 'NAVIGATION_ORDERS',
+  NAVIGATION_PAGES = 'NAVIGATION_PAGES',
+  NAVIGATION_TRANSLATIONS = 'NAVIGATION_TRANSLATIONS'
 }
 
 /**
@@ -159,13 +131,13 @@ export enum AppExtensionMountEnum {
  *
  */
 export enum AppExtensionTargetEnum {
-  POPUP = 'POPUP',
-  APP_PAGE = 'APP_PAGE'
+  APP_PAGE = 'APP_PAGE',
+  POPUP = 'POPUP'
 }
 
 export type AppFilterInput = {
-  search?: InputMaybe<Scalars['String']>;
   isActive?: InputMaybe<Scalars['Boolean']>;
+  search?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<AppTypeEnum>;
 };
 
@@ -177,21 +149,21 @@ export type AppInput = {
 };
 
 export type AppInstallInput = {
+  /** Determine if app will be set active or not. */
+  activateAfterInstallation?: InputMaybe<Scalars['Boolean']>;
   /** Name of the app to install. */
   appName?: InputMaybe<Scalars['String']>;
   /** Url to app's manifest in JSON format. */
   manifestUrl?: InputMaybe<Scalars['String']>;
-  /** Determine if app will be set active or not. */
-  activateAfterInstallation?: InputMaybe<Scalars['Boolean']>;
   /** List of permission code names to assign to this app. */
   permissions?: InputMaybe<Array<PermissionEnum>>;
 };
 
 export enum AppSortField {
-  /** Sort apps by name. */
-  NAME = 'NAME',
   /** Sort apps by creation date. */
-  CREATION_DATE = 'CREATION_DATE'
+  CREATION_DATE = 'CREATION_DATE',
+  /** Sort apps by name. */
+  NAME = 'NAME'
 }
 
 export type AppSortingInput = {
@@ -202,10 +174,10 @@ export type AppSortingInput = {
 };
 
 export type AppTokenInput = {
-  /** Name of the token. */
-  name?: InputMaybe<Scalars['String']>;
   /** ID of app. */
   app: Scalars['ID'];
+  /** Name of the token. */
+  name?: InputMaybe<Scalars['String']>;
 };
 
 /** Enum determining type of your App. */
@@ -219,308 +191,308 @@ export enum AppTypeEnum {
 /** An enumeration. */
 export enum AreaUnitsEnum {
   SQ_CM = 'SQ_CM',
-  SQ_M = 'SQ_M',
-  SQ_KM = 'SQ_KM',
   SQ_FT = 'SQ_FT',
-  SQ_YD = 'SQ_YD',
-  SQ_INCH = 'SQ_INCH'
+  SQ_INCH = 'SQ_INCH',
+  SQ_KM = 'SQ_KM',
+  SQ_M = 'SQ_M',
+  SQ_YD = 'SQ_YD'
 }
 
 /** An enumeration. */
 export enum CountryCode {
-  AF = 'AF',
-  AX = 'AX',
-  AL = 'AL',
-  DZ = 'DZ',
-  AS = 'AS',
   AD = 'AD',
-  AO = 'AO',
-  AI = 'AI',
-  AQ = 'AQ',
+  AE = 'AE',
+  AF = 'AF',
   AG = 'AG',
-  AR = 'AR',
+  AI = 'AI',
+  AL = 'AL',
   AM = 'AM',
-  AW = 'AW',
-  AU = 'AU',
+  AO = 'AO',
+  AQ = 'AQ',
+  AR = 'AR',
+  AS = 'AS',
   AT = 'AT',
+  AU = 'AU',
+  AW = 'AW',
+  AX = 'AX',
   AZ = 'AZ',
-  BS = 'BS',
-  BH = 'BH',
-  BD = 'BD',
+  BA = 'BA',
   BB = 'BB',
-  BY = 'BY',
+  BD = 'BD',
   BE = 'BE',
-  BZ = 'BZ',
+  BF = 'BF',
+  BG = 'BG',
+  BH = 'BH',
+  BI = 'BI',
   BJ = 'BJ',
+  BL = 'BL',
   BM = 'BM',
-  BT = 'BT',
+  BN = 'BN',
   BO = 'BO',
   BQ = 'BQ',
-  BA = 'BA',
-  BW = 'BW',
-  BV = 'BV',
   BR = 'BR',
-  IO = 'IO',
-  BN = 'BN',
-  BG = 'BG',
-  BF = 'BF',
-  BI = 'BI',
-  CV = 'CV',
-  KH = 'KH',
-  CM = 'CM',
+  BS = 'BS',
+  BT = 'BT',
+  BV = 'BV',
+  BW = 'BW',
+  BY = 'BY',
+  BZ = 'BZ',
   CA = 'CA',
-  KY = 'KY',
-  CF = 'CF',
-  TD = 'TD',
-  CL = 'CL',
-  CN = 'CN',
-  CX = 'CX',
   CC = 'CC',
-  CO = 'CO',
-  KM = 'KM',
-  CG = 'CG',
   CD = 'CD',
-  CK = 'CK',
-  CR = 'CR',
+  CF = 'CF',
+  CG = 'CG',
+  CH = 'CH',
   CI = 'CI',
-  HR = 'HR',
+  CK = 'CK',
+  CL = 'CL',
+  CM = 'CM',
+  CN = 'CN',
+  CO = 'CO',
+  CR = 'CR',
   CU = 'CU',
+  CV = 'CV',
   CW = 'CW',
+  CX = 'CX',
   CY = 'CY',
   CZ = 'CZ',
-  DK = 'DK',
+  DE = 'DE',
   DJ = 'DJ',
+  DK = 'DK',
   DM = 'DM',
   DO = 'DO',
+  DZ = 'DZ',
   EC = 'EC',
-  EG = 'EG',
-  SV = 'SV',
-  GQ = 'GQ',
-  ER = 'ER',
   EE = 'EE',
-  SZ = 'SZ',
+  EG = 'EG',
+  EH = 'EH',
+  ER = 'ER',
+  ES = 'ES',
   ET = 'ET',
   EU = 'EU',
-  FK = 'FK',
-  FO = 'FO',
-  FJ = 'FJ',
   FI = 'FI',
+  FJ = 'FJ',
+  FK = 'FK',
+  FM = 'FM',
+  FO = 'FO',
   FR = 'FR',
-  GF = 'GF',
-  PF = 'PF',
-  TF = 'TF',
   GA = 'GA',
-  GM = 'GM',
+  GB = 'GB',
+  GD = 'GD',
   GE = 'GE',
-  DE = 'DE',
+  GF = 'GF',
+  GG = 'GG',
   GH = 'GH',
   GI = 'GI',
-  GR = 'GR',
   GL = 'GL',
-  GD = 'GD',
-  GP = 'GP',
-  GU = 'GU',
-  GT = 'GT',
-  GG = 'GG',
+  GM = 'GM',
   GN = 'GN',
+  GP = 'GP',
+  GQ = 'GQ',
+  GR = 'GR',
+  GS = 'GS',
+  GT = 'GT',
+  GU = 'GU',
   GW = 'GW',
   GY = 'GY',
-  HT = 'HT',
-  HM = 'HM',
-  VA = 'VA',
-  HN = 'HN',
   HK = 'HK',
+  HM = 'HM',
+  HN = 'HN',
+  HR = 'HR',
+  HT = 'HT',
   HU = 'HU',
-  IS = 'IS',
-  IN = 'IN',
   ID = 'ID',
-  IR = 'IR',
-  IQ = 'IQ',
   IE = 'IE',
-  IM = 'IM',
   IL = 'IL',
+  IM = 'IM',
+  IN = 'IN',
+  IO = 'IO',
+  IQ = 'IQ',
+  IR = 'IR',
+  IS = 'IS',
   IT = 'IT',
-  JM = 'JM',
-  JP = 'JP',
   JE = 'JE',
+  JM = 'JM',
   JO = 'JO',
-  KZ = 'KZ',
+  JP = 'JP',
   KE = 'KE',
-  KI = 'KI',
-  KW = 'KW',
   KG = 'KG',
+  KH = 'KH',
+  KI = 'KI',
+  KM = 'KM',
+  KN = 'KN',
+  KP = 'KP',
+  KR = 'KR',
+  KW = 'KW',
+  KY = 'KY',
+  KZ = 'KZ',
   LA = 'LA',
-  LV = 'LV',
   LB = 'LB',
-  LS = 'LS',
-  LR = 'LR',
-  LY = 'LY',
+  LC = 'LC',
   LI = 'LI',
+  LK = 'LK',
+  LR = 'LR',
+  LS = 'LS',
   LT = 'LT',
   LU = 'LU',
-  MO = 'MO',
+  LV = 'LV',
+  LY = 'LY',
+  MA = 'MA',
+  MC = 'MC',
+  MD = 'MD',
+  ME = 'ME',
+  MF = 'MF',
   MG = 'MG',
-  MW = 'MW',
-  MY = 'MY',
-  MV = 'MV',
-  ML = 'ML',
-  MT = 'MT',
   MH = 'MH',
+  MK = 'MK',
+  ML = 'ML',
+  MM = 'MM',
+  MN = 'MN',
+  MO = 'MO',
+  MP = 'MP',
   MQ = 'MQ',
   MR = 'MR',
-  MU = 'MU',
-  YT = 'YT',
-  MX = 'MX',
-  FM = 'FM',
-  MD = 'MD',
-  MC = 'MC',
-  MN = 'MN',
-  ME = 'ME',
   MS = 'MS',
-  MA = 'MA',
+  MT = 'MT',
+  MU = 'MU',
+  MV = 'MV',
+  MW = 'MW',
+  MX = 'MX',
+  MY = 'MY',
   MZ = 'MZ',
-  MM = 'MM',
   NA = 'NA',
-  NR = 'NR',
-  NP = 'NP',
-  NL = 'NL',
   NC = 'NC',
-  NZ = 'NZ',
-  NI = 'NI',
   NE = 'NE',
-  NG = 'NG',
-  NU = 'NU',
   NF = 'NF',
-  KP = 'KP',
-  MK = 'MK',
-  MP = 'MP',
+  NG = 'NG',
+  NI = 'NI',
+  NL = 'NL',
   NO = 'NO',
+  NP = 'NP',
+  NR = 'NR',
+  NU = 'NU',
+  NZ = 'NZ',
   OM = 'OM',
-  PK = 'PK',
-  PW = 'PW',
-  PS = 'PS',
   PA = 'PA',
-  PG = 'PG',
-  PY = 'PY',
   PE = 'PE',
+  PF = 'PF',
+  PG = 'PG',
   PH = 'PH',
-  PN = 'PN',
+  PK = 'PK',
   PL = 'PL',
-  PT = 'PT',
+  PM = 'PM',
+  PN = 'PN',
   PR = 'PR',
+  PS = 'PS',
+  PT = 'PT',
+  PW = 'PW',
+  PY = 'PY',
   QA = 'QA',
   RE = 'RE',
   RO = 'RO',
+  RS = 'RS',
   RU = 'RU',
   RW = 'RW',
-  BL = 'BL',
-  SH = 'SH',
-  KN = 'KN',
-  LC = 'LC',
-  MF = 'MF',
-  PM = 'PM',
-  VC = 'VC',
-  WS = 'WS',
-  SM = 'SM',
-  ST = 'ST',
   SA = 'SA',
-  SN = 'SN',
-  RS = 'RS',
-  SC = 'SC',
-  SL = 'SL',
-  SG = 'SG',
-  SX = 'SX',
-  SK = 'SK',
-  SI = 'SI',
   SB = 'SB',
-  SO = 'SO',
-  ZA = 'ZA',
-  GS = 'GS',
-  KR = 'KR',
-  SS = 'SS',
-  ES = 'ES',
-  LK = 'LK',
+  SC = 'SC',
   SD = 'SD',
-  SR = 'SR',
-  SJ = 'SJ',
   SE = 'SE',
-  CH = 'CH',
+  SG = 'SG',
+  SH = 'SH',
+  SI = 'SI',
+  SJ = 'SJ',
+  SK = 'SK',
+  SL = 'SL',
+  SM = 'SM',
+  SN = 'SN',
+  SO = 'SO',
+  SR = 'SR',
+  SS = 'SS',
+  ST = 'ST',
+  SV = 'SV',
+  SX = 'SX',
   SY = 'SY',
-  TW = 'TW',
-  TJ = 'TJ',
-  TZ = 'TZ',
-  TH = 'TH',
-  TL = 'TL',
-  TG = 'TG',
-  TK = 'TK',
-  TO = 'TO',
-  TT = 'TT',
-  TN = 'TN',
-  TR = 'TR',
-  TM = 'TM',
+  SZ = 'SZ',
   TC = 'TC',
+  TD = 'TD',
+  TF = 'TF',
+  TG = 'TG',
+  TH = 'TH',
+  TJ = 'TJ',
+  TK = 'TK',
+  TL = 'TL',
+  TM = 'TM',
+  TN = 'TN',
+  TO = 'TO',
+  TR = 'TR',
+  TT = 'TT',
   TV = 'TV',
-  UG = 'UG',
+  TW = 'TW',
+  TZ = 'TZ',
   UA = 'UA',
-  AE = 'AE',
-  GB = 'GB',
+  UG = 'UG',
   UM = 'UM',
   US = 'US',
   UY = 'UY',
   UZ = 'UZ',
-  VU = 'VU',
+  VA = 'VA',
+  VC = 'VC',
   VE = 'VE',
-  VN = 'VN',
   VG = 'VG',
   VI = 'VI',
+  VN = 'VN',
+  VU = 'VU',
   WF = 'WF',
-  EH = 'EH',
+  WS = 'WS',
   YE = 'YE',
+  YT = 'YT',
+  ZA = 'ZA',
   ZM = 'ZM',
   ZW = 'ZW'
 }
 
 /** An enumeration. */
 export enum CustomerEventsEnum {
-  ACCOUNT_CREATED = 'ACCOUNT_CREATED',
   ACCOUNT_ACTIVATED = 'ACCOUNT_ACTIVATED',
+  ACCOUNT_CREATED = 'ACCOUNT_CREATED',
   ACCOUNT_DEACTIVATED = 'ACCOUNT_DEACTIVATED',
-  PASSWORD_RESET_LINK_SENT = 'PASSWORD_RESET_LINK_SENT',
-  PASSWORD_RESET = 'PASSWORD_RESET',
-  EMAIL_CHANGED_REQUEST = 'EMAIL_CHANGED_REQUEST',
-  PASSWORD_CHANGED = 'PASSWORD_CHANGED',
-  EMAIL_CHANGED = 'EMAIL_CHANGED',
-  PLACED_ORDER = 'PLACED_ORDER',
-  NOTE_ADDED_TO_ORDER = 'NOTE_ADDED_TO_ORDER',
-  DIGITAL_LINK_DOWNLOADED = 'DIGITAL_LINK_DOWNLOADED',
   CUSTOMER_DELETED = 'CUSTOMER_DELETED',
-  NAME_ASSIGNED = 'NAME_ASSIGNED',
+  DIGITAL_LINK_DOWNLOADED = 'DIGITAL_LINK_DOWNLOADED',
   EMAIL_ASSIGNED = 'EMAIL_ASSIGNED',
-  NOTE_ADDED = 'NOTE_ADDED'
+  EMAIL_CHANGED = 'EMAIL_CHANGED',
+  EMAIL_CHANGED_REQUEST = 'EMAIL_CHANGED_REQUEST',
+  NAME_ASSIGNED = 'NAME_ASSIGNED',
+  NOTE_ADDED = 'NOTE_ADDED',
+  NOTE_ADDED_TO_ORDER = 'NOTE_ADDED_TO_ORDER',
+  PASSWORD_CHANGED = 'PASSWORD_CHANGED',
+  PASSWORD_RESET = 'PASSWORD_RESET',
+  PASSWORD_RESET_LINK_SENT = 'PASSWORD_RESET_LINK_SENT',
+  PLACED_ORDER = 'PLACED_ORDER'
 }
 
 export type CustomerFilterInput = {
   dateJoined?: InputMaybe<DateRangeInput>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
   numberOfOrders?: InputMaybe<IntRangeInput>;
   placedOrders?: InputMaybe<DateRangeInput>;
   search?: InputMaybe<Scalars['String']>;
-  metadata?: InputMaybe<Array<MetadataFilter>>;
   updatedAt?: InputMaybe<DateTimeRangeInput>;
 };
 
 export type CustomerInput = {
-  /** Given name. */
-  firstName?: InputMaybe<Scalars['String']>;
-  /** Family name. */
-  lastName?: InputMaybe<Scalars['String']>;
   /** The unique email address of the user. */
   email?: InputMaybe<Scalars['String']>;
+  /** Given name. */
+  firstName?: InputMaybe<Scalars['String']>;
   /** User account is active. */
   isActive?: InputMaybe<Scalars['Boolean']>;
-  /** A note about the user. */
-  note?: InputMaybe<Scalars['String']>;
   /** User language code. */
   languageCode?: InputMaybe<LanguageCodeEnum>;
+  /** Family name. */
+  lastName?: InputMaybe<Scalars['String']>;
+  /** A note about the user. */
+  note?: InputMaybe<Scalars['String']>;
 };
 
 export type DateRangeInput = {
@@ -540,11 +512,11 @@ export type DateTimeRangeInput = {
 /** An enumeration. */
 export enum DistanceUnitsEnum {
   CM = 'CM',
-  M = 'M',
-  KM = 'KM',
   FT = 'FT',
-  YD = 'YD',
-  INCH = 'INCH'
+  INCH = 'INCH',
+  KM = 'KM',
+  M = 'M',
+  YD = 'YD'
 }
 
 export enum EventDeliveryAttemptSortField {
@@ -560,8 +532,8 @@ export type EventDeliveryAttemptSortingInput = {
 };
 
 export type EventDeliveryFilterInput = {
-  status?: InputMaybe<EventDeliveryStatusEnum>;
   eventType?: InputMaybe<WebhookEventTypeEnum>;
+  status?: InputMaybe<EventDeliveryStatusEnum>;
 };
 
 export enum EventDeliverySortField {
@@ -577,9 +549,9 @@ export type EventDeliverySortingInput = {
 };
 
 export enum EventDeliveryStatusEnum {
+  FAILED = 'FAILED',
   PENDING = 'PENDING',
-  SUCCESS = 'SUCCESS',
-  FAILED = 'FAILED'
+  SUCCESS = 'SUCCESS'
 }
 
 /** An enumeration. */
@@ -592,27 +564,27 @@ export enum ExportErrorCode {
 
 /** An enumeration. */
 export enum ExportEventsEnum {
-  EXPORT_PENDING = 'EXPORT_PENDING',
-  EXPORT_SUCCESS = 'EXPORT_SUCCESS',
-  EXPORT_FAILED = 'EXPORT_FAILED',
-  EXPORT_DELETED = 'EXPORT_DELETED',
   EXPORTED_FILE_SENT = 'EXPORTED_FILE_SENT',
-  EXPORT_FAILED_INFO_SENT = 'EXPORT_FAILED_INFO_SENT'
+  EXPORT_DELETED = 'EXPORT_DELETED',
+  EXPORT_FAILED = 'EXPORT_FAILED',
+  EXPORT_FAILED_INFO_SENT = 'EXPORT_FAILED_INFO_SENT',
+  EXPORT_PENDING = 'EXPORT_PENDING',
+  EXPORT_SUCCESS = 'EXPORT_SUCCESS'
 }
 
 export type ExportFileFilterInput = {
-  createdAt?: InputMaybe<DateTimeRangeInput>;
-  updatedAt?: InputMaybe<DateTimeRangeInput>;
-  status?: InputMaybe<JobStatusEnum>;
-  user?: InputMaybe<Scalars['String']>;
   app?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<DateTimeRangeInput>;
+  status?: InputMaybe<JobStatusEnum>;
+  updatedAt?: InputMaybe<DateTimeRangeInput>;
+  user?: InputMaybe<Scalars['String']>;
 };
 
 export enum ExportFileSortField {
-  STATUS = 'STATUS',
   CREATED_AT = 'CREATED_AT',
-  UPDATED_AT = 'UPDATED_AT',
-  LAST_MODIFIED_AT = 'LAST_MODIFIED_AT'
+  LAST_MODIFIED_AT = 'LAST_MODIFIED_AT',
+  STATUS = 'STATUS',
+  UPDATED_AT = 'UPDATED_AT'
 }
 
 export type ExportFileSortingInput = {
@@ -625,34 +597,34 @@ export type ExportFileSortingInput = {
 export type ExportInfoInput = {
   /** List of attribute ids witch should be exported. */
   attributes?: InputMaybe<Array<Scalars['ID']>>;
-  /** List of warehouse ids witch should be exported. */
-  warehouses?: InputMaybe<Array<Scalars['ID']>>;
   /** List of channels ids which should be exported. */
   channels?: InputMaybe<Array<Scalars['ID']>>;
   /** List of initiative fields witch should be exported. */
   fields?: InputMaybe<Array<InitiativeFieldEnum>>;
+  /** List of warehouse ids witch should be exported. */
+  warehouses?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type ExportInitiativesInput = {
-  /** Determine which initiatives should be exported. */
-  scope: ExportScope;
-  /** Filtering options for initiatives. */
-  filter?: InputMaybe<InitiativeFilterInput>;
-  /** List of initiatives IDs to export. */
-  ids?: InputMaybe<Array<Scalars['ID']>>;
   /** Input with info about fields which should be exported. */
   exportInfo?: InputMaybe<ExportInfoInput>;
   /** Type of exported file. */
   fileType: FileTypesEnum;
+  /** Filtering options for initiatives. */
+  filter?: InputMaybe<InitiativeFilterInput>;
+  /** List of initiatives IDs to export. */
+  ids?: InputMaybe<Array<Scalars['ID']>>;
+  /** Determine which initiatives should be exported. */
+  scope: ExportScope;
 };
 
 export enum ExportScope {
   /** Export all initiatives. */
   ALL = 'ALL',
-  /** Export initiatives with given ids. */
-  IDS = 'IDS',
   /** Export the filtered initiatives. */
-  FILTER = 'FILTER'
+  FILTER = 'FILTER',
+  /** Export initiatives with given ids. */
+  IDS = 'IDS'
 }
 
 /** An enumeration. */
@@ -662,62 +634,62 @@ export enum FileTypesEnum {
 }
 
 export type InitiativeCreateInput = {
-  /** Initiative title. */
-  title?: InputMaybe<Scalars['String']>;
-  /** Initiative slug. */
-  slug?: InputMaybe<Scalars['String']>;
   /** Search engine optimization fields. */
   seo?: InputMaybe<SeoInput>;
+  /** Initiative slug. */
+  slug?: InputMaybe<Scalars['String']>;
+  /** Initiative title. */
+  title?: InputMaybe<Scalars['String']>;
 };
 
 /** An enumeration. */
 export enum InitiativeErrorCode {
   ALREADY_EXISTS = 'ALREADY_EXISTS',
-  MEDIA_ALREADY_ASSIGNED = 'MEDIA_ALREADY_ASSIGNED',
   DUPLICATED_INPUT_ITEM = 'DUPLICATED_INPUT_ITEM',
   GRAPHQL_ERROR = 'GRAPHQL_ERROR',
   INVALID = 'INVALID',
-  NOT_INITIATIVES_IMAGE = 'NOT_INITIATIVES_IMAGE',
+  MEDIA_ALREADY_ASSIGNED = 'MEDIA_ALREADY_ASSIGNED',
   NOT_FOUND = 'NOT_FOUND',
+  NOT_INITIATIVES_IMAGE = 'NOT_INITIATIVES_IMAGE',
   REQUIRED = 'REQUIRED',
   UNIQUE = 'UNIQUE',
   UNSUPPORTED_MEDIA_PROVIDER = 'UNSUPPORTED_MEDIA_PROVIDER'
 }
 
 export enum InitiativeFieldEnum {
-  NAME = 'NAME',
-  DESCRIPTION = 'DESCRIPTION',
-  INITIATIVE_TYPE = 'INITIATIVE_TYPE',
   CATEGORY = 'CATEGORY',
-  INITIATIVE_WEIGHT = 'INITIATIVE_WEIGHT',
-  COLLECTIONS = 'COLLECTIONS',
   CHARGE_TAXES = 'CHARGE_TAXES',
+  COLLECTIONS = 'COLLECTIONS',
+  DESCRIPTION = 'DESCRIPTION',
   INITIATIVE_MEDIA = 'INITIATIVE_MEDIA',
+  INITIATIVE_TYPE = 'INITIATIVE_TYPE',
+  INITIATIVE_WEIGHT = 'INITIATIVE_WEIGHT',
+  NAME = 'NAME',
   VARIANT_ID = 'VARIANT_ID',
+  VARIANT_MEDIA = 'VARIANT_MEDIA',
   VARIANT_SKU = 'VARIANT_SKU',
-  VARIANT_WEIGHT = 'VARIANT_WEIGHT',
-  VARIANT_MEDIA = 'VARIANT_MEDIA'
+  VARIANT_WEIGHT = 'VARIANT_WEIGHT'
 }
 
 export type InitiativeFilterInput = {
-  search?: InputMaybe<Scalars['String']>;
-  metadata?: InputMaybe<Array<MetadataFilter>>;
-  ids?: InputMaybe<Array<Scalars['ID']>>;
   /**
    * Specifies the channel by which the data should be filtered.
    *
    * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
    */
   channel?: InputMaybe<Scalars['String']>;
+  ids?: InputMaybe<Array<Scalars['ID']>>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
+  search?: InputMaybe<Scalars['String']>;
 };
 
 export type InitiativeInput = {
-  /** Initiative title. */
-  title?: InputMaybe<Scalars['String']>;
-  /** Initiative slug. */
-  slug?: InputMaybe<Scalars['String']>;
   /** Search engine optimization fields. */
   seo?: InputMaybe<SeoInput>;
+  /** Initiative slug. */
+  slug?: InputMaybe<Scalars['String']>;
+  /** Initiative title. */
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type InitiativeMediaCreateInput = {
@@ -743,29 +715,29 @@ export type InitiativeMediaUpdateInput = {
 };
 
 export type InitiativeOrder = {
-  /** Specifies the direction in which to sort products. */
-  direction: OrderDirection;
+  /**
+   * Sort initiative by the selected attribute's values.
+   * Note: this doesn't take translations into account yet.
+   */
+  attributeId?: InputMaybe<Scalars['ID']>;
   /**
    * Specifies the channel in which to sort the data.
    *
    * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
    */
   channel?: InputMaybe<Scalars['String']>;
-  /**
-   * Sort initiative by the selected attribute's values.
-   * Note: this doesn't take translations into account yet.
-   */
-  attributeId?: InputMaybe<Scalars['ID']>;
+  /** Specifies the direction in which to sort products. */
+  direction: OrderDirection;
   /** Sort initiatives by the selected field. */
   field?: InputMaybe<InitiativeOrderField>;
 };
 
 export enum InitiativeOrderField {
-  NAME = 'NAME',
-  RANK = 'RANK',
-  LAST_MODIFIED = 'LAST_MODIFIED',
   DATE = 'DATE',
-  LAST_MODIFIED_AT = 'LAST_MODIFIED_AT'
+  LAST_MODIFIED = 'LAST_MODIFIED',
+  LAST_MODIFIED_AT = 'LAST_MODIFIED_AT',
+  NAME = 'NAME',
+  RANK = 'RANK'
 }
 
 export type IntRangeInput = {
@@ -777,10 +749,10 @@ export type IntRangeInput = {
 
 /** An enumeration. */
 export enum JobStatusEnum {
-  PENDING = 'PENDING',
-  SUCCESS = 'SUCCESS',
+  DELETED = 'DELETED',
   FAILED = 'FAILED',
-  DELETED = 'DELETED'
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS'
 }
 
 /** An enumeration. */
@@ -823,11 +795,11 @@ export enum LanguageCodeEnum {
   AR_TN = 'AR_TN',
   AR_YE = 'AR_YE',
   AS = 'AS',
-  AS_IN = 'AS_IN',
   ASA = 'ASA',
   ASA_TZ = 'ASA_TZ',
   AST = 'AST',
   AST_ES = 'AST_ES',
+  AS_IN = 'AS_IN',
   AZ = 'AZ',
   AZ_CYRL = 'AZ_CYRL',
   AZ_CYRL_AZ = 'AZ_CYRL_AZ',
@@ -836,11 +808,11 @@ export enum LanguageCodeEnum {
   BAS = 'BAS',
   BAS_CM = 'BAS_CM',
   BE = 'BE',
-  BE_BY = 'BE_BY',
   BEM = 'BEM',
   BEM_ZM = 'BEM_ZM',
   BEZ = 'BEZ',
   BEZ_TZ = 'BEZ_TZ',
+  BE_BY = 'BE_BY',
   BG = 'BG',
   BG_BG = 'BG_BG',
   BM = 'BM',
@@ -852,9 +824,9 @@ export enum LanguageCodeEnum {
   BO_CN = 'BO_CN',
   BO_IN = 'BO_IN',
   BR = 'BR',
-  BR_FR = 'BR_FR',
   BRX = 'BRX',
   BRX_IN = 'BRX_IN',
+  BR_FR = 'BR_FR',
   BS = 'BS',
   BS_CYRL = 'BS_CYRL',
   BS_CYRL_BA = 'BS_CYRL_BA',
@@ -870,9 +842,9 @@ export enum LanguageCodeEnum {
   CCP_BD = 'CCP_BD',
   CCP_IN = 'CCP_IN',
   CE = 'CE',
-  CE_RU = 'CE_RU',
   CEB = 'CEB',
   CEB_PH = 'CEB_PH',
+  CE_RU = 'CE_RU',
   CGG = 'CGG',
   CGG_UG = 'CGG_UG',
   CHR = 'CHR',
@@ -887,10 +859,10 @@ export enum LanguageCodeEnum {
   CY = 'CY',
   CY_GB = 'CY_GB',
   DA = 'DA',
-  DA_DK = 'DA_DK',
-  DA_GL = 'DA_GL',
   DAV = 'DAV',
   DAV_KE = 'DAV_KE',
+  DA_DK = 'DA_DK',
+  DA_GL = 'DA_GL',
   DE = 'DE',
   DE_AT = 'DE_AT',
   DE_BE = 'DE_BE',
@@ -1087,9 +1059,9 @@ export enum LanguageCodeEnum {
   FF_LATN_SL = 'FF_LATN_SL',
   FF_LATN_SN = 'FF_LATN_SN',
   FI = 'FI',
-  FI_FI = 'FI_FI',
   FIL = 'FIL',
   FIL_PH = 'FIL_PH',
+  FI_FI = 'FI_FI',
   FO = 'FO',
   FO_DK = 'FO_DK',
   FO_FO = 'FO_FO',
@@ -1156,17 +1128,17 @@ export enum LanguageCodeEnum {
   GSW_FR = 'GSW_FR',
   GSW_LI = 'GSW_LI',
   GU = 'GU',
-  GU_IN = 'GU_IN',
   GUZ = 'GUZ',
   GUZ_KE = 'GUZ_KE',
+  GU_IN = 'GU_IN',
   GV = 'GV',
   GV_IM = 'GV_IM',
   HA = 'HA',
+  HAW = 'HAW',
+  HAW_US = 'HAW_US',
   HA_GH = 'HA_GH',
   HA_NE = 'HA_NE',
   HA_NG = 'HA_NG',
-  HAW = 'HAW',
-  HAW_US = 'HAW_US',
   HE = 'HE',
   HE_IL = 'HE_IL',
   HI = 'HI',
@@ -1203,11 +1175,11 @@ export enum LanguageCodeEnum {
   JV = 'JV',
   JV_ID = 'JV_ID',
   KA = 'KA',
-  KA_GE = 'KA_GE',
   KAB = 'KAB',
   KAB_DZ = 'KAB_DZ',
   KAM = 'KAM',
   KAM_KE = 'KAM_KE',
+  KA_GE = 'KA_GE',
   KDE = 'KDE',
   KDE_TZ = 'KDE_TZ',
   KEA = 'KEA',
@@ -1217,31 +1189,31 @@ export enum LanguageCodeEnum {
   KI = 'KI',
   KI_KE = 'KI_KE',
   KK = 'KK',
-  KK_KZ = 'KK_KZ',
   KKJ = 'KKJ',
   KKJ_CM = 'KKJ_CM',
+  KK_KZ = 'KK_KZ',
   KL = 'KL',
-  KL_GL = 'KL_GL',
   KLN = 'KLN',
   KLN_KE = 'KLN_KE',
+  KL_GL = 'KL_GL',
   KM = 'KM',
   KM_KH = 'KM_KH',
   KN = 'KN',
   KN_IN = 'KN_IN',
   KO = 'KO',
-  KO_KP = 'KO_KP',
-  KO_KR = 'KO_KR',
   KOK = 'KOK',
   KOK_IN = 'KOK_IN',
+  KO_KP = 'KO_KP',
+  KO_KR = 'KO_KR',
   KS = 'KS',
-  KS_ARAB = 'KS_ARAB',
-  KS_ARAB_IN = 'KS_ARAB_IN',
   KSB = 'KSB',
   KSB_TZ = 'KSB_TZ',
   KSF = 'KSF',
   KSF_CM = 'KSF_CM',
   KSH = 'KSH',
   KSH_DE = 'KSH_DE',
+  KS_ARAB = 'KS_ARAB',
+  KS_ARAB_IN = 'KS_ARAB_IN',
   KU = 'KU',
   KU_TR = 'KU_TR',
   KW = 'KW',
@@ -1269,11 +1241,11 @@ export enum LanguageCodeEnum {
   LT = 'LT',
   LT_LT = 'LT_LT',
   LU = 'LU',
-  LU_CD = 'LU_CD',
   LUO = 'LUO',
   LUO_KE = 'LUO_KE',
   LUY = 'LUY',
   LUY_KE = 'LUY_KE',
+  LU_CD = 'LU_CD',
   LV = 'LV',
   LV_LV = 'LV_LV',
   MAI = 'MAI',
@@ -1286,11 +1258,11 @@ export enum LanguageCodeEnum {
   MFE = 'MFE',
   MFE_MU = 'MFE_MU',
   MG = 'MG',
-  MG_MG = 'MG_MG',
   MGH = 'MGH',
   MGH_MZ = 'MGH_MZ',
   MGO = 'MGO',
   MGO_CM = 'MGO_CM',
+  MG_MG = 'MG_MG',
   MI = 'MI',
   MI_NZ = 'MI_NZ',
   MK = 'MK',
@@ -1298,10 +1270,10 @@ export enum LanguageCodeEnum {
   ML = 'ML',
   ML_IN = 'ML_IN',
   MN = 'MN',
-  MN_MN = 'MN_MN',
   MNI = 'MNI',
   MNI_BENG = 'MNI_BENG',
   MNI_BENG_IN = 'MNI_BENG_IN',
+  MN_MN = 'MN_MN',
   MR = 'MR',
   MR_IN = 'MR_IN',
   MS = 'MS',
@@ -1323,10 +1295,10 @@ export enum LanguageCodeEnum {
   NB_NO = 'NB_NO',
   NB_SJ = 'NB_SJ',
   ND = 'ND',
-  ND_ZW = 'ND_ZW',
   NDS = 'NDS',
   NDS_DE = 'NDS_DE',
   NDS_NL = 'NDS_NL',
+  ND_ZW = 'ND_ZW',
   NE = 'NE',
   NE_IN = 'NE_IN',
   NE_NP = 'NE_NP',
@@ -1341,9 +1313,9 @@ export enum LanguageCodeEnum {
   NMG = 'NMG',
   NMG_CM = 'NMG_CM',
   NN = 'NN',
-  NN_NO = 'NN_NO',
   NNH = 'NNH',
   NNH_CM = 'NNH_CM',
+  NN_NO = 'NN_NO',
   NUS = 'NUS',
   NUS_SS = 'NUS_SS',
   NYN = 'NYN',
@@ -1391,10 +1363,10 @@ export enum LanguageCodeEnum {
   RN = 'RN',
   RN_BI = 'RN_BI',
   RO = 'RO',
-  RO_MD = 'RO_MD',
-  RO_RO = 'RO_RO',
   ROF = 'ROF',
   ROF_TZ = 'ROF_TZ',
+  RO_MD = 'RO_MD',
+  RO_RO = 'RO_RO',
   RU = 'RU',
   RU_BY = 'RU_BY',
   RU_KG = 'RU_KG',
@@ -1403,9 +1375,9 @@ export enum LanguageCodeEnum {
   RU_RU = 'RU_RU',
   RU_UA = 'RU_UA',
   RW = 'RW',
-  RW_RW = 'RW_RW',
   RWK = 'RWK',
   RWK_TZ = 'RWK_TZ',
+  RW_RW = 'RW_RW',
   SAH = 'SAH',
   SAH_RU = 'SAH_RU',
   SAQ = 'SAQ',
@@ -1421,13 +1393,13 @@ export enum LanguageCodeEnum {
   SD_DEVA = 'SD_DEVA',
   SD_DEVA_IN = 'SD_DEVA_IN',
   SE = 'SE',
-  SE_FI = 'SE_FI',
-  SE_NO = 'SE_NO',
-  SE_SE = 'SE_SE',
   SEH = 'SEH',
   SEH_MZ = 'SEH_MZ',
   SES = 'SES',
   SES_ML = 'SES_ML',
+  SE_FI = 'SE_FI',
+  SE_NO = 'SE_NO',
+  SE_SE = 'SE_SE',
   SG = 'SG',
   SG_CF = 'SG_CF',
   SHI = 'SHI',
@@ -1483,10 +1455,10 @@ export enum LanguageCodeEnum {
   TA_MY = 'TA_MY',
   TA_SG = 'TA_SG',
   TE = 'TE',
-  TE_IN = 'TE_IN',
   TEO = 'TEO',
   TEO_KE = 'TEO_KE',
   TEO_UG = 'TEO_UG',
+  TE_IN = 'TE_IN',
   TG = 'TG',
   TG_TJ = 'TG_TJ',
   TH = 'TH',
@@ -1571,8 +1543,8 @@ export enum MetadataErrorCode {
   GRAPHQL_ERROR = 'GRAPHQL_ERROR',
   INVALID = 'INVALID',
   NOT_FOUND = 'NOT_FOUND',
-  REQUIRED = 'REQUIRED',
-  NOT_UPDATED = 'NOT_UPDATED'
+  NOT_UPDATED = 'NOT_UPDATED',
+  REQUIRED = 'REQUIRED'
 }
 
 export type MetadataFilter = {
@@ -1598,13 +1570,13 @@ export enum OrderDirection {
 
 /** An enumeration. */
 export enum PermissionEnum {
-  MANAGE_USERS = 'MANAGE_USERS',
-  MANAGE_STAFF = 'MANAGE_STAFF',
   IMPERSONATE_USER = 'IMPERSONATE_USER',
   MANAGE_APPS = 'MANAGE_APPS',
-  MANAGE_OBSERVABILITY = 'MANAGE_OBSERVABILITY',
   MANAGE_INITIATIVES = 'MANAGE_INITIATIVES',
-  MANAGE_POLITICAL_ENTITIES = 'MANAGE_POLITICAL_ENTITIES'
+  MANAGE_OBSERVABILITY = 'MANAGE_OBSERVABILITY',
+  MANAGE_POLITICAL_ENTITIES = 'MANAGE_POLITICAL_ENTITIES',
+  MANAGE_STAFF = 'MANAGE_STAFF',
+  MANAGE_USERS = 'MANAGE_USERS'
 }
 
 export type PermissionGroupCreateInput = {
@@ -1619,8 +1591,8 @@ export type PermissionGroupCreateInput = {
 /** An enumeration. */
 export enum PermissionGroupErrorCode {
   ASSIGN_NON_STAFF_MEMBER = 'ASSIGN_NON_STAFF_MEMBER',
-  DUPLICATED_INPUT_ITEM = 'DUPLICATED_INPUT_ITEM',
   CANNOT_REMOVE_FROM_LAST_GROUP = 'CANNOT_REMOVE_FROM_LAST_GROUP',
+  DUPLICATED_INPUT_ITEM = 'DUPLICATED_INPUT_ITEM',
   LEFT_NOT_MANAGEABLE_PERMISSION = 'LEFT_NOT_MANAGEABLE_PERMISSION',
   OUT_OF_SCOPE_PERMISSION = 'OUT_OF_SCOPE_PERMISSION',
   OUT_OF_SCOPE_USER = 'OUT_OF_SCOPE_USER',
@@ -1629,8 +1601,8 @@ export enum PermissionGroupErrorCode {
 }
 
 export type PermissionGroupFilterInput = {
-  search?: InputMaybe<Scalars['String']>;
   ids?: InputMaybe<Array<Scalars['ID']>>;
+  search?: InputMaybe<Scalars['String']>;
 };
 
 export enum PermissionGroupSortField {
@@ -1659,25 +1631,25 @@ export type PermissionGroupUpdateInput = {
 };
 
 export type SeoInput = {
-  /** SEO title. */
-  title?: InputMaybe<Scalars['String']>;
   /** SEO description. */
   description?: InputMaybe<Scalars['String']>;
+  /** SEO title. */
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type StaffCreateInput = {
-  /** Given name. */
-  firstName?: InputMaybe<Scalars['String']>;
-  /** Family name. */
-  lastName?: InputMaybe<Scalars['String']>;
-  /** The unique email address of the user. */
-  email?: InputMaybe<Scalars['String']>;
-  /** User account is active. */
-  isActive?: InputMaybe<Scalars['Boolean']>;
-  /** A note about the user. */
-  note?: InputMaybe<Scalars['String']>;
   /** List of permission group IDs to which user should be assigned. */
   addGroups?: InputMaybe<Array<Scalars['ID']>>;
+  /** The unique email address of the user. */
+  email?: InputMaybe<Scalars['String']>;
+  /** Given name. */
+  firstName?: InputMaybe<Scalars['String']>;
+  /** User account is active. */
+  isActive?: InputMaybe<Scalars['Boolean']>;
+  /** Family name. */
+  lastName?: InputMaybe<Scalars['String']>;
+  /** A note about the user. */
+  note?: InputMaybe<Scalars['String']>;
   /** URL of a view where users should be redirected to set the password. URL in RFC 1808 format. */
   redirectUrl?: InputMaybe<Scalars['String']>;
 };
@@ -1690,26 +1662,26 @@ export enum StaffMemberStatus {
 }
 
 export type StaffUpdateInput = {
-  /** Given name. */
-  firstName?: InputMaybe<Scalars['String']>;
-  /** Family name. */
-  lastName?: InputMaybe<Scalars['String']>;
-  /** The unique email address of the user. */
-  email?: InputMaybe<Scalars['String']>;
-  /** User account is active. */
-  isActive?: InputMaybe<Scalars['Boolean']>;
-  /** A note about the user. */
-  note?: InputMaybe<Scalars['String']>;
   /** List of permission group IDs to which user should be assigned. */
   addGroups?: InputMaybe<Array<Scalars['ID']>>;
+  /** The unique email address of the user. */
+  email?: InputMaybe<Scalars['String']>;
+  /** Given name. */
+  firstName?: InputMaybe<Scalars['String']>;
+  /** User account is active. */
+  isActive?: InputMaybe<Scalars['Boolean']>;
+  /** Family name. */
+  lastName?: InputMaybe<Scalars['String']>;
+  /** A note about the user. */
+  note?: InputMaybe<Scalars['String']>;
   /** List of permission group IDs from which user should be unassigned. */
   removeGroups?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type StaffUserInput = {
-  status?: InputMaybe<StaffMemberStatus>;
-  search?: InputMaybe<Scalars['String']>;
   ids?: InputMaybe<Array<Scalars['ID']>>;
+  search?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<StaffMemberStatus>;
 };
 
 /** An enumeration. */
@@ -1730,15 +1702,15 @@ export enum TranslationErrorCode {
 }
 
 export type TranslationInput = {
-  seoTitle?: InputMaybe<Scalars['String']>;
-  seoDescription?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
   /**
    * Translated description.
    *
    * Rich text format. For reference see https://editorjs.io/
    */
   description?: InputMaybe<Scalars['JSONString']>;
+  name?: InputMaybe<Scalars['String']>;
+  seoDescription?: InputMaybe<Scalars['String']>;
+  seoTitle?: InputMaybe<Scalars['String']>;
 };
 
 /** An enumeration. */
@@ -1747,35 +1719,35 @@ export enum UploadErrorCode {
 }
 
 export type UserCreateInput = {
-  /** Given name. */
-  firstName?: InputMaybe<Scalars['String']>;
-  /** Family name. */
-  lastName?: InputMaybe<Scalars['String']>;
   /** The unique email address of the user. */
   email?: InputMaybe<Scalars['String']>;
+  /** Given name. */
+  firstName?: InputMaybe<Scalars['String']>;
   /** User account is active. */
   isActive?: InputMaybe<Scalars['Boolean']>;
-  /** A note about the user. */
-  note?: InputMaybe<Scalars['String']>;
   /** User language code. */
   languageCode?: InputMaybe<LanguageCodeEnum>;
+  /** Family name. */
+  lastName?: InputMaybe<Scalars['String']>;
+  /** A note about the user. */
+  note?: InputMaybe<Scalars['String']>;
   /** URL of a view where users should be redirected to set the password. URL in RFC 1808 format. */
   redirectUrl?: InputMaybe<Scalars['String']>;
 };
 
 export enum UserSortField {
-  /** Sort users by first name. */
-  FIRST_NAME = 'FIRST_NAME',
-  /** Sort users by last name. */
-  LAST_NAME = 'LAST_NAME',
-  /** Sort users by email. */
-  EMAIL = 'EMAIL',
-  /** Sort users by order count. */
-  ORDER_COUNT = 'ORDER_COUNT',
   /** Sort users by created at. */
   CREATED_AT = 'CREATED_AT',
+  /** Sort users by email. */
+  EMAIL = 'EMAIL',
+  /** Sort users by first name. */
+  FIRST_NAME = 'FIRST_NAME',
   /** Sort users by last modified at. */
-  LAST_MODIFIED_AT = 'LAST_MODIFIED_AT'
+  LAST_MODIFIED_AT = 'LAST_MODIFIED_AT',
+  /** Sort users by last name. */
+  LAST_NAME = 'LAST_NAME',
+  /** Sort users by order count. */
+  ORDER_COUNT = 'ORDER_COUNT'
 }
 
 export type UserSortingInput = {
@@ -1787,46 +1759,36 @@ export type UserSortingInput = {
 
 /** An enumeration. */
 export enum VolumeUnitsEnum {
-  CUBIC_MILLIMETER = 'CUBIC_MILLIMETER',
+  ACRE_FT = 'ACRE_FT',
+  ACRE_IN = 'ACRE_IN',
   CUBIC_CENTIMETER = 'CUBIC_CENTIMETER',
   CUBIC_DECIMETER = 'CUBIC_DECIMETER',
-  CUBIC_METER = 'CUBIC_METER',
-  LITER = 'LITER',
   CUBIC_FOOT = 'CUBIC_FOOT',
   CUBIC_INCH = 'CUBIC_INCH',
+  CUBIC_METER = 'CUBIC_METER',
+  CUBIC_MILLIMETER = 'CUBIC_MILLIMETER',
   CUBIC_YARD = 'CUBIC_YARD',
-  QT = 'QT',
-  PINT = 'PINT',
   FL_OZ = 'FL_OZ',
-  ACRE_IN = 'ACRE_IN',
-  ACRE_FT = 'ACRE_FT'
+  LITER = 'LITER',
+  PINT = 'PINT',
+  QT = 'QT'
 }
 
 export type WebhookCreateInput = {
-  /** The name of the webhook. */
-  name?: InputMaybe<Scalars['String']>;
-  /** The url to receive the payload. */
-  targetUrl?: InputMaybe<Scalars['String']>;
+  /** ID of the app to which webhook belongs. */
+  app?: InputMaybe<Scalars['ID']>;
+  /** The asynchronous events that webhook wants to subscribe. */
+  asyncEvents?: InputMaybe<Array<WebhookEventTypeAsyncEnum>>;
   /**
    * The events that webhook wants to subscribe.
    *
    * DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
    */
   events?: InputMaybe<Array<WebhookEventTypeEnum>>;
-  /** The asynchronous events that webhook wants to subscribe. */
-  asyncEvents?: InputMaybe<Array<WebhookEventTypeAsyncEnum>>;
-  /** The synchronous events that webhook wants to subscribe. */
-  syncEvents?: InputMaybe<Array<WebhookEventTypeSyncEnum>>;
-  /** ID of the app to which webhook belongs. */
-  app?: InputMaybe<Scalars['ID']>;
   /** Determine if webhook will be set active or not. */
   isActive?: InputMaybe<Scalars['Boolean']>;
-  /**
-   * The secret key used to create a hash signature with each payload.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
-   */
-  secretKey?: InputMaybe<Scalars['String']>;
+  /** The name of the webhook. */
+  name?: InputMaybe<Scalars['String']>;
   /**
    * Subscription query used to define a webhook payload.
    *
@@ -1835,6 +1797,16 @@ export type WebhookCreateInput = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   query?: InputMaybe<Scalars['String']>;
+  /**
+   * The secret key used to create a hash signature with each payload.
+   *
+   * DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
+   */
+  secretKey?: InputMaybe<Scalars['String']>;
+  /** The synchronous events that webhook wants to subscribe. */
+  syncEvents?: InputMaybe<Array<WebhookEventTypeSyncEnum>>;
+  /** The url to receive the payload. */
+  targetUrl?: InputMaybe<Scalars['String']>;
 };
 
 /** An enumeration. */
@@ -1850,103 +1822,103 @@ export enum WebhookErrorCode {
 export enum WebhookEventTypeAsyncEnum {
   /** All the events. */
   ANY_EVENTS = 'ANY_EVENTS',
-  /** A new app installed. */
-  APP_INSTALLED = 'APP_INSTALLED',
-  /** An app updated. */
-  APP_UPDATED = 'APP_UPDATED',
   /** An app deleted. */
   APP_DELETED = 'APP_DELETED',
+  /** A new app installed. */
+  APP_INSTALLED = 'APP_INSTALLED',
   /** An app status is changed. */
   APP_STATUS_CHANGED = 'APP_STATUS_CHANGED',
+  /** An app updated. */
+  APP_UPDATED = 'APP_UPDATED',
   /** A new customer account is created. */
   CUSTOMER_CREATED = 'CUSTOMER_CREATED',
-  /** A customer account is updated. */
-  CUSTOMER_UPDATED = 'CUSTOMER_UPDATED',
   /** A customer account is deleted. */
   CUSTOMER_DELETED = 'CUSTOMER_DELETED',
+  /** A customer account is updated. */
+  CUSTOMER_UPDATED = 'CUSTOMER_UPDATED',
   INITIATIVE_CREATED = 'INITIATIVE_CREATED',
-  INITIATIVE_UPDATED = 'INITIATIVE_UPDATED',
   INITIATIVE_DELETED = 'INITIATIVE_DELETED',
+  INITIATIVE_UPDATED = 'INITIATIVE_UPDATED',
   /** User notification triggered. */
   NOTIFY_USER = 'NOTIFY_USER',
+  /** An observability event is created. */
+  OBSERVABILITY = 'OBSERVABILITY',
   /** A new page is created. */
   PAGE_CREATED = 'PAGE_CREATED',
-  /** A page is updated. */
-  PAGE_UPDATED = 'PAGE_UPDATED',
   /** A page is deleted. */
   PAGE_DELETED = 'PAGE_DELETED',
   /** A new page type is created. */
   PAGE_TYPE_CREATED = 'PAGE_TYPE_CREATED',
-  /** A page type is updated. */
-  PAGE_TYPE_UPDATED = 'PAGE_TYPE_UPDATED',
   /** A page type is deleted. */
   PAGE_TYPE_DELETED = 'PAGE_TYPE_DELETED',
+  /** A page type is updated. */
+  PAGE_TYPE_UPDATED = 'PAGE_TYPE_UPDATED',
+  /** A page is updated. */
+  PAGE_UPDATED = 'PAGE_UPDATED',
   /** A new permission group is created. */
   PERMISSION_GROUP_CREATED = 'PERMISSION_GROUP_CREATED',
-  /** A permission group is updated. */
-  PERMISSION_GROUP_UPDATED = 'PERMISSION_GROUP_UPDATED',
   /** A permission group is deleted. */
   PERMISSION_GROUP_DELETED = 'PERMISSION_GROUP_DELETED',
+  /** A permission group is updated. */
+  PERMISSION_GROUP_UPDATED = 'PERMISSION_GROUP_UPDATED',
   /** A new staff user is created. */
   STAFF_CREATED = 'STAFF_CREATED',
-  /** A staff user is updated. */
-  STAFF_UPDATED = 'STAFF_UPDATED',
   /** A staff user is deleted. */
   STAFF_DELETED = 'STAFF_DELETED',
-  /** An observability event is created. */
-  OBSERVABILITY = 'OBSERVABILITY'
+  /** A staff user is updated. */
+  STAFF_UPDATED = 'STAFF_UPDATED'
 }
 
 /** Enum determining type of webhook. */
 export enum WebhookEventTypeEnum {
   /** All the events. */
   ANY_EVENTS = 'ANY_EVENTS',
-  /** A new app installed. */
-  APP_INSTALLED = 'APP_INSTALLED',
-  /** An app updated. */
-  APP_UPDATED = 'APP_UPDATED',
   /** An app deleted. */
   APP_DELETED = 'APP_DELETED',
+  /** A new app installed. */
+  APP_INSTALLED = 'APP_INSTALLED',
   /** An app status is changed. */
   APP_STATUS_CHANGED = 'APP_STATUS_CHANGED',
+  /** An app updated. */
+  APP_UPDATED = 'APP_UPDATED',
   /** A new customer account is created. */
   CUSTOMER_CREATED = 'CUSTOMER_CREATED',
-  /** A customer account is updated. */
-  CUSTOMER_UPDATED = 'CUSTOMER_UPDATED',
   /** A customer account is deleted. */
   CUSTOMER_DELETED = 'CUSTOMER_DELETED',
+  /** A customer account is updated. */
+  CUSTOMER_UPDATED = 'CUSTOMER_UPDATED',
+  EXAMPLE_SYNC_EVENT = 'EXAMPLE_SYNC_EVENT',
   INITIATIVE_CREATED = 'INITIATIVE_CREATED',
-  INITIATIVE_UPDATED = 'INITIATIVE_UPDATED',
   INITIATIVE_DELETED = 'INITIATIVE_DELETED',
+  INITIATIVE_UPDATED = 'INITIATIVE_UPDATED',
   /** User notification triggered. */
   NOTIFY_USER = 'NOTIFY_USER',
+  /** An observability event is created. */
+  OBSERVABILITY = 'OBSERVABILITY',
   /** A new page is created. */
   PAGE_CREATED = 'PAGE_CREATED',
-  /** A page is updated. */
-  PAGE_UPDATED = 'PAGE_UPDATED',
   /** A page is deleted. */
   PAGE_DELETED = 'PAGE_DELETED',
   /** A new page type is created. */
   PAGE_TYPE_CREATED = 'PAGE_TYPE_CREATED',
-  /** A page type is updated. */
-  PAGE_TYPE_UPDATED = 'PAGE_TYPE_UPDATED',
   /** A page type is deleted. */
   PAGE_TYPE_DELETED = 'PAGE_TYPE_DELETED',
+  /** A page type is updated. */
+  PAGE_TYPE_UPDATED = 'PAGE_TYPE_UPDATED',
+  /** A page is updated. */
+  PAGE_UPDATED = 'PAGE_UPDATED',
   /** A new permission group is created. */
   PERMISSION_GROUP_CREATED = 'PERMISSION_GROUP_CREATED',
-  /** A permission group is updated. */
-  PERMISSION_GROUP_UPDATED = 'PERMISSION_GROUP_UPDATED',
   /** A permission group is deleted. */
   PERMISSION_GROUP_DELETED = 'PERMISSION_GROUP_DELETED',
+  /** A permission group is updated. */
+  PERMISSION_GROUP_UPDATED = 'PERMISSION_GROUP_UPDATED',
   /** A new staff user is created. */
   STAFF_CREATED = 'STAFF_CREATED',
-  /** A staff user is updated. */
-  STAFF_UPDATED = 'STAFF_UPDATED',
   /** A staff user is deleted. */
   STAFF_DELETED = 'STAFF_DELETED',
-  /** An observability event is created. */
-  OBSERVABILITY = 'OBSERVABILITY',
-  EXAMPLE_SYNC_EVENT = 'EXAMPLE_SYNC_EVENT'
+  /** A staff user is updated. */
+  STAFF_UPDATED = 'STAFF_UPDATED'
 }
 
 /** Enum determining type of webhook. */
@@ -1956,57 +1928,47 @@ export enum WebhookEventTypeSyncEnum {
 
 /** An enumeration. */
 export enum WebhookSampleEventTypeEnum {
-  APP_INSTALLED = 'APP_INSTALLED',
-  APP_UPDATED = 'APP_UPDATED',
   APP_DELETED = 'APP_DELETED',
+  APP_INSTALLED = 'APP_INSTALLED',
   APP_STATUS_CHANGED = 'APP_STATUS_CHANGED',
+  APP_UPDATED = 'APP_UPDATED',
   CUSTOMER_CREATED = 'CUSTOMER_CREATED',
-  CUSTOMER_UPDATED = 'CUSTOMER_UPDATED',
   CUSTOMER_DELETED = 'CUSTOMER_DELETED',
+  CUSTOMER_UPDATED = 'CUSTOMER_UPDATED',
   INITIATIVE_CREATED = 'INITIATIVE_CREATED',
-  INITIATIVE_UPDATED = 'INITIATIVE_UPDATED',
   INITIATIVE_DELETED = 'INITIATIVE_DELETED',
+  INITIATIVE_UPDATED = 'INITIATIVE_UPDATED',
   NOTIFY_USER = 'NOTIFY_USER',
+  OBSERVABILITY = 'OBSERVABILITY',
   PAGE_CREATED = 'PAGE_CREATED',
-  PAGE_UPDATED = 'PAGE_UPDATED',
   PAGE_DELETED = 'PAGE_DELETED',
   PAGE_TYPE_CREATED = 'PAGE_TYPE_CREATED',
-  PAGE_TYPE_UPDATED = 'PAGE_TYPE_UPDATED',
   PAGE_TYPE_DELETED = 'PAGE_TYPE_DELETED',
+  PAGE_TYPE_UPDATED = 'PAGE_TYPE_UPDATED',
+  PAGE_UPDATED = 'PAGE_UPDATED',
   PERMISSION_GROUP_CREATED = 'PERMISSION_GROUP_CREATED',
-  PERMISSION_GROUP_UPDATED = 'PERMISSION_GROUP_UPDATED',
   PERMISSION_GROUP_DELETED = 'PERMISSION_GROUP_DELETED',
+  PERMISSION_GROUP_UPDATED = 'PERMISSION_GROUP_UPDATED',
   STAFF_CREATED = 'STAFF_CREATED',
-  STAFF_UPDATED = 'STAFF_UPDATED',
   STAFF_DELETED = 'STAFF_DELETED',
-  OBSERVABILITY = 'OBSERVABILITY'
+  STAFF_UPDATED = 'STAFF_UPDATED'
 }
 
 export type WebhookUpdateInput = {
-  /** The new name of the webhook. */
-  name?: InputMaybe<Scalars['String']>;
-  /** The url to receive the payload. */
-  targetUrl?: InputMaybe<Scalars['String']>;
+  /** ID of the app to which webhook belongs. */
+  app?: InputMaybe<Scalars['ID']>;
+  /** The asynchronous events that webhook wants to subscribe. */
+  asyncEvents?: InputMaybe<Array<WebhookEventTypeAsyncEnum>>;
   /**
    * The events that webhook wants to subscribe.
    *
    * DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
    */
   events?: InputMaybe<Array<WebhookEventTypeEnum>>;
-  /** The asynchronous events that webhook wants to subscribe. */
-  asyncEvents?: InputMaybe<Array<WebhookEventTypeAsyncEnum>>;
-  /** The synchronous events that webhook wants to subscribe. */
-  syncEvents?: InputMaybe<Array<WebhookEventTypeSyncEnum>>;
-  /** ID of the app to which webhook belongs. */
-  app?: InputMaybe<Scalars['ID']>;
   /** Determine if webhook will be set active or not. */
   isActive?: InputMaybe<Scalars['Boolean']>;
-  /**
-   * Use to create a hash signature with each payload.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
-   */
-  secretKey?: InputMaybe<Scalars['String']>;
+  /** The new name of the webhook. */
+  name?: InputMaybe<Scalars['String']>;
   /**
    * Subscription query used to define a webhook payload.
    *
@@ -2015,14 +1977,24 @@ export type WebhookUpdateInput = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   query?: InputMaybe<Scalars['String']>;
+  /**
+   * Use to create a hash signature with each payload.
+   *
+   * DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
+   */
+  secretKey?: InputMaybe<Scalars['String']>;
+  /** The synchronous events that webhook wants to subscribe. */
+  syncEvents?: InputMaybe<Array<WebhookEventTypeSyncEnum>>;
+  /** The url to receive the payload. */
+  targetUrl?: InputMaybe<Scalars['String']>;
 };
 
 /** An enumeration. */
 export enum WeightUnitsEnum {
   G = 'G',
+  KG = 'KG',
   LB = 'LB',
   OZ = 'OZ',
-  KG = 'KG',
   TONNE = 'TONNE'
 }
 

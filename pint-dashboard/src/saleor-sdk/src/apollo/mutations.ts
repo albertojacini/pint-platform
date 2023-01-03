@@ -4,7 +4,7 @@ import {
   accountErrorFragment,
   userBaseFragment,
   userDetailsFragment,
-} from "./fragments";
+} from "@saleor/fragments/auth"
 
 export const LOGIN_WITHOUT_DETAILS = gql`
   ${accountErrorFragment}

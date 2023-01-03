@@ -2,7 +2,8 @@
 // These are separate clients and do not share configs between themselves
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { ApolloLink } from "@apollo/client/link/core";
-import { createFetch, createSaleorClient } from "@saleor/sdk";
+import { createFetch } from "@saleor/saleor-sdk/src/apollo";
+import { createSaleorClient } from "@saleor/saleor-sdk/src/core";
 import { createUploadLink } from "apollo-upload-client";
 
 import { API_URI } from "../config";

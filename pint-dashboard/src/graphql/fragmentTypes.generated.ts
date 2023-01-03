@@ -60,8 +60,8 @@
     ],
     "_Entity": [
       "App",
-      "User",
-      "Group"
+      "Group",
+      "User"
     ]
   }
 };
