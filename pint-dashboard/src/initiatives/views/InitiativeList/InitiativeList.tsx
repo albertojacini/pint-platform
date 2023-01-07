@@ -13,7 +13,7 @@ import {
   defaultListSettings,
   InitiativeListColumns,
 } from "@saleor/config";
-import { Task } from "@saleor/containers/BackgroundTasks/types";
+// import { Task } from "@saleor/containers/BackgroundTasks/types";
 import {
   InitiativeListQueryVariables,
   // useGridAttributesQuery,
@@ -27,7 +27,7 @@ import {
   useInitiativeListQuery,
   // useWarehouseListQuery,
 } from "@saleor/graphql";
-import useBackgroundTask from "@saleor/hooks/useBackgroundTask";
+// import useBackgroundTask from "@saleor/hooks/useBackgroundTask";
 import useBulkActions from "@saleor/hooks/useBulkActions";
 import useListSettings from "@saleor/hooks/useListSettings";
 import useNavigator from "@saleor/hooks/useNavigator";
@@ -80,7 +80,7 @@ import {
   saveFilterTab,
 } from "./filters";
 import { canBeSorted, DEFAULT_SORT_KEY, getSortQueryVariables } from "./sort";
-import { getAvailableInitiativeKinds, getInitiativeKindOpts } from "./utils";
+// import { getAvailableInitiativeKinds, getInitiativeKindOpts } from "./utils";
 
 interface InitiativeListProps {
   params: InitiativeListUrlQueryParams;
@@ -89,7 +89,7 @@ interface InitiativeListProps {
 export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const { queue } = useBackgroundTask();
+  // const { queue } = useBackgroundTask();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
     params.ids,
   );
@@ -151,7 +151,7 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
   //     first: 10,
   //   },
   // });
-  const [focusedAttribute, setFocusedAttribute] = useState<string>();
+  // const [focusedAttribute, setFocusedAttribute] = useState<string>();
   // const searchAttributeValues = useAttributeValueSearch({
   //   variables: {
   //     id: focusedAttribute,
@@ -166,7 +166,7 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
   //   },
   //   skip: params.action !== "export",
   // });
-  const availableInitiativeKinds = getAvailableInitiativeKinds();
+  // const availableInitiativeKinds = getAvailableInitiativeKinds();
   // const { availableChannels } = useAppChannel(false);
   // const limitOpts = useShopLimitsQuery({
   //   variables: {
@@ -182,7 +182,8 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
     params,
     defaultSortField: DEFAULT_SORT_KEY,
     urlFunc: initiativeListUrl,
-    resetToDefault: !canBeSorted(params.sort, !!selectedChannel),
+    // resetToDefault: !canBeSorted(params.sort, !!selectedChannel),
+    resetToDefault: !canBeSorted(params.sort),
   });
 
   const [openModal, closeModal] = createDialogActionHandlers<
@@ -194,9 +195,9 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
 
   const currentTab = getFiltersCurrentTab(params, tabs);
 
-  const countAllInitiatives = useInitiativeCountQuery({
-    skip: params.action !== "export",
-  });
+  // const countAllInitiatives = useInitiativeCountQuery({
+  //   skip: params.action !== "export",
+  // });
 
   // const [exportInitiatives, exportInitiativesOpts] = useInitiativeExportMutation({
   //   onCompleted: data => {
@@ -265,35 +266,37 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
       }),
     );
 
-  const kindOpts = getInitiativeKindOpts(availableInitiativeKinds, intl);
+  // const kindOpts = getInitiativeKindOpts(availableInitiativeKinds, intl);
   const paginationState = createPaginationState(settings.rowNumber, params);
   // const channelOpts = availableChannels
   //   ? mapNodeToChoice(availableChannels, channel => channel.slug)
   //   : null;
   // const filter = getFilterVariables(params, !!selectedChannel);
+  const filter = getFilterVariables(params);
   // const sort = getSortQueryVariables(params, !!selectedChannel);
-  // const queryVariables = React.useMemo<
-  //   Omit<InitiativeListQueryVariables, "hasChannel" | "hasSelectedAttributes">
-  // >(
-  //   () => ({
-  //     ...paginationState,
-  //     filter,
-  //     sort,
-  //     channel: selectedChannel?.slug,
-  //   }),
-  //   [params, settings.rowNumber],
-  // );
+  const sort = getSortQueryVariables(params);
+  const queryVariables = React.useMemo<
+    Omit<InitiativeListQueryVariables, "hasChannel" | "hasSelectedAttributes">
+  >(
+    () => ({
+      ...paginationState,
+      filter,
+      sort,
+      // channel: selectedChannel?.slug,
+    }),
+    [params, settings.rowNumber],
+  );
 
-  const filteredColumnIds = settings.columns
-    .filter(isAttributeColumnValue)
-    .map(getAttributeIdFromColumnValue);
+  // const filteredColumnIds = settings.columns
+  //   .filter(isAttributeColumnValue)
+  //   .map(getAttributeIdFromColumnValue);
 
   const { data, loading, refetch } = useInitiativeListQuery({
     displayLoader: true,
     variables: {
       ...queryVariables,
       // hasChannel: !!selectedChannel,
-      hasSelectedAttributes: filteredColumnIds.length > 0,
+      // hasSelectedAttributes: filteredColumnIds.length > 0,
     },
   });
 
@@ -321,7 +324,7 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
         });
         reset();
         refetch();
-        limitOpts.refetch();
+        // limitOpts.refetch();
       }
     },
   });
@@ -334,11 +337,11 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
   //   variables: DEFAULT_INITIAL_SEARCH_DATA,
   // });
 
-  const fetchMoreDialogInitiativeTypes = {
-    hasMore: searchDialogInitiativeTypesOpts.data?.search?.pageInfo?.hasNextPage,
-    loading: searchDialogInitiativeTypesOpts.loading,
-    onFetchMore: loadMoreDialogInitiativeTypes,
-  };
+  // const fetchMoreDialogInitiativeTypes = {
+  //   // hasMore: searchDialogInitiativeTypesOpts.data?.search?.pageInfo?.hasNextPage,
+  //   // loading: searchDialogInitiativeTypesOpts.loading,
+  //   onFetchMore: loadMoreDialogInitiativeTypes,
+  // };
 
   const filterOpts = getFilterOpts(
     params,
@@ -358,8 +361,8 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
     //   initial: mapEdgesToItems(initialFilterInitiativeTypes?.initiativeTypes) || [],
     //   search: searchInitiativeTypes,
     // },
-    kindOpts,
-    channelOpts,
+    // kindOpts,
+    // channelOpts,
   );
 
   const paginationValues = usePaginator({
@@ -382,7 +385,7 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
         //     availableInGridAttributesOpts.result?.data?.availableInGrid,
         //   ) || []
         // }
-        currencySymbol={selectedChannel?.currencyCode || ""}
+        // currencySymbol={selectedChannel?.currencyCode || ""}
         currentTab={currentTab}
         defaultSettings={defaultListSettings[ListViews.INITIATIVE_LIST]}
         filterOpts={filterOpts}
@@ -398,7 +401,7 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
         //   false,
         // )}
         disabled={loading}
-        limits={limitOpts.data?.shop.limits}
+        // limits={limitOpts.data?.shop.limits}
         initiatives={mapEdgesToItems(data?.initiatives)}
         // onColumnQueryChange={availableInGridAttributesOpts.search}
         // onFetchMore={availableInGridAttributesOpts.loadMore}
@@ -424,14 +427,14 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
         toggleAll={toggleAll}
         onSearchChange={handleSearchChange}
         onFilterChange={changeFilters}
-        onFilterAttributeFocus={setFocusedAttribute}
+        // onFilterAttributeFocus={setFocusedAttribute}
         onTabSave={() => openModal("save-search")}
         onTabDelete={() => openModal("delete-search")}
         onTabChange={handleTabChange}
         initialSearch={params.query || ""}
         tabs={getFilterTabs().map(tab => tab.name)}
         onExport={() => openModal("export")}
-        selectedChannelId={selectedChannel?.id}
+        // selectedChannelId={selectedChannel?.id}
         // columnQuery={availableInGridAttributesOpts.query}
       />
       <ActionDialog
@@ -462,41 +465,41 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
           />
         </DialogContentText>
       </ActionDialog>
-      <InitiativeExportDialog
-        // attributes={
-        //   mapEdgesToItems(searchAttributes?.result?.data?.search) || []
-        // }
-        // hasMore={searchAttributes.result.data?.search.pageInfo.hasNextPage}
-        // loading={
-        //   searchAttributes.result.loading ||
-        //   countAllInitiatives.loading ||
-        //   warehouses.loading
-        // }
-        // onFetch={searchAttributes.search}
-        // onFetchMore={searchAttributes.loadMore}
-        open={params.action === "export"}
-        confirmButtonState={exportInitiativesOpts.status}
-        errors={exportInitiativesOpts.data?.exportInitiatives.errors || []}
-        initiativeQuantity={{
-          all: countAllInitiatives.data?.initiatives?.totalCount,
-          filter: data?.initiatives?.totalCount,
-        }}
-        selectedInitiatives={listElements.length}
-        // warehouses={mapEdgesToItems(warehouses?.data?.warehouses) || []}
-        channels={availableChannels}
-        onClose={closeModal}
-        onSubmit={data =>
-          exportInitiatives({
-            variables: {
-              input: {
-                ...data,
-                filter,
-                ids: listElements,
-              },
-            },
-          })
-        }
-      />
+      {/*<InitiativeExportDialog*/}
+      {/*  // attributes={*/}
+      {/*  //   mapEdgesToItems(searchAttributes?.result?.data?.search) || []*/}
+      {/*  // }*/}
+      {/*  // hasMore={searchAttributes.result.data?.search.pageInfo.hasNextPage}*/}
+      {/*  // loading={*/}
+      {/*  //   searchAttributes.result.loading ||*/}
+      {/*  //   countAllInitiatives.loading ||*/}
+      {/*  //   warehouses.loading*/}
+      {/*  // }*/}
+      {/*  // onFetch={searchAttributes.search}*/}
+      {/*  // onFetchMore={searchAttributes.loadMore}*/}
+      {/*  open={params.action === "export"}*/}
+      {/*  // confirmButtonState={exportInitiativesOpts.status}*/}
+      {/*  // errors={exportInitiativesOpts.data?.exportInitiatives.errors || []}*/}
+      {/*  initiativeQuantity={{*/}
+      {/*    all: countAllInitiatives.data?.initiatives?.totalCount,*/}
+      {/*    filter: data?.initiatives?.totalCount,*/}
+      {/*  }}*/}
+      {/*  selectedInitiatives={listElements.length}*/}
+      {/*  // warehouses={mapEdgesToItems(warehouses?.data?.warehouses) || []}*/}
+      {/*  // channels={availableChannels}*/}
+      {/*  onClose={closeModal}*/}
+      {/*  onSubmit={data =>*/}
+      {/*    exportInitiatives({*/}
+      {/*      variables: {*/}
+      {/*        input: {*/}
+      {/*          ...data,*/}
+      {/*          filter,*/}
+      {/*          ids: listElements,*/}
+      {/*        },*/}
+      {/*      },*/}
+      {/*    })*/}
+      {/*  }*/}
+      {/*/>*/}
       <SaveFilterTabDialog
         open={params.action === "save-search"}
         confirmButtonState="default"

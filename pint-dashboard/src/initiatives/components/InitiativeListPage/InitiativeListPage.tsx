@@ -15,10 +15,10 @@ import { MultiAutocompleteChoiceType } from "@saleor/components/MultiAutocomplet
 import PageHeader from "@saleor/components/PageHeader";
 import { InitiativeListColumns } from "@saleor/config";
 import {
-  GridAttributesQuery,
+  // GridAttributesQuery,
   InitiativeListQuery,
-  RefreshLimitsQuery,
-  SearchAvailableInGridAttributesQuery,
+  // RefreshLimitsQuery,
+  // SearchAvailableInGridAttributesQuery,
 } from "@saleor/graphql";
 import { sectionNames } from "@saleor/intl";
 import { makeStyles } from "@saleor/macaw-ui";
@@ -31,7 +31,7 @@ import {
   RelayToFlat,
   SortPage,
 } from "@saleor/types";
-import { hasLimits, isLimitReached } from "@saleor/utils/limits";
+// import { hasLimits, isLimitReached } from "@saleor/utils/limits";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -43,7 +43,7 @@ import {
   InitiativeFilterKeys,
   InitiativeListFilterOpts,
 } from "./filters";
-import { getAttributeColumnValue } from "./utils";
+// import { getAttributeColumnValue } from "./utils";
 
 export interface InitiativeListPageProps
   extends PageListProps<InitiativeListColumns>,
@@ -53,13 +53,13 @@ export interface InitiativeListPageProps
     SortPage<InitiativeListUrlSortField>,
     ChannelProps {
   activeAttributeSortId: string;
-  availableInGridAttributes: RelayToFlat<
-    SearchAvailableInGridAttributesQuery["availableInGrid"]
-  >;
+  // availableInGridAttributes: RelayToFlat<
+  //   SearchAvailableInGridAttributesQuery["availableInGrid"]
+  // >;
   columnQuery: string;
   currencySymbol: string;
   gridAttributes: RelayToFlat<GridAttributesQuery["grid"]>;
-  limits: RefreshLimitsQuery["shop"]["limits"];
+  // limits: RefreshLimitsQuery["shop"]["limits"];
   initiatives: RelayToFlat<InitiativeListQuery["initiatives"]>;
   onAdd: () => void;
   onExport: () => void;
@@ -91,9 +91,9 @@ export const InitiativeListPage: React.FC<InitiativeListPageProps> = props => {
     currencySymbol,
     currentTab,
     defaultSettings,
-    gridAttributes,
-    limits,
-    availableInGridAttributes,
+    // gridAttributes,
+    // limits,
+    // availableInGridAttributes,
     filterOpts,
     hasMore,
     initialSearch,
@@ -141,13 +141,15 @@ export const InitiativeListPage: React.FC<InitiativeListPageProps> = props => {
     const selectedStaticColumns = staticColumns.filter(column =>
       (settings.columns || []).includes(column.value),
     );
-    const selectedAttributeColumns = gridAttributes.map(attribute => ({
-      label: attribute.name,
-      value: getAttributeColumnValue(attribute.id),
-    }));
+    // const selectedAttributeColumns = gridAttributes.map(attribute => ({
+    //   label: attribute.name,
+    //   value: getAttributeColumnValue(attribute.id),
+    // }));
 
-    return [...selectedStaticColumns, ...selectedAttributeColumns];
-  }, [gridAttributes, settings.columns]);
+    // return [...selectedStaticColumns, ...selectedAttributeColumns];
+    return [...selectedStaticColumns];
+  // }, [gridAttributes, settings.columns]);
+  }, [settings.columns]);
 
   const handleSave = (columns: InitiativeListColumns[]) =>
     onUpdateListSettings("columns", columns);
@@ -158,16 +160,16 @@ export const InitiativeListPage: React.FC<InitiativeListPageProps> = props => {
 
   const availableColumns: MultiAutocompleteChoiceType[] = [
     ...staticColumns,
-    ...availableInGridAttributes.map(
-      attribute =>
-        ({
-          label: attribute.name,
-          value: getAttributeColumnValue(attribute.id),
-        } as MultiAutocompleteChoiceType),
-    ),
+    // ...availableInGridAttributes.map(
+    //   attribute =>
+    //     ({
+    //       label: attribute.name,
+    //       value: getAttributeColumnValue(attribute.id),
+    //     } as MultiAutocompleteChoiceType),
+    // ),
   ];
 
-  const limitReached = isLimitReached(limits, "initiativeVariants");
+  // const limitReached = isLimitReached(limits, "initiativeVariants");
   const {
     INITIATIVE_OVERVIEW_CREATE,
     INITIATIVE_OVERVIEW_MORE_ACTIONS,
@@ -198,20 +200,20 @@ export const InitiativeListPage: React.FC<InitiativeListPageProps> = props => {
           />
         }
         title={intl.formatMessage(sectionNames.initiatives)}
-        limitText={
-          hasLimits(limits, "initiativeVariants") &&
-          intl.formatMessage(
-            {
-              id: "Kw0jHS",
-              defaultMessage: "{count}/{max} SKUs used",
-              description: "created initiatives counter",
-            },
-            {
-              count: limits.currentUsage.initiativeVariants,
-              max: limits.allowedUsage.initiativeVariants,
-            },
-          )
-        }
+        // limitText={
+        //   hasLimits(limits, "initiativeVariants") &&
+        //   intl.formatMessage(
+        //     {
+        //       id: "Kw0jHS",
+        //       defaultMessage: "{count}/{max} SKUs used",
+        //       description: "created initiatives counter",
+        //     },
+        //     {
+        //       count: limits.currentUsage.initiativeVariants,
+        //       max: limits.allowedUsage.initiativeVariants,
+        //     },
+        //   )
+        // }
       >
         <ColumnPicker
           className={classes.columnPicker}
@@ -228,7 +230,7 @@ export const InitiativeListPage: React.FC<InitiativeListPageProps> = props => {
         <ButtonWithSelect
           options={extensionCreateButtonItems}
           data-test-id="add-initiative"
-          disabled={limitReached}
+          // disabled={limitReached}
           onClick={onAdd}
         >
           <FormattedMessage
@@ -238,20 +240,20 @@ export const InitiativeListPage: React.FC<InitiativeListPageProps> = props => {
           />
         </ButtonWithSelect>
       </PageHeader>
-      {limitReached && (
-        <LimitReachedAlert
-          title={intl.formatMessage({
-            id: "FwHWUm",
-            defaultMessage: "SKU limit reached",
-            description: "alert",
-          })}
-        >
-          <FormattedMessage
-            id="5Vwnu+"
-            defaultMessage="You have reached your SKU limit, you will be no longer able to add SKUs to your store. If you would like to up your limit, contact your administration staff about raising your limits."
-          />
-        </LimitReachedAlert>
-      )}
+      {/*{limitReached && (*/}
+      {/*  <LimitReachedAlert*/}
+      {/*    title={intl.formatMessage({*/}
+      {/*      id: "FwHWUm",*/}
+      {/*      defaultMessage: "SKU limit reached",*/}
+      {/*      description: "alert",*/}
+      {/*    })}*/}
+      {/*  >*/}
+      {/*    <FormattedMessage*/}
+      {/*      id="5Vwnu+"*/}
+      {/*      defaultMessage="You have reached your SKU limit, you will be no longer able to add SKUs to your store. If you would like to up your limit, contact your administration staff about raising your limits."*/}
+      {/*    />*/}
+      {/*  </LimitReachedAlert>*/}
+      {/*)}*/}
       <Card>
         <FilterBar
           currencySymbol={currencySymbol}
@@ -278,7 +280,7 @@ export const InitiativeListPage: React.FC<InitiativeListPageProps> = props => {
         />
         <InitiativeList
           {...listProps}
-          gridAttributes={gridAttributes}
+          // gridAttributes={gridAttributes}
           settings={settings}
           selectedChannelId={selectedChannelId}
           onUpdateListSettings={onUpdateListSettings}

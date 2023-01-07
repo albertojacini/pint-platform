@@ -9,18 +9,18 @@ export const DEFAULT_SORT_KEY = InitiativeListUrlSortField.name;
 
 export function canBeSorted(
   sort: InitiativeListUrlSortField,
-  isChannelSelected: boolean,
+  // isChannelSelected: boolean,
 ) {
   switch (sort) {
     case InitiativeListUrlSortField.name:
-    case InitiativeListUrlSortField.initiativeType:
-    case InitiativeListUrlSortField.attribute:
-    case InitiativeListUrlSortField.rank:
-    case InitiativeListUrlSortField.date:
-      return true;
-    case InitiativeListUrlSortField.price:
-    case InitiativeListUrlSortField.status:
-      return isChannelSelected;
+    // case InitiativeListUrlSortField.initiativeType:
+    // case InitiativeListUrlSortField.attribute:
+    // case InitiativeListUrlSortField.rank:
+    // case InitiativeListUrlSortField.date:
+    //   return true;
+    // case InitiativeListUrlSortField.price:
+    // case InitiativeListUrlSortField.status:
+    //   return isChannelSelected;
     default:
       return false;
   }
@@ -32,14 +32,14 @@ export function getSortQueryField(
   switch (sort) {
     case InitiativeListUrlSortField.name:
       return InitiativeOrderField.NAME;
-    case InitiativeListUrlSortField.price:
-      return InitiativeOrderField.PRICE;
-    case InitiativeListUrlSortField.initiativeType:
-      return InitiativeOrderField.TYPE;
-    case InitiativeListUrlSortField.status:
-      return InitiativeOrderField.PUBLISHED;
-    case InitiativeListUrlSortField.rank:
-      return InitiativeOrderField.RANK;
+    // case InitiativeListUrlSortField.price:
+    //   return InitiativeOrderField.PRICE;
+    // case InitiativeListUrlSortField.initiativeType:
+    //   return InitiativeOrderField.TYPE;
+    // case InitiativeListUrlSortField.status:
+    //   return InitiativeOrderField.PUBLISHED;
+    // case InitiativeListUrlSortField.rank:
+    //   return InitiativeOrderField.RANK;
     case InitiativeListUrlSortField.date:
       return InitiativeOrderField.DATE;
     default:
@@ -49,9 +49,10 @@ export function getSortQueryField(
 
 export function getSortQueryVariables(
   params: InitiativeListUrlQueryParams,
-  isChannelSelected: boolean,
+  // isChannelSelected: boolean,
 ): InitiativeOrder {
-  if (!canBeSorted(params.sort, isChannelSelected)) {
+  // if (!canBeSorted(params.sort, isChannelSelected)) {
+  if (!canBeSorted(params.sort)) {
     return;
   }
 

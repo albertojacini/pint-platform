@@ -9,30 +9,30 @@ interface InitiativeKindChoice {
   value: InitiativeTypeKindEnum;
 }
 
-export const getAvailableInitiativeKinds = (): InitiativeKindChoice[] =>
-  Object.keys(InitiativeTypeKindEnum).map(kind => ({
-    label: kind,
-    value: kind as InitiativeTypeKindEnum,
-  }));
+// export const getAvailableInitiativeKinds = (): InitiativeKindChoice[] =>
+//   Object.keys(InitiativeTypeKindEnum).map(kind => ({
+//     label: kind,
+//     value: kind as InitiativeTypeKindEnum,
+//   }));
 
-export const getInitiativeKindOpts = (
-  availableInitiatives: InitiativeKindChoice[],
-  intl: IntlShape,
-): InitiativeKindChoice[] =>
-  availableInitiatives.map(kind => {
-    switch (kind.value) {
-      case InitiativeTypeKindEnum.GIFT_CARD:
-        return {
-          ...kind,
-          label: intl.formatMessage(messages.giftCardLabel),
-        };
-      case InitiativeTypeKindEnum.NORMAL:
-        return {
-          ...kind,
-          label: intl.formatMessage(messages.normalLabel),
-        };
-    }
-  });
+// export const getInitiativeKindOpts = (
+//   availableInitiatives: InitiativeKindChoice[],
+//   intl: IntlShape,
+// ): InitiativeKindChoice[] =>
+//   availableInitiatives.map(kind => {
+//     switch (kind.value) {
+//       case InitiativeTypeKindEnum.GIFT_CARD:
+//         return {
+//           ...kind,
+//           label: intl.formatMessage(messages.giftCardLabel),
+//         };
+//       case InitiativeTypeKindEnum.NORMAL:
+//         return {
+//           ...kind,
+//           label: intl.formatMessage(messages.normalLabel),
+//         };
+//     }
+//   });
 
 export const getInitiativeGiftCardFilterParam = (initiativeKind?: string) => {
   if (
