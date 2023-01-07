@@ -22,7 +22,7 @@ import {
   // useInitialInitiativeFilterCollectionsQuery,
   // useInitialInitiativeFilterInitiativeTypesQuery,
   useInitiativeBulkDeleteMutation,
-  useInitiativeCountQuery,
+  // useInitiativeCountQuery,
   // useInitiativeExportMutation,
   useInitiativeListQuery,
   // useWarehouseListQuery,
@@ -67,7 +67,7 @@ import { getSortUrlVariables } from "@saleor/utils/sort";
 import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { useSortRedirects } from "../../../hooks/useSortRedirects";
+// import { useSortRedirects } from "../../../hooks/useSortRedirects";
 import InitiativeListPage from "../../components/InitiativeListPage";
 import {
   deleteFilterTab,
@@ -178,13 +178,13 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
   //   channel => channel.slug === params.channel,
   // );
 
-  useSortRedirects<InitiativeListUrlSortField>({
-    params,
-    defaultSortField: DEFAULT_SORT_KEY,
-    urlFunc: initiativeListUrl,
-    // resetToDefault: !canBeSorted(params.sort, !!selectedChannel),
-    resetToDefault: !canBeSorted(params.sort),
-  });
+  // useSortRedirects<InitiativeListUrlSortField>({
+  //   params,
+  //   defaultSortField: DEFAULT_SORT_KEY,
+  //   urlFunc: initiativeListUrl,
+  //   // resetToDefault: !canBeSorted(params.sort, !!selectedChannel),
+  //   resetToDefault: !canBeSorted(params.sort),
+  // });
 
   const [openModal, closeModal] = createDialogActionHandlers<
     InitiativeListUrlDialog,
