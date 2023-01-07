@@ -7,8 +7,8 @@ export const USER_WITHOUT_DETAILS = gql`
     user: me {
       ...UserBaseFragment
     }
-#    authenticated @client
-#    authenticating @client
+    authenticated @client
+    authenticating @client
   }
 `;
 
@@ -18,7 +18,7 @@ export const USER = gql`
     user: me {
       ...UserDetailsFragment
     }
-#    authenticated @client
-#    authenticating @client
+    authenticated @client
+    authenticating @client
   }
 `;

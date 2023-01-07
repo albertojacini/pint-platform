@@ -91,11 +91,13 @@ const Routes: React.FC = () => {
 
   // const { channel } = useAppChannel(false);
 
-  const channelLoaded = typeof channel !== "undefined";
+  // const channelLoaded = typeof channel !== "undefined";
 
-  const homePageLoaded = channelLoaded && authenticated;
+  // const homePageLoaded = channelLoaded && authenticated;
+  const homePageLoaded = authenticated;
 
-  const homePageLoading = (authenticated && !channelLoaded) || authenticating;
+  // const homePageLoading = (authenticated && !channelLoaded) || authenticating;
+  const homePageLoading = authenticated || authenticating;
 
   const { isAppPath } = useLocationState();
 

@@ -10,7 +10,7 @@ import {
   useAuthState,
 } from "../../saleor-sdk/src/react/hooks"
 import {
-  GetExternalAccessTokenData,
+  // GetExternalAccessTokenData,
   LoginData,
 } from "../../saleor-sdk/src/core/types"
 import {
@@ -23,9 +23,9 @@ import { IntlShape } from "react-intl";
 import urlJoin from "url-join";
 
 import {
-  ExternalLoginInput,
-  RequestExternalLoginInput,
-  RequestExternalLogoutInput,
+  // ExternalLoginInput,
+  // RequestExternalLoginInput,
+  // RequestExternalLogoutInput,
   UserContext,
   UserContextError,
 } from "../types";
@@ -50,10 +50,10 @@ export function useAuthProvider({
   } = useAuth();
   const navigate = useNavigator();
   const { authenticated, authenticating, user } = useAuthState();
-  const [requestedExternalPluginId] = useLocalStorage(
-    "requestedExternalPluginId",
-    null,
-  );
+  // const [requestedExternalPluginId] = useLocalStorage(
+  //   "requestedExternalPluginId",
+  //   null,
+  // );
   const [error, setError] = useState<UserContextError>();
   const permitCredentialsAPI = useRef(true);
 
@@ -73,7 +73,7 @@ export function useAuthProvider({
     if (
       !authenticated &&
       !authenticating &&
-      !requestedExternalPluginId &&
+      // !requestedExternalPluginId &&
       permitCredentialsAPI.current
     ) {
       permitCredentialsAPI.current = false;
@@ -161,34 +161,35 @@ export function useAuthProvider({
   //   return result?.data?.externalAuthenticationUrl;
   // };
 
-  const handleExternalLogin = async (
-    pluginId: string,
-    input: ExternalLoginInput,
-  ) => {
-    try {
-      const result = await getExternalAccessToken({
-        pluginId,
-        input: JSON.stringify(input),
-      });
-
-      if (result && !result.data?.externalObtainAccessTokens.errors.length) {
-        if (DEMO_MODE) {
-          displayDemoMessage(intl, notify);
-        }
-      } else {
-        setError("externalLoginError");
-      }
-
-      await logoutNonStaffUser(result.data.externalObtainAccessTokens);
-
-      return result?.data?.externalObtainAccessTokens;
-    } catch (error) {
-      setError("serverError");
-    }
-  };
+  // const handleExternalLogin = async (
+  //   pluginId: string,
+  //   input: ExternalLoginInput,
+  // ) => {
+  //   try {
+  //     const result = await getExternalAccessToken({
+  //       pluginId,
+  //       input: JSON.stringify(input),
+  //     });
+  //
+  //     if (result && !result.data?.externalObtainAccessTokens.errors.length) {
+  //       if (DEMO_MODE) {
+  //         displayDemoMessage(intl, notify);
+  //       }
+  //     } else {
+  //       setError("externalLoginError");
+  //     }
+  //
+  //     await logoutNonStaffUser(result.data.externalObtainAccessTokens);
+  //
+  //     return result?.data?.externalObtainAccessTokens;
+  //   } catch (error) {
+  //     setError("serverError");
+  //   }
+  // };
 
   const logoutNonStaffUser = async (
-    data: LoginData | GetExternalAccessTokenData,
+    // data: LoginData | GetExternalAccessTokenData,
+    data: LoginData,
   ) => {
     if (data.user && !data.user.isStaff) {
       notify({
@@ -203,7 +204,7 @@ export function useAuthProvider({
   return {
     login: handleLogin,
     // requestLoginByExternalPlugin: handleRequestExternalLogin,
-    loginByExternalPlugin: handleExternalLogin,
+    // loginByExternalPlugin: handleExternalLogin,
     logout: handleLogout,
     authenticating: authenticating && !error,
     authenticated: authenticated && user?.isStaff,

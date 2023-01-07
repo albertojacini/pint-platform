@@ -14,7 +14,6 @@ import getModeActions from "./modes";
 // import { getGqlOrderId, isQueryValidOrderNumber } from "./modes/orders";
 import { getMode } from "./modes/utils";
 import useSearchCatalog from "./queries/useCatalogSearch";
-import useCheckIfOrderExists from "./queries/useCheckIfOrderExists";
 import { QuickSearchAction, QuickSearchMode } from "./types";
 
 type UseQuickSearch = [
@@ -31,7 +30,7 @@ function useQuickSearch(
   const [mode, setMode] = useState<QuickSearchMode>("default");
   const intl = useIntl();
   const navigate = useNavigator();
-  const [{ data: orderData }, getOrderData] = useCheckIfOrderExists();
+  // const [{ data: orderData }, getOrderData] = useCheckIfOrderExists();
   // const { result: customers, search: searchCustomers } = useCustomerSearch({
   //   variables: {
   //     ...DEFAULT_INITIAL_SEARCH_DATA,
