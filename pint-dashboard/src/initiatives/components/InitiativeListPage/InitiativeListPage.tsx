@@ -156,7 +156,8 @@ export const InitiativeListPage: React.FC<InitiativeListPageProps> = props => {
 
   const filterStructure = createFilterStructure(intl, filterOpts);
 
-  const filterDependency = filterStructure.find(getByName("channel"));
+  // const filterDependency = filterStructure.find(getByName("channel"));
+  const filterDependency = filterStructure.find(getByName("metadata"));
 
   const availableColumns: MultiAutocompleteChoiceType[] = [
     ...staticColumns,
