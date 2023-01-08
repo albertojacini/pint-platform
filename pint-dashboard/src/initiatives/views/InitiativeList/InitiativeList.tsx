@@ -45,7 +45,7 @@ import {
   getAttributeIdFromColumnValue,
   isAttributeColumnValue,
 } from "@saleor/initiatives/components/InitiativeListPage/utils";
-// import InitiativeTypePickerDialog from "@saleor/initiatives/components/InitiativeTypePickerDialog";
+import InitiativeTypePickerDialog from "@saleor/initiatives/components/InitiativeTypePickerDialog";
 import {
   initiativeAddUrl,
   initiativeListUrl,
@@ -513,23 +513,26 @@ export const InitiativeList: React.FC<InitiativeListProps> = ({ params }) => {
         onSubmit={handleFilterTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-      {/*<InitiativeTypePickerDialog*/}
-      {/*  confirmButtonState="success"*/}
-      {/*  open={params.action === "create-initiative"}*/}
-      {/*  initiativeTypes={mapNodeToChoice(*/}
-      {/*    mapEdgesToItems(searchDialogInitiativeTypesOpts?.data?.search),*/}
-      {/*  )}*/}
-      {/*  fetchInitiativeTypes={searchDialogInitiativeTypes}*/}
-      {/*  fetchMoreInitiativeTypes={fetchMoreDialogInitiativeTypes}*/}
-      {/*  onClose={closeModal}*/}
-      {/*  onConfirm={initiativeTypeId =>*/}
-      {/*    navigate(*/}
-      {/*      initiativeAddUrl({*/}
-      {/*        "initiative-type-id": initiativeTypeId,*/}
-      {/*      }),*/}
-      {/*    )*/}
-      {/*  }*/}
-      {/*/>*/}
+      <InitiativeTypePickerDialog
+        confirmButtonState="success"
+        open={params.action === "create-initiative"}
+        // initiativeTypes={mapNodeToChoice(
+        //   mapEdgesToItems(searchDialogInitiativeTypesOpts?.data?.search),
+        // )}
+        // fetchInitiativeTypes={searchDialogInitiativeTypes}
+        // fetchMoreInitiativeTypes={fetchMoreDialogInitiativeTypes}
+        onClose={closeModal}
+        onConfirm={initiativeTypeId =>
+          navigate(
+            initiativeAddUrl({
+              "initiative-type-id": initiativeTypeId,
+            }),
+            // initiativeAddUrl({
+            //   "initiative-type-id": initiativeTypeId,
+            // }),
+          )
+        }
+      />
     </PaginatorContext.Provider>
   );
 };

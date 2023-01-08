@@ -65,7 +65,7 @@ import { FetchMoreProps, RelayToFlat, ReorderEvent } from "@saleor/types";
 import useMetadataChangeTrigger from "@saleor/utils/metadata/useMetadataChangeTrigger";
 import { RichTextContext } from "@saleor/utils/richText/context";
 // import { useMultipleRichText } from "@saleor/utils/richText/useMultipleRichText";
-// import useRichText from "@saleor/utils/richText/useRichText";
+import useRichText from "@saleor/utils/richText/useRichText";
 import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -100,8 +100,8 @@ export interface InitiativeCreateFormData extends MetadataFormData {
 }
 export interface InitiativeCreateData extends InitiativeCreateFormData {
   // attributes: AttributeInput[];
-  attributesWithNewFileValue: FormsetData<null, File>;
-  stocks: InitiativeStockInput[];
+  // attributesWithNewFileValue: FormsetData<null, File>;
+  // stocks: InitiativeStockInput[];
 }
 
 export interface InitiativeCreateHandlers
@@ -154,8 +154,8 @@ export interface UseInitiativeCreateFormOpts
   fetchReferenceInitiatives?: (data: string) => void;
   fetchMoreReferenceInitiatives?: FetchMoreProps;
   assignReferencesAttributeId?: string;
-  selectedInitiativeType?: InitiativeTypeQuery["initiativeType"];
-  onSelectInitiativeType: (initiativeTypeId: string) => void;
+  // selectedInitiativeType?: InitiativeTypeQuery["initiativeType"];
+  // onSelectInitiativeType: (initiativeTypeId: string) => void;
 }
 
 export interface InitiativeCreateFormProps extends UseInitiativeCreateFormOpts {
@@ -236,10 +236,10 @@ function useInitiativeCreateForm(
   // });
   // const attributesWithNewFileValue = useFormset<null, File>([]);
   // const stocks = useFormset<InitiativeStockFormsetData>([]);
-  // const richText = useRichText({
-  //   initial: null,
-  //   triggerChange,
-  // });
+  const richText = useRichText({
+    initial: null,
+    triggerChange,
+  });
 
   const {
     makeChangeHandler: makeMetadataChangeHandler,
@@ -468,7 +468,7 @@ function useInitiativeCreateForm(
     submit,
     isSaveDisabled,
     richText,
-    attributeRichTextGetters,
+    // attributeRichTextGetters,
   };
 }
 

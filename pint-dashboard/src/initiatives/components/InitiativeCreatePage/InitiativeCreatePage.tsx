@@ -104,7 +104,7 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
   // categories: categoryChoiceList,
   // collections: collectionChoiceList,
   // attributeValues,
-  // errors: apiErrors,
+  errors: apiErrors,
   fetchCategories,
   fetchCollections,
   fetchMoreCategories,
@@ -210,7 +210,7 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
         change,
         data,
         formErrors,
-        validationErrors,
+        // validationErrors,
         handlers,
         submit,
         isSaveDisabled,
@@ -219,7 +219,8 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
         // Comparing explicitly to false because `hasVariants` can be undefined
         const isSimpleInitiative = data.initiativeType?.hasVariants === false;
 
-        const errors = [...apiErrors, ...validationErrors];
+        // const errors = [...apiErrors, ...validationErrors];
+        const errors = [...apiErrors];
 
         return (
           <Container>
@@ -229,12 +230,12 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
             <PageHeader title={header} />
             <Grid>
               <div>
-                <InitiativeDetailsForm
-                  data={data}
-                  disabled={loading}
-                  errors={errors}
-                  onChange={change}
-                />
+                {/*<InitiativeDetailsForm*/}
+                {/*  data={data}*/}
+                {/*  disabled={loading}*/}
+                {/*  errors={errors}*/}
+                {/*  onChange={change}*/}
+                {/*/>*/}
                 <CardSpacer />
                 {/*{data.attributes.length > 0 && (*/}
                 {/*  <Attributes*/}
@@ -311,28 +312,28 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
                 <Metadata data={data} onChange={handlers.changeMetadata} />
               </div>
               <div>
-                <InitiativeOrganization
-                  canChangeType={true}
-                  // categories={categories}
-                  categoryInputDisplayValue={selectedCategory}
-                  // collections={collections}
-                  data={data}
-                  disabled={loading}
-                  // errors={[...errors, ...channelsErrors]}
-                  fetchCategories={fetchCategories}
-                  fetchCollections={fetchCollections}
-                  fetchMoreCategories={fetchMoreCategories}
-                  fetchMoreCollections={fetchMoreCollections}
-                  fetchMoreInitiativeTypes={fetchMoreInitiativeTypes}
-                  fetchInitiativeTypes={fetchInitiativeTypes}
-                  initiativeType={data.initiativeType}
-                  initiativeTypeInputDisplayValue={data.initiativeType?.name || ""}
-                  // initiativeTypes={initiativeTypes}
-                  onCategoryChange={handlers.selectCategory}
-                  onCollectionChange={handlers.selectCollection}
-                  onInitiativeTypeChange={handlers.selectInitiativeType}
-                  collectionsInputDisplayValue={selectedCollections}
-                />
+                {/*<InitiativeOrganization*/}
+                {/*  canChangeType={true}*/}
+                {/*  // categories={categories}*/}
+                {/*  categoryInputDisplayValue={selectedCategory}*/}
+                {/*  // collections={collections}*/}
+                {/*  data={data}*/}
+                {/*  disabled={loading}*/}
+                {/*  // errors={[...errors, ...channelsErrors]}*/}
+                {/*  fetchCategories={fetchCategories}*/}
+                {/*  fetchCollections={fetchCollections}*/}
+                {/*  fetchMoreCategories={fetchMoreCategories}*/}
+                {/*  fetchMoreCollections={fetchMoreCollections}*/}
+                {/*  fetchMoreInitiativeTypes={fetchMoreInitiativeTypes}*/}
+                {/*  fetchInitiativeTypes={fetchInitiativeTypes}*/}
+                {/*  initiativeType={data.initiativeType}*/}
+                {/*  initiativeTypeInputDisplayValue={data.initiativeType?.name || ""}*/}
+                {/*  // initiativeTypes={initiativeTypes}*/}
+                {/*  onCategoryChange={handlers.selectCategory}*/}
+                {/*  onCollectionChange={handlers.selectCollection}*/}
+                {/*  onInitiativeTypeChange={handlers.selectInitiativeType}*/}
+                {/*  collectionsInputDisplayValue={selectedCollections}*/}
+                {/*/>*/}
                 <CardSpacer />
                 {/*{isSimpleInitiative ? (*/}
                 {/*  <ChannelsAvailabilityCard*/}

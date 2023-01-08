@@ -19,8 +19,9 @@ import { stringifyQs } from "../utils/urls";
 const initiativeSection = "/initiatives/";
 
 export const initiativeAddPath = urlJoin(initiativeSection, "add");
-export const initiativeAddUrl = (params?: InitiativeCreateUrlQueryParams) =>
-  initiativeAddPath + "?" + stringifyQs(params);
+// export const initiativeAddUrl = (params?: InitiativeCreateUrlQueryParams) =>
+//   initiativeAddPath + "?" + stringifyQs(params);
+export const initiativeAddUrl = () => initiativeAddPath
 
 export const initiativeListPath = initiativeSection;
 export type InitiativeListUrlDialog =
