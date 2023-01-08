@@ -4,19 +4,19 @@ import CardTitle from "@saleor/components/CardTitle";
 import FormSpacer from "@saleor/components/FormSpacer";
 import Grid from "@saleor/components/Grid";
 import Hr from "@saleor/components/Hr";
-import RichTextEditor from "@saleor/components/RichTextEditor";
-import { RichTextEditorLoading } from "@saleor/components/RichTextEditor/RichTextEditorLoading";
+// import RichTextEditor from "@saleor/components/RichTextEditor";
+// import { RichTextEditorLoading } from "@saleor/components/RichTextEditor/RichTextEditorLoading";
 import { InitiativeErrorFragment } from "@saleor/graphql";
 import { commonMessages } from "@saleor/intl";
 import { getFormErrors, getInitiativeErrorMessage } from "@saleor/utils/errors";
-import { useRichTextContext } from "@saleor/utils/richText/context";
+// import { useRichTextContext } from "@saleor/utils/richText/context";
 import React from "react";
 import { useIntl } from "react-intl";
 
 interface InitiativeDetailsFormProps {
   data: {
     description: OutputData;
-    name: string;
+    title: string;
     rating: number;
   };
   disabled?: boolean;
@@ -32,14 +32,14 @@ export const InitiativeDetailsForm: React.FC<InitiativeDetailsFormProps> = ({
   onChange,
 }) => {
   const intl = useIntl();
-  const {
-    editorRef,
-    defaultValue,
-    isReadyForMount,
-    handleChange,
-  } = useRichTextContext();
+  // const {
+  //   editorRef,
+  //   defaultValue,
+  //   isReadyForMount,
+  //   handleChange,
+  // } = useRichTextContext();
 
-  const formErrors = getFormErrors(["name", "description", "rating"], errors);
+  const formErrors = getFormErrors(["title", "description", "rating"], errors);
   return (
     <Card>
       <CardTitle
@@ -53,31 +53,31 @@ export const InitiativeDetailsForm: React.FC<InitiativeDetailsFormProps> = ({
           fullWidth
           label={intl.formatMessage({
             id: "6AMFki",
-            defaultMessage: "Name",
-            description: "initiative name",
+            defaultMessage: "Title",
+            description: "initiative title",
           })}
-          name="name"
-          value={data.name}
+          name="title"
+          value={data.title}
           onChange={onChange}
         />
         <FormSpacer />
-        {isReadyForMount ? (
-          <RichTextEditor
-            editorRef={editorRef}
-            defaultValue={defaultValue}
-            onChange={handleChange}
-            disabled={disabled}
-            error={!!formErrors.description}
-            helperText={getInitiativeErrorMessage(formErrors.description, intl)}
-            label={intl.formatMessage(commonMessages.description)}
-            name="description"
-          />
-        ) : (
-          <RichTextEditorLoading
-            label={intl.formatMessage(commonMessages.description)}
-            name="description"
-          />
-        )}
+        {/*{isReadyForMount ? (*/}
+        {/*  <RichTextEditor*/}
+        {/*    editorRef={editorRef}*/}
+        {/*    defaultValue={defaultValue}*/}
+        {/*    onChange={handleChange}*/}
+        {/*    disabled={disabled}*/}
+        {/*    error={!!formErrors.description}*/}
+        {/*    helperText={getInitiativeErrorMessage(formErrors.description, intl)}*/}
+        {/*    label={intl.formatMessage(commonMessages.description)}*/}
+        {/*    name="description"*/}
+        {/*  />*/}
+        {/*) : (*/}
+        {/*  <RichTextEditorLoading*/}
+        {/*    label={intl.formatMessage(commonMessages.description)}*/}
+        {/*    name="description"*/}
+        {/*  />*/}
+        {/*)}*/}
         <FormSpacer />
         <Hr />
         <FormSpacer />

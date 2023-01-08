@@ -24,12 +24,12 @@ const createEmptyRequiredError = (
 export const validateInitiativeCreateData = (data: InitiativeCreateData) => {
   let errors: InitiativeErrorWithAttributesFragment[] = [];
 
-  if (!data.initiativeType) {
-    errors = [...errors, createEmptyRequiredError("initiativeType")];
-  }
+  // if (!data.initiativeType) {
+  //   errors = [...errors, createEmptyRequiredError("initiativeType")];
+  // }
 
-  if (!data.name) {
-    errors = [...errors, createEmptyRequiredError("name")];
+  if (!data.title) {
+    errors = [...errors, createEmptyRequiredError("title")];
   }
 
   return errors;

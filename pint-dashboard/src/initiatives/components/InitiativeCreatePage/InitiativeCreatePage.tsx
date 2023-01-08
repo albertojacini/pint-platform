@@ -105,11 +105,11 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
   // collections: collectionChoiceList,
   // attributeValues,
   errors: apiErrors,
-  fetchCategories,
-  fetchCollections,
-  fetchMoreCategories,
-  fetchMoreCollections,
-  fetchMoreInitiativeTypes,
+  // fetchCategories,
+  // fetchCollections,
+  // fetchMoreCategories,
+  // fetchMoreCollections,
+  // fetchMoreInitiativeTypes,
   header,
   initial,
   // initiativeTypes: initiativeTypeChoiceList,
@@ -119,39 +119,39 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
   // warehouses,
   // taxTypes,
   // selectedInitiativeType,
-  fetchInitiativeTypes,
-  weightUnit,
+  // fetchInitiativeTypes,
+  // weightUnit,
   onSubmit,
   // onChannelsChange,
-  onWarehouseConfigure,
-  openChannelsModal,
+  // onWarehouseConfigure,
+  // openChannelsModal,
   assignReferencesAttributeId,
   // onAssignReferencesClick,
   fetchReferencePages,
   fetchMoreReferencePages,
   fetchReferenceInitiatives,
   fetchMoreReferenceInitiatives,
-  fetchAttributeValues,
-  fetchMoreAttributeValues,
+  // fetchAttributeValues,
+  // fetchMoreAttributeValues,
   onCloseDialog,
   onSelectInitiativeType,
-  onAttributeSelectBlur,
+  // onAttributeSelectBlur,
 }: InitiativeCreatePageProps) => {
   const intl = useIntl();
   const navigate = useNavigator();
 
   // Display values
-  const [selectedCategory, setSelectedCategory] = useStateFromProps(
-    initial?.category || "",
-  );
+  // const [selectedCategory, setSelectedCategory] = useStateFromProps(
+  //   initial?.category || "",
+  // );
 
-  const [selectedCollections, setSelectedCollections] = useStateFromProps<
-    MultiAutocompleteChoiceType[]
-  >([]);
+  // const [selectedCollections, setSelectedCollections] = useStateFromProps<
+  //   MultiAutocompleteChoiceType[]
+  // >([]);
 
-  const [selectedTaxType, setSelectedTaxType] = useStateFromProps(
-    initial?.taxCode || null,
-  );
+  // const [selectedTaxType, setSelectedTaxType] = useStateFromProps(
+  //   initial?.taxCode || null,
+  // );
 
   // const categories = getChoices(categoryChoiceList);
   // const collections = getChoices(collectionChoiceList);
@@ -162,23 +162,23 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
   //     value: taxType.taxCode,
   //   })) || [];
 
-  const canOpenAssignReferencesAttributeDialog = !!assignReferencesAttributeId;
+  // const canOpenAssignReferencesAttributeDialog = !!assignReferencesAttributeId;
 
-  const handleAssignReferenceAttribute = (
-    attributeValues: string[],
-    data: InitiativeCreateData,
-    handlers: InitiativeCreateHandlers,
-  ) => {
-    handlers.selectAttributeReference(
-      assignReferencesAttributeId,
-      mergeAttributeValues(
-        assignReferencesAttributeId,
-        attributeValues,
-        data.attributes,
-      ),
-    );
-    onCloseDialog();
-  };
+  // const handleAssignReferenceAttribute = (
+  //   attributeValues: string[],
+  //   data: InitiativeCreateData,
+  //   handlers: InitiativeCreateHandlers,
+  // ) => {
+  //   handlers.selectAttributeReference(
+  //     assignReferencesAttributeId,
+  //     mergeAttributeValues(
+  //       assignReferencesAttributeId,
+  //       attributeValues,
+  //       data.attributes,
+  //     ),
+  //   );
+  //   onCloseDialog();
+  // };
 
   return (
     <InitiativeCreateForm
@@ -191,10 +191,10 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
       // initiativeTypes={initiativeTypeChoiceList}
       // referencePages={referencePages}
       referenceInitiatives={referenceInitiatives}
-      selectedCollections={selectedCollections}
-      setSelectedCategory={setSelectedCategory}
-      setSelectedCollections={setSelectedCollections}
-      setSelectedTaxType={setSelectedTaxType}
+      // selectedCollections={selectedCollections}
+      // setSelectedCategory={setSelectedCategory}
+      // setSelectedCollections={setSelectedCollections}
+      // setSelectedTaxType={setSelectedTaxType}
       // setChannels={onChannelsChange}
       // taxTypes={taxTypeChoices}
       // warehouses={warehouses}
@@ -230,12 +230,12 @@ export const InitiativeCreatePage: React.FC<InitiativeCreatePageProps> = ({
             <PageHeader title={header} />
             <Grid>
               <div>
-                {/*<InitiativeDetailsForm*/}
-                {/*  data={data}*/}
-                {/*  disabled={loading}*/}
-                {/*  errors={errors}*/}
-                {/*  onChange={change}*/}
-                {/*/>*/}
+                <InitiativeDetailsForm
+                  data={data}
+                  disabled={loading}
+                  errors={errors}
+                  onChange={change}
+                />
                 <CardSpacer />
                 {/*{data.attributes.length > 0 && (*/}
                 {/*  <Attributes*/}

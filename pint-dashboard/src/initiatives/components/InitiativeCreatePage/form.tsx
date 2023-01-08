@@ -65,7 +65,7 @@ import { FetchMoreProps, RelayToFlat, ReorderEvent } from "@saleor/types";
 import useMetadataChangeTrigger from "@saleor/utils/metadata/useMetadataChangeTrigger";
 import { RichTextContext } from "@saleor/utils/richText/context";
 // import { useMultipleRichText } from "@saleor/utils/richText/useMultipleRichText";
-import useRichText from "@saleor/utils/richText/useRichText";
+// import useRichText from "@saleor/utils/richText/useRichText";
 import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -78,7 +78,7 @@ export interface InitiativeCreateFormData extends MetadataFormData {
   // channelListings: ChannelData[];
   // chargeTaxes: boolean;
   // collections: string[];
-  description: OutputData;
+  // description: OutputData;
   isAvailable: boolean;
   // name: string;
   title: string;
@@ -182,7 +182,7 @@ function useInitiativeCreateForm(
     // channelListings: opts.currentChannels,
     // chargeTaxes: false,
     // collections: [],
-    description: null,
+    // description: null,
     isAvailable: false,
     metadata: [],
     // name: "",
@@ -236,10 +236,10 @@ function useInitiativeCreateForm(
   // });
   // const attributesWithNewFileValue = useFormset<null, File>([]);
   // const stocks = useFormset<InitiativeStockFormsetData>([]);
-  const richText = useRichText({
-    initial: null,
-    triggerChange,
-  });
+  // const richText = useRichText({
+  //   initial: null,
+  //   triggerChange,
+  // });
 
   const {
     makeChangeHandler: makeMetadataChangeHandler,
@@ -348,14 +348,14 @@ function useInitiativeCreateForm(
     //   opts.referenceInitiatives,
     // ),
     // attributesWithNewFileValue: attributesWithNewFileValue.data,
-    description: null,
+    // description: null,
     // initiativeType: opts.selectedInitiativeType,
     // stocks: stocks.data,
   };
 
   const getData = async (): Promise<InitiativeCreateData> => ({
     ...data,
-    description: await richText.getValue(),
+    // description: await richText.getValue(),
     // attributes: mergeAttributes(
     //   attributes.data,
     //   getRichTextAttributesFromMap(
@@ -366,6 +366,7 @@ function useInitiativeCreateForm(
   });
 
   const handleSubmit = async (data: InitiativeCreateData) => {
+    debugger
     const errors = validateInitiativeCreateData(data);
 
     // setValidationErrors(errors);
@@ -467,7 +468,7 @@ function useInitiativeCreateForm(
     },
     submit,
     isSaveDisabled,
-    richText,
+    // richText,
     // attributeRichTextGetters,
   };
 }

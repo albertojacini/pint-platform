@@ -10,6 +10,7 @@ import {
 import {
   // InitiativeChannelListingErrorFragment,
   // InitiativeErrorWithAttributesFragment,
+  InitiativeErrorFragment,
   useFileUploadMutation,
   // useInitiativeChannelListingUpdateMutation,
   useInitiativeCreateMutation,
@@ -65,15 +66,15 @@ export const InitiativeCreateView: React.FC<InitiativeCreateProps> = ({ params }
   const [initiativeCreateComplete, setInitiativeCreateComplete] = React.useState(
     false,
   );
-  const selectedInitiativeTypeId = params["initiative-type-id"];
+  // const selectedInitiativeTypeId = params["initiative-type-id"];
 
-  const handleSelectInitiativeType = (initiativeTypeId: string) =>
-    navigate(
-      initiativeAddUrl({
-        ...params,
-        "initiative-type-id": initiativeTypeId,
-      }),
-    );
+  // const handleSelectInitiativeType = (initiativeTypeId: string) =>
+  //   navigate(
+  //     initiativeAddUrl({
+  //       ...params,
+  //       "initiative-type-id": initiativeTypeId,
+  //     }),
+  //   );
 
   const [openModal, closeModal] = createDialogActionHandlers<
     InitiativeCreateUrlDialog,
@@ -284,8 +285,9 @@ export const InitiativeCreateView: React.FC<InitiativeCreateProps> = ({ params }
   //   onFetchMore: loadMoreAttributeValues,
   // };
 
-  const loading = true
-    // uploadFileOpts.loading ||
+  const loading =
+    uploadFileOpts.loading ||
+    initiativeCreateOpts.loading
     // initiativeCreateOpts.loading ||
     // initiativeVariantCreateOpts.loading ||
     // updateChannelsOpts.loading ||
@@ -298,7 +300,8 @@ export const InitiativeCreateView: React.FC<InitiativeCreateProps> = ({ params }
   const errors = [
     ...getMutationErrors(initiativeCreateOpts),
     // ...getMutationErrors(initiativeVariantCreateOpts),
-  ] as InitiativeErrorWithAttributesFragment[];
+  // ] as InitiativeErrorWithAttributesFragment[];
+  ] as InitiativeErrorFragment[];
 
   return (
     <>
@@ -374,7 +377,7 @@ export const InitiativeCreateView: React.FC<InitiativeCreateProps> = ({ params }
         // fetchMoreAttributeValues={fetchMoreAttributeValues}
         onCloseDialog={() => navigate(initiativeAddUrl())}
         // selectedInitiativeType={selectedInitiativeType?.initiativeType}
-        onSelectInitiativeType={handleSelectInitiativeType}
+        // onSelectInitiativeType={handleSelectInitiativeType}
         // onAttributeSelectBlur={searchAttributeReset}
       />
     </>
